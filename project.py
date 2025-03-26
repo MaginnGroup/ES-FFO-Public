@@ -46,7 +46,7 @@ def create_system(job):
     class_dict = _get_class_from_molecule(job.sp.mol_name)
     class_data = class_dict[job.sp.mol_name]
     rho_liq = class_data.expt_vap_density[int(job.sp.T)]
-    system = mbuild.fill_box(compound, n_compounds=300, density=rho_liq)
+    system = mbuild.fill_box(compound, n_compounds=750, density=rho_liq)
 
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
