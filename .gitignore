@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*example_output_files
 # C extensions
 *.so
 
