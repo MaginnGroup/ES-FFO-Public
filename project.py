@@ -22,7 +22,7 @@ class Project(FlowProject):
 @Project.operation
 def create_forcefield(job):
     """Create the forcefield .xml file for the job"""
-    molec_xml_function = _get_xml_from_molecule(job.sp.mol_name)       
+    molec_xml_function = _get_xml_from_molecule(job.sp.mol_name)
     content = molec_xml_function(job)
 
     with open(job.fn("ff.xml"), "w") as ff:
@@ -42,11 +42,7 @@ def create_system(job):
     import unyt as u
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
-    #Load density from exp values
-    class_dict = _get_class_from_molecule(job.sp.mol_name)
-    class_data = class_dict[job.sp.mol_name]
-    rho_liq = class_data.expt_vap_density[int(job.sp.T)]
-    system = mbuild.fill_box(compound, n_compounds=750, density=rho_liq)
+    system = mbuild.fill_box(compound, n_compounds=750, density=job.sp.rho_avg)
 
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
@@ -55,7 +51,7 @@ def create_system(job):
 
     system_ff.save("system.gro")
     system_ff.save("system.top")
-    
+
     # system_ff.save(job.fn("unedited.top"))
     # # Get pre-minimized gro file
     # shutil.copy("data/initial_config/system_em.gro", job.fn("system.gro"))
@@ -74,14 +70,14 @@ def fix_topology(job):
 
     top_contents = []
     with open(job.fn("unedited.top")) as fin:
-        for (line_number, line) in enumerate(fin):
+        for line_number, line in enumerate(fin):
             top_contents.append(line)
             if line.strip() == "[ defaults ]":
                 defaults_line = line_number
 
-    top_contents[
-        defaults_line + 2
-    ] = "1               2               yes              0.5       0.8333333\n" #changed no to yes
+    top_contents[defaults_line + 2] = (
+        "1               2               yes              0.5       0.8333333\n"  # changed no to yes
+    )
 
     with open(job.fn("system.top"), "w") as fout:
         for line in top_contents:
@@ -128,6 +124,7 @@ def generate_inputs(job):
     with open(job.fn("inter_prod.mdp"), "w") as inp:
         inp.write(content)
 
+
 # @Project.pre.after(create_system)
 # @Project.pre.after(fix_topology)
 # @Project.pre.after(generate_inputs)
@@ -149,19 +146,21 @@ def generate_inputs(job):
 
 #     return command
 
-#Energy Minimization
+
+# Energy Minimization
 @Project.label
 def em_complete(job):
     if "emin_fin" in job.doc:
         return True
     else:
         return False
-    
+
+
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.pre.after(generate_inputs)
 @Project.post(em_complete)
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
@@ -169,17 +168,19 @@ def em_sim(job):
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
     job.doc.emin_fin = True
 
-#Short NVT Equilibration
+
+# Short NVT Equilibration
 @Project.label
 def nvt1_eq_comp(job):
     if "nvt1_eq_fin" in job.doc:
         return True
     else:
         return False
-    
+
+
 @Project.pre.after(em_sim)
 @Project.post(nvt1_eq_comp)
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def nvt_eq1_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq1"
@@ -188,109 +189,121 @@ def nvt_eq1_sim(job):
     job.doc.nvt1_eq_fin = True
 
 
-#Long Equilibration NPT
+# Long Equilibration NPT
 @Project.label
 def npt_eq_comp(job):
     if "npt_eq_fin" in job.doc:
         return True
     else:
         return False
+
+
 @Project.pre.after(nvt_eq1_sim)
 @Project.post(npt_eq_comp)
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def npt_eq_sim(job):
     import panedr
+
     """Run the equilibration simulations"""
-    #Generate the first run
-    sim_name = "npt_eq"   
+    # Generate the first run
+    sim_name = "npt_eq"
     last_sim_name = "nvt_eq1"
     property = "Pressure"
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
     job.doc.npt_eq_fin = True
 
-#Run short NVT pre-equilibration   
+
+# Run short NVT pre-equilibration
 @Project.label
 def nvt2_eq_comp(job):
     if "xy_box_len" in job.doc and "aspect_ratio" in job.doc:
         return True
     else:
         return False
-    
+
+
 @Project.pre.after(npt_eq_sim)
 @Project.post(nvt2_eq_comp)
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def nvt_eq2_sim(job):
     """Run the minimization simulations"""
     sim_name = "nvt_eq2"
     last_sim_name = "npt_eq"
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-    #Get final box volume
+    # Get final box volume
     property = "Volume"
     eq_data_dict = {}
     eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
     vol_equib_data = np.array([eq_data_dict["Volume"]["data"]])
     ave_vol = np.mean(vol_equib_data)
-    ave_length = ave_vol**(1/3)
+    ave_length = ave_vol ** (1 / 3)
     job.doc.xy_box_len = ave_length
     job.doc.aspect_ratio = 3.0
 
-#Make Interface for simulation
+
+# Make Interface for simulation
 @Project.pre.after(nvt_eq2_sim)
 @Project.post.isfile("init_inter_eq.gro")
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def inter_eq_sim(job):
     box_len = job.doc.xy_box_len
-    xy_cen = job.doc.xy_box_len/2
-    z_cen = job.doc.xy_box_len * job.doc.aspect_ratio/2
-    new_z_len = z_cen*2
+    xy_cen = job.doc.xy_box_len / 2
+    z_cen = job.doc.xy_box_len * job.doc.aspect_ratio / 2
+    new_z_len = z_cen * 2
     job.doc.z_box_len = new_z_len
 
-    command = (
-        f"gmx_d editconf -f $GRO_file -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
-    )
+    command = f"gmx_d editconf -f $GRO_file -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
     subprocess.run(command, shell=True, check=True)
 
-#Run Interface NVT equilibration
+
+# Run Interface NVT equilibration
 @Project.label
 def inter_eq_comp(job):
     if "inter_eq_fin" in job.doc:
         return True
     else:
         return False
-    
+
+
 @Project.pre.after(nvt_eq2_sim)
 @Project.post(inter_eq_comp)
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def inter_eq_sim(job):
     """Run the interface equilibration simulations"""
     import panedr
-    #Generate the first run
-    last_sim_name = "init_inter_eq" #Use the same one since the -gro file is created beforehand
-    sim_name = "inter_eq"   
-    property = "#Surf*SurfTen" #Surface tension
+
+    # Generate the first run
+    last_sim_name = (
+        "init_inter_eq"  # Use the same one since the -gro file is created beforehand
+    )
+    sim_name = "inter_eq"
+    property = "#Surf*SurfTen"  # Surface tension
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
     job.doc.inter_eq_fin = True
 
 
-#Run Interface NVT Production
+# Run Interface NVT Production
 @Project.label
 def inter_prod_comp(job):
     if "inter_prod_fin" in job.doc:
         return True
     else:
         return False
-    
+
+
 @Project.pre.after(nvt_eq2_sim)
 @Project.post(inter_prod_comp)
-@Project.operation(with_job = True, cmd=False)
+@Project.operation(with_job=True, cmd=False)
 def inter_prod_sim(job):
     """Run the production simulations"""
-    
-    #Generate the first run
-    last_sim_name = "inter_eq" #Use the same one since the -gro file is created beforehand
-    sim_name = "inter_prod"   
-    property = "#Surf*SurfTen" #Surface tension
+
+    # Generate the first run
+    last_sim_name = (
+        "inter_eq"  # Use the same one since the -gro file is created beforehand
+    )
+    sim_name = "inter_prod"
+    property = "#Surf*SurfTen"  # Surface tension
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
     job.doc.inter_prod_fin = True
 
@@ -325,7 +338,9 @@ def calculate_properties(job):
             for nblk_ops, (mean_est, var_est, var_err) in enumerate(
                 zip(means_est, vars_est, vars_err)
             ):
-                ferr.write("{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err))
+                ferr.write(
+                    "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err)
+                )
 
         job.doc[name + "_unc"] = np.max(np.sqrt(vars_est))
 
@@ -333,7 +348,7 @@ def calculate_properties(job):
 #####################################################################
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
-#Calculation Functions
+# Calculation Functions
 def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
     res_matrix = []
@@ -347,197 +362,254 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
 
             # Try with ADF test enabled, fallback without it if it fails
             try:
-                results = pymser.equilibrate(eq_col, LLM=False, batch_size=batch_size, ADF_test=True, uncertainty='uSD', print_results=False)
+                results = pymser.equilibrate(
+                    eq_col,
+                    LLM=False,
+                    batch_size=batch_size,
+                    ADF_test=True,
+                    uncertainty="uSD",
+                    print_results=False,
+                )
                 adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
             except:
-                results = pymser.equilibrate(eq_col, LLM=False, batch_size=batch_size, ADF_test=False, uncertainty='uSD', print_results=False)
-                results["adf"], results["critical_values"], adf_test_failed = None, None, False
+                results = pymser.equilibrate(
+                    eq_col,
+                    LLM=False,
+                    batch_size=batch_size,
+                    ADF_test=False,
+                    uncertainty="uSD",
+                    print_results=False,
+                )
+                results["adf"], results["critical_values"], adf_test_failed = (
+                    None,
+                    None,
+                    False,
+                )
 
-            equilibrium = len(eq_col) - results['t0'] >= prod_tol
+            equilibrium = len(eq_col) - results["t0"] >= prod_tol
             equil_matrix.append(equilibrium and not adf_test_failed)
             res_matrix.append(results)
-        
+
         for i, is_equilibrated in enumerate(equil_matrix):
             key_name = list(eq_data_dict.keys())[i]
             col_vals = eq_data_dict[key_name]["data"]
-            #plot all
+            # plot all
 
             # if not all(equil_matrix):
-            plot_res_pymser(job, col_vals, res_matrix[i], prop_names[i % len(prop_cols)])
+            plot_res_pymser(
+                job, col_vals, res_matrix[i], prop_names[i % len(prop_cols)]
+            )
 
             # Display outcome
-            prod_cycles = len(col_vals) - res_matrix[i]['t0']
+            prod_cycles = len(col_vals) - res_matrix[i]["t0"]
             if is_equilibrated:
-                #Plot successful equilibration
+                # Plot successful equilibration
                 statement = f"       > Success! Found {prod_cycles} production cycles."
             else:
-                #Plot failed equilibration
+                # Plot failed equilibration
                 statement = f"       > Equil Failure! "
                 if res_matrix[i]["adf"] is None:
                     # Note: ADF test failed to complete
                     statement += f"ADF test failed to complete! "
-                elif res_matrix[i]['adf'] > res_matrix[i]['critical_values']['1%']:
-                    adf, one_pct = res_matrix[i]['adf'], res_matrix[i]['critical_values']['1%']
+                elif res_matrix[i]["adf"] > res_matrix[i]["critical_values"]["1%"]:
+                    adf, one_pct = (
+                        res_matrix[i]["adf"],
+                        res_matrix[i]["critical_values"]["1%"],
+                    )
                     statement += f"ADF value: {adf}, 99% confidence value: {one_pct}! "
-                if len(col_vals) - res_matrix[i]['t0'] < prod_tol:
-                   statement += f"Only {prod_cycles} production cycles found."
-                
+                if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
+                    statement += f"Only {prod_cycles} production cycles found."
+
             with open("Equil_Output.txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:
-        #This will cause an error in the GEMC operation which lets us know that the job failed
+        # This will cause an error in the GEMC operation which lets us know that the job failed
         raise Exception(f"Error processing job {job.id}: {e}")
 
+
 def plot_res_pymser(job, eq_col, results, name):
-    fig, [ax1, ax2] = plt.subplots(1, 2, gridspec_kw={'width_ratios': [2, 1]}, sharey=True)
+    fig, [ax1, ax2] = plt.subplots(
+        1, 2, gridspec_kw={"width_ratios": [2, 1]}, sharey=True
+    )
 
-    ax1.set_ylabel(name, color="black", fontsize=14, fontweight='bold')
-    ax1.set_xlabel("GEMC Steps", fontsize=14, fontweight='bold')
+    ax1.set_ylabel(name, color="black", fontsize=14, fontweight="bold")
+    ax1.set_xlabel("GEMC Steps", fontsize=14, fontweight="bold")
 
-    ax1.plot(range(0, len(eq_col)*10, 10), 
-            eq_col, 
-            label = 'Raw data', 
-            color='blue')
+    ax1.plot(range(0, len(eq_col) * 10, 10), eq_col, label="Raw data", color="blue")
 
-    ax1.plot(range(0, len(eq_col)*10, 10)[results['t0']:], 
-            results['equilibrated'], 
-            label = 'Equilibrated data', 
-            color='red')
+    ax1.plot(
+        range(0, len(eq_col) * 10, 10)[results["t0"] :],
+        results["equilibrated"],
+        label="Equilibrated data",
+        color="red",
+    )
 
-    ax1.plot([0, len(eq_col)*10], 
-            [results['average'], results['average']], 
-            color='green', zorder=4, 
-            label='Equilibrated average')
+    ax1.plot(
+        [0, len(eq_col) * 10],
+        [results["average"], results["average"]],
+        color="green",
+        zorder=4,
+        label="Equilibrated average",
+    )
 
-    ax1.fill_between(range(0, len(eq_col)*10, 10), 
-                    results['average'] - results['uncertainty'], 
-                    results['average'] + results['uncertainty'], 
-                    color='lightgreen', alpha=0.3, zorder=4)
+    ax1.fill_between(
+        range(0, len(eq_col) * 10, 10),
+        results["average"] - results["uncertainty"],
+        results["average"] + results["uncertainty"],
+        color="lightgreen",
+        alpha=0.3,
+        zorder=4,
+    )
 
-    ax1.set_yticks(np.arange(0, eq_col.max()*1.1, eq_col.max()/10))
-    ax1.set_xlim(-len(eq_col)*10*0.02, len(eq_col)*10*1.02)
+    ax1.set_yticks(np.arange(0, eq_col.max() * 1.1, eq_col.max() / 10))
+    ax1.set_xlim(-len(eq_col) * 10 * 0.02, len(eq_col) * 10 * 1.02)
     ax1.tick_params(axis="y", labelcolor="black")
 
     ax1.grid(alpha=0.3)
     ax1.legend()
 
-    ax2.hist(eq_col, 
-            orientation=u'horizontal', 
-            bins=30, 
-            edgecolor='blue', 
-            lw=1.5, 
-            facecolor='white', 
-            zorder=3)
+    ax2.hist(
+        eq_col,
+        orientation="horizontal",
+        bins=30,
+        edgecolor="blue",
+        lw=1.5,
+        facecolor="white",
+        zorder=3,
+    )
 
     bin_red = 10
-    ax2.hist(results['equilibrated'], 
-            orientation=u'horizontal', 
-            bins=bin_red, 
-            edgecolor='red', 
-            lw=1.5, 
-            facecolor='white', 
-            zorder=3)
+    ax2.hist(
+        results["equilibrated"],
+        orientation="horizontal",
+        bins=bin_red,
+        edgecolor="red",
+        lw=1.5,
+        facecolor="white",
+        zorder=3,
+    )
 
     ymax = int(ax2.get_xlim()[-1])
 
-    ax2.plot([0, ymax], 
-            [results['average'], results['average']],
-            color='green', zorder=4, label='Equilibrated average')
+    ax2.plot(
+        [0, ymax],
+        [results["average"], results["average"]],
+        color="green",
+        zorder=4,
+        label="Equilibrated average",
+    )
 
-    ax2.fill_between(range(ymax), 
-                    results['average'] - results['uncertainty'],
-                    results['average'] + results['uncertainty'],
-                    color='lightgreen', alpha=0.3, zorder=4)
+    ax2.fill_between(
+        range(ymax),
+        results["average"] - results["uncertainty"],
+        results["average"] + results["uncertainty"],
+        color="lightgreen",
+        alpha=0.3,
+        zorder=4,
+    )
 
     ax2.set_xlim(0, ymax)
 
     ax2.grid(alpha=0.5, zorder=1)
 
-    fig.set_size_inches(9,5)
+    fig.set_size_inches(9, 5)
     fig.set_dpi(100)
     fig.tight_layout()
-    save_name = 'MSER_eq_vol.png'
-    fig.savefig(job.fn(save_name), dpi=300, facecolor='white')
+    save_name = "MSER_eq_vol.png"
+    fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
-#HELPER FUNCTIONS
+
+# HELPER FUNCTIONS
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
     with job:
-        if os.path.exists(sim_name+".cpt"):
-            command = (
-                f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-            )
+        if os.path.exists(sim_name + ".cpt"):
+            command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
         else:
             command = (
-            f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-            f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-        )
+                f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+                f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+            )
         subprocess.run(command, shell=True, check=True)
-        
+
+
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
-        #Set number of iterations per extension and intitialize counter and total number of steps
-        eq_extend = int(job.sp.nsteps_gemc_eq/4) #In femtoseconds
-        total_eq_steps = job.sp.nsteps_gemc_eq #In femtoseconds
+        if sim_name == "npt_eq":
+            nsteps_eq = job.sp.nsteps_npt
+        elif sim_name == "inter_eq":
+            nsteps_eq = job.sp.nsteps_intereq
+
+        # Set number of iterations per extension and intitialize counter and total number of steps
+        eq_extend = int(nsteps_eq / 4)  # In femtoseconds
+        total_eq_steps = nsteps_eq  # In femtoseconds
         existing_eq_steps = 0
-        
 
         if max_eq_steps not in job.doc:
-            job.doc.max_eq_steps = total_eq_steps*2
-            #Get the total number of equilibration restarts and steps so far
-            existing_eq_steps = count_steps(sim_name)*1000 #Convert to femtoseconds
-            #The max number of steps is the larger of the number of steps + the org number of steps or the current max
-            max_eq_steps = np.maximum(job.doc.max_eq_steps )#, existing_eq_steps + 2*job.sp.nsteps_gemc_eq)
-            #Originally set the document eq_steps to the max number, it will be overwritten later
+            job.doc.max_eq_steps = total_eq_steps * 2
+            # Get the total number of equilibration restarts and steps so far
+            existing_eq_steps = count_steps(sim_name) * 1000  # Convert to femtoseconds
+            # The max number of steps is the larger of the number of steps + the org number of steps or the current max
+            max_eq_steps = np.maximum(
+                job.doc.max_eq_steps
+            )  # , existing_eq_steps + 2*nsteps_eq)
+            # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc.nsteps_gemc_eq = int(max_eq_steps)
-            
+
         eq_data_dict = {}
         eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
-        
+
         while total_eq_steps < job.doc.max_eq_steps:
-            #Set tolerance for determining equilibrium and check for convergence
-            prod_tol_eq = count_steps(sim_name)/4 #In picoseconds (same units as the data)
+            # Set tolerance for determining equilibrium and check for convergence
+            prod_tol_eq = (
+                count_steps(sim_name) / 4
+            )  # In picoseconds (same units as the data)
             is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
 
             if is_equil:
                 break
             else:
-                #If you have enough steps, run the simulation, continue the simulation with more points
+                # If you have enough steps, run the simulation, continue the simulation with more points
                 if total_eq_steps <= max_eq_steps:
-                    #If we have no steps, start the simulation
+                    # If we have no steps, start the simulation
                     if total_eq_steps == 0:
                         command = (
                             f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
                             f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
                         )
-                    #Otherwise, check log file for whether previous simulation finished correctly
+                    # Otherwise, check log file for whether previous simulation finished correctly
                     elif check_norm_term(job, sim_name):
-                        #If it finished, extend the simulation
+                        # If it finished, extend the simulation
                         command = (
-                            f"gmx convert-tpr -s {sim_name}.tpr -extend " + eq_extend + f" -o {sim_name}.tpr &&"
+                            f"gmx convert-tpr -s {sim_name}.tpr -extend "
+                            + eq_extend
+                            + f" -o {sim_name}.tpr &&"
                             f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
                         )
-                    #Otherwise restart the simulation from the checkpoint file
+                    # Otherwise restart the simulation from the checkpoint file
                     else:
-                        command = (
-                            f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm eq -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-                        )
+                        command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm eq -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
                     subprocess.run(command, shell=True, check=True)
-                    #Track the number of added steps
+                    # Track the number of added steps
                     total_eq_steps += eq_extend
 
-                    #Resave volume steps as needed
-                    eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
+                    # Resave volume steps as needed
+                    eq_data_dict = get_eq_data_dict(
+                        job, eq_data_dict, sim_name, property
+                    )
 
-                #Otherwise report an error
+                # Otherwise report an error
                 else:
                     job.doc.equil_fail = True
-                    raise Exception(f"GEMC equilibration failed to converge after {max_eq_steps} steps")
+                    raise Exception(
+                        f"GEMC equilibration failed to converge after {max_eq_steps} steps"
+                    )
 
-        #Set the step counter to whatever the final number of equilibration steps was
+        # Set the step counter to whatever the final number of equilibration steps was
         job.doc.nsteps_gemc_eq = total_eq_steps
         job.doc.equil_fail = False
+
 
 def check_norm_term(job, sim_name):
     selected_file = job.fn(sim_name + ".log")
@@ -545,7 +617,7 @@ def check_norm_term(job, sim_name):
         # Move the pointer to the end of the file, but leave space to find the last line
         f.seek(-2, os.SEEK_END)
         # Read backward until a newline is found
-        while f.read(1) != b'\n':
+        while f.read(1) != b"\n":
             f.seek(-2, os.SEEK_CUR)
         # Read the last line after finding the newline
         last_line = f.readline().decode()
@@ -553,11 +625,13 @@ def check_norm_term(job, sim_name):
         return True
     else:
         return False
-        
+
+
 def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     import panedr
-    #Get the density and volume data
-    df_all = panedr.edr_to_df(job.fn(sim_name+".edr"))
+
+    # Get the density and volume data
+    df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
     with job:
         if property in df_all.columns:
             df = df[["Time", property]].copy()
@@ -569,48 +643,39 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
                 f"EOF"
             )
             subprocess.run(command, shell=True, check=True)
-            prop_data = np.loadtxt(sim_name+"_"+property+".xvg", comments=["#" , "@"])
+            prop_data = np.loadtxt(
+                sim_name + "_" + property + ".xvg", comments=["#", "@"]
+            )
             df = pd.DataFrame(prop_data)
 
         property_data = df[:, 1]
         eq_col_file = job.fn(sim_name + "_" + property + ".csv")
-        eq_data_dict[property] = {"data": property_data, "file": eq_col_file}  
-        np.savetxt(eq_col_file, property_data, delimiter=",")  
+        eq_data_dict[property] = {"data": property_data, "file": eq_col_file}
+        np.savetxt(eq_col_file, property_data, delimiter=",")
         return eq_data_dict
+
 
 def count_steps(job, sim_name):
     import panedr
-    if os.path.exists(job.fn(sim_name+".edr")):
+
+    if os.path.exists(job.fn(sim_name + ".edr")):
         # Extract the maximum time recorded
-        df = panedr.edr_to_df(job.fn(sim_name+".edr"))
-        time_total = df["Time"].max() #in picoseconds
+        df = panedr.edr_to_df(job.fn(sim_name + ".edr"))
+        time_total = df["Time"].max()  # in picoseconds
     else:
         time_total = 0
 
     return time_total
 
-#Build FFs
-def _get_molec_dicts():
-    # Load class properies for each molecule
-    from utils.molec_class_files import r41 #import all the class files
-    R41 = r41.R41Constants()
 
-    #Create a dictionary with all of the data
-    molec_dict = {
-        "R41": R41,
-    }
-    return molec_dict
-
-def _get_class_from_molecule(molecule_name):
-    molec_dict = _get_molec_dicts()
-    return {molecule_name: molec_dict[molecule_name]}
-
+# Build FFs
 def _get_xml_from_molecule(molecule_name):
     if molecule_name == "R41":
         molec_xml_function = _generate_r41_xml
     else:
         raise ValueError("Molecule name not recognized")
     return molec_xml_function
+
 
 def _generate_r41_xml(job):
 
@@ -641,13 +706,12 @@ def _generate_r41_xml(job):
         epsilon_C1=job.sp.epsilon_C1,
         epsilon_F1=job.sp.epsilon_F1,
         epsilon_H1=job.sp.epsilon_H1,
-        
     )
-
 
     return content
 
-#Build mdp files
+
+# Build mdp files
 def _generate_em_mdp(job):
 
     contents = """
@@ -679,7 +743,7 @@ lincs-iter      = 4
 
 
 def _generate_nvt1_eq_mdp(job):
-    #Use 100000 (100 ps) for the first equilibration
+    # Use 100000 (100 ps) for the first equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -702,11 +766,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -740,13 +804,14 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nstepseq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt1
     )
 
     return contents
 
+
 def _generate_npt_eq_mdp(job):
-    #Use 500000 (100 ps) for the first equilibration
+    # Use 500000 (500 ps) for the first equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -769,11 +834,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -807,13 +872,14 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nstepseq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
     )
 
     return contents
+
 
 def _generate_nvt2_eq_mdp(job):
-    #Use 1000000 (1 ns) for the second equilibration
+    # Use 100000 (100 ps) minimum for the second equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -874,13 +940,14 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nstepseq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2
     )
 
     return contents
+
 
 def _generate_inter_eq_mdp(job):
-    #Use 30000000 (30 ns) for the interfacial equilibration
+    # Use 25000000 (25 ns) minimum for the interfacial equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -941,13 +1008,14 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nstepseq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq
     )
 
     return contents
 
+
 def _generate_inter_prod_mdp(job):
-    #Use 60000000 (60 ns) for the interfacial production
+    # Use 50000000 (50 ns) for the interfacial production
     contents = """
 ; MDP file for NVT simulation
 
@@ -1008,10 +1076,11 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nstepseq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod
     )
 
     return contents
+
 
 if __name__ == "__main__":
     Project().main()

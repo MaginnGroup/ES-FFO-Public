@@ -1,74 +1,158 @@
 import signac
 import numpy as np
 import unyt as u
+from scipy.stats import qmc
+import pandas as pd
+import csv
 
-from fffit.utils import values_scaled_to_real
+from fffit.fffit.utils import values_scaled_to_real
+from utils.molec_class_files import (
+    r14,
+    r32,
+    r50,
+    r125,
+    r134a,
+    r143a,
+    r170,
+    r41,
+    r23,
+    r161,
+    r152a,
+    r152,
+    r134,
+    r143,
+    r116,
+)
+from utils import atom_type, opt_atom_types
+
+# Load class properies for each training and testing molecule
+R14 = r14.R14Constants()
+R32 = r32.R32Constants()
+R50 = r50.R50Constants()
+R125 = r125.R125Constants()
+R134a = r134a.R134aConstants()
+R143a = r143a.R143aConstants()
+R170 = r170.R170Constants()
+R41 = r41.R41Constants()
+R23 = r23.R23Constants()
+R161 = r161.R161Constants()
+R152a = r152a.R152aConstants()
+R152 = r152.R152Constants()
+R143 = r143.R143Constants()
+R134 = r134.R134Constants()
+R116 = r116.R116Constants()
+
+molec_dict = {
+    "R14": R14,
+    "R32": R32,
+    "R50": R50,
+    "R125": R125,
+    "R134a": R134a,
+    "R143a": R143a,
+    "R170": R170,
+    "R41": R41,
+    "R23": R23,
+    "R161": R161,
+    "R152a": R152a,
+    "R152": R152,
+    "R143": R143,
+    "R134": R134,
+    "R116": R116,
+}
+
+
+def _get_molec_dicts():
+    # Load class properies for each molecule
+    from utils.molec_class_files import r41  # import all the class files
+
+    R41 = r41.R41Constants()
+
+    # Create a dictionary with all of the data
+    molec_dict = {
+        "R41": R41,
+    }
+    return molec_dict
+
+
+def _get_class_from_molecule(molecule_name):
+    molec_dict = _get_molec_dicts()
+    return {molecule_name: molec_dict[molecule_name]}
+
+
+def unpack_molec_values(class_data, state_point, sample):
+    """
+    Unpacks sckaled sample values given the molecule under study
+    """
+    param_names = class_data.param_names
+    for i, param in enumerate(param_names):
+        if "sigma" in param:
+            state_point[param] = float((sample[i] * u.Angstrom).in_units(u.nm).value)
+        elif "epsilon" in param:
+            state_point[param] = float(
+                (sample[i] * u.K * u.kb).in_units("kJ/mol").value
+            )
+        state_point[param] = sample[i]
+
+    return state_point
+
+
+nsteps_nvt1 = 100000  # 100ps
+nsteps_npt = 500000  # 500ps (minimum)
+nsteps_nvt2 = 100000  # 100ps
+nsteps_intereq = 25000000  # 25 ns (minimum)
+nsteps_interprod = 50000000  # 50 ns
 
 
 def init_project():
-
     # Initialize project
-    project = signac.init_project()
+    project = signac.init_project("ES_FF")
+    # Loop over all molecules
+    for molec_name, molec_data in molec_dict.items():
+        # Define temps (from constants files)
+        temps = list(molec_data.expt_Pvap.keys())
 
-    # Define temps
-    temps = [
-        210.0 * u.K,
-        230.0 * u.K,
-        250.0 * u.K,
-        270.0 * u.K,
-        290.0 * u.K
-    ]
+        ##FIGURE OUT HOW I WANT TO DO THIS. Consider a script to make these before so they don't change
+        # Get number of parameters from molecule class
+        class_dict = _get_class_from_molecule(job.sp.mol_name)
+        class_data = class_dict[job.sp.mol_name]
+        d = class_data.num_params  # Number of dimensions
+        seed = 7
+        n = 200
+        sampler = qmc.LatinHypercube(d, seed=seed)
+        lh_samples = sampler.random(n)
+        bounds = class_data.param_bounds
 
-    # Run at vapor pressure
-    press = {
-        210: (2.1852 * u.bar),
-        230: (5.0928 * u.bar),
-        250: (10.296 * u.bar),
-        270: (18.740 * u.bar),
-        290: (31.548 * u.bar),
+        # Save the samples to a csv file
+        sample = pd.DataFrame(lh_samples)
+        sample.columns = class_data.param_names
+        filename = "LHS_" + str(n) + "_x_" + str(d) + ".csv"
+        sample.to_csv(filename, index=True)
 
-    }
+        # Convert scaled latin hypercube samples to physical values
+        scaled_params = values_scaled_to_real(lh_samples, bounds)
 
-    # Run for 2.5 ns (1 fs timestep) and 0.5 ns eq
-    nstepseq = 500000
-    nstepsprod = 2500000
+        for temp in temps:
+            liq_density = molec_data.expt_liq_density[int(temp)]
+            vap_density = molec_data.expt_vap_density[int(temp)]
+            avg_density = (liq_density + vap_density) / 2
+            for sample in scaled_params:
+                # Define the state point w/ unchanging characteristics
+                state_point = {
+                    "mol_name": molec_name,
+                    "smiles": molec_data.smiles_str,
+                    "T": float(temp.in_units(u.K).value),
+                    "P": float(class_data.expt_Pvap[temp]),
+                    "rho_avg": avg_density,  # kg/m^3
+                    "nsteps_nvt1": nsteps_nvt1,
+                    "nsteps_npt": nsteps_npt,
+                    "nsteps_nvt2": nsteps_nvt2,
+                    "nsteps_intereq": nsteps_intereq,
+                    "nsteps_interprod": nsteps_interprod,
+                }
+                state_point = unpack_molec_values(class_data, state_point, sample)
 
-    # Load samples from Latin hypercube
-    lh_samples = np.genfromtxt("../../LHS_200_x_6.csv",delimiter=",",skip_header=1,)[:, 1:]
-
-    # Define bounds on sigma/epsilon
-    bounds_sigma = np.asarray([[2.0, 4.0], [2.0, 4.0], [1.5, 3.0]])  # C1 # F1 # H1 
-
-    bounds_epsilon = np.asarray(
-        [[10.0,75.0], [15.0, 50.0], [2.0, 10.0]])  # C1 # F1 # H1
-    
-
-    bounds = np.vstack((bounds_sigma, bounds_epsilon))
-    # Convert scaled latin hypercube samples to physical values
-    scaled_params = values_scaled_to_real(lh_samples, bounds)
-    
-    for temp in temps:
-        for sample in scaled_params:
-
-            # Unpack the sample
-            (sigma_C1, sigma_F1, sigma_H1, epsilon_C1, epsilon_F1, epsilon_H1) = sample
-
-            # Define the state point
-            state_point = {
-                "T": float(temp.in_units(u.K).value),
-                "P": float(press[int(temp.in_units(u.K).value)].in_units(u.bar).value),
-                "nstepseq": nstepseq,
-                "nstepsprod": nstepsprod,
-                "sigma_C1": float((sigma_C1 * u.Angstrom).in_units(u.nm).value),
-                "sigma_F1": float((sigma_F1 * u.Angstrom).in_units(u.nm).value),
-                "sigma_H1": float((sigma_H1 * u.Angstrom).in_units(u.nm).value),
-                "epsilon_C1": float((epsilon_C1 * u.K * u.kb).in_units("kJ/mol").value),
-                "epsilon_F1": float((epsilon_F1 * u.K * u.kb).in_units("kJ/mol").value),
-                "epsilon_H1": float((epsilon_H1 * u.K * u.kb).in_units("kJ/mol").value),
-            }
-
-            job = project.open_job(state_point)
-            job.init()
+                job = project.open_job(state_point)
+                job.init()
 
 
 if __name__ == "__main__":
