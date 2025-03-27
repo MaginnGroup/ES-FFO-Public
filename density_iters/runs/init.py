@@ -4,8 +4,9 @@ import unyt as u
 from scipy.stats import qmc
 import pandas as pd
 import csv
+import glob
 
-from fffit.fffit.utils import values_scaled_to_real
+from fffit.utils import values_scaled_to_real
 from utils.molec_class_files import (
     r14,
     r32,
@@ -96,6 +97,18 @@ def unpack_molec_values(class_data, state_point, sample):
     return state_point
 
 
+def determine_density_iter(molec_name):
+    # Check the analysis folder for analysis/MolName/density-iter-X folders
+    # Find the highest density-iter-X folder
+    files = sorted(glob.glob("analysis/" + molec_name + "/density-iter-*"))
+    if len(files) == 0:
+        dens_iter = 1
+    else:
+        # Get the highest density-iter-X folder from the last character of the last file
+        dens_iter = files[-1][-1]
+    return dens_iter
+
+
 nsteps_nvt1 = 100000  # 100ps
 nsteps_npt = 500000  # 500ps (minimum)
 nsteps_nvt2 = 100000  # 100ps
@@ -104,33 +117,32 @@ nsteps_interprod = 50000000  # 50 ns
 
 
 def init_project():
-    # Initialize project
-    project = signac.init_project("ES_FF")
     # Loop over all molecules
     for molec_name, molec_data in molec_dict.items():
-        # Define temps (from constants files)
-        temps = list(molec_data.expt_Pvap.keys())
+        # Determine Density iter based off of the analysis folder
+        # For now use dens-iter = 1
+        dens_iter = determine_density_iter(molec_name)
 
-        ##FIGURE OUT HOW I WANT TO DO THIS. Consider a script to make these before so they don't change
-        # Get number of parameters from molecule class
+        # Initialize project
+        project = signac.init_project("dens-iter-" + str(dens_iter))
+
+        # Use GenLHS samples to generate LHS samples in the analysis folder
+        # Load the lhs_samples and bounds
         class_dict = _get_class_from_molecule(job.sp.mol_name)
         class_data = class_dict[job.sp.mol_name]
-        d = class_data.num_params  # Number of dimensions
-        seed = 7
-        n = 200
-        sampler = qmc.LatinHypercube(d, seed=seed)
-        lh_samples = sampler.random(n)
         bounds = class_data.param_bounds
-
-        # Save the samples to a csv file
-        sample = pd.DataFrame(lh_samples)
-        sample.columns = class_data.param_names
-        filename = "LHS_" + str(n) + "_x_" + str(d) + ".csv"
-        sample.to_csv(filename, index=True)
+        if dens_iter == 1:
+            lhs_samples = pd.read_csv("analysis/" + molec_name + "/LHS_200.csv")
+        else:
+            lhs_samples = pd.read_csv(
+                "analysis/" + molec_name + "/dens-iter-" + str(dens_iter) + ".csv"
+            )
 
         # Convert scaled latin hypercube samples to physical values
-        scaled_params = values_scaled_to_real(lh_samples, bounds)
+        scaled_params = values_scaled_to_real(lhs_samples, bounds)
 
+        # Define temps (from constants files)
+        temps = list(molec_data.expt_Pvap.keys())
         for temp in temps:
             liq_density = molec_data.expt_liq_density[int(temp)]
             vap_density = molec_data.expt_vap_density[int(temp)]
@@ -139,6 +151,7 @@ def init_project():
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
+                    "density-iter": dens_iter,
                     "smiles": molec_data.smiles_str,
                     "T": float(temp.in_units(u.K).value),
                     "P": float(class_data.expt_Pvap[temp]),
