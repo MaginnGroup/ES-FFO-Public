@@ -24,7 +24,6 @@ from utils.molec_class_files import (
     r143,
     r116,
 )
-from utils import atom_type, opt_atom_types
 
 # Load class properies for each training and testing molecule
 R14 = r14.R14Constants()
@@ -100,7 +99,7 @@ def unpack_molec_values(class_data, state_point, sample):
 def determine_density_iter(molec_name):
     # Check the analysis folder for analysis/MolName/density-iter-X folders
     # Find the highest density-iter-X folder
-    files = sorted(glob.glob("analysis/" + molec_name + "/density-iter-*"))
+    files = sorted(glob.glob("analysis/" + molec_name + "/dens-iter-*"))
     if len(files) == 0:
         dens_iter = 1
     else:
@@ -131,12 +130,9 @@ def init_project():
         class_dict = _get_class_from_molecule(job.sp.mol_name)
         class_data = class_dict[job.sp.mol_name]
         bounds = class_data.param_bounds
-        if dens_iter == 1:
-            lhs_samples = pd.read_csv("analysis/" + molec_name + "/LHS_200.csv")
-        else:
-            lhs_samples = pd.read_csv(
-                "analysis/" + molec_name + "/dens-iter-" + str(dens_iter) + ".csv"
-            )
+        lhs_samples = pd.read_csv(
+            "analysis/" + molec_name + "/dens-iter-" + str(dens_iter) + ".csv"
+        )
 
         # Convert scaled latin hypercube samples to physical values
         scaled_params = values_scaled_to_real(lhs_samples, bounds)
@@ -151,7 +147,7 @@ def init_project():
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
-                    "density-iter": dens_iter,
+                    "dens-iter": dens_iter,
                     "smiles": molec_data.smiles_str,
                     "T": float(temp.in_units(u.K).value),
                     "P": float(class_data.expt_Pvap[temp]),
