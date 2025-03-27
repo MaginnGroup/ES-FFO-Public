@@ -352,8 +352,9 @@ def calculate_properties(job):
 def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
     res_matrix = []
-    prop_cols = [0]
     prop_names = list(eq_data_dict.keys())
+    num_cols = len(prop_names)
+
     try:
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
@@ -396,9 +397,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
             # plot all
 
             # if not all(equil_matrix):
-            plot_res_pymser(
-                job, col_vals, res_matrix[i], prop_names[i % len(prop_cols)]
-            )
+            plot_res_pymser(job, col_vals, res_matrix[i], prop_names[i % num_cols])
 
             # Display outcome
             prod_cycles = len(col_vals) - res_matrix[i]["t0"]
@@ -543,10 +542,12 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
 
         # Set number of iterations per extension and intitialize counter and total number of steps
         eq_extend = int(nsteps_eq / 4)  # In femtoseconds
+
         # Get the total number of equilibration restarts and steps so far
         existing_eq_steps = count_steps(sim_name) * 1000  # Convert to femtoseconds
         total_eq_steps = existing_eq_steps  # In femtoseconds
 
+        # Set the maximum number of steps
         if max_eq_steps not in job.doc:
             job.doc.max_eq_steps = total_eq_steps * 2
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
@@ -556,6 +557,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc.nsteps_gemc_eq = int(max_eq_steps)
 
+        # Continue running while you have not exceeded the max number of steps
         while total_eq_steps < job.doc.max_eq_steps:
             # If you have enough steps, run the simulation, continue the simulation with more points
             if total_eq_steps <= max_eq_steps:
@@ -579,8 +581,11 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm eq -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
                 subprocess.run(command, shell=True, check=True)
 
-                # Save equilibrium steps as needed
+                # Update equilibration data dictionary/files
                 eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
+
+                # Track the number of added steps
+                total_eq_steps += eq_extend
 
                 # Set tolerance for determining equilibrium and check for convergence
                 prod_tol_eq = (
@@ -588,12 +593,9 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                 )  # In picoseconds (same units as the data)
                 is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
 
-                # FIX ME
+                # If the simulation has converged, break
                 if is_equil:
                     break
-                else:
-                    # Track the number of added steps
-                    total_eq_steps += eq_extend
 
             # Otherwise report an error
             else:
