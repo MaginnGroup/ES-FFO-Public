@@ -560,7 +560,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
         # Continue running while you have not exceeded the max number of steps
         while total_eq_steps < job.doc.max_eq_steps:
             # If you have enough steps, run the simulation, continue the simulation with more points
-            if total_eq_steps <= max_eq_steps:
+            if total_eq_steps + eq_extend <= max_eq_steps:
                 # If we have no steps, start the simulation
                 if existing_eq_steps == 0:
                     command = (
@@ -571,14 +571,14 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                 elif check_norm_term(job, sim_name):
                     # If it finished, extend the simulation
                     command = (
-                        f"gmx convert-tpr -s {sim_name}.tpr -extend "
-                        + eq_extend
+                        f"gmx_d convert-tpr -s {sim_name}.tpr -extend "
+                        + str(eq_extend)
                         + f" -o {sim_name}.tpr &&"
                         f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
                     )
                 # Otherwise restart the simulation from the checkpoint file
                 else:
-                    command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm eq -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                    command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
                 subprocess.run(command, shell=True, check=True)
 
                 # Update equilibration data dictionary/files
