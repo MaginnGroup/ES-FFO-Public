@@ -353,7 +353,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
     res_matrix = []
     prop_cols = [0]
-    prop_names = ["Volume"]
+    prop_names = list(eq_data_dict.keys())
     try:
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
@@ -543,13 +543,12 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
 
         # Set number of iterations per extension and intitialize counter and total number of steps
         eq_extend = int(nsteps_eq / 4)  # In femtoseconds
-        total_eq_steps = nsteps_eq  # In femtoseconds
-        existing_eq_steps = 0
+        # Get the total number of equilibration restarts and steps so far
+        existing_eq_steps = count_steps(sim_name) * 1000  # Convert to femtoseconds
+        total_eq_steps = existing_eq_steps  # In femtoseconds
 
         if max_eq_steps not in job.doc:
             job.doc.max_eq_steps = total_eq_steps * 2
-            # Get the total number of equilibration restarts and steps so far
-            existing_eq_steps = count_steps(sim_name) * 1000  # Convert to femtoseconds
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
             max_eq_steps = np.maximum(
                 job.doc.max_eq_steps
@@ -557,54 +556,51 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc.nsteps_gemc_eq = int(max_eq_steps)
 
-        eq_data_dict = {}
-        eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
-
         while total_eq_steps < job.doc.max_eq_steps:
-            # Set tolerance for determining equilibrium and check for convergence
-            prod_tol_eq = (
-                count_steps(sim_name) / 4
-            )  # In picoseconds (same units as the data)
-            is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+            # If you have enough steps, run the simulation, continue the simulation with more points
+            if total_eq_steps <= max_eq_steps:
+                # If we have no steps, start the simulation
+                if existing_eq_steps == 0:
+                    command = (
+                        f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+                        f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                    )
+                # Otherwise, check log file for whether previous simulation finished correctly
+                elif check_norm_term(job, sim_name):
+                    # If it finished, extend the simulation
+                    command = (
+                        f"gmx convert-tpr -s {sim_name}.tpr -extend "
+                        + eq_extend
+                        + f" -o {sim_name}.tpr &&"
+                        f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
+                    )
+                # Otherwise restart the simulation from the checkpoint file
+                else:
+                    command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm eq -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                subprocess.run(command, shell=True, check=True)
 
-            if is_equil:
-                break
-            else:
-                # If you have enough steps, run the simulation, continue the simulation with more points
-                if total_eq_steps <= max_eq_steps:
-                    # If we have no steps, start the simulation
-                    if total_eq_steps == 0:
-                        command = (
-                            f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-                            f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-                        )
-                    # Otherwise, check log file for whether previous simulation finished correctly
-                    elif check_norm_term(job, sim_name):
-                        # If it finished, extend the simulation
-                        command = (
-                            f"gmx convert-tpr -s {sim_name}.tpr -extend "
-                            + eq_extend
-                            + f" -o {sim_name}.tpr &&"
-                            f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
-                        )
-                    # Otherwise restart the simulation from the checkpoint file
-                    else:
-                        command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm eq -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-                    subprocess.run(command, shell=True, check=True)
+                # Save equilibrium steps as needed
+                eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
+
+                # Set tolerance for determining equilibrium and check for convergence
+                prod_tol_eq = (
+                    count_steps(sim_name) / 4
+                )  # In picoseconds (same units as the data)
+                is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+
+                # FIX ME
+                if is_equil:
+                    break
+                else:
                     # Track the number of added steps
                     total_eq_steps += eq_extend
 
-                    # Resave volume steps as needed
-                    eq_data_dict = get_eq_data_dict(
-                        job, eq_data_dict, sim_name, property
-                    )
-
-                # Otherwise report an error
-                else:
-                    job.doc.equil_fail = True
-                    raise Exception(
-                        f"GEMC equilibration failed to converge after {max_eq_steps} steps"
-                    )
+            # Otherwise report an error
+            else:
+                job.doc.equil_fail = True
+                raise Exception(
+                    f"GEMC equilibration failed to converge after {max_eq_steps} steps"
+                )
 
         # Set the step counter to whatever the final number of equilibration steps was
         job.doc.nsteps_gemc_eq = total_eq_steps
