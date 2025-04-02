@@ -1040,3 +1040,35 @@ DEC = EsolvsConstants(
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
 )
+
+def make_dict(mol_names = None):
+    """
+    Make a dictionary of all the solvents
+    """
+    solvents = {}
+    if mol_names is None:
+        mol_names = ["EthGly", "Glycerol", "ACN", "MeOH", "DMSO", "DMF", "THF", "DCM", "DEC"]
+    
+    for name in mol_names:
+        if name == "EthGly":
+            solvents[name] = EthGly
+        elif name == "Glycerol":
+            solvents[name] = Glycerol
+        elif name == "ACN":
+            solvents[name] = ACN
+        elif name == "MeOH":
+            solvents[name] = MeOH
+        elif name == "DMSO":
+            solvents[name] = DMSO
+        elif name == "DMF":
+            solvents[name] = DMF
+        elif name == "THF":
+            solvents[name] = THF
+        elif name == "DCM":
+            solvents[name] = DCM
+        elif name == "DEC":
+            solvents[name] = DEC
+        else:
+            raise ValueError(f"Unknown solvent name: {name}")
+
+    return solvents
