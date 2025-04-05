@@ -45,8 +45,28 @@ class EsolvsConstants:
         self.expt_surftens = expt_surftens
         self.expt_Pvap = expt_Pvap
         self.expt_Hvap = expt_Hvap
-        self.expt_vap_density = expt_vap_density
+        self.expt_vap_density = self.get_vap_density(expt_vap_density)
         self.uncertainty = self.process_unc(uncertainty)
+
+    def get_vap_density(self, expt_vap_density=None):
+        """Get the vapor density from the experimental data"""
+        # If the density is given great
+        if expt_vap_density is not None:
+            expt_vap_density = self.expt_vap_density
+        # Otherwise estimate it from the vapor pressure and ideal gas law
+        else:
+            expt_vap_density = {}
+            for T in self.expt_Pvap.keys():
+                if T in self.expt_Pvap.keys():
+                    unit_T = T * u.K
+                    mw = self.molecular_weight * u.g / u.mol
+                    R = 8.314 * u.J / (u.mol * u.K)
+                    expt_vap_density[T] = float(
+                        ((self.expt_Pvap[T] * mw) / (R * unit_T))
+                        .in_units("kg/m^3")
+                        .value
+                    )
+        return expt_vap_density
 
     def process_unc(self, uncertainty):
         for key in [
