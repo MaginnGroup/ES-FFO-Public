@@ -51,11 +51,7 @@ def create_system(job):
     system_ff.combining_rule = "lorentz"
 
     system_ff.save("system.gro")
-    system_ff.save("system.top")
-
-    # system_ff.save(job.fn("unedited.top"))
-    # # Get pre-minimized gro file
-    # shutil.copy("data/initial_config/system_em.gro", job.fn("system.gro"))
+    system_ff.save("unedited.top")
 
 
 @Project.pre.after(create_system)
@@ -209,7 +205,7 @@ def npt_eq_sim(job):
     # Generate the first run
     sim_name = "npt_eq"
     last_sim_name = "nvt_eq1"
-    property = "Pressure"
+    property = "Density"
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
     job.doc.npt_eq_fin = True
 
@@ -232,13 +228,19 @@ def nvt_eq2_sim(job):
     last_sim_name = "npt_eq"
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-    # Get final box volume
-    property = "Volume"
-    eq_data_dict = {}
-    eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
-    vol_equib_data = np.array([eq_data_dict["Volume"]["data"]])
-    ave_vol = np.mean(vol_equib_data)
-    ave_length = ave_vol ** (1 / 3)
+    # Get final box lengths
+    # Extract the last line of the .gro file
+    with open(sim_name + ".gro", "rb") as f:
+        # Move the pointer to the end of the file, but leave space to find the last line
+        f.seek(-2, os.SEEK_END)
+        # Read backward until a newline is found
+        while f.read(1) != b"\n":
+            f.seek(-2, os.SEEK_CUR)
+        # Read the last line after finding the newline
+        last_line = f.readline().decode()
+    # Extract the box length from the last line
+    last_line.strip()
+    ave_length = list(map(float, last_line.split()))[0]
     job.doc.xy_box_len = ave_length
     job.doc.aspect_ratio = 3.0
 
@@ -254,7 +256,7 @@ def inter_eq_sim(job):
     new_z_len = z_cen * 2
     job.doc.z_box_len = new_z_len
 
-    command = f"gmx_d editconf -f $GRO_file -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
+    command = f"gmx_d editconf -f init_inter_eq.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
     subprocess.run(command, shell=True, check=True)
 
 
@@ -279,7 +281,7 @@ def inter_eq_sim(job):
         "init_inter_eq"  # Use the same one since the -gro file is created beforehand
     )
     sim_name = "inter_eq"
-    property = "#Surf*SurfTen"  # Surface tension
+    property = "Total-Energy"  # Total Energy Stable = Equilibrated
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
     job.doc.inter_eq_fin = True
 
@@ -395,10 +397,13 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         for i, is_equilibrated in enumerate(equil_matrix):
             key_name = list(eq_data_dict.keys())[i]
             col_vals = eq_data_dict[key_name]["data"]
+            t_vals = eq_data_dict[key_name]["time_data"]
             # plot all
 
             # if not all(equil_matrix):
-            plot_res_pymser(job, col_vals, res_matrix[i], prop_names[i % num_cols])
+            plot_res_pymser(
+                job, t_vals, col_vals, res_matrix[i], prop_names[i % num_cols]
+            )
 
             # Display outcome
             prod_cycles = len(col_vals) - res_matrix[i]["t0"]
@@ -428,25 +433,25 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         raise Exception(f"Error processing job {job.id}: {e}")
 
 
-def plot_res_pymser(job, eq_col, results, name):
+def plot_res_pymser(job, t_col, eq_col, results, name):
     fig, [ax1, ax2] = plt.subplots(
         1, 2, gridspec_kw={"width_ratios": [2, 1]}, sharey=True
     )
 
     ax1.set_ylabel(name, color="black", fontsize=14, fontweight="bold")
-    ax1.set_xlabel("GEMC Steps", fontsize=14, fontweight="bold")
+    ax1.set_xlabel("Time (ns)", fontsize=14, fontweight="bold")
 
-    ax1.plot(range(0, len(eq_col) * 10, 10), eq_col, label="Raw data", color="blue")
+    ax1.plot(t_col, eq_col, label="Raw data", color="blue")
 
     ax1.plot(
-        range(0, len(eq_col) * 10, 10)[results["t0"] :],
+        t_col[results["t0"] :],
         results["equilibrated"],
         label="Equilibrated data",
         color="red",
     )
 
     ax1.plot(
-        [0, len(eq_col) * 10],
+        [0, t_col[-1]],
         [results["average"], results["average"]],
         color="green",
         zorder=4,
@@ -454,7 +459,7 @@ def plot_res_pymser(job, eq_col, results, name):
     )
 
     ax1.fill_between(
-        range(0, len(eq_col) * 10, 10),
+        t_col,
         results["average"] - results["uncertainty"],
         results["average"] + results["uncertainty"],
         color="lightgreen",
@@ -462,8 +467,8 @@ def plot_res_pymser(job, eq_col, results, name):
         zorder=4,
     )
 
-    ax1.set_yticks(np.arange(0, eq_col.max() * 1.1, eq_col.max() / 10))
-    ax1.set_xlim(-len(eq_col) * 10 * 0.02, len(eq_col) * 10 * 1.02)
+    # ax1.set_yticks(np.arange(eq_col.min(), eq_col.max(), eq_col.max() / 15))
+    ax1.set_xlim(t_col.min(), t_col.max())
     ax1.tick_params(axis="y", labelcolor="black")
 
     ax1.grid(alpha=0.3)
@@ -516,7 +521,7 @@ def plot_res_pymser(job, eq_col, results, name):
     fig.set_size_inches(9, 5)
     fig.set_dpi(100)
     fig.tight_layout()
-    save_name = "MSER_eq_vol.png"
+    save_name = "MSER_eq_" + name + ".png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
@@ -536,78 +541,93 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
-        if sim_name == "npt_eq":
-            nsteps_eq = job.sp.nsteps_npt
-        elif sim_name == "inter_eq":
-            nsteps_eq = job.sp.nsteps_intereq
+        try:
+            if sim_name == "npt_eq":
+                nsteps_eq = job.sp.nsteps_npt
+            elif sim_name == "inter_eq":
+                nsteps_eq = job.sp.nsteps_intereq
 
-        # Set number of iterations per extension and intitialize counter and total number of steps
-        eq_extend = int(nsteps_eq / 4)  # In femtoseconds
+            # Set number of iterations per extension and intitialize counter and total number of steps
+            eq_extend = int(nsteps_eq / 4)  # In femtoseconds
 
-        # Get the total number of equilibration restarts and steps so far
-        existing_eq_steps = count_steps(sim_name) * 1000  # Convert to femtoseconds
-        total_eq_steps = existing_eq_steps  # In femtoseconds
+            # Get the total number of equilibration restarts and steps so far
+            existing_eq_steps = (
+                count_steps(sim_name) * 1000
+            )  # Convert to femtoseconds (step timescale is 1 fs)
+            total_eq_steps = existing_eq_steps  # In femtoseconds
 
-        # Set the maximum number of steps
-        if max_eq_steps not in job.doc:
-            job.doc.max_eq_steps = total_eq_steps * 2
+            # Set the maximum number of steps
+            if max_eq_steps not in job.doc:
+                job.doc.max_eq_steps = total_eq_steps * 2
+
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
             max_eq_steps = np.maximum(
-                job.doc.max_eq_steps
-            )  # , existing_eq_steps + 2*nsteps_eq)
+                job.doc.max_eq_steps, existing_eq_steps + 2 * nsteps_eq
+            )
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc.nsteps_gemc_eq = int(max_eq_steps)
 
-        # Continue running while you have not exceeded the max number of steps
-        while total_eq_steps < job.doc.max_eq_steps:
-            # If you have enough steps, run the simulation, continue the simulation with more points
-            if total_eq_steps + eq_extend <= max_eq_steps:
-                # If we have no steps, start the simulation
-                if existing_eq_steps == 0:
-                    command = (
-                        f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-                        f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+            # Continue running while you have not exceeded the max number of steps
+            while total_eq_steps < job.doc.max_eq_steps:
+                # If you have enough steps, run the simulation, continue the simulation with more points
+                if total_eq_steps + eq_extend <= max_eq_steps:
+                    # If we have no steps, start the simulation
+                    if existing_eq_steps == 0:
+                        command = (
+                            f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+                            f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                        )
+                    # Otherwise, check log file for whether previous simulation finished correctly
+                    elif check_norm_term(job, sim_name):
+                        # If it finished, extend the simulation
+                        command = (
+                            f"gmx_d convert-tpr -s {sim_name}.tpr -extend "
+                            + str(eq_extend)
+                            + f" -o {sim_name}.tpr &&"
+                            f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
+                        )
+                    # Otherwise restart the simulation from the checkpoint file
+                    else:
+                        command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                    subprocess.run(command, shell=True, check=True)
+
+                    # Update equilibration data dictionary/files
+                    eq_data_dict = get_eq_data_dict(
+                        job, eq_data_dict, sim_name, property
                     )
-                # Otherwise, check log file for whether previous simulation finished correctly
-                elif check_norm_term(job, sim_name):
-                    # If it finished, extend the simulation
-                    command = (
-                        f"gmx_d convert-tpr -s {sim_name}.tpr -extend "
-                        + str(eq_extend)
-                        + f" -o {sim_name}.tpr &&"
-                        f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
-                    )
-                # Otherwise restart the simulation from the checkpoint file
+
+                    # Track the number of added steps
+                    total_eq_steps += eq_extend
+
+                    # Set tolerance for determining equilibrium and check for convergence
+                    prod_tol_eq = (
+                        count_steps(sim_name) / 4
+                    )  # In picoseconds (same units as the data)
+                    is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+
+                    # If the simulation has converged, break
+                    if is_equil:
+                        break
+
+                # Otherwise report an error
                 else:
-                    command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-                subprocess.run(command, shell=True, check=True)
+                    job.doc.equil_fail = True
+                    raise Exception(
+                        f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
+                    )
 
-                # Update equilibration data dictionary/files
-                eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
-
-                # Track the number of added steps
-                total_eq_steps += eq_extend
-
-                # Set tolerance for determining equilibrium and check for convergence
-                prod_tol_eq = (
-                    count_steps(sim_name) / 4
-                )  # In picoseconds (same units as the data)
-                is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
-
-                # If the simulation has converged, break
-                if is_equil:
-                    break
-
-            # Otherwise report an error
+            # Set the step counter to whatever the final number of equilibration steps was
+            job.doc.nsteps_gemc_eq = total_eq_steps
+            job.doc.equil_fail = False
+        except:
+            # If the simulation fails, extend the simulation
+            if "equil_fail" in job.doc.keys() and job.doc.equil_fail:
+                job.doc.max_eq_steps = total_eq_steps * 2
+                del job.doc.nsteps_gemc_eq
+                del job.doc.equil_fail
+            # If another error occurs, set the equilibration failure flag
             else:
-                job.doc.equil_fail = True
-                raise Exception(
-                    f"GEMC equilibration failed to converge after {max_eq_steps} steps"
-                )
-
-        # Set the step counter to whatever the final number of equilibration steps was
-        job.doc.nsteps_gemc_eq = total_eq_steps
-        job.doc.equil_fail = False
+                job.doc["eq_fail"] = True
 
 
 def check_norm_term(job, sim_name):
@@ -629,27 +649,30 @@ def check_norm_term(job, sim_name):
 def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     import panedr
 
-    # Get the density and volume data
-    df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
     with job:
+        # Get the density and volume data
+        df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
         if property in df_all.columns:
             df = df[["Time", property]].copy()
 
         elif property in ["Volume", "Density"]:
-            command = (
-                f"gmx energy -f prd.edr -s prd.tpr -o {sim_name}_{property}.xvg << EOF &&"
-                f"{property}"
-                f"EOF"
+            command = f"gmx_d energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
+            subprocess.run(
+                command, input=f"{property}", text=True, check=True, shell=True
             )
-            subprocess.run(command, shell=True, check=True)
             prop_data = np.loadtxt(
                 sim_name + "_" + property + ".xvg", comments=["#", "@"]
             )
             df = pd.DataFrame(prop_data)
 
-        property_data = df[:, 1]
+        property_data = df.iloc[:, 1].values
+        time_data = df.iloc[:, 0].values
         eq_col_file = job.fn(sim_name + "_" + property + ".csv")
-        eq_data_dict[property] = {"data": property_data, "file": eq_col_file}
+        eq_data_dict[property] = {
+            "data": property_data,
+            "time_data": time_data,
+            "file": eq_col_file,
+        }
         np.savetxt(eq_col_file, property_data, delimiter=",")
         return eq_data_dict
 
@@ -669,45 +692,26 @@ def count_steps(job, sim_name):
 
 # Build FFs
 def _get_xml_from_molecule(molecule_name):
-    if molecule_name == "R41":
-        molec_xml_function = _generate_r41_xml
+    if molecule_name == "EG":
+        molec_xml_function = __generate_EG_xml
+    elif molecule_name == "Gly":
+        molec_xml_function = __generate_Gly_xml
+    elif molecule_name == "ACN":
+        molec_xml_function = __generate_ACN_xml
+    elif molecule_name == "MeOH":
+        molec_xml_function = __generate_MeOH_xml
+    elif molecule_name == "DMSO":
+        molec_xml_function = __generate_DMSO_xml
+    elif molecule_name == "THF":
+        molec_xml_function = __generate_THF_xml
+    elif molecule_name == "DCM":
+        molec_xml_function = __generate_DCM_xml
+    elif molecule_name == "DEC":
+        molec_xml_function = __generate_DEC_xml
     else:
         raise ValueError("Molecule name not recognized")
     return molec_xml_function
 
-
-def _generate_r41_xml(job):
-
-    content = """<ForceField>
- <AtomTypes>
-  <Type name="C1" class="c3" element="C" mass="12.010" def="C(F)" desc="carbon"/>
-  <Type name="F1" class="f" element="F" mass="19.000" def="F(C)" desc="F bonded to C1"/>
-  <Type name="H1" class="h1" element="H" mass="1.008" def="H(C)" desc="H bonded to C1"/>
- </AtomTypes>
- <HarmonicBondForce>
-  <Bond class1="c3" class2="f" length="0.1344" k="304427.36"/>
-  <Bond class1="c3" class2="h1" length="0.1093" k="281080.35"/>
- </HarmonicBondForce>
- <HarmonicAngleForce>
-  <Angle class1="f" class2="c3" class3="h1" angle="1.8823376" k="431.53717916"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.9120082" k="327.85584464"/>
- </HarmonicAngleForce>
- <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
-  <Atom type="C1" charge="0.119281"  sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
-  <Atom type="F1" charge="-0.274252" sigma="{sigma_F1:0.6f}" epsilon="{epsilon_F1:0.6f}"/>
-  <Atom type="H1" charge="0.051657"  sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
- </NonbondedForce>
-</ForceField>
-""".format(
-        sigma_C1=job.sp.sigma_C1,
-        sigma_F1=job.sp.sigma_F1,
-        sigma_H1=job.sp.sigma_H1,
-        epsilon_C1=job.sp.epsilon_C1,
-        epsilon_F1=job.sp.epsilon_F1,
-        epsilon_H1=job.sp.epsilon_H1,
-    )
-
-    return content
 
 def __generate_EG_xml(job):
     content = """<ForceField>
@@ -755,6 +759,7 @@ def __generate_EG_xml(job):
         epsilon_H2=job.sp.epsilon_H2,
     )
     return content
+
 
 def __generate_Gly_xml(job):
     content = """<ForceField>
@@ -816,6 +821,7 @@ def __generate_Gly_xml(job):
     )
     return content
 
+
 def __generate_MeOH_xml(job):
     content = """<ForceField>
  <AtomTypes>
@@ -855,6 +861,7 @@ def __generate_MeOH_xml(job):
     )
     return content
 
+
 def __generate_DCM_xml(job):
     content = """<ForceField>
   <AtomTypes>
@@ -886,6 +893,7 @@ def __generate_DCM_xml(job):
         epsilon_Cl1=job.sp.epsilon_Cl1,
     )
     return content
+
 
 def __generate_DMSO_xml(job):
     content = """<ForceField>
@@ -928,6 +936,7 @@ def __generate_DMSO_xml(job):
     )
     return content
 
+
 def __generate_ACN_xml(job):
     content = """<ForceField>
  <AtomTypes>
@@ -966,6 +975,7 @@ def __generate_ACN_xml(job):
         epsilon_H1=job.sp.epsilon_H1,
     )
     return content
+
 
 def __generate_DEC_xml(job):
     content = """<ForceField>
@@ -1037,6 +1047,7 @@ def __generate_DEC_xml(job):
     )
     return content
 
+
 def __generate_THF_xml(job):
     content = """<ForceField>
  <AtomTypes>
@@ -1094,6 +1105,7 @@ def __generate_THF_xml(job):
         epsilon_O1=job.sp.epsilon_O1,
     )
     return content
+
 
 # Build mdp files
 def _generate_em_mdp(job):
@@ -1197,7 +1209,7 @@ lincs-iter              = 4
 def _generate_npt_eq_mdp(job):
     # Use 500000 (500 ps) for the first equilibration
     contents = """
-; MDP file for NVT simulation
+; MDP file for NPT simulation
 
 ; Run parameters
 integrator	            = md		    ; leap-frog integrator
