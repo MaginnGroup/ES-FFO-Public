@@ -1,5 +1,6 @@
 import numpy as np
 import unyt as u
+from thermo import *
 
 
 class EsolvsConstants:
@@ -48,24 +49,35 @@ class EsolvsConstants:
         self.expt_vap_density = self.get_vap_density(expt_vap_density)
         self.uncertainty = self.process_unc(uncertainty)
 
+    def pr_vap_dens(self, T):
+        P = float(
+            (self.expt_Pvap[T] * u.bar).in_units("Pa")
+        )  # Pressure in Pascals (adjust as needed)
+        # Create a Chemical object for the compound
+        constants = Chemical(self.smiles_str)
+        eos = PR(constants.Tc, constants.Pc, constants.omega, T=T, P=P)
+        # Use the Peng-Robinson EOS to calculate the vapor density
+        molar_vol_g = eos.V_g  # m^3/mol
+        vapor_density = self.molecular_weight / 1000 / molar_vol_g  # Convert to kg/m^3
+        return vapor_density
+
+    # def ig_vap_dens(self, T):
+    #     unit_T = T * u.K
+    #     mw = self.molecular_weight * (u.g / u.mol)
+    #     R = 8.314 * (u.Pa * u.m**3) / (u.mol * u.K)
+    #     vapor_density = float(
+    #         ((self.expt_Pvap[T] * u.bar * mw) / (R * unit_T)).in_units("kg/m**3").value
+    #     )
+    #     return vapor_density
+
     def get_vap_density(self, expt_vap_density=None):
         """Get the vapor density from the experimental data"""
-        # If the density is given great
         if expt_vap_density is not None:
-            expt_vap_density = self.expt_vap_density
-        # Otherwise estimate it from the vapor pressure and ideal gas law
+            expt_vap_density = expt_vap_density
         else:
             expt_vap_density = {}
             for T in self.expt_Pvap.keys():
-                if T in self.expt_Pvap.keys():
-                    unit_T = T * u.K
-                    mw = self.molecular_weight * u.g / u.mol
-                    R = 8.314 * u.J / (u.mol * u.K)
-                    expt_vap_density[T] = float(
-                        ((self.expt_Pvap[T] * mw) / (R * unit_T))
-                        .in_units("kg/m^3")
-                        .value
-                    )
+                expt_vap_density[T] = self.pr_vap_dens(T)
         return expt_vap_density
 
     def process_unc(self, uncertainty):
@@ -93,6 +105,11 @@ class EsolvsConstants:
         bounds = np.vstack((bounds_sigma, bounds_epsilon))
 
         return bounds
+
+    @property
+    def n_params(self):
+        """Number of adjustable parameters"""
+        return len(self.param_names)
 
     def temperature_bounds(self, prop_name="expt_surftens"):
         """Bounds on temperature in units of K"""
@@ -180,13 +197,13 @@ gaff_params = {
     "epsilon_O1": 0.880310 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # [3.0, 4.0],  # C
     [1.5, 3.0],  # H1
     [1.5, 3.0],  # H2 True Value is apparently 0. Ask EM)
     [2.0, 4.0],  # O #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # [20.0, 75.0],  # C
     [2.0, 10.0],  # H
     [1.5, 10.0],  # H2 (True Value is apparently 0. Ask EM)
@@ -280,8 +297,8 @@ EG = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -335,7 +352,7 @@ gaff_params = {
     "epsilon_O2": 0.880310 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [2.0, 4.0],  # C2
     [1.5, 3.0],  # H1
@@ -345,7 +362,7 @@ bounds_sig = [
     [2.0, 4.0],  # O1 #Check with EM what is reasonable here
     [2.0, 4.0],  # O2 #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [10.0, 75.0],  # C2
     [2.0, 10.0],  # H1
@@ -407,8 +424,8 @@ Gly = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -447,13 +464,13 @@ gaff_params = {
     "epsilon_N1": 0.711277 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [2.0, 4.0],  # C2
     [1.5, 3.0],  # H1
     [2.0, 4.0],  # N #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [75.0, 135.0],  # C1 (Check with EM what is reasonable here)
     [10.0, 75.0],  # C2
     [2.0, 10.0],  # H1
@@ -528,8 +545,8 @@ ACN = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -567,13 +584,13 @@ gaff_params = {
     "epsilon_O1": 0.880310 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [1.5, 3.0],  # H1
     [1.5, 3.0],  # H2
     [2.0, 4.0],  # O #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H1
     [2.0, 10.0],  # H2
@@ -635,8 +652,8 @@ MeOH = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -677,7 +694,7 @@ gaff_params = {
     "epsilon_H1": 7.901,
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [2.0, 4.0],  # C2
     [1.5, 3.0],  # H1
@@ -685,7 +702,7 @@ bounds_sig = [
     [2.0, 4.0],  # O1 #Check with EM what is reasonable here
     [2.0, 4.0],  # N1 #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [10.0, 75.0],  # C2
     [2.0, 10.0],  # H1
@@ -766,8 +783,8 @@ DMF = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -807,13 +824,13 @@ gaff_params = {
     "epsilon_S1": 1.046001 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [1.5, 3.0],  # H1
     [2.0, 4.0],  # O #Check with EM what is reasonable here
     [3.0, 5.0],  # S #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H1
     [75.0, 135.0],  # O #Check with EM what is reasonable here
@@ -902,8 +919,8 @@ DMSO = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -943,14 +960,14 @@ gaff_params = {
     "epsilon_O1": 0.711277 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [2.0, 4.0],  # C2
     [1.5, 3.0],  # H1
     [1.5, 3.0],  # H2
     [2.0, 4.0],  # O1 #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [10.0, 75.0],  # C2
     [2.0, 10.0],  # H1
@@ -1032,8 +1049,8 @@ THF = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -1066,12 +1083,12 @@ gaff_params = {
     "epsilon_Cl1": 1.108758 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [1.5, 3.0],  # H1
     [2.0, 4.0],  # Cl #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H2
     [90.0, 150.0],  # Cl #Check with EM what is reasonable here
@@ -1164,8 +1181,8 @@ DCM = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
@@ -1213,7 +1230,7 @@ gaff_params = {
     "epsilon_O2": 0.878639 * (1 / 0.0083144598),
 }
 
-bounds_sig = [
+bnds_sig = [
     [2.0, 4.0],  # C1
     [2.0, 4.0],  # C2
     [2.0, 4.0],  # C3
@@ -1222,7 +1239,7 @@ bounds_sig = [
     [2.0, 4.0],  # O1 #Check with EM what is reasonable here
     [2.0, 4.0],  # O2 #Check with EM what is reasonable here
 ]
-bounds_eps = [
+bnds_eps = [
     [10.0, 75.0],  # C1
     [10.0, 75.0],  # C2
     [10.0, 75.0],  # C3
@@ -1295,8 +1312,8 @@ DEC = EsolvsConstants(
     smiles_str=smiles_str,
     param_names=param_names,
     gaff_params=gaff_params,
-    bounds_sig=bounds_sig,
-    bounds_eps=bounds_eps,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
