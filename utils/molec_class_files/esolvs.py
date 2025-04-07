@@ -605,7 +605,7 @@ bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H1
     [2.0, 10.0],  # H2
-    [10.0, 75.0],  # O #Check with EM what is reasonable here
+    [75.0, 135.0],,  # O #Check with EM what is reasonable here
 ]
 
 
@@ -839,7 +839,7 @@ bnds_sig = [
     [2.0, 4.0],  # C1
     [1.5, 3.0],  # H1
     [2.0, 4.0],  # O #Check with EM what is reasonable here
-    [3.0, 5.0],  # S #Check with EM what is reasonable here
+    [2.5, 4.5],  # S #Check with EM what is reasonable here
 ]
 bnds_eps = [
     [10.0, 75.0],  # C1
@@ -1097,7 +1097,7 @@ gaff_params = {
 bnds_sig = [
     [2.0, 4.0],  # C1
     [1.5, 3.0],  # H1
-    [2.0, 4.0],  # Cl #Check with EM what is reasonable here
+    [2.5, 4.5],  # Cl #Check with EM what is reasonable here
 ]
 bnds_eps = [
     [10.0, 75.0],  # C1
