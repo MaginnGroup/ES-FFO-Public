@@ -36,6 +36,7 @@ class EsolvsConstants:
         self.gaff_params = gaff_params
         self.bnds_sig = bnds_sig
         self.bnds_eps = bnds_eps
+        self.bounds_sig, self.bounds_eps = self._get_sig_eps_bnds()
         # Experimental data
         self.molecular_weight = mol_wt
         self.expt_Tc = Tc
@@ -91,6 +92,16 @@ class EsolvsConstants:
             if key not in uncertainty.keys():
                 uncertainty[key] = 0.02 if key == "expt_vap_density" else 0.10
         return uncertainty
+
+    def _get_sig_eps_bnds(self):
+        """Bounds on sigma and epsilon in units of nm and kJ/mol"""
+
+        bounds_sigma = (np.asarray(self.bnds_sig) * u.Angstrom).in_units(u.nm).value
+        bounds_epsilon = (
+            (np.asarray(self.bnds_eps) * u.K * u.kb).in_units("kJ/mol").value
+        )
+
+        return bounds_sigma, bounds_epsilon
 
     @property
     def param_bounds(self):
