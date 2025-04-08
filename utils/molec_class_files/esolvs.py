@@ -1232,8 +1232,8 @@ expt_vap_density = None
 expt_Pvap = {
     293.15: (47.21 * u.kPa).to_value(u.bar),
     298.15: (57.89 * u.kPa).to_value(u.bar),
-    293.15: (70.42 * u.kPa).to_value(u.bar),
-    303.15: (85.04 * u.kPa).to_value(u.bar),
+    303.15: (70.42 * u.kPa).to_value(u.bar),
+    308.15: (85.04 * u.kPa).to_value(u.bar),
     313.15: (101.98 * u.kPa).to_value(u.bar),
 }
 # mN/m (equal to dyn/cm)
@@ -1280,7 +1280,6 @@ DCM = EsolvsConstants(
     expt_vap_density=expt_vap_density,
     uncertainty=uncertainty,
 )
-
 
 # Diethyl Carbonate (DEC)
 mol_wt = 84.93
