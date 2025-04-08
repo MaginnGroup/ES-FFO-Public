@@ -25,12 +25,7 @@ class EsolvsConstants:
         uncertainty={},
     ):
         """Initialize the class with experimental data"""
-        # assert (
-        #     self.expt_liq_density.keys()
-        #     == self.expt_surftens.keys()
-        #     == self.expt_Pvap.keys()
-        #     == self.expt_Hvap.keys()
-        # )
+
         # FF Properties
         self.param_names = param_names
         self.gaff_params = gaff_params
@@ -49,6 +44,14 @@ class EsolvsConstants:
         self.expt_Hvap = expt_Hvap
         self.expt_vap_density = self.get_vap_density(expt_vap_density)
         self.uncertainty = self.process_unc(uncertainty)
+
+        # Check that the experimental data keys are the same for density, Pvap, and surface tension
+        assert (
+            self.expt_liq_density.keys()
+            == self.expt_vap_density.keys()
+            == self.expt_surftens.keys()
+            == self.expt_Pvap.keys()
+        )
 
     def pr_vap_dens(self, T):
         P = float(
