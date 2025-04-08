@@ -211,13 +211,13 @@ gaff_params = {
 bnds_sig = [
     [2.0, 4.0],  # [3.0, 4.0],  # C
     [1.5, 3.0],  # H1
-    [1.5, 3.0],  # H2 True Value is apparently 0. Ask EM)
+    [0.0, 0.0],  # H2 True Value is apparently 0. Ask EM)
     [2.0, 4.0],  # O #Check with EM what is reasonable here
 ]
 bnds_eps = [
     [10.0, 75.0],  # [20.0, 75.0],  # C
     [2.0, 10.0],  # H
-    [1.5, 10.0],  # H2 (True Value is apparently 0. Ask EM)
+    [0.0, 0.0],  # H2 (True Value is apparently 0. Ask EM)
     [75.0, 135.0],  # O #Check with EM what is reasonable here
 ]
 
@@ -368,8 +368,8 @@ bnds_sig = [
     [2.0, 4.0],  # C2
     [1.5, 3.0],  # H1
     [1.5, 3.0],  # H2
-    [1.5, 3.0],  # H3
-    [1.5, 3.0],  # H4 (Check lower bound since GAFF is 0)
+    [0.0, 0.0],  # H3
+    [0.0, 0.0],  # H4 (Check lower bound since GAFF is 0)
     [2.0, 4.0],  # O1 #Check with EM what is reasonable here
     [2.0, 4.0],  # O2 #Check with EM what is reasonable here
 ]
@@ -378,8 +378,8 @@ bnds_eps = [
     [10.0, 75.0],  # C2
     [2.0, 10.0],  # H1
     [2.0, 10.0],  # H2
-    [2.0, 10.0],  # H3
-    [2.0, 10.0],  # H4 (Check lower bound since GAFF is 0)
+    [0.0, 0.0],  # H3
+    [0.0, 0.0],  # H4 (Check lower bound since GAFF is 0)
     [75.0, 135.0],  # O1 #Check with EM what is reasonable here
     [75.0, 135.0],  # O2 #Check with EM what is reasonable here
 ]
@@ -598,14 +598,14 @@ gaff_params = {
 bnds_sig = [
     [2.0, 4.0],  # C1
     [1.5, 3.0],  # H1
-    [1.5, 3.0],  # H2
+    [0.0, 0.0],  # H2
     [2.0, 4.0],  # O #Check with EM what is reasonable here
 ]
 bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H1
-    [2.0, 10.0],  # H2
-    [75.0, 135.0],,  # O #Check with EM what is reasonable here
+    [0.0, 0.0],  # H2
+    [75.0, 135.0],  # O #Check with EM what is reasonable here
 ]
 
 
