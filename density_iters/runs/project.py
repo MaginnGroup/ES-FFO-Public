@@ -716,10 +716,10 @@ def _get_xml_from_molecule(molecule_name):
 def __generate_EG_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -728,21 +728,21 @@ def __generate_EG_xml(job):
   <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="c3" class2="c3" class3="oh" angle="1.910" k="566.680"/>
-  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="oh" angle="1.90991" k="566.680"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.88775" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.91777" k="426.515"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.669" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.602" periodicity2="2" phase2="0.0" k2="4.916"/>
+  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.66948049" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.69874740"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.60246593" periodicity2="2" phase2="0.0" k2="4.91617518"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.299206" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.002766" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="O1" charge="-0.731599" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
@@ -764,14 +764,14 @@ def __generate_EG_xml(job):
 def __generate_Gly_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H3" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
-   <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H4" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H3" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H4" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -780,26 +780,26 @@ def __generate_Gly_xml(job):
   <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="c3" class2="c3" class3="c3" angle="1.931" k="528.933"/>
-  <Angle class1="c3" class2="c3" class3="oh" angle="1.910" k="566.680"/>
-  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="c3" angle="1.93086" k="528.933"/>
+  <Angle class1="c3" class2="c3" class3="oh" angle="1.90991" k="566.680"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.88775" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.91777" k="426.515"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="c3" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.669" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.602" periodicity2="2" phase2="0.0" k2="4.916"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.66948049" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.69874740"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.60246593" periodicity2="2" phase2="0.0" k2="4.91617518"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.071924" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.049478" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="C2" charge="0.489580" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -833,10 +833,10 @@ def __generate_Gly_xml(job):
 def __generate_MeOH_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -844,14 +844,14 @@ def __generate_MeOH_xml(job):
   <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.88775" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.91777" k="426.515"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.69874740"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.248643" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.002748" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="O1" charge="-0.672287" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
@@ -872,27 +872,26 @@ def __generate_MeOH_xml(job):
 
 def __generate_DCM_xml(job):
     content = """<ForceField>
-  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h2" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])[N,O,F,Cl,Br,I,S]" desc="H bonded to aliphatic carbon with 2 d. group"/>
-   <Type name="Cl1" class="cl" element="Cl" mass="35.45" def="Cl" desc="Chlorine"/>
-  </AtomTypes>
-  <HarmonicBondForce>
-   <Bond class1="c3" class2="h2" length="0.1100" k="273131.744"/>
-   <Bond class1="c3" class2="cl" length="0.1786" k="233466.771"/>
-  </HarmonicBondForce>
-  <HarmonicAngleForce>
-   <Angle class1="h2" class2="c3" class3="h2" angle="1.906" k="326.359"/>
-   <Angle class1="cl" class2="c3" class3="h2" angle="1.870" k="363.924"/>
-   <Angle class1="cl" class2="c3" class3="cl" angle="1.938" k="524.676"/>
-  </HarmonicAngleForce>
-  <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
-    <Atom type="C1" charge="-0.375336" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
-    <Atom type="H1" charge="0.243662" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
-    <Atom type="Cl1" charge="-0.055994" sigma="{sigma_Cl1:0.6f}" epsilon="{epsilon_Cl1:0.6f}"/>
-  </NonbondedForce>
-</ForceField>
-""".format(
+ <AtomTypes>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h2" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])[N,O,F,Cl,Br,I,S]" desc="H bonded to aliphatic carbon with 2 d. group"/>
+  <Type name="Cl1" class="cl" element="Cl" mass="35.45" def="Cl" desc="Chlorine"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="h2" length="0.1100" k="273131.744"/>
+  <Bond class1="c3" class2="cl" length="0.1786" k="233466.771"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="h2" class2="c3" class3="h2" angle="1.90573" k="326.359"/>
+  <Angle class1="cl" class2="c3" class3="h2" angle="1.86995" k="363.924"/>
+  <Angle class1="cl" class2="c3" class3="cl" angle="1.93784" k="524.676"/>
+ </HarmonicAngleForce>
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
+  <Atom type="C1" charge="-0.375336" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="H1" charge="0.243662" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="Cl1" charge="-0.055994" sigma="{sigma_Cl1:0.6f}" epsilon="{epsilon_Cl1:0.6f}"/>
+ </NonbondedForce>
+</ForceField>""".format(
         sigma_C1=job.sp.sigma_C1,
         sigma_H1=job.sp.sigma_H1,
         sigma_Cl1=job.sp.sigma_Cl1,
@@ -906,10 +905,10 @@ def __generate_DCM_xml(job):
 def __generate_DMSO_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="S1" class="s4" element="S" mass="32.06" def="[S;X3]" desc="S with three connected atoms"/>
-   <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="S1" class="s4" element="S" mass="32.06" def="[S;X3]" desc="S with three connected atoms"/>
+  <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="o" class2="s4" length="0.1497" k="375471.133"/>
@@ -917,14 +916,14 @@ def __generate_DMSO_xml(job):
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="h1" class2="c3" class3="s4" angle="1.896" k="454.219"/>
-  <Angle class1="c3" class2="s4" class3="o" angle="1.854" k="343.587"/>
-  <Angle class1="c3" class2="s4" class3="c3" angle="1.690" k="325.012"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="s4" angle="1.89647" k="454.219"/>
+  <Angle class1="c3" class2="s4" class3="o" angle="1.85371" k="343.587"/>
+  <Angle class1="c3" class2="s4" class3="c3" angle="1.68983" k="325.012"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="h1" class2="c3" class3="s4" class4="c3" periodicity1="3" phase1="0.0" k1="0.837"/>
-  <Proper class1="h1" class2="c3" class3="s4" class4="o" periodicity1="3" phase1="0.0" k1="0.837"/>
+  <Proper class1="h1" class2="c3" class3="s4" class4="c3" periodicity1="3" phase1="0.0" k1="0.83676747"/>
+  <Proper class1="h1" class2="c3" class3="s4" class4="o" periodicity1="3" phase1="0.0" k1="0.83676747"/>
  </PeriodicTorsionForce>
  <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="S1" charge="0.357892" sigma="{sigma_S1:0.6f}" epsilon="{epsilon_S1:0.6f}"/>
@@ -948,10 +947,10 @@ def __generate_DMSO_xml(job):
 def __generate_ACN_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
-   <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
+  <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c1" class2="n1" length="0.1138" k="848933.191"/>
@@ -959,14 +958,14 @@ def __generate_ACN_xml(job):
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c1" class3="n1" angle="3.115" k="486.180"/>
-  <Angle class1="c1" class2="c3" class3="hc" angle="1.915" k="403.750"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="c1" class3="n1" angle="3.11541" k="486.180"/>
+  <Angle class1="c1" class2="c3" class3="hc" angle="1.91550" k="403.750"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.1" k1="0.000"/>
+  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.141592654" k1="0.0"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="N1" charge="-0.505798" sigma="{sigma_N1:0.6f}" epsilon="{epsilon_N1:0.6f}"/>
   <Atom type="C1" charge="0.461146" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="C2" charge="-0.474882" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -988,13 +987,13 @@ def __generate_ACN_xml(job):
 def __generate_DEC_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
-   <Type name="C3" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
-   <Type name="O2" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
+  <Type name="C3" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
+  <Type name="O2" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
@@ -1005,30 +1004,30 @@ def __generate_DEC_xml(job):
   <Bond class1="c" class2="o" length="0.1214" k="542245.941"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="c3" class2="c3" class3="os" angle="1.892" k="567.179"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
-  <Angle class1="c3" class2="c3" class3="hc" angle="1.921" k="388.019"/>
-  <Angle class1="c3" class2="os" class3="c" angle="2.010" k="532.458"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="os" angle="1.899" k="425.434"/>
-  <Angle class1="os" class2="c" class3="o" angle="2.153" k="635.375"/>
-  <Angle class1="os" class2="c" class3="os" angle="1.944" k="639.731"/>
-  <Angle class1="c" class2="os" class3="c3" angle="2.010" k="532.458"/>
-  <Angle class1="o" class2="c" class3="os" angle="2.153" k="635.375"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="os" angle="1.89229" k="567.179"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
+  <Angle class1="c3" class2="c3" class3="hc" angle="1.92073" k="388.019"/>
+  <Angle class1="c3" class2="os" class3="c" angle="2.00957" k="532.458"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="os" angle="1.89927" k="425.434"/>
+  <Angle class1="os" class2="c" class3="o" angle="2.15251" k="635.375"/>
+  <Angle class1="os" class2="c" class3="os" angle="1.94395" k="639.731"/>
+  <Angle class1="c" class2="os" class3="c3" angle="2.00957" k="532.458"/>
+  <Angle class1="o" class2="c" class3="os" angle="2.15251" k="635.375"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.602" periodicity2="1" phase2="3.1" k2="3.347"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.602"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="os" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="o" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.1" k1="11.297" periodicity2="1" phase2="3.1" k2="5.858"/>
-  <Proper class1="o" class2="os" class3="c" class4="os" periodicity1="2" phase1="180.0" k1="43.932"/>
-  <Proper class1="os" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.1" k1="11.297"/>
-  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="c3" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.60244629" periodicity2="1" phase2="3.141592654" k2="3.34723617"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.60244629"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="os" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="o" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.141592654" k1="11.29677657" periodicity2="1" phase2="3.141592654" k2="5.85762173"/>
+  <Proper class1="os" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.141592654" k1="11.29677657"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Improper class1="o" class2="os" class3="c" class4="os" periodicity1="2" phase1="3.141592654" k1="43.93195509"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="-0.453302" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.119642" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="C2" charge="0.496179" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -1059,11 +1058,11 @@ def __generate_DEC_xml(job):
 def __generate_THF_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="H2" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="H2" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="os" length="0.1439" k="252295.702"/>
@@ -1072,28 +1071,28 @@ def __generate_THF_xml(job):
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="os" class3="c3" angle="1.963" k="522.082"/>
-  <Angle class1="c3" class2="c3" class3="c3" angle="1.931" k="528.933"/>
-  <Angle class1="c3" class2="c3" class3="hc" angle="1.921" k="388.019"/>
-  <Angle class1="c3" class2="c3" class3="os" angle="1.892" k="567.179"/>
-  <Angle class1="h1" class2="c3" class3="os" angle="1.899" k="425.434"/>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="os" class3="c3" angle="1.96262" k="522.082"/>
+  <Angle class1="c3" class2="c3" class3="c3" angle="1.93086" k="528.933"/>
+  <Angle class1="c3" class2="c3" class3="hc" angle="1.92073" k="388.019"/>
+  <Angle class1="c3" class2="c3" class3="os" angle="1.89229" k="567.179"/>
+  <Angle class1="h1" class2="c3" class3="os" angle="1.89927" k="425.434"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.753" periodicity2="2" phase2="3.1" k2="1.046"/>
-  <Proper class1="c3" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.669"/>
-  <Proper class1="c3" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.602" periodicity2="2" phase2="3.1" k2="0.418"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.602"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.669"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.628"/>
-  <Proper class1="os" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.75312398" periodicity2="2" phase2="3.141592654" k2="1.04595934"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.66948049"/>
+  <Proper class1="c3" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.60244629" periodicity2="2" phase2="3.141592654" k2="0.41838374"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.60244629"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.66948049"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.62757560"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.235221" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="O1" charge="-0.442876" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
   <Atom type="C2" charge="-0.049525" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
