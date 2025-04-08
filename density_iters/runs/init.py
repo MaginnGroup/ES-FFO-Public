@@ -16,7 +16,7 @@ sys.path.remove("../..")
 from utils.molec_class_files import esolvs
 
 # Load class properies for each training molecule
-mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC"]
+mol_names = ["EG"]  # , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC"]
 molec_dict = esolvs.make_dict(mol_names)
 
 
@@ -26,13 +26,13 @@ def unpack_molec_values(class_data, state_point, sample):
     """
     param_names = class_data.param_names
     for i, param in enumerate(param_names):
-        if "sigma" in param:
-            state_point[param] = float((sample[i] * u.Angstrom).in_units(u.nm).value)
-        elif "epsilon" in param:
-            state_point[param] = float(
-                (sample[i] * u.K * u.kb).in_units("kJ/mol").value
-            )
-        state_point[param] = sample[i]
+        # Unpack the sample, set to 0.0 if the value is less than 1e-14
+        if sample[i] > 1.0 * 1e-14:
+            sample_use = sample[i]
+        else:
+            sample_use = 0.0
+
+        state_point[param] = sample_use
 
     return state_point
 
@@ -79,18 +79,18 @@ def init_project():
 
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
-        for temp in temps:
+        for temp in [temps[0]]:
             liq_density = molec_data.expt_liq_density[temp]
             vap_density = molec_data.expt_vap_density[temp]
             avg_density = (liq_density + vap_density) / 2
-            for sample in scaled_params:
+            for sample in scaled_params[0].reshape(1, -1):
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
                     "dens-iter": dens_iter,
                     "smiles": molec_data.smiles_str,
-                    "T": float((temp * u.K).in_units(u.K).value),
-                    "P": float(molec_data.expt_Pvap[temp]),
+                    "T": float((temp * u.K).in_units(u.K).value),  # K
+                    "P": float(molec_data.expt_Pvap[temp]),  # bar
                     "rho_avg": avg_density,  # kg/m^3
                     "nsteps_nvt1": nsteps_nvt1,
                     "nsteps_npt": nsteps_npt,
@@ -101,10 +101,8 @@ def init_project():
 
                 state_point = unpack_molec_values(molec_data, state_point, sample)
 
-                # print(state_point)
-
-                # job = project.open_job(state_point)
-                # job.init()
+                job = project.open_job(state_point)
+                job.init()
 
 
 if __name__ == "__main__":
