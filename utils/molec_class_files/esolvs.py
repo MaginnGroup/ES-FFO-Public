@@ -329,7 +329,7 @@ EG = EsolvsConstants(
     expt_surftens=expt_surftens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
-    expt_vap_density=None,
+    expt_vap_density=expt_vap_density,
     uncertainty=uncertainty,
 )
 
@@ -502,7 +502,6 @@ bnds_eps = [
     [2.0, 10.0],  # H1
     [40.0, 100.0],  # N #Check with EM what is reasonable here
 ]
-
 
 # (equal to dyn/cm)
 # DOI: 10.1021/ja02201a003
@@ -768,10 +767,18 @@ Tc = 649.6  # K (https://webbook.nist.gov/cgi/cbook.cgi?ID=C68122&Mask=4#ref-2)
 
 # Fix me later
 gaff_params = {
-    "sigma_C1": 3.400,
-    "sigma_H1": 2.65,
+    "sigma_C1": 3.400,  # C attached to N and H
+    "sigma_C2": 3.400,  # C attached to O, and N
+    "sigma_H1": 2.471,  # Attached to C1
+    "sigma_H2": 2.421,  # Attached to C2
+    "sigma_O1": 2.96,
+    "sigma_N1": 3.25,
     "epsilon_C1": 55.052,
-    "epsilon_H1": 7.901,
+    "epsilon_C2": 43.277,
+    "epsilon_H1": 7.90105,
+    "epsilon_H2": 7.548,
+    "epsilon_O1": 105.676,
+    "epsilon_N1": 85.547,
 }
 
 bnds_sig = [
@@ -1325,8 +1332,8 @@ bnds_eps = [
     [10.0, 75.0],  # C3
     [2.0, 10.0],  # H1
     [2.0, 10.0],  # H2
-    [10.0, 75.0],  # O1 #Check with EM what is reasonable here
-    [10.0, 75.0],  # O2 #Check with EM what is reasonable here
+    [40.0, 100.0],  # O1 #Check with EM what is reasonable here
+    [75.0, 135.0],  # O2 #Check with EM what is reasonable here
 ]
 
 rho_c = 245.46  # kg/m^3 (DOI: 10.1021/je100494z)
