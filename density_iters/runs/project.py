@@ -249,7 +249,7 @@ def nvt_eq2_sim(job):
 @Project.pre.after(nvt_eq2_sim)
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(with_job=True, cmd=False)
-def inter_eq_sim(job):
+def init_inter_eq_sim(job):
     box_len = job.doc.xy_box_len
     xy_cen = job.doc.xy_box_len / 2
     z_cen = job.doc.xy_box_len * job.doc.aspect_ratio / 2
@@ -811,13 +811,21 @@ def __generate_Gly_xml(job):
  </NonbondedForce>
 </ForceField>""".format(
         sigma_C1=job.sp.sigma_C1,
+        sigma_C2=job.sp.sigma_C2,
         sigma_H1=job.sp.sigma_H1,
-        sigma_O1=job.sp.sigma_O1,
         sigma_H2=job.sp.sigma_H2,
+        sigma_H3=job.sp.sigma_H3,
+        sigma_H4=job.sp.sigma_H4,
+        sigma_O1=job.sp.sigma_O1,
+        sigma_O2=job.sp.sigma_O2,
         epsilon_C1=job.sp.epsilon_C1,
+        epsilon_C2=job.sp.epsilon_C2,
         epsilon_H1=job.sp.epsilon_H1,
-        epsilon_O1=job.sp.epsilon_O1,
         epsilon_H2=job.sp.epsilon_H2,
+        epsilon_H3=job.sp.epsilon_H3,
+        epsilon_H4=job.sp.epsilon_H4,
+        epsilon_O1=job.sp.epsilon_O1,
+        epsilon_O2=job.sp.epsilon_O2,
     )
     return content
 
