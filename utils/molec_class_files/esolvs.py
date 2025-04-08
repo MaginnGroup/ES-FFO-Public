@@ -221,82 +221,97 @@ bnds_eps = [
     [75.0, 135.0],  # O #Check with EM what is reasonable here
 ]
 
-# #Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
-# expt_liq_density = {
-#     293.15: 1113.379,
-#     313.15: 1099.006,
-#     333.15: 1083.804,
-#     353.15: 1068.201,
-#     373.15: 1052.399,
-# }
-
 # # Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
+# # 10.1021/ie50199a004
 # expt_liq_density = {
 #     378.15: 1048.112,
-#     398.15: 1032.314,
-#     418.15: 1016.517,
-#     438.15: 1000.719,
-#     458.15: 984.921,
+#     383.15: 1044.162,
+#     393.15: 1036.264,
+#     403.15: 1028.365,
+#     413.15: 1020.466,
 # }
 
-# # Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
+# # Correlation from 10.1063/1.3253106
+# # gamma = 50.21-0.089*T(C)
 # expt_surftens = {
-#     293.15: 48.43,
-#     313.15: 46.65,
-#     333.15: 44.87,
-#     353.15: 43.09,
-#     373.15: 41.31,
+#     378.15: 40.865,
+#     383.15: 40.42,
+#     393.15: 39.53,
+#     403.15: 38.64,
+#     413.15: 37.75,
 # }
 
 # # Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
+# # 10.1021/ie50199a004
 # expt_Pvap = {
 #     378.15: (3.600 * u.kPa).to_value(u.bar),
-#     398.15: (7.066 * u.kPa).to_value(u.bar),
-#     418.15: (16.67 * u.kPa).to_value(u.bar),
-#     438.15: (35.06 * u.kPa).to_value(u.bar),
-#     458.15: (768.53 * u.kPa).to_value(u.bar),
+#     383.15: (4.000 * u.kPa).to_value(u.bar),
+#     393.15: (5.600 * u.kPa).to_value(u.bar),
+#     403.15: (9.066 * u.kPa).to_value(u.bar),
+#     413.15: (13.732 * u.kPa).to_value(u.bar),
 # }
 
-# Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
-# 10.1021/ie50199a004
+# # Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
+# # 10.1021/ie50199a004
+# expt_Hvap = {
+#     403.75: 985.33,
+#     433.95: 954.79,
+#     461.55: 879.90,
+# }
+
+# uncertainty = {
+#     "expt_surftens": 0.022,
+# }
+
+# From REFPROP
 expt_liq_density = {
-    378.15: 1048.112,
-    383.15: 1044.162,
-    393.15: 1036.264,
-    403.15: 1028.365,
-    413.15: 1020.466,
+    378.15: 1051.7,
+    383.15: 1047.9,
+    393.15: 1040.2,
+    403.15: 1032.3,
+    413.15: 1024.3,
 }
 
-# Correlation from 10.1063/1.3253106
-# gamma = 50.21-0.089*T(C)
+# From REFPROP
 expt_surftens = {
-    378.15: 40.865,
-    383.15: 40.42,
-    393.15: 39.53,
-    403.15: 38.64,
-    413.15: 37.75,
+    378.15: 40.939,
+    383.15: 40.472,
+    393.15: 39.533,
+    403.15: 38.587,
+    413.15: 37.634,
 }
 
-# Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
-# 10.1021/ie50199a004
+# From REFPROP
 expt_Pvap = {
-    378.15: (3.600 * u.kPa).to_value(u.bar),
-    383.15: (4.000 * u.kPa).to_value(u.bar),
-    393.15: (5.600 * u.kPa).to_value(u.bar),
-    403.15: (9.066 * u.kPa).to_value(u.bar),
-    413.15: (13.732 * u.kPa).to_value(u.bar),
+    378.15: (2.7108 * u.kPa).to_value(u.bar),
+    383.15: (3.4853 * u.kPa).to_value(u.bar),
+    393.15: (5.6304 * u.kPa).to_value(u.bar),
+    403.15: (8.8396 * u.kPa).to_value(u.bar),
+    413.15: (13.518 * u.kPa).to_value(u.bar),
 }
 
-# Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
-# 10.1021/ie50199a004
+# From REFPROP
 expt_Hvap = {
-    403.75: 985.33,
-    433.95: 954.79,
-    461.55: 879.90,
+    378.15: 977.45,
+    383.15: 972.15,
+    393.15: 961.57,
+    403.15: 951.01,
+    413.15: 940.46,
+}
+
+# From REFPROP
+expt_vap_density = {
+    378.15: 0.053545,
+    383.15: 0.067953,
+    393.15: 0.10702,
+    403.15: 0.16393,
+    413.15: 0.24479,
 }
 
 uncertainty = {
-    "expt_surftens": 0.022,
+    "expt_surftens": 0.01,
+    "expt_liq_density": 0.001,
+    "expt_vap_density": 0.001,
 }
 
 # Create an instance of the EsolvsConstants class
@@ -609,17 +624,63 @@ bnds_eps = [
 ]
 
 
+# # (equal to dyn/cm)
+# # Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
+# expt_surftens = {
+#     200.0: 31.1,
+#     300.0: 22.1,
+#     350.0: 17.9,
+#     400.0: 13.0,
+#     500.0: 1.20,
+# }
+
+# # Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
+# expt_liq_density = {
+#     200.0: 880.28,
+#     300.0: 784.51,
+#     350.0: 735.84,
+#     400.0: 678.59,
+#     500.0: 451.53,
+# }
+
+# expt_vap_density = {
+#     200.0: 0.0001,
+#     300.0: 0.2462,
+#     350.0: 1.9053,
+#     400.0: 8.7343,
+#     500.0: 109.88,
+# }
+
+# # Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
+# expt_Pvap = {
+#     200.0: (0.061 * u.kPa).to_value(u.bar),
+#     300.0: (18.7 * u.kPa).to_value(u.bar),
+#     350.0: (161.7 * u.kPa).to_value(u.bar),
+#     400.0: (773.3 * u.kPa).to_value(u.bar),
+#     500.0: (6525.0 * u.kPa).to_value(u.bar),
+# }
+
+# # https://doi.org/10.1063/1.1696002
+# expt_Hvap = {
+#     200.0: 1289.99,
+#     300.0: 1166.17,
+#     350.0: 1075.936,
+#     400.0: 944.57,
+#     500.0: 391.09,
+# }
+
+
 # (equal to dyn/cm)
-# Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
+# REFPROP
 expt_surftens = {
-    200.0: 31.1,
-    300.0: 22.1,
-    350.0: 17.9,
-    400.0: 13.0,
-    500.0: 12.0,
+    200.0: 31.717,
+    300.0: 21.993,
+    350.0: 17.727,
+    400.0: 12.928,
+    500.0: 1.2466,
 }
 
-# Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
+# REFPROP
 expt_liq_density = {
     200.0: 880.28,
     300.0: 784.51,
@@ -628,24 +689,32 @@ expt_liq_density = {
     500.0: 451.53,
 }
 
+# REFPROP
 expt_vap_density = {
-    200.0: 0.0001,
-    300.0: 0.2462,
+    200.0: 0.000118,
+    300.0: 0.24623,
     350.0: 1.9053,
     400.0: 8.7343,
     500.0: 109.88,
 }
 
-# Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
+# REFPROP
 expt_Pvap = {
-    200.0: (0.061 * u.kPa).to_value(u.bar),
-    300.0: (18.7 * u.kPa).to_value(u.bar),
-    350.0: (161.7 * u.kPa).to_value(u.bar),
-    400.0: (773.3 * u.kPa).to_value(u.bar),
+    200.0: (0.06096 * u.kPa).to_value(u.bar),
+    300.0: (18.682 * u.kPa).to_value(u.bar),
+    350.0: (161.72 * u.kPa).to_value(u.bar),
+    400.0: (773.74 * u.kPa).to_value(u.bar),
     500.0: (6525.0 * u.kPa).to_value(u.bar),
 }
 
-# https://doi.org/10.1063/1.1696002
+# REFPROP
+uncertainty = {
+    "expt_liq_density": 0.001,
+    "expt_surftens": 0.0126,
+    "expt_vap_density": 0.001,
+}
+
+# REFPROP
 expt_Hvap = {
     200.0: 1289.99,
     300.0: 1166.17,
