@@ -5,11 +5,13 @@
 #$ -pe smp {{ np_global }}
 #$ -r n
 #$ -m ae
-#$ -q long
+#$ -q gpu #long
+#$ -l gpu_card=1
 #$ -M mcarlozo@nd.edu
 
-module load gcc/9.1.0
-source /afs/crc.nd.edu/group/maginn/group_members/Ryan_DeFever/software/gromacs-2020/gromacs-dp/bin/GMXRC
+# module load gcc/9.1.0
+# source /afs/crc.nd.edu/group/maginn/group_members/Ryan_DeFever/software/gromacs-2020/gromacs-dp/bin/GMXRC
+module load gromacs
 # export PATH=/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfc-ffo/bin:$PATH
 
 {% block tasks %}

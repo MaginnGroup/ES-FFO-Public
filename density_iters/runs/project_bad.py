@@ -42,15 +42,15 @@ def create_system(job):
     import shutil
     import unyt as u
 
-    compound = mbuild.load(job.sp.smiles, smiles=True)
-    system = mbuild.fill_box(compound, n_compounds=1000, density=job.sp.rho_avg)
-
-    ff = foyer.Forcefield(job.fn("ff.xml"))
-
-    system_ff = ff.apply(system)
-    system_ff.combining_rule = "lorentz"
-
     with job:
+        compound = mbuild.load(job.sp.smiles, smiles=True)
+        system = mbuild.fill_box(compound, n_compounds=1000, density=job.sp.rho_avg)
+
+        ff = foyer.Forcefield(job.fn("ff.xml"))
+
+        system_ff = ff.apply(system)
+        system_ff.combining_rule = "lorentz"
+
         system_ff.save("system.gro")
         system_ff.save("unedited.top")
 
@@ -65,21 +65,21 @@ def fix_topology(job):
     GAFF uses 0.5. This function edits the topology
     file accordingly.
     """
+    with job:
+        top_contents = []
+        with open(job.fn("unedited.top")) as fin:
+            for line_number, line in enumerate(fin):
+                top_contents.append(line)
+                if line.strip() == "[ defaults ]":
+                    defaults_line = line_number
 
-    top_contents = []
-    with open(job.fn("unedited.top")) as fin:
-        for line_number, line in enumerate(fin):
-            top_contents.append(line)
-            if line.strip() == "[ defaults ]":
-                defaults_line = line_number
+        top_contents[defaults_line + 2] = (
+            "1               2               yes              0.5       0.8333333\n"  # changed no to yes
+        )
 
-    top_contents[defaults_line + 2] = (
-        "1               2               yes              0.5       0.8333333\n"  # changed no to yes
-    )
-
-    with open(job.fn("system.top"), "w") as fout:
-        for line in top_contents:
-            fout.write(line)
+        with open(job.fn("system.top"), "w") as fout:
+            for line in top_contents:
+                fout.write(line)
 
 
 @Project.post.isfile("em.mdp")
@@ -97,60 +97,38 @@ def generate_inputs(job):
     with open(job.fn("em.mdp"), "w") as inp:
         inp.write(content)
 
-    # content = _generate_nvt_eq1_mdp(job)
 
-    # with open(job.fn("nvt_eq1.mdp"), "w") as inp:
-    #     inp.write(content)
+#     content = _generate_nvt_eq1_mdp(job)
+#     with open(job.fn("nvt_eq1.mdp"), "w") as inp:
+#         inp.write(content)
 
-    # content = _generate_npt_eq_mdp(job)
+#     content = _generate_npt_eq_mdp(job)
 
-    # with open(job.fn("npt_eq.mdp"), "w") as inp:
-    #     inp.write(content)
+#     with open(job.fn("npt_eq.mdp"), "w") as inp:
+#         inp.write(content)
 
-    # content = _generate_nvt_eq2_mdp(job)
+#     content = _generate_nvt_eq2_mdp(job)
 
-    # with open(job.fn("nvt_eq2.mdp"), "w") as inp:
-    #     inp.write(content)
+#     with open(job.fn("nvt_eq2.mdp"), "w") as inp:
+#         inp.write(content)
 
-    # content = _generate_inter_eq_mdp(job)
+#     content = _generate_inter_eq_mdp(job)
 
-    # with open(job.fn("inter_eq.mdp"), "w") as inp:
-    #     inp.write(content)
+#     with open(job.fn("inter_eq.mdp"), "w") as inp:
+#         inp.write(content)
 
-    # content = _generate_inter_prod_mdp(job)
+#     content = _generate_inter_prod_mdp(job)
 
-    # with open(job.fn("inter_prod.mdp"), "w") as inp:
-    #     inp.write(content)
-
-
-# @Project.pre.after(create_system)
-# @Project.pre.after(fix_topology)
-# @Project.pre.after(generate_inputs)
-# @Project.post(em_complete)
-# @Project.post(eq_complete)
-# @Project.post(prod_complete)
-# @Project.operation(with_job = True, cmd=True)
-# def simulate(job):
-#     """Run the minimization, equilibration, and production simulations"""
-
-#     command = (
-#         "gmx grompp -f em.mdp -c system.gro -p system.top -o em && "
-#         "gmx mdrun -v -deffnm em  -ntomp 1 && "
-#         "gmx grompp -f eq.mdp -c em.gro -p system.top -o eq && "
-#         "gmx mdrun -v -deffnm eq  -ntomp 1 && "
-#         "gmx grompp -f prod.mdp -c eq.gro -p system.top -o prod && "
-#         "gmx mdrun -v -deffnm prod  -ntomp 1"
-#     )
-
-#     return command
+#     with open(job.fn("inter_prod.mdp"), "w") as inp:
+#         inp.write(content)
 
 
 # Energy Minimization
 @Project.label
 def em_complete(job):
-    try:
-        return check_norm_term(job, "em")
-    except:
+    if "em_fin" in job.doc.keys():
+        return True
+    else:
         return False
 
 
@@ -163,20 +141,23 @@ def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
     last_sim_name = "system"
+
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
+    job.doc.em_fin = True
 
 
 # Short NVT Equilibration
 @Project.label
 def nvt_eq1_comp(job):
-    try:
-        return check_norm_term(job, "nvt_eq1")
-    except:
+    if "nvt_eq1_fin" in job.doc:
+        return True
+    else:
         return False
 
 
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq1_comp)
+@Project.post.isfile("nvt_eq1.tpr")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def nvt_eq1_sim(job):
     """Run the 1st short NVT simulation"""
@@ -190,6 +171,8 @@ def nvt_eq1_sim(job):
         inp.write(content)
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
+    get_box_len(job, sim_name)
+    job.doc.nvt_eq1_fin = True
 
 
 # Long Equilibration NPT
@@ -203,23 +186,24 @@ def npt_eq_comp(job):
 
 @Project.pre.after(nvt_eq1_sim)
 @Project.post(npt_eq_comp)
+@Project.post.isfile("npt_eq.tpr")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def npt_eq_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
+
     # Generate the first run
     sim_name = "npt_eq"
     last_sim_name = "nvt_eq1"
     property = "Density"
 
-    if not job.isfile("npt_eq.mdp"):
-        with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-            content = _generate_npt_eq_mdp(job, cutoff)
+    if not os.path.exists(job.fn("npt_eq.mdp")):
+        cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+        content = _generate_npt_eq_mdp(job, cutoff)
 
-            with open(job.fn("npt_eq.mdp"), "w") as inp:
-                inp.write(content)
+        with open(job.fn("npt_eq.mdp"), "w") as inp:
+            inp.write(content)
 
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
@@ -235,24 +219,21 @@ def nvt_eq2_comp(job):
 
 @Project.pre.after(npt_eq_sim)
 @Project.post(nvt_eq2_comp)
+@Project.post.isfile("nvt_eq2.tpr")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def nvt_eq2_sim(job):
     """Run the minimization simulations"""
     sim_name = "nvt_eq2"
     last_sim_name = "npt_eq"
 
-    if not job.isfile("nvt_eq2.mdp"):
-        with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-            content = _generate_nvt_eq2_mdp(job, cutoff)
+    cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+    content = _generate_nvt_eq2_mdp(job, cutoff)
 
-            with open(job.fn("nvt_eq2.mdp"), "w") as inp:
-                inp.write(content)
+    with open(job.fn("nvt_eq2.mdp"), "w") as inp:
+        inp.write(content)
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-    # Get final box lengths
-    # Extract the last line of the .gro file
     ave_length = get_box_len(job, sim_name)
     job.doc.xy_box_len = ave_length
     job.doc.aspect_ratio = 3.0
@@ -261,20 +242,16 @@ def nvt_eq2_sim(job):
 # Make Interface for simulation
 @Project.pre.after(nvt_eq2_sim)
 @Project.post.isfile("init_inter_eq.gro")
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False)
 def init_inter_eq_sim(job):
-
-    sim_name = "init_inter_eq"
-    last_sim_name = "nvt_eq2"
     box_len = job.doc.xy_box_len
     xy_cen = job.doc.xy_box_len / 2
     z_cen = job.doc.xy_box_len * job.doc.aspect_ratio / 2
     new_z_len = z_cen * 2
     job.doc.z_box_len = new_z_len
 
-    with job:
-        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
-        subprocess.run(command, shell=True, check=True)
+    command = f"gmx editconf -f init_inter_eq.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
+    subprocess.run(command, shell=True, check=True)
 
 
 # Run Interface NVT equilibration
@@ -286,7 +263,7 @@ def inter_eq_comp(job):
         return False
 
 
-@Project.pre.after(init_inter_eq_sim)
+@Project.pre.after(nvt_eq2_sim)
 @Project.post(inter_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def inter_eq_sim(job):
@@ -299,16 +276,9 @@ def inter_eq_sim(job):
     )
     sim_name = "inter_eq"
     property = "Total-Energy"  # Total Energy Stable = Equilibrated
-
-    if not job.isfile("inter_eq.mdp"):
-        with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-            content = _generate_inter_eq_mdp(job, cutoff)
-
-            with open(job.fn("inter_eq.mdp"), "w") as inp:
-                inp.write(content)
-
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
+    job.doc.inter_eq_fin = True
+
 
 # Run Interface NVT Production
 @Project.label
@@ -319,7 +289,7 @@ def inter_prod_comp(job):
         return False
 
 
-@Project.pre.after(inter_eq_sim)
+@Project.pre.after(nvt_eq2_sim)
 @Project.post(inter_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def inter_prod_sim(job):
@@ -331,17 +301,8 @@ def inter_prod_sim(job):
     )
     sim_name = "inter_prod"
     property = "#Surf*SurfTen"  # Surface tension
-
-    if not job.isfile("inter_prod.mdp"):
-        with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-            content = _generate_inter_prod_mdp(job, cutoff)
-
-            with open(job.fn("inter_prod.mdp"), "w") as inp:
-                inp.write(content)
-
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
-    # job.doc.inter_prod_fin = True
+    job.doc.inter_prod_fin = True
 
 
 @Project.pre.after(inter_prod_sim)
@@ -458,7 +419,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
                 if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
                     statement += f"Only {prod_cycles} production cycles found."
 
-            with open(key_name + "_eqout.txt", "a") as f:
+            with open("eq_output_" + key_name + ".txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:
@@ -562,6 +523,8 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
 
 
 # HELPER FUNCTIONS
+
+
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
     with job:
         if sim_name != "em":
@@ -576,7 +539,6 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
                 f"gmx mdrun -v -deffnm {sim_name}" + w_gpu
             )
         subprocess.run(command, shell=True, check=True)
-        job.doc[sim_name + "_fin"] = True
 
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
@@ -587,28 +549,44 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
             elif sim_name == "inter_eq":
                 nsteps_eq = job.sp.nsteps_intereq
 
-            max_steps_str = "max_eq_steps_" + sim_name
+            equil_ex_str = "eq_extend_" + sim_name
             nsteps_str = "nsteps_" + sim_name
-            eq_ext_str = "eq_ext_" + sim_name
+
+            # Delete the equilibration extension flag if it exists
+            if equil_ex_str in job.doc.keys():
+                del job.doc[equil_ex_str]
+
             eq_data_dict = {}
             # Set number of iterations per extension and intitialize counter and total number of steps
-            eq_extend = int(nsteps_eq / 4 / 1000)  # In ps
+            eq_extend = int(nsteps_eq / 4 / 1000)  # In picoseconds (nsteps_eq in fs)
 
             # Get the total number of equilibration restarts and steps so far
-            steps, num_pts = count_steps(job, sim_name)
-            existing_eq_steps = steps  # In ps
-            total_eq_steps = existing_eq_steps  # In ps
+            steps, num_pts = count_steps(
+                job, sim_name
+            )  # edr save time in ps by default
+            existing_eq_steps = steps  # #In Picoseconds
+            total_eq_steps = existing_eq_steps  # In picoseconds
+
             # Set the maximum number of steps
-            if max_steps_str not in job.doc:
-                job.doc[max_steps_str] = int(nsteps_eq / 1000) + eq_extend * 2
+            max_eq_steps_str = "max_eq_steps_" + sim_name
+            if max_eq_steps_str not in job.doc.keys():
+                job.doc.max_eq_steps_str = 300
+                # job.doc[max_eq_steps_str] = (
+                #     2 * nsteps_eq / 1000
+                # )  # In picoseconds (nsteps_eq in fs)
 
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
-            max_eq_steps = job.doc[max_steps_str]
+            # max_eq_steps = np.maximum(
+            #     job.doc[max_eq_steps_str], existing_eq_steps + 2 * nsteps_eq / 1000
+            # )  # In picoseconds (nsteps_eq in fs))
+
+            max_eq_steps = job.doc[max_eq_steps_str]  # In picoseconds
+
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc[nsteps_str] = int(max_eq_steps)
 
             # Continue running while you have not exceeded the max number of steps
-            while total_eq_steps < max_eq_steps:
+            while total_eq_steps < job.doc[max_eq_steps_str]:
                 # If you have enough steps, run the simulation, continue the simulation with more points
                 if total_eq_steps + eq_extend <= max_eq_steps:
                     # If we have no steps, start the simulation
@@ -624,11 +602,11 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                             f"gmx convert-tpr -s {sim_name}.tpr -extend "
                             + str(eq_extend)
                             + f" -o {sim_name}.tpr &&"
-                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu "
+                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -append"
                         )
                     # Otherwise restart the simulation from the checkpoint file
                     else:
-                        command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                        command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -append"
                     subprocess.run(command, shell=True, check=True)
 
                     # Update equilibration data dictionary/files
@@ -637,35 +615,36 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     )
 
                     # Track the number of added steps
-                    total_eq_steps += eq_extend
+                    # total_eq_steps += eq_extend
 
                     # Set tolerance for determining equilibrium and check for convergence
                     steps, num_pts = count_steps(job, sim_name)
+                    total_eq_steps = steps  # In picoseconds
                     prod_tol_eq = num_pts / 4  # In picoseconds (same units as the data)
                     is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
 
                     # If the simulation has converged, break
                     if is_equil:
-                        # Set the step counter to whatever the final number of equilibration steps was
-                        job.doc[nsteps_str] = total_eq_steps
-                        job.doc[eq_ext_str] = False
-                        job.doc[sim_name + "_fin"] = True
+                        fin_str = sim_name + "_fin"
+                        job.doc[fin_str] = True
                         break
-                    # Otherwise report an error
-                    elif total_eq_steps + eq_extend > max_eq_steps:
-                        job.doc[eq_ext_str] = True
+                    # Raise an error if the simulation hasn't converged after max steps
+                    elif total_eq_steps + eq_extend > job.doc[max_eq_steps_str]:
+                        # Otherwise report an error
+                        job.doc[equil_ex_str] = True
                         raise Exception(
                             f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
                         )
 
+            # Set the step counter to whatever the final number of equilibration steps was
+            job.doc[nsteps_str] = total_eq_steps
+            job.doc[equil_ex_str] = False
         except:
             # If the simulation fails, extend the simulation
-            print(eq_ext_str in job.doc)
-            print(job.doc[eq_ext_str] == True)
-            if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
-                job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
+            if equil_ex_str in job.doc.keys() and job.doc[equil_ex_str]:
+                job.doc[max_eq_steps_str] = int(total_eq_steps + eq_extend * 2)
                 del job.doc[nsteps_str]
-                del job.doc[eq_ext_str]
+                del job.doc[equil_ex_str]
             # If another error occurs, set the equilibration failure flag
             else:
                 eq_fail_str = "eq_fail_" + sim_name
@@ -682,6 +661,7 @@ def check_norm_term(job, sim_name):
     #         f.seek(-2, os.SEEK_CUR)
     #     # Read the last line after finding the newline
     #     last_line = f.readline().decode()
+
     num_newlines = 0
     with open(selected_file, "rb") as f:
         try:
@@ -700,41 +680,24 @@ def check_norm_term(job, sim_name):
         return False
 
 
-def get_box_len(job, sim_name):
-    # Get final box lengths
-    # Extract the last line of the .gro file
-    with open(sim_name + ".gro", "rb") as f:
-        # Move the pointer to the end of the file, but leave space to find the last line
-        f.seek(-2, os.SEEK_END)
-        # Read backward until a newline is found
-        while f.read(1) != b"\n":
-            f.seek(-2, os.SEEK_CUR)
-        # Read the last line after finding the newline
-        last_line = f.readline().decode().strip()
-    # Extract the box length from the last line
-    ave_length = list(map(float, last_line.split()))[0]
-    job.doc["box_len_" + sim_name] = ave_length
-    return ave_length
-
-
 def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     import panedr
 
     with job:
         # Get the density and volume data
         df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
-        # if property in df_all.columns:
-        df = df_all[["Time", property]].copy()
+        if property in df_all.columns:
+            df = df_all[["Time", property]].copy()
 
-        # elif property in ["Volume", "Density"]:
-        #     command = f"gmx energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
-        #     subprocess.run(
-        #         command, input=f"{property}", text=True, check=True, shell=True
-        #     )
-        #     prop_data = np.loadtxt(
-        #         sim_name + "_" + property + ".xvg", comments=["#", "@"]
-        #     )
-        #     df = pd.DataFrame(prop_data)
+        elif property in ["Volume", "Density"]:
+            command = f"gmx energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
+            subprocess.run(
+                command, input=f"{property}", text=True, check=True, shell=True
+            )
+            prop_data = np.loadtxt(
+                sim_name + "_" + property + ".xvg", comments=["#", "@"]
+            )
+            df = pd.DataFrame(prop_data)
 
         property_data = df.iloc[:, 1].values
         time_data = df.iloc[:, 0].values
@@ -746,6 +709,24 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
         }
         np.savetxt(eq_col_file, property_data, delimiter=",")
         return eq_data_dict
+
+
+def get_box_len(job, sim_name):
+    # Get final box lengths
+    # Extract the last line of the .gro file
+    with open(sim_name + ".gro", "rb") as f:
+        # Move the pointer to the end of the file, but leave space to find the last line
+        f.seek(-2, os.SEEK_END)
+        # Read backward until a newline is found
+        while f.read(1) != b"\n":
+            f.seek(-2, os.SEEK_CUR)
+        # Read the last line after finding the newline
+        last_line = f.readline().decode()
+    # Extract the box length from the last line
+    last_line.strip()
+    ave_length = list(map(float, last_line.split()))[0]
+    job.doc["box_len_" + sim_name] = ave_length
+    return ave_length
 
 
 def count_steps(job, sim_name):
@@ -789,10 +770,10 @@ def _get_xml_from_molecule(molecule_name):
 def __generate_EG_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -801,21 +782,21 @@ def __generate_EG_xml(job):
   <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="c3" class2="c3" class3="oh" angle="1.910" k="566.680"/>
-  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="oh" angle="1.90991" k="566.680"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.88775" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.91777" k="426.515"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.669" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.602" periodicity2="2" phase2="0.0" k2="4.916"/>
+  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.66948049" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.69874740"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.60246593" periodicity2="2" phase2="0.0" k2="4.91617518"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.299206" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.002766" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="O1" charge="-0.731599" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
@@ -837,14 +818,14 @@ def __generate_EG_xml(job):
 def __generate_Gly_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H3" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
-   <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H4" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H3" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H4" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -853,26 +834,26 @@ def __generate_Gly_xml(job):
   <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="c3" class2="c3" class3="c3" angle="1.931" k="528.933"/>
-  <Angle class1="c3" class2="c3" class3="oh" angle="1.910" k="566.680"/>
-  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="c3" angle="1.93086" k="528.933"/>
+  <Angle class1="c3" class2="c3" class3="oh" angle="1.90991" k="566.680"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.88775" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.91777" k="426.515"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="c3" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.669" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.602" periodicity2="2" phase2="0.0" k2="4.916"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.66948049" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.69874740"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.60246593" periodicity2="2" phase2="0.0" k2="4.91617518"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.071924" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.049478" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="C2" charge="0.489580" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -906,10 +887,10 @@ def __generate_Gly_xml(job):
 def __generate_MeOH_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+  <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -917,14 +898,14 @@ def __generate_MeOH_xml(job):
   <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.88775" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.91777" k="426.515"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.69874740"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.248643" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.002748" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="O1" charge="-0.672287" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
@@ -945,27 +926,26 @@ def __generate_MeOH_xml(job):
 
 def __generate_DCM_xml(job):
     content = """<ForceField>
-  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h2" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])[N,O,F,Cl,Br,I,S]" desc="H bonded to aliphatic carbon with 2 d. group"/>
-   <Type name="Cl1" class="cl" element="Cl" mass="35.45" def="Cl" desc="Chlorine"/>
-  </AtomTypes>
-  <HarmonicBondForce>
-   <Bond class1="c3" class2="h2" length="0.1100" k="273131.744"/>
-   <Bond class1="c3" class2="cl" length="0.1786" k="233466.771"/>
-  </HarmonicBondForce>
-  <HarmonicAngleForce>
-   <Angle class1="h2" class2="c3" class3="h2" angle="1.906" k="326.359"/>
-   <Angle class1="cl" class2="c3" class3="h2" angle="1.870" k="363.924"/>
-   <Angle class1="cl" class2="c3" class3="cl" angle="1.938" k="524.676"/>
-  </HarmonicAngleForce>
-  <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
-    <Atom type="C1" charge="-0.375336" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
-    <Atom type="H1" charge="0.243662" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
-    <Atom type="Cl1" charge="-0.055994" sigma="{sigma_Cl1:0.6f}" epsilon="{epsilon_Cl1:0.6f}"/>
-  </NonbondedForce>
-</ForceField>
-""".format(
+ <AtomTypes>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h2" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])[N,O,F,Cl,Br,I,S]" desc="H bonded to aliphatic carbon with 2 d. group"/>
+  <Type name="Cl1" class="cl" element="Cl" mass="35.45" def="Cl" desc="Chlorine"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="h2" length="0.1100" k="273131.744"/>
+  <Bond class1="c3" class2="cl" length="0.1786" k="233466.771"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="h2" class2="c3" class3="h2" angle="1.90573" k="326.359"/>
+  <Angle class1="cl" class2="c3" class3="h2" angle="1.86995" k="363.924"/>
+  <Angle class1="cl" class2="c3" class3="cl" angle="1.93784" k="524.676"/>
+ </HarmonicAngleForce>
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
+  <Atom type="C1" charge="-0.375336" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="H1" charge="0.243662" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="Cl1" charge="-0.055994" sigma="{sigma_Cl1:0.6f}" epsilon="{epsilon_Cl1:0.6f}"/>
+ </NonbondedForce>
+</ForceField>""".format(
         sigma_C1=job.sp.sigma_C1,
         sigma_H1=job.sp.sigma_H1,
         sigma_Cl1=job.sp.sigma_Cl1,
@@ -979,10 +959,10 @@ def __generate_DCM_xml(job):
 def __generate_DMSO_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="S1" class="s4" element="S" mass="32.06" def="[S;X3]" desc="S with three connected atoms"/>
-   <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="S1" class="s4" element="S" mass="32.06" def="[S;X3]" desc="S with three connected atoms"/>
+  <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="o" class2="s4" length="0.1497" k="375471.133"/>
@@ -990,14 +970,14 @@ def __generate_DMSO_xml(job):
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="h1" class2="c3" class3="s4" angle="1.896" k="454.219"/>
-  <Angle class1="c3" class2="s4" class3="o" angle="1.854" k="343.587"/>
-  <Angle class1="c3" class2="s4" class3="c3" angle="1.690" k="325.012"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="s4" angle="1.89647" k="454.219"/>
+  <Angle class1="c3" class2="s4" class3="o" angle="1.85371" k="343.587"/>
+  <Angle class1="c3" class2="s4" class3="c3" angle="1.68983" k="325.012"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="h1" class2="c3" class3="s4" class4="c3" periodicity1="3" phase1="0.0" k1="0.837"/>
-  <Proper class1="h1" class2="c3" class3="s4" class4="o" periodicity1="3" phase1="0.0" k1="0.837"/>
+  <Proper class1="h1" class2="c3" class3="s4" class4="c3" periodicity1="3" phase1="0.0" k1="0.83676747"/>
+  <Proper class1="h1" class2="c3" class3="s4" class4="o" periodicity1="3" phase1="0.0" k1="0.83676747"/>
  </PeriodicTorsionForce>
  <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="S1" charge="0.357892" sigma="{sigma_S1:0.6f}" epsilon="{epsilon_S1:0.6f}"/>
@@ -1021,10 +1001,10 @@ def __generate_DMSO_xml(job):
 def __generate_ACN_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
-   <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
+  <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c1" class2="n1" length="0.1138" k="848933.191"/>
@@ -1032,14 +1012,14 @@ def __generate_ACN_xml(job):
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c1" class3="n1" angle="3.115" k="486.180"/>
-  <Angle class1="c1" class2="c3" class3="hc" angle="1.915" k="403.750"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="c1" class3="n1" angle="3.11541" k="486.180"/>
+  <Angle class1="c1" class2="c3" class3="hc" angle="1.91550" k="403.750"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.1" k1="0.000"/>
+  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.141592654" k1="0.0"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="N1" charge="-0.505798" sigma="{sigma_N1:0.6f}" epsilon="{epsilon_N1:0.6f}"/>
   <Atom type="C1" charge="0.461146" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="C2" charge="-0.474882" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -1061,13 +1041,13 @@ def __generate_ACN_xml(job):
 def __generate_DEC_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
-   <Type name="C3" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
-   <Type name="O2" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
+  <Type name="C3" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
+  <Type name="O2" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
@@ -1078,30 +1058,30 @@ def __generate_DEC_xml(job):
   <Bond class1="c" class2="o" length="0.1214" k="542245.941"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="c3" class2="c3" class3="os" angle="1.892" k="567.179"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
-  <Angle class1="c3" class2="c3" class3="hc" angle="1.921" k="388.019"/>
-  <Angle class1="c3" class2="os" class3="c" angle="2.010" k="532.458"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="h1" class2="c3" class3="os" angle="1.899" k="425.434"/>
-  <Angle class1="os" class2="c" class3="o" angle="2.153" k="635.375"/>
-  <Angle class1="os" class2="c" class3="os" angle="1.944" k="639.731"/>
-  <Angle class1="c" class2="os" class3="c3" angle="2.010" k="532.458"/>
-  <Angle class1="o" class2="c" class3="os" angle="2.153" k="635.375"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="os" angle="1.89229" k="567.179"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
+  <Angle class1="c3" class2="c3" class3="hc" angle="1.92073" k="388.019"/>
+  <Angle class1="c3" class2="os" class3="c" angle="2.00957" k="532.458"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="os" angle="1.89927" k="425.434"/>
+  <Angle class1="os" class2="c" class3="o" angle="2.15251" k="635.375"/>
+  <Angle class1="os" class2="c" class3="os" angle="1.94395" k="639.731"/>
+  <Angle class1="c" class2="os" class3="c3" angle="2.00957" k="532.458"/>
+  <Angle class1="o" class2="c" class3="os" angle="2.15251" k="635.375"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.602" periodicity2="1" phase2="3.1" k2="3.347"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.602"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="os" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
-  <Proper class1="o" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.1" k1="11.297" periodicity2="1" phase2="3.1" k2="5.858"/>
-  <Proper class1="o" class2="os" class3="c" class4="os" periodicity1="2" phase1="180.0" k1="43.932"/>
-  <Proper class1="os" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.1" k1="11.297"/>
-  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="c3" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.60244629" periodicity2="1" phase2="3.141592654" k2="3.34723617"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.60244629"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="os" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Proper class1="o" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.141592654" k1="11.29677657" periodicity2="1" phase2="3.141592654" k2="5.85762173"/>
+  <Proper class1="os" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.141592654" k1="11.29677657"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
+  <Improper class1="o" class2="os" class3="c" class4="os" periodicity1="2" phase1="3.141592654" k1="43.93195509"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="-0.453302" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="H1" charge="0.119642" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
   <Atom type="C2" charge="0.496179" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -1132,11 +1112,11 @@ def __generate_DEC_xml(job):
 def __generate_THF_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="H2" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="H2" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="os" length="0.1439" k="252295.702"/>
@@ -1145,28 +1125,28 @@ def __generate_THF_xml(job):
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="os" class3="c3" angle="1.963" k="522.082"/>
-  <Angle class1="c3" class2="c3" class3="c3" angle="1.931" k="528.933"/>
-  <Angle class1="c3" class2="c3" class3="hc" angle="1.921" k="388.019"/>
-  <Angle class1="c3" class2="c3" class3="os" angle="1.892" k="567.179"/>
-  <Angle class1="h1" class2="c3" class3="os" angle="1.899" k="425.434"/>
-  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
-  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="os" class3="c3" angle="1.96262" k="522.082"/>
+  <Angle class1="c3" class2="c3" class3="c3" angle="1.93086" k="528.933"/>
+  <Angle class1="c3" class2="c3" class3="hc" angle="1.92073" k="388.019"/>
+  <Angle class1="c3" class2="c3" class3="os" angle="1.89229" k="567.179"/>
+  <Angle class1="h1" class2="c3" class3="os" angle="1.89927" k="425.434"/>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.92108" k="387.936"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="c3" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.753" periodicity2="2" phase2="3.1" k2="1.046"/>
-  <Proper class1="c3" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.669"/>
-  <Proper class1="c3" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.602" periodicity2="2" phase2="3.1" k2="0.418"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="h1" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.602"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.669"/>
-  <Proper class1="hc" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.628"/>
-  <Proper class1="os" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.653"/>
-  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.75312398" periodicity2="2" phase2="3.141592654" k2="1.04595934"/>
+  <Proper class1="c3" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.66948049"/>
+  <Proper class1="c3" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.60244629" periodicity2="2" phase2="3.141592654" k2="0.41838374"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="h1" class2="c3" class3="os" class4="c3" periodicity1="3" phase1="0.0" k1="1.60244629"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.66948049"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.62757560"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="c3" periodicity1="3" phase1="0.0" k1="0.65268528"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="0.0" k2="1.04595934"/>
  </PeriodicTorsionForce>
- <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
   <Atom type="C1" charge="0.235221" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
   <Atom type="O1" charge="-0.442876" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
   <Atom type="C2" charge="-0.049525" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
@@ -1243,11 +1223,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1260,7 +1240,11 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = no
+pcoupl		            = berendsen
+pcoupltype              = isotropic
+ref-p                   = {press}
+tau-p                   = 0.5
+compressibility         = 4.5e-5
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1277,7 +1261,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_nvt1, cut=cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt1, cutoff=cutoff
     )
 
     return contents
@@ -1290,14 +1274,14 @@ def _generate_npt_eq_mdp(job, cutoff):
 
 ; Run parameters
 integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
+nsteps		            = 10000	    ;
 dt		                = 0.001		    ; 1 fs
 
 ; Output control
-nstxout		            = 10000		    ; save coordinates every 10.0 ps
+nstxout		            = 1000		    ; save coordinates every 10.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 10000		    ; save energies every 10.0 ps
-nstlog		            = 10000		    ; update log file every 10.0 ps
+nstenergy	            = 1000		    ; save energies every 10.0 ps
+nstlog		            = 1000		    ; update log file every 10.0 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
@@ -1307,11 +1291,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1345,7 +1329,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt, cut=cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt, cutoff=cutoff
     )
 
     return contents
@@ -1375,11 +1359,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1392,7 +1376,11 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = no
+pcoupl		            = berendsen
+pcoupltype              = isotropic
+ref-p                   = {press}
+tau-p                   = 0.5
+compressibility         = 4.5e-5
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1409,7 +1397,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2, cut=cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2, cutoff=cutoff
     )
 
     return contents
@@ -1439,11 +1427,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1456,7 +1444,11 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = no
+pcoupl		            = berendsen
+pcoupltype              = isotropic
+ref-p                   = {press}
+tau-p                   = 0.5
+compressibility         = 4.5e-5
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1473,7 +1465,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq, cut=cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq, cutoff=cutoff
     )
 
     return contents
@@ -1503,11 +1495,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1520,7 +1512,11 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = no
+pcoupl		            = berendsen
+pcoupltype              = isotropic
+ref-p                   = {press}
+tau-p                   = 0.5
+compressibility         = 4.5e-5
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1537,7 +1533,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod, cut=cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod, cutoff=cutoff
     )
 
     return contents
