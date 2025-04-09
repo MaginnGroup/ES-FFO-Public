@@ -97,6 +97,7 @@ def init_project():
                     "nsteps_nvt2": nsteps_nvt2,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
+                    "cutoff": 6 * np.max(molec_data.bounds_sig),
                 }
 
                 state_point = unpack_molec_values(molec_data, state_point, sample)
