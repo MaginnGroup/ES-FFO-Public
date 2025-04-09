@@ -42,16 +42,17 @@ def create_system(job):
     import shutil
     import unyt as u
 
-    compound = mbuild.load(job.sp.smiles, smiles=True)
-    system = mbuild.fill_box(compound, n_compounds=750, density=job.sp.rho_avg)
+    with job:
+        compound = mbuild.load(job.sp.smiles, smiles=True)
+        system = mbuild.fill_box(compound, n_compounds=1000, density=job.sp.rho_avg)
 
-    ff = foyer.Forcefield(job.fn("ff.xml"))
+        ff = foyer.Forcefield(job.fn("ff.xml"))
 
-    system_ff = ff.apply(system)
-    system_ff.combining_rule = "lorentz"
+        system_ff = ff.apply(system)
+        system_ff.combining_rule = "lorentz"
 
-    system_ff.save("system.gro")
-    system_ff.save("unedited.top")
+        system_ff.save("system.gro")
+        system_ff.save("unedited.top")
 
 
 @Project.pre.after(create_system)
@@ -64,29 +65,29 @@ def fix_topology(job):
     GAFF uses 0.5. This function edits the topology
     file accordingly.
     """
+    with job:
+        top_contents = []
+        with open(job.fn("unedited.top")) as fin:
+            for line_number, line in enumerate(fin):
+                top_contents.append(line)
+                if line.strip() == "[ defaults ]":
+                    defaults_line = line_number
 
-    top_contents = []
-    with open(job.fn("unedited.top")) as fin:
-        for line_number, line in enumerate(fin):
-            top_contents.append(line)
-            if line.strip() == "[ defaults ]":
-                defaults_line = line_number
+        top_contents[defaults_line + 2] = (
+            "1               2               yes              0.5       0.8333333\n"  # changed no to yes
+        )
 
-    top_contents[defaults_line + 2] = (
-        "1               2               yes              0.5       0.8333333\n"  # changed no to yes
-    )
-
-    with open(job.fn("system.top"), "w") as fout:
-        for line in top_contents:
-            fout.write(line)
+        with open(job.fn("system.top"), "w") as fout:
+            for line in top_contents:
+                fout.write(line)
 
 
 @Project.post.isfile("em.mdp")
-@Project.post.isfile("nvt1_eq.mdp")
-@Project.post.isfile("npt_eq.mdp")
-@Project.post.isfile("nvt2_eq.mdp")
-@Project.post.isfile("inter_eq.mdp")
-@Project.post.isfile("inter_prod.mdp")
+# @Project.post.isfile("nvt_eq1.mdp")
+# @Project.post.isfile("npt_eq.mdp")
+# @Project.post.isfile("nvt_eq2.mdp")
+# @Project.post.isfile("inter_eq.mdp")
+# @Project.post.isfile("inter_prod.mdp")
 @Project.operation
 def generate_inputs(job):
     """Generate mdp files for energy minimization, equilibration, production"""
@@ -96,52 +97,30 @@ def generate_inputs(job):
     with open(job.fn("em.mdp"), "w") as inp:
         inp.write(content)
 
-    content = _generate_nvt1_eq_mdp(job)
 
-    with open(job.fn("nvt1_eq.mdp"), "w") as inp:
-        inp.write(content)
+#     content = _generate_nvt_eq1_mdp(job)
+#     with open(job.fn("nvt_eq1.mdp"), "w") as inp:
+#         inp.write(content)
 
-    content = _generate_npt_eq_mdp(job)
+#     content = _generate_npt_eq_mdp(job)
 
-    with open(job.fn("npt_eq.mdp"), "w") as inp:
-        inp.write(content)
+#     with open(job.fn("npt_eq.mdp"), "w") as inp:
+#         inp.write(content)
 
-    content = _generate_nvt2_eq_mdp(job)
+#     content = _generate_nvt_eq2_mdp(job)
 
-    with open(job.fn("nvt2_eq.mdp"), "w") as inp:
-        inp.write(content)
+#     with open(job.fn("nvt_eq2.mdp"), "w") as inp:
+#         inp.write(content)
 
-    content = _generate_inter_eq_mdp(job)
+#     content = _generate_inter_eq_mdp(job)
 
-    with open(job.fn("inter_eq.mdp"), "w") as inp:
-        inp.write(content)
+#     with open(job.fn("inter_eq.mdp"), "w") as inp:
+#         inp.write(content)
 
-    content = _generate_inter_prod_mdp(job)
+#     content = _generate_inter_prod_mdp(job)
 
-    with open(job.fn("inter_prod.mdp"), "w") as inp:
-        inp.write(content)
-
-
-# @Project.pre.after(create_system)
-# @Project.pre.after(fix_topology)
-# @Project.pre.after(generate_inputs)
-# @Project.post(em_complete)
-# @Project.post(eq_complete)
-# @Project.post(prod_complete)
-# @Project.operation(with_job = True, cmd=True)
-# def simulate(job):
-#     """Run the minimization, equilibration, and production simulations"""
-
-#     command = (
-#         "gmx_d grompp -f em.mdp -c system.gro -p system.top -o em && "
-#         "gmx_d mdrun -v -deffnm em -ntmpi 1 -ntomp 1 && "
-#         "gmx_d grompp -f eq.mdp -c em.gro -p system.top -o eq && "
-#         "gmx_d mdrun -v -deffnm eq -ntmpi 1 -ntomp 1 && "
-#         "gmx_d grompp -f prod.mdp -c eq.gro -p system.top -o prod && "
-#         "gmx_d mdrun -v -deffnm prod -ntmpi 1 -ntomp 1"
-#     )
-
-#     return command
+#     with open(job.fn("inter_prod.mdp"), "w") as inp:
+#         inp.write(content)
 
 
 # Energy Minimization
@@ -157,33 +136,48 @@ def em_complete(job):
 @Project.pre.after(fix_topology)
 @Project.pre.after(generate_inputs)
 @Project.post(em_complete)
-@Project.operation(with_job=True, cmd=False)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
     last_sim_name = "system"
+
+    content = _generate_em_mdp(job)
+
+    with open(job.fn("em.mdp"), "w") as inp:
+        inp.write(content)
+
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
     job.doc.emin_fin = True
 
 
 # Short NVT Equilibration
 @Project.label
-def nvt1_eq_comp(job):
-    if "nvt1_eq_fin" in job.doc:
+def nvt_eq1_comp(job):
+    if "nvt_eq1_fin" in job.doc:
         return True
     else:
         return False
 
 
 @Project.pre.after(em_sim)
-@Project.post(nvt1_eq_comp)
-@Project.operation(with_job=True, cmd=False)
+@Project.post(nvt_eq1_comp)
+@Project.post.isfile("nvt_eq1.tpr")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def nvt_eq1_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq1"
     last_sim_name = "em"
+
+    cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+    content = _generate_nvt_eq1_mdp(job, cutoff)
+
+    with open(job.fn("nvt_eq1.mdp"), "w") as inp:
+        inp.write(content)
+
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
-    job.doc.nvt1_eq_fin = True
+    get_box_len(job, sim_name)
+    job.doc.nvt_eq1_fin = True
 
 
 # Long Equilibration NPT
@@ -197,22 +191,31 @@ def npt_eq_comp(job):
 
 @Project.pre.after(nvt_eq1_sim)
 @Project.post(npt_eq_comp)
-@Project.operation(with_job=True, cmd=False)
+@Project.post.isfile("npt_eq.tpr")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def npt_eq_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
+
     # Generate the first run
     sim_name = "npt_eq"
     last_sim_name = "nvt_eq1"
     property = "Density"
+
+    cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+    content = _generate_npt_eq_mdp(job, cutoff)
+
+    with open(job.fn("npt_eq.mdp"), "w") as inp:
+        inp.write(content)
+
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
     job.doc.npt_eq_fin = True
 
 
 # Run short NVT pre-equilibration
 @Project.label
-def nvt2_eq_comp(job):
+def nvt_eq2_comp(job):
     if "xy_box_len" in job.doc and "aspect_ratio" in job.doc:
         return True
     else:
@@ -220,27 +223,23 @@ def nvt2_eq_comp(job):
 
 
 @Project.pre.after(npt_eq_sim)
-@Project.post(nvt2_eq_comp)
-@Project.operation(with_job=True, cmd=False)
+@Project.post(nvt_eq2_comp)
+@Project.post.isfile("nvt_eq2.tpr")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def nvt_eq2_sim(job):
     """Run the minimization simulations"""
     sim_name = "nvt_eq2"
     last_sim_name = "npt_eq"
+
+    cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+    content = _generate_nvt_eq2_mdp(job, cutoff)
+
+    with open(job.fn("nvt_eq2.mdp"), "w") as inp:
+        inp.write(content)
+
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-    # Get final box lengths
-    # Extract the last line of the .gro file
-    with open(sim_name + ".gro", "rb") as f:
-        # Move the pointer to the end of the file, but leave space to find the last line
-        f.seek(-2, os.SEEK_END)
-        # Read backward until a newline is found
-        while f.read(1) != b"\n":
-            f.seek(-2, os.SEEK_CUR)
-        # Read the last line after finding the newline
-        last_line = f.readline().decode()
-    # Extract the box length from the last line
-    last_line.strip()
-    ave_length = list(map(float, last_line.split()))[0]
+    ave_length = get_box_len(job, sim_name)
     job.doc.xy_box_len = ave_length
     job.doc.aspect_ratio = 3.0
 
@@ -256,7 +255,7 @@ def init_inter_eq_sim(job):
     new_z_len = z_cen * 2
     job.doc.z_box_len = new_z_len
 
-    command = f"gmx_d editconf -f init_inter_eq.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
+    command = f"gmx editconf -f init_inter_eq.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
     subprocess.run(command, shell=True, check=True)
 
 
@@ -271,7 +270,7 @@ def inter_eq_comp(job):
 
 @Project.pre.after(nvt_eq2_sim)
 @Project.post(inter_eq_comp)
-@Project.operation(with_job=True, cmd=False)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def inter_eq_sim(job):
     """Run the interface equilibration simulations"""
     import panedr
@@ -297,7 +296,7 @@ def inter_prod_comp(job):
 
 @Project.pre.after(nvt_eq2_sim)
 @Project.post(inter_prod_comp)
-@Project.operation(with_job=True, cmd=False)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def inter_prod_sim(job):
     """Run the production simulations"""
 
@@ -529,105 +528,129 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
 # HELPER FUNCTIONS
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
     with job:
-        if os.path.exists(sim_name + ".cpt"):
-            command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+        if sim_name != "em":
+            w_gpu = " -nb gpu -pme gpu -bonded gpu"
         else:
+            w_gpu = ""
+        if os.path.exists(sim_name + ".cpt"):
+            # command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+            command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name}" + w_gpu
+        else:
+            # command = (
+            #     f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+            #     f"gmx mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+            # )
             command = (
-                f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-                f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+                f"gmx mdrun -v -deffnm {sim_name} -ntomp 8" + w_gpu
             )
         subprocess.run(command, shell=True, check=True)
 
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
-        try:
-            if sim_name == "npt_eq":
-                nsteps_eq = job.sp.nsteps_npt
-            elif sim_name == "inter_eq":
-                nsteps_eq = job.sp.nsteps_intereq
+        # try:
+        if sim_name == "npt_eq":
+            nsteps_eq = job.sp.nsteps_npt
+        elif sim_name == "inter_eq":
+            nsteps_eq = job.sp.nsteps_intereq
 
-            # Set number of iterations per extension and intitialize counter and total number of steps
-            eq_extend = int(nsteps_eq / 4)  # In femtoseconds
+        equil_ex_str = "eq_extend_" + sim_name
+        nsteps_str = "nsteps_" + sim_name
+        eq_data_dict = {}
+        # Set number of iterations per extension and intitialize counter and total number of steps
+        eq_extend = int(nsteps_eq / 4)  # In femtoseconds
 
-            # Get the total number of equilibration restarts and steps so far
-            existing_eq_steps = (
-                count_steps(sim_name) * 1000
-            )  # Convert to femtoseconds (step timescale is 1 fs)
-            total_eq_steps = existing_eq_steps  # In femtoseconds
+        # Get the total number of equilibration restarts and steps so far
+        existing_eq_steps = (
+            count_steps(job, sim_name) * 1000
+        )  # Convert to femtoseconds (step timescale is 1 fs)
+        total_eq_steps = existing_eq_steps  # In femtoseconds
 
-            # Set the maximum number of steps
-            if max_eq_steps not in job.doc:
-                job.doc.max_eq_steps = total_eq_steps * 2
+        # Set the maximum number of steps
+        max_eq_steps_str = "max_eq_steps_" + sim_name
+        if max_eq_steps_str not in job.doc.keys():
+            job.doc[max_eq_steps_str] = 2 * nsteps_eq
 
-            # The max number of steps is the larger of the number of steps + the org number of steps or the current max
-            max_eq_steps = np.maximum(
-                job.doc.max_eq_steps, existing_eq_steps + 2 * nsteps_eq
-            )
-            # Originally set the document eq_steps to the max number, it will be overwritten later
-            job.doc.nsteps_gemc_eq = int(max_eq_steps)
+        # The max number of steps is the larger of the number of steps + the org number of steps or the current max
+        max_eq_steps = np.maximum(
+            job.doc[max_eq_steps_str], existing_eq_steps + 2 * nsteps_eq
+        )
 
-            # Continue running while you have not exceeded the max number of steps
-            while total_eq_steps < job.doc.max_eq_steps:
-                # If you have enough steps, run the simulation, continue the simulation with more points
-                if total_eq_steps + eq_extend <= max_eq_steps:
-                    # If we have no steps, start the simulation
-                    if existing_eq_steps == 0:
-                        command = (
-                            f"gmx_d grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-                            f"gmx_d mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-                        )
-                    # Otherwise, check log file for whether previous simulation finished correctly
-                    elif check_norm_term(job, sim_name):
-                        # If it finished, extend the simulation
-                        command = (
-                            f"gmx_d convert-tpr -s {sim_name}.tpr -extend "
-                            + str(eq_extend)
-                            + f" -o {sim_name}.tpr &&"
-                            f"gmx_d mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
-                        )
-                    # Otherwise restart the simulation from the checkpoint file
-                    else:
-                        command = f"gmx_d mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
-                    subprocess.run(command, shell=True, check=True)
+        # Originally set the document eq_steps to the max number, it will be overwritten later
+        job.doc[nsteps_str] = int(max_eq_steps)
 
-                    # Update equilibration data dictionary/files
-                    eq_data_dict = get_eq_data_dict(
-                        job, eq_data_dict, sim_name, property
+        # Continue running while you have not exceeded the max number of steps
+        while total_eq_steps < job.doc[max_eq_steps_str]:
+            # If you have enough steps, run the simulation, continue the simulation with more points
+            if total_eq_steps + eq_extend <= max_eq_steps:
+                # If we have no steps, start the simulation
+                if existing_eq_steps == 0:
+                    # command = (
+                    #     f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+                    #     f"gmx mdrun -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                    # )
+                    command = (
+                        f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
+                        f"gmx mdrun -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu"
                     )
-
-                    # Track the number of added steps
-                    total_eq_steps += eq_extend
-
-                    # Set tolerance for determining equilibrium and check for convergence
-                    prod_tol_eq = (
-                        count_steps(sim_name) / 4
-                    )  # In picoseconds (same units as the data)
-                    is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
-
-                    # If the simulation has converged, break
-                    if is_equil:
-                        break
-
-                # Otherwise report an error
+                # Otherwise, check log file for whether previous simulation finished correctly
+                elif check_norm_term(job, sim_name):
+                    # If it finished, extend the simulation
+                    # command = (
+                    #     f"gmx convert-tpr -s {sim_name}.tpr -extend "
+                    #     + str(eq_extend)
+                    #     + f" -o {sim_name}.tpr &&"
+                    #     f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu "
+                    # )
+                    command = (
+                        f"gmx convert-tpr -s {sim_name}.tpr -extend "
+                        + str(eq_extend)
+                        + f" -o {sim_name}.tpr &&"
+                        f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu "
+                    )
+                # Otherwise restart the simulation from the checkpoint file
                 else:
-                    job.doc.equil_fail = True
-                    raise Exception(
-                        f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
-                    )
+                    # command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntmpi 1 -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                    command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                subprocess.run(command, shell=True, check=True)
 
-            # Set the step counter to whatever the final number of equilibration steps was
-            job.doc.nsteps_gemc_eq = total_eq_steps
-            job.doc.equil_fail = False
-        except:
-            # If the simulation fails, extend the simulation
-            if "equil_fail" in job.doc.keys() and job.doc.equil_fail:
-                job.doc.max_eq_steps = total_eq_steps * 2
-                del job.doc.nsteps_gemc_eq
-                del job.doc.equil_fail
-            # If another error occurs, set the equilibration failure flag
+                # Update equilibration data dictionary/files
+                eq_data_dict = get_eq_data_dict(job, eq_data_dict, sim_name, property)
+
+                # Track the number of added steps
+                total_eq_steps += eq_extend
+
+                # Set tolerance for determining equilibrium and check for convergence
+                prod_tol_eq = (
+                    count_steps(job, sim_name) / 4
+                )  # In picoseconds (same units as the data)
+                is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+
+                # If the simulation has converged, break
+                if is_equil:
+                    break
+
+            # Otherwise report an error
             else:
-                job.doc["eq_fail"] = True
+                job.doc[equil_ex_str] = True
+                raise Exception(
+                    f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
+                )
+
+        # Set the step counter to whatever the final number of equilibration steps was
+        job.doc[nsteps_str] = total_eq_steps
+        job.doc[equil_ex_str] = False
+        # except:
+        #     # If the simulation fails, extend the simulation
+        #     if equil_ex_str in job.doc.keys() and job.doc[equil_ex_str]:
+        #         job.doc[max_eq_steps_str] = total_eq_steps * 2
+        #         del job.doc[nsteps_str]
+        #         del job.doc[equil_ex_str]
+        #     # If another error occurs, set the equilibration failure flag
+        #     else:
+        #         eq_fail_str = "eq_fail_" + sim_name
+        #         job.doc[eq_fail_str] = True
 
 
 def check_norm_term(job, sim_name):
@@ -653,10 +676,10 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
         # Get the density and volume data
         df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
         if property in df_all.columns:
-            df = df[["Time", property]].copy()
+            df = df_all[["Time", property]].copy()
 
         elif property in ["Volume", "Density"]:
-            command = f"gmx_d energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
+            command = f"gmx energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
             subprocess.run(
                 command, input=f"{property}", text=True, check=True, shell=True
             )
@@ -675,6 +698,24 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
         }
         np.savetxt(eq_col_file, property_data, delimiter=",")
         return eq_data_dict
+
+
+def get_box_len(job, sim_name):
+    # Get final box lengths
+    # Extract the last line of the .gro file
+    with open(sim_name + ".gro", "rb") as f:
+        # Move the pointer to the end of the file, but leave space to find the last line
+        f.seek(-2, os.SEEK_END)
+        # Read backward until a newline is found
+        while f.read(1) != b"\n":
+            f.seek(-2, os.SEEK_CUR)
+        # Read the last line after finding the newline
+        last_line = f.readline().decode()
+    # Extract the box length from the last line
+    last_line.strip()
+    ave_length = list(map(float, last_line.split()))[0]
+    job.doc["box_len_" + sim_name] = ave_length
+    return ave_length
 
 
 def count_steps(job, sim_name):
@@ -1145,7 +1186,7 @@ lincs-iter      = 4
     return contents
 
 
-def _generate_nvt1_eq_mdp(job):
+def _generate_nvt_eq1_mdp(job, cutoff):
     # Use 100000 (100 ps) for the first equilibration
     contents = """
 ; MDP file for NVT simulation
@@ -1169,11 +1210,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1207,13 +1248,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt1
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt1, cutoff=cutoff
     )
 
     return contents
 
 
-def _generate_npt_eq_mdp(job):
+def _generate_npt_eq_mdp(job, cutoff):
     # Use 500000 (500 ps) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
@@ -1237,11 +1278,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1275,13 +1316,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt, cutoff=cutoff
     )
 
     return contents
 
 
-def _generate_nvt2_eq_mdp(job):
+def _generate_nvt_eq2_mdp(job, cutoff):
     # Use 100000 (100 ps) minimum for the second equilibration
     contents = """
 ; MDP file for NVT simulation
@@ -1305,11 +1346,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1343,13 +1384,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2, cutoff=cutoff
     )
 
     return contents
 
 
-def _generate_inter_eq_mdp(job):
+def _generate_inter_eq_mdp(job, cutoff):
     # Use 25000000 (25 ns) minimum for the interfacial equilibration
     contents = """
 ; MDP file for NVT simulation
@@ -1373,11 +1414,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1411,13 +1452,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq, cutoff=cutoff
     )
 
     return contents
 
 
-def _generate_inter_prod_mdp(job):
+def _generate_inter_prod_mdp(job, cutoff):
     # Use 50000000 (50 ns) for the interfacial production
     contents = """
 ; MDP file for NVT simulation
@@ -1441,11 +1482,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cutoff}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cutoff}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1479,7 +1520,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod, cutoff=cutoff
     )
 
     return contents
