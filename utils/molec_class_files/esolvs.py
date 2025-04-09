@@ -768,7 +768,6 @@ rho_c = (
 )
 Tc = 649.6  # K (https://webbook.nist.gov/cgi/cbook.cgi?ID=C68122&Mask=4#ref-2)
 
-# Fix me later
 gaff_params = {
     "sigma_C1": 3.400,  # C attached to N and H
     "sigma_C2": 3.400,  # C attached to O, and N

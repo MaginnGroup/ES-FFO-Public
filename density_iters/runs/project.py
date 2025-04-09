@@ -781,6 +781,8 @@ def _get_xml_from_molecule(molecule_name):
         molec_xml_function = __generate_DCM_xml
     elif molecule_name == "DEC":
         molec_xml_function = __generate_DEC_xml
+    elif molecule_name == "DMF":
+        molec_xml_function = __generate_DMF_xml
     else:
         raise ValueError("Molecule name not recognized")
     return molec_xml_function
@@ -1057,6 +1059,63 @@ def __generate_ACN_xml(job):
     )
     return content
 
+def __generate_DMF_xml(job):
+    content = """<ForceField>
+ <AtomTypes>
+  <Type name="N1" class="n" element="N" mass="14.01" def="[N;X3][C;X3][O&X1,S&X1]" desc="Sp2 nitrogen in amide groups"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="C2" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
+  <Type name="H2" class="h5" element="H" mass="1.008" def="H[C;!X4]([N,O,F,Cl,Br,I,S])([N,O,F,Cl,Br,I,S])" desc="H bonded to non-sp3 carbon with 2 d. group"/>
+  <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="n" length="0.1460" k="276645.436"/>
+  <Bond class1="c" class2="n" length="0.1345" k="400156.771"/>
+  <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
+  <Bond class1="c" class2="h5" length="0.1105" k="267273.374"/>
+  <Bond class1="c" class2="o" length="0.1214" k="542245.941"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="h1" class2="c3" class3="n" angle="1.90799" k="416.887"/>
+  <Angle class1="h5" class2="c" class3="n" angle="1.95808" k="438.405"/>
+  <Angle class1="n" class2="c" class3="o" angle="2.12983" k="634.543"/>
+  <Angle class1="c3" class2="n" class3="c3" angle="2.01690" k="528.268"/>
+  <Angle class1="c3" class2="n" class3="c" angle="2.11796" k="534.886"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h5" class2="c" class3="o" angle="2.15129" k="450.943"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="h1" class2="c3" class3="n" class4="c" periodicity1="3" phase1="0.0" k1="69.02990737"/>
+  <Proper class1="h1" class2="c3" class3="n" class4="c3" periodicity1="3" phase1="0.0" k1="57.15386222"/>
+  <Proper class1="h5" class2="c" class3="n" class4="c3" periodicity1="2" phase1="3.141592654" k1="10.46000910"/>
+  <Proper class1="o" class2="c" class3="n" class4="c3" periodicity1="2" phase1="3.141592654" k1="10.46000910"/>
+  <Improper class1="c" class2="c3" class3="n" class4="c3" periodicity1="2" phase1="3.141592654" k1="4.60238738"/>
+  <Improper class1="h5" class2="n" class3="c" class4="o" periodicity1="2" phase1="3.141592654" k1="43.93195509"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+  <Atom type="N1" charge="0.086913" sigma="{sigma_N1:0.6f}" epsilon="{epsilon_N1:0.6f}"/>
+  <Atom type="C1" charge="-0.310731" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="H1" charge="0.115127" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="C2" charge="0.321534" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
+  <Atom type="H2" charge="0.044705" sigma="{sigma_H2:0.6f}" epsilon="{epsilon_H2:0.6f}"/>
+  <Atom type="O1" charge="-0.522452" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
+ </NonbondedForce>
+</ForceField>""".format(
+        sigma_N1=job.sp.sigma_N1,
+        sigma_C1=job.sp.sigma_C1,
+        sigma_C2=job.sp.sigma_C2,
+        sigma_H1=job.sp.sigma_H1,
+        sigma_H2=job.sp.sigma_H2,
+        sigma_O1=job.sp.sigma_O1,
+        epsilon_N1=job.sp.epsilon_N1,
+        epsilon_C1=job.sp.epsilon_C1,
+        epsilon_C2=job.sp.epsilon_C2,
+        epsilon_H1=job.sp.epsilon_H1,
+        epsilon_H2=job.sp.epsilon_H2,
+        epsilon_O1=job.sp.epsilon_O1,
+    )
+    return content
 
 def __generate_DEC_xml(job):
     content = """<ForceField>
