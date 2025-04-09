@@ -1462,7 +1462,7 @@ pcoupl		            = no
 pbc		                = xyz		    ; 3-D PBC
 
 ; Dispersion correction
-DispCorr	            = EnerPres	    ; apply analytical tail corrections
+DispCorr	            = no	    ; account for cut-off vdW scheme
 
 ; Velocity generation
 gen-vel		            = yes		    ; assign velocities from Maxwell distribution
