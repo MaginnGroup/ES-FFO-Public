@@ -298,7 +298,7 @@ def inter_eq_sim(job):
         "init_inter_eq"  # Use the same one since the -gro file is created beforehand
     )
     sim_name = "inter_eq"
-    property = "Total-Energy"  # Total Energy Stable = Equilibrated
+    property = "Total Energy"  # Total Energy Stable = Equilibrated
 
     if not job.isfile("inter_eq.mdp"):
         with job:
@@ -309,6 +309,7 @@ def inter_eq_sim(job):
                 inp.write(content)
 
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
+
 
 # Run Interface NVT Production
 @Project.label
@@ -429,6 +430,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
 
         for i, is_equilibrated in enumerate(equil_matrix):
             key_name = list(eq_data_dict.keys())[i]
+            key_name_str = key_name.replace(" ", "_")
             col_vals = eq_data_dict[key_name]["data"]
             t_vals = eq_data_dict[key_name]["time_data"]
             # plot all
@@ -458,7 +460,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
                 if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
                     statement += f"Only {prod_cycles} production cycles found."
 
-            with open(key_name + "_eqout.txt", "a") as f:
+            with open(key_name_str + "_eqout.txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:
@@ -556,7 +558,8 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
     fig.set_size_inches(9, 5)
     fig.set_dpi(100)
     fig.tight_layout()
-    save_name = "MSER_eq_" + name + ".png"
+    name_nospace = name.replace(" ", "_")
+    save_name = "MSER_eq_" + name_nospace + ".png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
@@ -660,8 +663,6 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
 
         except:
             # If the simulation fails, extend the simulation
-            print(eq_ext_str in job.doc)
-            print(job.doc[eq_ext_str] == True)
             if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
                 job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
                 del job.doc[nsteps_str]
@@ -738,7 +739,8 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
 
         property_data = df.iloc[:, 1].values
         time_data = df.iloc[:, 0].values
-        eq_col_file = job.fn(sim_name + "_" + property + ".csv")
+        prop_save = property.replace(" ", "_")
+        eq_col_file = job.fn(sim_name + "_" + prop_save + ".csv")
         eq_data_dict[property] = {
             "data": property_data,
             "time_data": time_data,
@@ -1059,6 +1061,7 @@ def __generate_ACN_xml(job):
     )
     return content
 
+
 def __generate_DMF_xml(job):
     content = """<ForceField>
  <AtomTypes>
@@ -1116,6 +1119,7 @@ def __generate_DMF_xml(job):
         epsilon_O1=job.sp.epsilon_O1,
     )
     return content
+
 
 def __generate_DEC_xml(job):
     content = """<ForceField>
