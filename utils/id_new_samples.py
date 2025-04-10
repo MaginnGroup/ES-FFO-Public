@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from fffit.utils import values_real_to_scaled, values_scaled_to_real
+from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real
 
 
 def prepare_df_density(df_csv, molecule, liquid_density_threshold):

@@ -224,6 +224,21 @@ def npt_eq_sim(job):
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
 
+@Project.pre.after(npt_eq_sim)
+@Project.post.isfile("init_inter_eq.gro")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+def init_nvt_eq2_sim(job):
+    """Run the minimization simulations"""
+    sim_name = "init_nvt_eq2"
+    last_sim_name = "npt_eq"
+
+    # Write a function to compute density from box length of the edr
+
+    with job:
+        command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro - box {ave_length} {ave_length} {ave_length}"
+        subprocess.run(command, shell=True, check=True)
+
+
 # Run short NVT pre-equilibration
 @Project.label
 def nvt_eq2_comp(job):
@@ -233,7 +248,7 @@ def nvt_eq2_comp(job):
         return False
 
 
-@Project.pre.after(npt_eq_sim)
+@Project.pre.after(init_nvt_eq2_sim)
 @Project.post(nvt_eq2_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def nvt_eq2_sim(job):
@@ -1479,7 +1494,7 @@ lincs-iter              = 4
 
 
 def _generate_inter_eq_mdp(job, cutoff):
-    # Use 25000000 (25 ns) minimum for the interfacial equilibration
+    # Use 15000000 (15 ns) minimum for the interfacial equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -1553,10 +1568,10 @@ nsteps		            = {nsteps}	    ;
 dt		                = 0.001		    ; 1 fs
 
 ; Output control
-nstxout		            = 1000		    ; save coordinates every 1.0 ps
+nstxout		            = 10000		    ; save coordinates every 10.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 1.0 ps
-nstlog		            = 1000		    ; update log file every 1.0 ps
+nstenergy	            = 10000		    ; save energies every 10.0 ps
+nstlog		            = 10000		    ; update log file every 10.0 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet

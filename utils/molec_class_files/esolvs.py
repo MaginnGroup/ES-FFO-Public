@@ -185,7 +185,7 @@ class EsolvsConstants:
 
 # Ethylene glycol (EG)
 mol_wt = 62.07
-rho_c = None
+rho_c = 391.9405  # https://doi.org/10.1016/0009-2509(89)85265-0
 Tc = 719.6
 n_atoms = 10
 smiles_str = "C(CO)O"

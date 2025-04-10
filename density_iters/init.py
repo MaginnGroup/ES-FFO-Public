@@ -55,7 +55,7 @@ def determine_density_iter(molec_name):
 nsteps_nvt1 = 100000  # 100ps
 nsteps_npt = 500000  # 500ps (minimum)
 nsteps_nvt2 = 100000  # 100ps
-nsteps_intereq = 25000000  # 25 ns (minimum)
+nsteps_intereq = 15000000  # 15 ns (minimum)
 nsteps_interprod = 50000000  # 50 ns
 
 
