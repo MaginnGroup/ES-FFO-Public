@@ -40,7 +40,9 @@ def unpack_molec_values(class_data, state_point, sample):
 def determine_density_iter(molec_name):
     # Check the analysis folder for analysis/MolName/density-iter-X folders
     # Find the highest density-iter-X folder
-    files = sorted(glob.glob("../analysis/" + molec_name + "/dens-iter-*"))
+    files = sorted(
+        glob.glob("../analysis/" + molec_name + "/params-iter-*.csv")
+    )
     if len(files) == 0:
         dens_iter = 1
     else:
@@ -65,13 +67,17 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("dens-iter-" + str(dens_iter))
+        project = signac.init_project("runs")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
         bounds = molec_data.param_bounds
         lhs_samples = pd.read_csv(
-            "../analysis/" + molec_name + "/dens-iter-" + str(dens_iter) + ".csv",
+            "../analysis/
+            + molec_name
+            + "/params-iter-"
+            + str(dens_iter)
+            + ".csv",
             index_col=0,
         )
         # Convert scaled latin hypercube samples to physical values

@@ -9,7 +9,7 @@ from utils.molec_class_files import esolvs
 sys.path.remove("..")
 
 # Load class properies for each training molecule
-mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC"]
+mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict()
 
 
@@ -24,5 +24,5 @@ for molec_name in molec_dict.keys():
     lhs_samples = pd.DataFrame(sample)
     lhs_samples.columns = list(class_data.param_names)
     os.makedirs("analysis/" + molec_name, exist_ok=True)
-    filename = "analysis/" + molec_name + "/dens-iter-1.csv"
+    filename = "analysis/" + molec_name + "/params-iter-1.csv"
     lhs_samples.to_csv(filename, index=True)

@@ -21,109 +21,87 @@ from utils.molec_class_files import r41
 
 sys.path.append("../")
 
-# Load class properies for each training and testing molecule
-R41 = r41.R41Constants()
-
-molec_dict = {
-    "R41": R41,
-}
-
-
-def _get_molec_dicts():
-    # Load class properies for each molecule
-    from utils.molec_class_files import r41  # import all the class files
-
-    R41 = r41.R41Constants()
-
-    # Create a dictionary with all of the data
-    molec_dict = {
-        "R41": R41,
-    }
-    return molec_dict
-
-
-def _get_class_from_molecule(molecule_name):
-    molec_dict = _get_molec_dicts()
-    return {molecule_name: molec_dict[molecule_name]}
-
-
-def save_signac_results(project_name, property_names, save_csv=True):
+def save_signac_results(projects, data_dict, prop_names, save_csv=True):
     """Save the signac results to a CSV file.
 
     Parameters
     ----------
-    project : signac.Project
-        signac project to load
-    property_names : set
+    projects : list of signac.Project
+        signac projects to load
+    data_dict : dictionary
+        dictionary of molecule names and data from esolvs.py
+    prop_names : set
         set of property names
-    csv_name : string
-        name of csv file to save results
+    save_csv : bool, default True
+        Whether to save the results to a CSV file
     """
-    df_all_molec = {}
-
+    if type(param_names) not in (list, tuple):
+        raise TypeError("param_names must be a list or tuple")
     if type(property_names) not in (list, tuple):
         raise TypeError("property_names must be a list or tuple")
 
-    project = signac.get_project(project_name)
-    # From Project, group by molecule name
-    molec_groupby = project.groupby("mol_name")
-    for molec, molec_group in molec_groupby:
-        # Get the parameter names from utils/molec_class_files/
-        molec_dict = _get_class_from_molecule(molec)
-        param_names = molec_dict[molec].param_names
-        job_groupby = param_names  # tuple(param_names)
-        property_names = tuple(property_names)
+    # Group by project_name and molecules
+    job_groupby = tuple(("mol_name", "dens-iter"))
+    property_names = tuple(property_names)
+    
+    print(f"Extracting the following properties: {property_names}")  
 
-        print(f"Extracting the following properties: {property_names}")
+    all_data_dict = {}
 
-        # Store data here before converting to dataframe
-        data = []
-
-        # Loop over all jobs in project and group by parameter sets
-        for params, job_group in molec_group.groupby(job_groupby):
-            for job in job_group:
+    # Loop over all jobs in project and group by mol name and density iter
+    for (mol_name, dens_iter), job_group in project.groupby(job_groupby):
+        data = [] # Store data here before converting to dataframe
+        # Get the unique param sets for each molecule
+        param_names = data_dict[mol_name].param_names
+        #Loop over each parameter set in the group
+        for param_vals, job_group_params in job_group.groupby(param_names):
+            #Loop over all jobs (temperatures) in the group
+            for job in job_group_params:
                 # Extract the parameters into a dict
-                new_row = {name: param for (name, param) in zip(job_groupby, params)}
+                new_row = {
+                    name: param for (name, param) in zip(param_names, param_vals).
+                }
 
                 # Extract the temperature for each job.
                 # Assumes temperature increments >= 1 K
                 temperature = round(job.sp.T)
                 new_row["temperature"] = temperature
 
-                job_fail_stat = False
                 # Extract property values. Insert N/A if not found
                 for property_name in property_names:
                     try:
                         property_ = job.doc[property_name]
                         new_row[property_name] = property_
                     except KeyError:
-                        job_fail_stat = True
+                        print(f"Job failed: {job.id}")
                         new_row[property_name] = np.nan
-                if job_fail_stat:
-                    print(
-                        f"Job {job.id} in project {project} failed. Molecule {job.sp.mol_name} at T = {temperature} K."
-                    )
-
+                
                 data.append(new_row)
 
-        # Save to csv file for record-keeping
+        #Create data from dict
         df = pd.DataFrame(data)
-        sortby_list = list(param_names) + ["temperature"]
-        # sort by parameter, and temperature
-        df.sort_values(
-            by=sortby_list,
-            ignore_index=True,
-            inplace=True,
-        )
 
-        df_all_molec[molec] = df
+        #Add data to all_data_dict
+        # If the molecule name is already in the dictionary, concatenate the dataframes
+        if mol_name in all_data_dict:
+            all_data_dict[mol_name] = pd.concat([all_data_dict[mol_name], df])
+        # If the molecule name is not in the dictionary, add the dataframe
+        else:
+            all_data_dict[mol_name] = df
 
-        if save_csv == True:
-            os.makedirs("density_iters/analysis/" + molec, exist_ok=True)
-            save_name = "density_iters/analysis/" + molec + "/" + project_name + ".csv"
-            df.to_csv(save_name)
+        # Save to csv file for record-keeping
+        if save_csv:
+            csv_name = "density_iters/analysis/" +  mol_name  + "/results-iter-" + str(dens_iter) + ".csv"
+            df.to_csv(csv_name)
+    
+    # Save all data to a single CSV file
+    for mol_name, data in all_data_dict.items():
+        if save_csv:
+            # Save each molecule data to a separate CSV file
+            csv_name = "density_iters/analysis/" + mol_name + "/all_results.csv"
+            data.to_csv(csv_name)
 
-    return df_all_molec
+    return all_data_dict
 
 
 def opt_dist(distance, top_samples, constants, target_num, rand_seed=None, eval=False):
