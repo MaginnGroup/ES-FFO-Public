@@ -14,15 +14,17 @@ molec_dict = esolvs.make_dict()
 
 
 seed = 7  # Seed of data
-n = 200  # Number of points to generate
-
-for molec_name in molec_dict.keys():
-    class_data = molec_dict[molec_name]
-    d = class_data.n_params  # Number of dimensions
-    sampler = qmc.LatinHypercube(d, seed=seed)
-    sample = sampler.random(n)
-    lhs_samples = pd.DataFrame(sample)
-    lhs_samples.columns = list(class_data.param_names)
-    os.makedirs("analysis/" + molec_name, exist_ok=True)
-    filename = "analysis/" + molec_name + "/params-iter-1.csv"
-    lhs_samples.to_csv(filename, index=True)
+for n in [200, 500000]:  # Number of points to generate
+    for molec_name in molec_dict.keys():
+        class_data = molec_dict[molec_name]
+        d = class_data.n_params  # Number of dimensions
+        sampler = qmc.LatinHypercube(d, seed=seed)
+        sample = sampler.random(n)
+        lhs_samples = pd.DataFrame(sample)
+        lhs_samples.columns = list(class_data.param_names)
+        os.makedirs("analysis/" + molec_name, exist_ok=True)
+        if n == 200:
+            filename = "analysis/" + molec_name + "/params-iter-1.csv"
+        else:
+            filename = "analysis/" + molec_name + "/LHS_500000.csv"
+        lhs_samples.to_csv(filename, index=True)

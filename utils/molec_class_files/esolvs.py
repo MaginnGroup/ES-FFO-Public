@@ -35,9 +35,9 @@ class EsolvsConstants:
         # Experimental data
         self.molecular_weight = mol_wt
         self.expt_Tc = Tc
-        self.expt_rhoc = rhoc
         self.n_atoms = n_atoms
         self.smiles_str = smiles_str
+        self.expt_rhoc = self.chem_crit_dens() if rhoc is None else rhoc
         self.expt_liq_density = expt_liq_density
         self.expt_surftens = expt_surftens
         self.expt_Pvap = expt_Pvap
@@ -53,6 +53,12 @@ class EsolvsConstants:
             == self.expt_Pvap.keys()
         )
 
+    def chem_crit_dens(self):
+        # Create a Chemical object for the compound
+        constants = Chemical(self.smiles_str)
+        rhoc = constants.rhoc  # kg/m^3
+        return rhoc
+
     def pr_vap_dens(self, T):
         P = float(
             (self.expt_Pvap[T] * u.bar).in_units("Pa")
@@ -61,8 +67,8 @@ class EsolvsConstants:
         constants = Chemical(self.smiles_str)
         eos = PR(constants.Tc, constants.Pc, constants.omega, T=T, P=P)
         # Use the Peng-Robinson EOS to calculate the vapor density
-        molar_vol_g = eos.V_g  # m^3/mol
-        vapor_density = self.molecular_weight / 1000 / molar_vol_g  # Convert to kg/m^3
+        molar_dens_g = eos.rho_g  # mol/m^3
+        vapor_density = constants.MW * molar_dens_g / 1000  # Convert to kg/m^3
         return vapor_density
 
     # def ig_vap_dens(self, T):

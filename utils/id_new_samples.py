@@ -31,8 +31,8 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
     df_vapor : pd.DataFrame
         `df_all` where `is_liquid` is False
     """
-    if "density" not in df_csv.columns:
-        raise ValueError("df_csv must contain column 'density'")
+    if "density" not in df_csv.columns or "surf_tens" not in df_csv.columns:
+        raise ValueError("df_csv must contain column 'density' and 'surf_tens'")
     if "temperature" not in df_csv.columns:
         raise ValueError("df_csv must contain column 'temperature'")
     for param in list(molecule.param_names):
@@ -40,31 +40,30 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
             raise ValueError(f"df_csv must contain a column for parameter: '{param}'")
 
     # Add expt density and is_liquid
-    df_all = df_csv.rename(columns={"density": "md_density"})
-    df_all["expt_density"] = df_all["temperature"].apply(
-        lambda temp: molecule.expt_liq_density[int(temp)]
+    df_all = df_csv.rename(
+        columns={"density": "md_density", "surf_tens": "md_surf_tens"}
     )
-    df_all["is_liquid"] = df_all["md_density"].apply(
-        lambda x: x > liquid_density_threshold
-    )
+    df_all["expt_density"] = df_all["temperature"].map(molecule.expt_liq_density)
+    df_all["expt_surf_tens"] = df_all["temperature"].map(molecule.expt_surftens)
+    df_all["is_liquid"] = df_all["md_density"] > liquid_density_threshold
 
     # Scale all values
-    scaled_param_values = values_real_to_scaled(
-        df_all[list(molecule.param_names)], molecule.param_bounds
+    scaling_info = {
+        "temperature": molecule.temperature_bounds(),
+        "md_density": molecule.liq_density_bounds,
+        "expt_density": molecule.liq_density_bounds,
+        "md_surf_tens": molecule.surftens_bounds,
+        "expt_surf_tens": molecule.surftens_bounds,
+    }
+
+    # Scale param values
+    df_all[molecule.param_names] = values_real_to_scaled(
+        df_all[molecule.param_names], molecule.param_bounds
     )
-    scaled_temperature = values_real_to_scaled(
-        df_all["temperature"], molecule.temperature_bounds
-    )
-    scaled_md_density = values_real_to_scaled(
-        df_all["md_density"], molecule.liq_density_bounds
-    )
-    scaled_expt_density = values_real_to_scaled(
-        df_all["expt_density"], molecule.liq_density_bounds
-    )
-    df_all[list(molecule.param_names)] = scaled_param_values
-    df_all["temperature"] = scaled_temperature
-    df_all["md_density"] = scaled_md_density
-    df_all["expt_density"] = scaled_expt_density
+
+    # Scale other properties
+    for col, bounds_func in scaling_info.items():
+        df_all[col] = values_real_to_scaled(df_all[col], bounds_func)
 
     # Split out vapor and liquid samples
     df_liquid = df_all[df_all["is_liquid"] == True]

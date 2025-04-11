@@ -83,6 +83,8 @@ def init_project():
         temps = list(molec_data.expt_Pvap.keys())
         for temp in [temps[0]]:
             liq_density = molec_data.expt_liq_density[temp]
+            # vap_density = molec_data.expt_vap_density[temp]
+            # rho_avg = (liq_density + vap_density) / 2.0
             for sample in scaled_params[0].reshape(1, -1):
                 # Define the state point w/ unchanging characteristics
                 state_point = {
@@ -93,6 +95,7 @@ def init_project():
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
                     "rho_liq": liq_density,  # kg/m^3
                     "nmols": nmols,  # Number of molecules
+                    "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt1": nsteps_nvt1,
                     "nsteps_npt": nsteps_npt,
                     "nsteps_nvt2": nsteps_nvt2,

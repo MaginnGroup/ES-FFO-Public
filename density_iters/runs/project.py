@@ -267,7 +267,7 @@ def nvt_eq2_comp(job):
 def nvt_eq2_sim(job):
     """Run the minimization simulations"""
     sim_name = "nvt_eq2"
-    last_sim_name = "init_nvt_eq2_sim"
+    last_sim_name = "init_nvt_eq2"
 
     if not job.isfile("nvt_eq2.mdp"):
         with job:
@@ -293,8 +293,8 @@ def init_inter_eq_sim(job):
     last_sim_name = "nvt_eq2"
     box_len = job.doc["box_len_" + last_sim_name]
     xy_cen = round(box_len / 2, 5)
-    z_cen = round(box_len * aspect_ratio / 2, 5)
-    new_z_len = round(box_len * aspect_ratio, 5)
+    z_cen = round(box_len * job.sp.aspect_ratio / 2, 5)
+    new_z_len = round(box_len * job.sp.aspect_ratio, 5)
     job.doc["z_box_len"] = new_z_len
 
     with job:
@@ -375,8 +375,8 @@ def inter_prod_sim(job):
 
 
 @Project.pre.after(inter_prod_sim)
-@Project.post(lambda job: "surf_ten" in job.doc)
-@Project.post(lambda job: "surf_ten_unc" in job.doc)
+@Project.post(lambda job: "surf_tens" in job.doc)
+@Project.post(lambda job: "surf_tens_unc" in job.doc)
 @Project.operation
 def calculate_properties(job):
     """Calculate the density"""
@@ -389,7 +389,7 @@ def calculate_properties(job):
     df = panedr.edr_to_df(job.fn("inter_prod.edr"))
 
     get_props = ["Density", "#Surf*SurfTen"]
-    names = ["density", "surf_ten"]
+    names = ["density", "surf_tens"]
     for prop, name in zip(get_props, names):
         property = df[prop].values
         ave = np.mean(property)
@@ -693,7 +693,6 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                         raise Exception(
                             f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
                         )
-
         except:
             # If the simulation fails, extend the simulation
             if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
