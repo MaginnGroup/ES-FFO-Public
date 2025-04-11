@@ -21,7 +21,7 @@ from utils.molec_class_files import r41
 
 sys.path.append("../")
 
-def save_signac_results(projects, data_dict, prop_names, save_csv=True):
+def save_signac_results(project, data_dict, prop_names, save_csv=True):
     """Save the signac results to a CSV file.
 
     Parameters
@@ -59,7 +59,7 @@ def save_signac_results(projects, data_dict, prop_names, save_csv=True):
             for job in job_group_params:
                 # Extract the parameters into a dict
                 new_row = {
-                    name: param for (name, param) in zip(param_names, param_vals).
+                    name: param for (name, param) in zip(param_names, param_vals)
                 }
 
                 # Extract the temperature for each job.
@@ -251,23 +251,30 @@ def bisection(
     return final_distance, final_eval - target_num
 
 
-# STOPPED HERE
-def id_new_samples(all_df_data, mol_data_dict, verbose = True, save_fig=False):
+# Turn this into multiple functions
+def id_new_samples(all_df_data, mol_data_dict, verbose = True, save_fig=False, cl_shuffle_seed = 1, gp_shuffle_seed = 42, dist_seed = 1):
     #Loop over all molecules:
+    next_iter_params_all = {}
     for mol_name, data in all_df_data.items():
         #Prepare df_density
         ld_threshold = mol_data_dict[mol_name].expt_rhoc
         df_csv = all_df_data[mol_name]
+        df_iter1_csv = df_csv[df_csv["dens-iter"] == 1].copy()
+        iter_num = df_csv["dens-iter"].max()
         df_all, df_liquid, df_vapor = prepare_df_density(
-            df_csv, data, liquid_density_threshold
+            df_csv, data, ld_threshold
         )
+        df_iter1, df_liquid_iter1, df_vapor_iter1 = prepare_df_density(
+            df_iter1_csv, data, ld_threshold
+        )
+        root_dir = "density-iters/analysis/" + mol_name + "/"
 
         ### Step 2: Fit classifier and GP models
         # Create training/test set
         param_names = list(data.param_names) + ["temperature"]
         property_name = "is_liquid"
         x_train, y_train, x_test, y_test = shuffle_and_split(
-            df_all, param_names, property_name, shuffle_seed
+            df_iter1, param_names, property_name, cl_shuffle_seed
         )
 
         # Create and fit classifier
@@ -281,7 +288,7 @@ def id_new_samples(all_df_data, mol_data_dict, verbose = True, save_fig=False):
             classifier, x_test, y_test, display_labels=["Vapor", "Liquid"]
         )
         if save_fig:
-            plt.savefig("classifier.pdf")
+            plt.savefig(root_dir + "classifier.pdf")
 
         ### Fit GP Model
         # Create training/test set
@@ -292,131 +299,138 @@ def id_new_samples(all_df_data, mol_data_dict, verbose = True, save_fig=False):
             x_train, y_train, x_test, y_test = shuffle_and_split(
             df_liquid, param_names, property_name, shuffle_seed=gp_shuffle_seed
         )
-            models[prop] = run_gpflow_scipy(
+            models[property_name] = run_gpflow_scipy(
                 x_train,
                 y_train,
                 gpflow.kernels.RBF(lengthscales=np.ones(data.n_params + 1)),
             )
 
         ### Step 3: Find new parameters for MD simulations
-
         # SVM to classify hypercube regions as liquid or vapor
         latin_hypercube = np.genfromtxt(
-            "../../LHS_500000_x_6.csv",
+            root_dir + "LHS_500000.csv",
             delimiter=",",
             skip_header=1,
         )[:, 1:]
         liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier)
 
         # Find the lowest MSE points from the GP in both sets
-        ranked_liquid_samples = rank_samples(liquid_samples, model, R41, "sim_liq_density")
+        ranked_liquid_samples = rank_samples(liquid_samples, models["md_density"], data, "sim_liq_density")
         ranked_vapor_samples = rank_samples(
-            vapor_samples, model, R41, "sim_liq_density"
+            vapor_samples, models["md_density"], data, "sim_liq_density"
         )  # both l and g compared to liquid density
 
         # Make a set of the lowest MSE parameter sets
         top_liquid_samples = ranked_liquid_samples[ranked_liquid_samples["mse"] < 625.0]
         top_vapor_samples = ranked_vapor_samples[ranked_vapor_samples["mse"] < 625.0]
 
-        print(
-            "There are:",
-            top_liquid_samples.shape[0],
-            "liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
-        )
-        print(
-            "There are:",
-            top_vapor_samples.shape[0],
-            " vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
-        )
+        if verbose:
+            print(
+                "There are:",
+                top_liquid_samples.shape[0],
+                "liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
+            )
+            print(
+                "There are:",
+                top_vapor_samples.shape[0],
+                " vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
+            )
 
-    #### Visualization: Low MSE parameter sets
-    # Create a pairplot of the top "liquid" parameter values
-    column_names = list(R41.param_names)
-    g = seaborn.pairplot(top_liquid_samples.drop(columns=["mse"]))
-    g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
-    if save_fig:
-        g.savefig("liq_mse_below625.pdf")
+        #### Visualization: Low MSE parameter sets
+        # Create a pairplot of the top "liquid" parameter values
+        column_names = list(data.param_names)
+        g = seaborn.pairplot(top_liquid_samples.drop(columns=["mse"]))
+        g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
 
-    # Create a pairplot of the top "vapor" parameter values
-    column_names = list(R41.param_names)
-    g = seaborn.pairplot(top_vapor_samples.drop(columns=["mse"]))
-    g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
-    if save_fig:
-        g.savefig("vap_mse_below625.pdf")
-
-    new_liquid_params = [top_liquid_samples.drop(columns=["mse"])]
-    new_vapor_params = [top_vapor_samples.drop(columns=["mse"])]
-
-    # Concatenate into a single dataframe and save to CSV
-    new_liquid_params = pd.concat(new_liquid_params)
-    new_vapor_params = pd.concat(new_vapor_params)
-    if save_fig:
-        new_liquid_params.to_csv(csv_path + out_top_liquid_csv_name)
-        new_vapor_params.to_csv(csv_path + out_top_vapor_csv_name)
-    top_liq = pd.read_csv(
-        csv_path + out_top_liquid_csv_name, delimiter=",", index_col=0
-    )
-    top_vap = pd.read_csv(csv_path + out_top_vapor_csv_name, delimiter=",", index_col=0)
-
-    top_liq = top_liq.reset_index(drop=True)
-    top_vap = top_vap.reset_index(drop=True)
-
-    from numpy.linalg import norm
-
-    target_total = 200
-    # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
-    target_num_l = np.minimum(200, len(top_liq))
-    target_num_v = target_total - target_num_l
-    print(target_num_l, target_num_v)
-
-    zero_array = np.zeros(top_liq.shape[1])
-    one_array = np.ones(top_liq.shape[1])
-    ub_array = one_array - zero_array
-
-    # lower_bound = 1e-8
-    lower_bound = 0
-    # IL norm between the highest high parameter space, and lowest low parameter space value
-    upper_bound = norm(ub_array, 1)  # This number will be 10, the number of dimensions
-    error_tol = 1e-8
-
-    # If we have enough liquid samples, we want to find the distance that will give us the target number of liquid samples
-    if len(top_liq) >= target_total:
-        distance_opt_l, number_points_l = bisection(
-            lower_bound, upper_bound, error_tol, top_liq, R41, target_num_l, dist_seed
-        )
-        print(
-            "\nRequired Distance for liquid is : %0.8f and there are %0.1f points too many"
-            % (distance_opt_l, number_points_l)
-        )
-        new_points_l = opt_dist(
-            distance_opt_l, top_liq, R41, target_num_l, rand_seed=dist_seed, eval=True
-        )
-        print(
-            len(new_points_l),
-            "top liquid density points are left after removing similar points using a distance of",
-            np.round(distance_opt_l, 5),
-        )
         if save_fig:
-            new_points_l.to_csv(csv_path + out_csv_name)
-    # If we don't we want to find the vapor sets to add
-    else:
-        distance_opt_v, number_points_v = bisection(
-            lower_bound, upper_bound, error_tol, top_vap, R41, target_num_v, dist_seed
-        )
-        print(
-            "\nRequired Distance for vapor is : %0.8f and there are %0.1f points too many"
-            % (distance_opt_v, number_points_v)
-        )
-        new_points_v = opt_dist(
-            distance_opt_v, top_vap, R41, target_num_v, rand_seed=dist_seed, eval=True
-        )
-        print(
-            len(new_points_v),
-            "top vapor density points are left after removing similar points using a distance of",
-            np.round(distance_opt_v, 5),
-        )
+            g.savefig(root_dir + "liq_mse_below625.pdf")
+
+        # Create a pairplot of the top "vapor" parameter values
+        column_names = list(data.param_names)
+        g = seaborn.pairplot(top_vapor_samples.drop(columns=["mse"]))
+        g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
         if save_fig:
-            pd.concat([top_liq, new_points_v], axis=0).to_csv(csv_path + out_csv_name)
+            g.savefig(root_dir + "vap_mse_below625.pdf")
+
+        new_liquid_params = [top_liquid_samples.drop(columns=["mse"])]
+        new_vapor_params = [top_vapor_samples.drop(columns=["mse"])]
+
+        # Concatenate into a single dataframe and save to CSV
+        new_liquid_params = pd.concat(new_liquid_params)
+        new_vapor_params = pd.concat(new_vapor_params)
+
+        liq_path = root_dir + "dens-iter-" + str(iter_num) + "-liq-params.csv"
+        vap_path = root_dir + "dens-iter-" + str(iter_num) + "-vap-params.csv"
+        new_liquid_params.to_csv(liq_path)
+        new_vapor_params.to_csv(vap_path)
+
+        top_liq = new_liquid_params.reset_index(drop=True)
+        top_vap = new_vapor_params.reset_index(drop=True)
+
+        from numpy.linalg import norm
+
+        target_total = 200
+        final_sample_file = root_dir + "dens-iter-" + str(iter_num + 1) + "-params.csv"
+        # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
+        target_num_l = np.minimum(200, len(top_liq))
+        target_num_v = target_total - target_num_l
+        if verbose:
+            print(target_num_l, target_num_v)
+
+        zero_array = np.zeros(top_liq.shape[1])
+        one_array = np.ones(top_liq.shape[1])
+        ub_array = one_array - zero_array
+
+        # lower_bound = 1e-8
+        lower_bound = 0
+        # IL norm between the highest high parameter space, and lowest low parameter space value
+        upper_bound = norm(ub_array, 1)  # This number will be 10, the number of dimensions
+        error_tol = 1e-8
+
+        # If we have enough liquid samples, we want to find the distance that will give us the target number of liquid samples
+        if len(top_liq) >= target_total:
+            distance_opt_l, number_points_l = bisection(
+                lower_bound, upper_bound, error_tol, top_liq, data, target_num_l, dist_seed
+            )
+            new_points_l = opt_dist(
+                distance_opt_l, top_liq, data, target_num_l, rand_seed=dist_seed, eval=True
+            )
+            if verbose:
+                print(
+                    "\nRequired Distance for liquid is : %0.8f and there are %0.1f points too many"
+                    % (distance_opt_l, number_points_l)
+                )
+                print(
+                    len(new_points_l),
+                    "top liquid density points are left after removing similar points using a distance of",
+                    np.round(distance_opt_l, 5),
+                )
+            
+            next_iter_params = new_points_l
+        # If we don't we want to find the vapor sets to add
+        else:
+            distance_opt_v, number_points_v = bisection(
+                lower_bound, upper_bound, error_tol, top_vap, data, target_num_v, dist_seed
+            )
+            new_points_v = opt_dist(
+                distance_opt_v, top_vap, data, target_num_v, rand_seed=dist_seed, eval=True
+            )
+            if verbose:
+                print(
+                    "\nRequired Distance for vapor is : %0.8f and there are %0.1f points too many"
+                    % (distance_opt_v, number_points_v)
+                )
+                
+                print(
+                    len(new_points_v),
+                    "top vapor density points are left after removing similar points using a distance of",
+                    np.round(distance_opt_v, 5),
+                )
+            next_iter_params = pd.concat([top_liq, new_points_v], axis=0)
+
+        next_iter_params.to_csv(final_sample_file)
+        next_iter_params_all[mol_name] = next_iter_params
+    return next_iter_params_all
 
 # def id_new_samples():
 #     liquid_density_threshold = (
