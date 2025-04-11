@@ -43,7 +43,7 @@ def create_system(job):
     import unyt as u
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
-    system = mbuild.fill_box(compound, n_compounds=1000, density=job.sp.rho_avg)
+    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density=job.sp.rho_liq)
 
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
@@ -183,8 +183,7 @@ def nvt_eq1_sim(job):
     sim_name = "nvt_eq1"
     last_sim_name = "em"
 
-    cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-    content = _generate_nvt_eq1_mdp(job, cutoff)
+    content = _generate_nvt_eq1_mdp(job)
 
     with open(job.fn("nvt_eq1.mdp"), "w") as inp:
         inp.write(content)
@@ -215,8 +214,7 @@ def npt_eq_sim(job):
 
     if not job.isfile("npt_eq.mdp"):
         with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-            content = _generate_npt_eq_mdp(job, cutoff)
+            content = _generate_npt_eq_mdp(job)
 
             with open(job.fn("npt_eq.mdp"), "w") as inp:
                 inp.write(content)
@@ -225,24 +223,39 @@ def npt_eq_sim(job):
 
 
 @Project.pre.after(npt_eq_sim)
-@Project.post.isfile("init_inter_eq.gro")
+@Project.post.isfile("init_nvt_eq2.gro")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def init_nvt_eq2_sim(job):
     """Run the minimization simulations"""
+    import panedr
+
     sim_name = "init_nvt_eq2"
     last_sim_name = "npt_eq"
+    property = "Volume"  # If NPT equilibrated, volume will also equilibrate
 
-    # Write a function to compute density from box length of the edr
+    # Get final box lengths from volune
+    df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
+    volume = df[property].values
+    results, adf_test_failed = get_pymser_results(volume)
+    if not adf_test_failed:
+        vol_prod = volume[results["t0"] :]
+    else:
+        raise Exception(
+            "ADF test failed to complete. Ensure NPT equilibration is complete."
+        )
+    ave_length = np.mean(vol_prod) ** (1 / 3)
+    ave_length_rnd = np.round(ave_length, 5)
+    job.doc["box_len_" + sim_name] = ave_length_rnd
 
     with job:
-        command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro - box {ave_length} {ave_length} {ave_length}"
+        command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro -box {ave_length_rnd} {ave_length_rnd} {ave_length_rnd}"
         subprocess.run(command, shell=True, check=True)
 
 
 # Run short NVT pre-equilibration
 @Project.label
 def nvt_eq2_comp(job):
-    if "xy_box_len" in job.doc and "aspect_ratio" in job.doc:
+    if "box_len_nvt_eq2" in job.doc:
         return True
     else:
         return False
@@ -254,12 +267,11 @@ def nvt_eq2_comp(job):
 def nvt_eq2_sim(job):
     """Run the minimization simulations"""
     sim_name = "nvt_eq2"
-    last_sim_name = "npt_eq"
+    last_sim_name = "init_nvt_eq2_sim"
 
     if not job.isfile("nvt_eq2.mdp"):
         with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
-            content = _generate_nvt_eq2_mdp(job, cutoff)
+            content = _generate_nvt_eq2_mdp(job)
 
             with open(job.fn("nvt_eq2.mdp"), "w") as inp:
                 inp.write(content)
@@ -269,8 +281,6 @@ def nvt_eq2_sim(job):
     # Get final box lengths
     # Extract the last line of the .gro file
     ave_length = get_box_len(job, sim_name)
-    job.doc.xy_box_len = ave_length
-    job.doc.aspect_ratio = 3.0
 
 
 # Make Interface for simulation
@@ -281,11 +291,11 @@ def init_inter_eq_sim(job):
 
     sim_name = "init_inter_eq"
     last_sim_name = "nvt_eq2"
-    box_len = job.doc.xy_box_len
-    xy_cen = job.doc.xy_box_len / 2
-    z_cen = job.doc.xy_box_len * job.doc.aspect_ratio / 2
-    new_z_len = z_cen * 2
-    job.doc.z_box_len = new_z_len
+    box_len = job.doc["box_len_" + last_sim_name]
+    xy_cen = round(box_len / 2, 5)
+    z_cen = round(box_len * aspect_ratio / 2, 5)
+    new_z_len = round(box_len * aspect_ratio, 5)
+    job.doc["z_box_len"] = new_z_len
 
     with job:
         command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
@@ -317,7 +327,9 @@ def inter_eq_sim(job):
 
     if not job.isfile("inter_eq.mdp"):
         with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+            cutoff = np.minimum(
+                0.9 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+            )
             content = _generate_inter_eq_mdp(job, cutoff)
 
             with open(job.fn("inter_eq.mdp"), "w") as inp:
@@ -350,7 +362,9 @@ def inter_prod_sim(job):
 
     if not job.isfile("inter_prod.mdp"):
         with job:
-            cutoff = np.minimum(get_box_len(job, last_sim_name) / 2, job.sp.cutoff)
+            cutoff = np.minimum(
+                0.9 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+            )
             content = _generate_inter_prod_mdp(job, cutoff)
 
             with open(job.fn("inter_prod.mdp"), "w") as inp:
@@ -401,6 +415,37 @@ def calculate_properties(job):
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
+def get_pymser_results(eq_col):
+    batch_size = max(1, int(len(eq_col) * 0.0005))
+
+    # Try with ADF test enabled, fallback without it if it fails
+    try:
+        results = pymser.equilibrate(
+            eq_col,
+            LLM=False,
+            batch_size=batch_size,
+            ADF_test=True,
+            uncertainty="uSD",
+            print_results=False,
+        )
+        adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
+    except:
+        results = pymser.equilibrate(
+            eq_col,
+            LLM=False,
+            batch_size=batch_size,
+            ADF_test=False,
+            uncertainty="uSD",
+            print_results=False,
+        )
+        results["adf"], results["critical_values"], adf_test_failed = (
+            None,
+            None,
+            False,
+        )
+    return results, adf_test_failed
+
+
 def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
     res_matrix = []
@@ -411,34 +456,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
             eq_col = eq_data_dict[key]["data"]
-            batch_size = max(1, int(len(eq_col) * 0.0005))
-
-            # Try with ADF test enabled, fallback without it if it fails
-            try:
-                results = pymser.equilibrate(
-                    eq_col,
-                    LLM=False,
-                    batch_size=batch_size,
-                    ADF_test=True,
-                    uncertainty="uSD",
-                    print_results=False,
-                )
-                adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
-            except:
-                results = pymser.equilibrate(
-                    eq_col,
-                    LLM=False,
-                    batch_size=batch_size,
-                    ADF_test=False,
-                    uncertainty="uSD",
-                    print_results=False,
-                )
-                results["adf"], results["critical_values"], adf_test_failed = (
-                    None,
-                    None,
-                    False,
-                )
-
+            results, adf_test_failed = get_pymser_results(eq_col)
             equilibrium = len(eq_col) - results["t0"] >= prod_tol
             equil_matrix.append(equilibrium and not adf_test_failed)
             res_matrix.append(results)
@@ -1286,8 +1304,8 @@ cutoff-scheme   = Verlet
 ns-type		    = grid		; Method to determine neighbor list (simple, grid)
 verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 coulombtype	    = PME		; Treatment of long range electrostatic interactions
-rcoulomb	    = 1.2		; Short-range electrostatic cut-off
-rvdw		    = 1.2		; Short-range Van der Waals cut-off
+rcoulomb	    = 1.0		; Short-range electrostatic cut-off
+rvdw		    = 1.0		; Short-range Van der Waals cut-off
 pbc		        = xyz 		; Periodic Boundary Conditions (yes/no)
 constraints     = all-bonds
 lincs-order     = 8
@@ -1297,7 +1315,7 @@ lincs-iter      = 4
     return contents
 
 
-def _generate_nvt_eq1_mdp(job, cutoff):
+def _generate_nvt_eq1_mdp(job):
     # Use 100000 (100 ps) for the first equilibration
     contents = """
 ; MDP file for NVT simulation
@@ -1321,11 +1339,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1355,13 +1373,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_nvt1, cut=cutoff
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt1
     )
 
     return contents
 
 
-def _generate_npt_eq_mdp(job, cutoff):
+def _generate_npt_eq_mdp(job):
     # Use 500000 (500 ps) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
@@ -1372,10 +1390,10 @@ nsteps		            = {nsteps}	    ;
 dt		                = 0.001		    ; 1 fs
 
 ; Output control
-nstxout		            = 10000		    ; save coordinates every 10.0 ps
+nstxout		            = 1000		    ; save coordinates every 1.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 10000		    ; save energies every 10.0 ps
-nstlog		            = 10000		    ; update log file every 10.0 ps
+nstenergy	            = 100		    ; save energies every 0.1 ps
+nstlog		            = 100		    ; update log file every 0.1 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
@@ -1385,11 +1403,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1417,19 +1435,21 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
-gen_vel                 = no        ; Velocity generation is off 
+gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+gen-temp	            = {temp}        ; temperature for Maxwell distribution
+gen-seed	            = -1		    ; generate a random seed
 
 constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt, cut=cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
     )
 
     return contents
 
 
-def _generate_nvt_eq2_mdp(job, cutoff):
+def _generate_nvt_eq2_mdp(job):
     # Use 100000 (100 ps) minimum for the second equilibration
     contents = """
 ; MDP file for NVT simulation
@@ -1453,11 +1473,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourier-spacing         = 0.12          ; effects accuracy of pme
@@ -1487,7 +1507,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2, cut=cutoff
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt2
     )
 
     return contents
@@ -1551,7 +1571,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq, cut=cutoff
+        temp=job.sp.T, nsteps=job.sp.nsteps_intereq, cut=cutoff
     )
 
     return contents
@@ -1615,7 +1635,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod, cut=cutoff
+        temp=job.sp.T, nsteps=job.sp.nsteps_interprod, cut=cutoff
     )
 
     return contents

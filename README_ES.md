@@ -113,27 +113,27 @@ To run liquid density iterations, follow the following steps:
    ```       
 4. Create force fields and generate inputs
    ```
-     python ../project.py run -o create_forcefield
-     python ../project.py run -o generate_inputs
+     python project.py run -o create_forcefield
+     python project.py run -o generate_inputs
    ```
 5. Create systems
     - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
    ```
-     python ../project.py run -o create_system
+     python project.py run -o create_system
    ```
 6. Fix topology
    ```
-     python ../project.py run -o fix_topology    
+     python project.py run -o fix_topology    
    ```
 7. Run simulation
    ```
-     python ../project.py submit -o em_sim --bundle=24 --parallel
-     python ../project.py submit -o nvt_eq1_sim --bundle=24 --parallel
-     python ../project.py submit -o npt_eq_sim --bundle=24 --parallel
-     python ../project.py submit -o nvt_eq2_sim --bundle=24 --parallel
-     python ../project.py submit -o init_inter_eq_sim --bundle=24 --parallel
-     python ../project.py submit -o inter_eq_sim --bundle=24 --parallel
-     python ../project.py submit -o inter_prod_sim --bundle=24 --parallel
+     python project.py submit -o em_sim --bundle=24 --parallel
+     python project.py submit -o nvt_eq1_sim --bundle=24 --parallel
+     python project.py submit -o npt_eq_sim --bundle=24 --parallel
+     python project.py submit -o nvt_eq2_sim --bundle=24 --parallel
+     python project.py submit -o init_inter_eq_sim --bundle=24 --parallel
+     python project.py submit -o inter_eq_sim --bundle=24 --parallel
+     python project.py submit -o inter_prod_sim --bundle=24 --parallel
    ```  
 8. Calculate density
    ```

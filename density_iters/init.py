@@ -7,11 +7,11 @@ import sys
 import glob
 import os
 
-sys.path.append("../..")
+sys.path.append("../")
 from utils.molec_class_files import esolvs
 from fffit.fffit.utils import values_scaled_to_real
 
-sys.path.remove("../..")
+sys.path.remove("../")
 
 from utils.molec_class_files import esolvs
 
@@ -40,9 +40,7 @@ def unpack_molec_values(class_data, state_point, sample):
 def determine_density_iter(molec_name):
     # Check the analysis folder for analysis/MolName/density-iter-X folders
     # Find the highest density-iter-X folder
-    files = sorted(
-        glob.glob("../analysis/" + molec_name + "/params-iter-*.csv")
-    )
+    files = sorted(glob.glob("analysis/" + molec_name + "/params-iter-*.csv"))
     if len(files) == 0:
         dens_iter = 1
     else:
@@ -57,6 +55,8 @@ nsteps_npt = 500000  # 500ps (minimum)
 nsteps_nvt2 = 100000  # 100ps
 nsteps_intereq = 15000000  # 15 ns (minimum)
 nsteps_interprod = 50000000  # 50 ns
+nmols = 1000  # Number of molecules in the system
+aspect_ratio = 3.0  # Aspect ratio of the box
 
 
 def init_project():
@@ -73,11 +73,7 @@ def init_project():
         # Load the lhs_samples and bounds
         bounds = molec_data.param_bounds
         lhs_samples = pd.read_csv(
-            "../analysis/
-            + molec_name
-            + "/params-iter-"
-            + str(dens_iter)
-            + ".csv",
+            "analysis/" + molec_name + "/params-iter-" + str(dens_iter) + ".csv",
             index_col=0,
         )
         # Convert scaled latin hypercube samples to physical values
@@ -87,8 +83,6 @@ def init_project():
         temps = list(molec_data.expt_Pvap.keys())
         for temp in [temps[0]]:
             liq_density = molec_data.expt_liq_density[temp]
-            vap_density = molec_data.expt_vap_density[temp]
-            avg_density = (liq_density + vap_density) / 2
             for sample in scaled_params[0].reshape(1, -1):
                 # Define the state point w/ unchanging characteristics
                 state_point = {
@@ -97,7 +91,8 @@ def init_project():
                     "smiles": molec_data.smiles_str,
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
-                    "rho_avg": avg_density,  # kg/m^3
+                    "rho_liq": liq_density,  # kg/m^3
+                    "nmols": nmols,  # Number of molecules
                     "nsteps_nvt1": nsteps_nvt1,
                     "nsteps_npt": nsteps_npt,
                     "nsteps_nvt2": nsteps_nvt2,
