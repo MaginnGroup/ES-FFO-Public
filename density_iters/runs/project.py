@@ -11,6 +11,7 @@ import templates.ndcrc
 from pymser import pymser
 import warnings
 import unyt as u
+from findpeaks import findpeaks
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -375,28 +376,45 @@ def inter_prod_sim(job):
 
 
 @Project.pre.after(inter_prod_sim)
-@Project.post(lambda job: "surf_tens" in job.doc)
-@Project.post(lambda job: "surf_tens_unc" in job.doc)
+@Project.post(lambda job: "surf_tens" in job.doc and "density" in job.doc)
+@Project.post(lambda job: "surf_tens_unc" in job.doc and "density_unc" in job.doc)
 @Project.operation
-def calculate_properties(job):
+def calculate_props(job):
     """Calculate the density"""
 
     import panedr
     import numpy as np
-    from block_average import block_average
-
-    # Load the thermo data
-    df = panedr.edr_to_df(job.fn("inter_prod.edr"))
-
+    print(os.getcwd())
+    sys.path.append("../../")
+    print(os.getcwd())
+    from block_average.block_average import block_average
+    sys.path.remove("../../")
+    sim_name = "inter_prod"
+ 
     get_props = ["Density", "#Surf*SurfTen"]
     names = ["density", "surf_tens"]
+    #For surface tension and density
     for prop, name in zip(get_props, names):
-        property = df[prop].values
-        ave = np.mean(property)
+        #For density get profile from xvg
+        if prop == "Density":
+            with job:
+                command = f"gmx density -f {sim_name}.trr -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
+                subprocess.run(
+                    command, input=f"System", text=True, check=True, shell=True
+                )
+                prop_data = np.loadtxt(
+                    sim_name + "_" + name + ".xvg", comments=["#", "@"]
+                )
+            df = pd.DataFrame(prop_data)
+            density = df.iloc[:, 1].values
+            #Calculate the liquid mass density as a fxn of Z
+            property = calc_mass_dens(density)
+        else:
+             # Load the thermo data
+            df = panedr.edr_to_df(job.fn("inter_prod.edr"))
+            property = df[prop].values
 
-        # save average density
-        job.doc[name] = ave
-
+        #Use block averaging to calculate the variance of each property
         (means_est, vars_est, vars_err) = block_average(property)
 
         with open(job.fn(name + "_blk_avg.txt"), "w") as ferr:
@@ -407,14 +425,64 @@ def calculate_properties(job):
                 ferr.write(
                     "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err)
                 )
+        # save average density and stdev
+        mean = np.mean(property)
+        std = np.max(np.sqrt(vars_est))
 
-        job.doc[name + "_unc"] = np.max(np.sqrt(vars_est))
+        if name == "surf_tens":
+            #Convert to mN/m from kJ/molnm^2
+            mean = float((mean * u.kJ / u.mol / u.nm**2).in_units(u.mN/u.m).value)
+            std = float((std * u.kJ / u.mol / u.nm**2).in_units(u.mN/u.m).value)
+        job.doc[name] = mean
+        job.doc[name + "_unc"] = std
 
 
 #####################################################################
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
+def calc_mass_dens(mass_dens_z):
+    #Find the region attributed to liquid density
+    find_liq_slab = find_bulk_liq_index(mass_dens_z)
+    range_for_liq_dens = find_liq_slab[0]
+    #Calculate the density
+    prop_vals = mass_dens_z[range_for_liq_dens] #kg/m^3
+
+    return prop_vals
+
+def find_bulk_liq_index(ES_numdens_z):
+    #Use np.diff to approximate the 1st derivative
+    dy = np.diff(ES_numdens_z)
+    #Use findpeaks to find the peaks and valleys, interpolating to get as close as possible
+    fp = findpeaks(lookahead=1, interpolate=10)
+    results = fp.fit(dy)["df_interp"]
+    all_peaks = results[results['peak'] | results['valley']].index.values
+
+    #get the highest peak and the lowest valley, these are the interfaces
+    interfaces = all_peaks[np.argsort(abs(results['y'].iloc[all_peaks]))[-2:]]
+    
+    # plt.scatter(results['x'], results['y'], label='ES', color='blue')
+    # plt.scatter(results['x'].iloc[interfaces], results['y'].iloc[interfaces], label='ES', color='red')
+    # plt.show()
+
+    #Divide the indices by 10 to get the correct index for the density based on interpolation
+    interfaces = [int(i/10) for i in interfaces]
+    range_org_liq = np.arange(interfaces[0], interfaces[1], 1)
+    #Get the median density from the bulk range
+    median_dens_liq = np.median(ES_numdens_z[range_org_liq])
+
+    # Find the first and last index where density >= median
+    valid_idx = np.where(ES_numdens_z[range_org_liq] >= median_dens_liq)[0]
+    #Cut the range to only include indeces where the density is above the median
+    if valid_idx.size > 0:
+        start = valid_idx[0]
+        end = valid_idx[-1] + 1  # +1 to include the last valid index
+        range_for_liq_dens = range_org_liq[start:end]
+    else:
+        range_for_liq_dens = np.array([], dtype=int)
+
+    return range_for_liq_dens, interfaces, ES_numdens_z
+
 def get_pymser_results(eq_col):
     batch_size = max(1, int(len(eq_col) * 0.0005))
 
