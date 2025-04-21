@@ -377,6 +377,7 @@ def inter_prod_sim(job):
 
 
 @Project.pre.after(inter_prod_sim)
+@Project.post.isfile("inter_prod_density.xvg")
 @Project.post(lambda job: "surf_tens" in job.doc and "density" in job.doc)
 @Project.post(lambda job: "surf_tens_unc" in job.doc and "density_unc" in job.doc)
 @Project.operation
@@ -406,8 +407,7 @@ def calculate_props(job):
                 prop_data = np.loadtxt(
                     sim_name + "_" + name + ".xvg", comments=["#", "@"]
                 )
-            df = pd.DataFrame(prop_data)
-            density = df.iloc[:, 1].values
+            density = pd.DataFrame(prop_data)
             #Calculate the liquid mass density as a fxn of Z
             property = calc_mass_dens(density)
         else:
@@ -442,18 +442,19 @@ def calculate_props(job):
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
-def calc_mass_dens(mass_dens_z):
+def calc_mass_dens(density):
     #Find the region attributed to liquid density
-    find_liq_slab = find_bulk_liq_index(mass_dens_z)
+    mass_dens_z = density[:,1]
+    find_liq_slab = find_bulk_liq_index(density)
     range_for_liq_dens = find_liq_slab[0]
     #Calculate the density
     prop_vals = mass_dens_z[range_for_liq_dens] #kg/m^3
-
     return prop_vals
 
-def find_bulk_liq_index(ES_numdens_z):
+def find_bulk_liq_index(density):
     #Use np.diff to approximate the 1st derivative
-    dy = np.diff(ES_numdens_z)
+    ES_numdens_z = density[:,1]
+    dy = np.gradient(ES_numdens_z, density[:,0])
     #Use findpeaks to find the peaks and valleys, interpolating to get as close as possible
     fp = findpeaks(lookahead=1, interpolate=10)
     results = fp.fit(dy)["df_interp"]
@@ -461,10 +462,6 @@ def find_bulk_liq_index(ES_numdens_z):
 
     #get the highest peak and the lowest valley, these are the interfaces
     interfaces = all_peaks[np.argsort(abs(results['y'].iloc[all_peaks]))[-2:]]
-    
-    # plt.scatter(results['x'], results['y'], label='ES', color='blue')
-    # plt.scatter(results['x'].iloc[interfaces], results['y'].iloc[interfaces], label='ES', color='red')
-    # plt.show()
 
     #Divide the indices by 10 to get the correct index for the density based on interpolation
     interfaces = [int(i/10) for i in interfaces]
