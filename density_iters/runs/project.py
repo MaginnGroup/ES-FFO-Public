@@ -48,7 +48,8 @@ def create_system(job):
 
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
-    system_ff = ff.apply(system)
+    # Apply the forcefield to the system even when all dihedrals are zero
+    system_ff = ff.apply(system, assert_dihedral_params = False)
     system_ff.combining_rule = "lorentz"
 
     with job:
@@ -1125,10 +1126,10 @@ def __generate_DMSO_xml(job):
 def __generate_ACN_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
-   <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
+  <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c1" class2="n1" length="0.1138" k="848933.191"/>
@@ -1136,12 +1137,12 @@ def __generate_ACN_xml(job):
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c1" class3="n1" angle="3.115" k="486.180"/>
-  <Angle class1="c1" class2="c3" class3="hc" angle="1.915" k="403.750"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="c1" class3="n1" angle="3.11541" k="486.180"/>
+  <Angle class1="c1" class2="c3" class3="hc" angle="1.91550" k="403.750"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.1" k1="0.000"/>
+  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.141592654" k1="0.0"/>
  </PeriodicTorsionForce>
  <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
   <Atom type="N1" charge="-0.505798" sigma="{sigma_N1:0.6f}" epsilon="{epsilon_N1:0.6f}"/>

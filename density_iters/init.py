@@ -16,7 +16,7 @@ sys.path.remove("../")
 from utils.molec_class_files import esolvs
 
 # Load class properies for each training molecule
-mol_names = ["EG"]  # , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["ACN"]  # , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 
@@ -78,6 +78,9 @@ def init_project():
         )
         # Convert scaled latin hypercube samples to physical values
         scaled_params = values_scaled_to_real(lhs_samples, bounds)
+        #Make the GAFF param_set (test)
+        scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
+        scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
 
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())

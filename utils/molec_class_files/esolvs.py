@@ -53,6 +53,24 @@ class EsolvsConstants:
             == self.expt_Pvap.keys()
         )
 
+    def A_kJmol_to_nm_Kkb(self, dict_or_array):
+
+        """Convert nm and kJ/mol to Angstroms and kJ/mol"""
+        if isinstance(dict_or_array, np.ndarray):
+            data = np.array(data, dtype=float)
+            n = len(data) // 2
+            sigmas = float((data[:n] * u.Angstrom).in_units(u.nm).value)
+            epsilons = float((data[n:] * (u.K * u.kb)).in_units(u.kJ / u.mol).value)
+            dict_arr = np.concatenate([sigmas, epsilons])
+        else:
+            dict_arr = {}
+            for key in dict_or_array.keys():
+                if key.startswith("sigma_"):
+                    dict_arr[key] = float((dict_or_array[key] * u.Angstrom).in_units(u.nm).value)
+                elif key.startswith("epsilon_"):
+                    dict_arr[key] = float((dict_or_array[key] * u.K *u .kb).in_units(u.kJ / u.mol).value)
+        return dict_arr
+        
     def chem_crit_dens(self):
         # Create a Chemical object for the compound
         constants = Chemical(self.smiles_str)
@@ -489,11 +507,11 @@ param_names = (
 
 
 gaff_params = {
-    "sigma_C1": 3.400,  # C attached to N
+    "sigma_C1": 3.400,  # C attached to N #Angstroms
     "sigma_C2": 3.400,  # C attached to H
     "sigma_H1": 2.65,  # Attached to C2
     "sigma_N1": 3.25,
-    "epsilon_C1": 0.878693 * (1 / 0.0083144598),
+    "epsilon_C1": 0.878693 * (1 / 0.0083144598), #kJ/mol
     "epsilon_C2": 0.457728 * (1 / 0.0083144598),
     "epsilon_H1": 0.065693 * (1 / 0.0083144598),
     "epsilon_N1": 0.711277 * (1 / 0.0083144598),
