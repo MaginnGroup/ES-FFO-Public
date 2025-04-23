@@ -48,7 +48,7 @@ df_all = prepare_df_vle(df_csv, R134a)
 def main():
     # ID pareto points
     result, pareto_points, dominated_points = find_pareto_set(
-        df_paramsets.filter(["mse_liq_density", "mse_vap_density", "mse_Pvap", "mse_Hvap", "mse_Tc", "mse_rhoc"]).values,
+        df_paramsets.filter(["mse_liq_density", "mse_surf_tens"]).values,
         is_pareto_efficient
     )
     df_paramsets = df_paramsets.join(pd.DataFrame(result, columns=["is_pareto"]))
