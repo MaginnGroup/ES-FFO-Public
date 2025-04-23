@@ -378,6 +378,7 @@ def inter_prod_sim(job):
 
 @Project.pre.after(inter_prod_sim)
 @Project.post.isfile("inter_prod_density.xvg")
+@Project.post.isfile("inter_prod_surf_tens.txt")
 @Project.post(lambda job: "surf_tens" in job.doc and "density" in job.doc)
 @Project.post(lambda job: "surf_tens_unc" in job.doc and "density_unc" in job.doc)
 @Project.operation
@@ -400,18 +401,24 @@ def calculate_props(job):
         #For density get profile from xvg
         if prop == "Density":
             with job:
-                command = f"gmx density -f {sim_name}.trr -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
-                subprocess.run(
-                    command, input=f"System", text=True, check=True, shell=True
-                )
+                if not os.path.exists(job.fn("inter_prod_density.xvg")):
+                    command = f"gmx density -f {sim_name}.trr -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
+                    subprocess.run(
+                        command, input=f"System", text=True, check=True, shell=True
+                    )
                 prop_data = np.loadtxt(
-                    sim_name + "_" + name + ".xvg", comments=["#", "@"]
+                    job.fn(sim_name + "_" + name + ".xvg"), comments=["#", "@"]
                 )
             density = pd.DataFrame(prop_data)
             #Calculate the liquid mass density as a fxn of Z
-            property = calc_mass_dens(density)
+            property = calc_mass_dens(density.to_numpy())
         else:
-             # Load the thermo data
+            with job:
+                if not os.path.exists(job.fn("inter_prod_surf_tens.txt")):
+                    command = f"echo '{prop}' | gmx energy -f {sim_name}.edr >> {sim_name}_{name}.txt"
+                    subprocess.run(
+                        command, input=f"System", text=True, check=True, shell=True
+                    )
             df = panedr.edr_to_df(job.fn("inter_prod.edr"))
             property = df[prop].values
 
@@ -431,9 +438,9 @@ def calculate_props(job):
         std = np.max(np.sqrt(vars_est))
 
         if name == "surf_tens":
-            #Convert to mN/m from kJ/molnm^2
-            mean = float((mean * u.kJ / u.mol / u.nm**2).in_units(u.mN/u.m).value)
-            std = float((std * u.kJ / u.mol / u.nm**2).in_units(u.mN/u.m).value)
+            #Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
+            mean = float((mean * u.bar * u.nm).in_units(u.mN/u.m).value)/2
+            std = float((std * u.bar * u.nm).in_units(u.mN/u.m).value)/2
         job.doc[name] = mean
         job.doc[name + "_unc"] = std
 
@@ -459,9 +466,11 @@ def find_bulk_liq_index(density):
     fp = findpeaks(lookahead=1, interpolate=10)
     results = fp.fit(dy)["df_interp"]
     all_peaks = results[results['peak'] | results['valley']].index.values
-
     #get the highest peak and the lowest valley, these are the interfaces
-    interfaces = all_peaks[np.argsort(abs(results['y'].iloc[all_peaks]))[-2:]]
+    y_vals = results['y'].iloc[all_peaks]
+    peak_index = all_peaks[np.argmax(y_vals)]
+    valley_index = all_peaks[np.argmin(y_vals)]
+    interfaces = [peak_index, valley_index]
 
     #Divide the indices by 10 to get the correct index for the density based on interpolation
     interfaces = [int(i/10) for i in interfaces]
