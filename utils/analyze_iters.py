@@ -2,6 +2,7 @@ import signac
 import sys
 import pandas as pd
 import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
 from utils.id_new_samples import (
     prep_df_density,
     build_classifier,
@@ -14,6 +15,7 @@ from utils.id_new_samples import (
 )
 from utils.molec_class_files import esolvs
 from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
+from utils.plotfig_gp_examples import fit_gp_models
 
 sys.path.append("../")
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
@@ -165,11 +167,20 @@ def find_pareto(all_df_data):
     all_final_params[mol_name] = df_final
     return all_final_params
 
-def plot_gp_examples(all_df_data, next_iter_params_all):
+def plot_gp_examples(all_df_data, gp_shuffle_seed = 42, save_fig=False):
     #Get all data
-    next_iter_params_all = {}
     for mol_name, data in all_df_data.items():
+        root_dir = "density-iters/analysis/" + mol_name + "/"
         df_csv = all_df_data[mol_name]
         iter_num = df_csv["dens-iter"].max()
         ld_threshold = data.expt_rhoc
+        pdf_name = root_dir + "dens-iter-" + str(iter_num) + f"-fig_gp_examples.csv"
+        pdf = PdfPages(pdf_name)
         df_all, df_liq, df_vap = prepare_df_density(df_csv, data, ld_threshold)
+
+        property_names = ["md_liq_density", "md_surf_tens"]
+        # Get the property names from the data
+        for prop_name in property_names:
+            models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig)
+
+        pdf.close()

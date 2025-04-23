@@ -18,7 +18,7 @@ class EsolvsConstants:
         bnds_sig,
         bnds_eps,
         expt_liq_density,
-        expt_surftens,
+        expt_surf_tens,
         expt_Pvap,
         expt_Hvap,
         expt_vap_density,
@@ -39,7 +39,7 @@ class EsolvsConstants:
         self.smiles_str = smiles_str
         self.expt_rhoc = self.chem_crit_dens() if rhoc is None else rhoc
         self.expt_liq_density = expt_liq_density
-        self.expt_surftens = expt_surftens
+        self.expt_surf_tens = expt_surf_tens
         self.expt_Pvap = expt_Pvap
         self.expt_Hvap = expt_Hvap
         self.expt_vap_density = self.get_vap_density(expt_vap_density)
@@ -49,7 +49,7 @@ class EsolvsConstants:
         assert (
             self.expt_liq_density.keys()
             == self.expt_vap_density.keys()
-            == self.expt_surftens.keys()
+            == self.expt_surf_tens.keys()
             == self.expt_Pvap.keys()
         )
 
@@ -112,7 +112,7 @@ class EsolvsConstants:
         for key in [
             "expt_liq_density",
             "expt_vap_density",
-            "expt_surftens",
+            "expt_surf_tens",
             "expt_Pvap",
             "expt_Hvap",
         ]:
@@ -149,14 +149,14 @@ class EsolvsConstants:
         """Number of adjustable parameters"""
         return len(self.param_names)
 
-    def temperature_bounds(self, prop_name="expt_surftens"):
+    def temperature_bounds(self, prop_name="expt_surf_tens"):
         """Bounds on temperature in units of K"""
 
         # Get the minimum and maximum temperature from the experimental data
         if prop_name == "expt_liq_density":
             prop = self.expt_liq_density
-        elif prop_name == "expt_surftens":
-            prop = self.expt_surftens
+        elif prop_name == "expt_surf_tens":
+            prop = self.expt_surf_tens
         elif prop_name == "expt_Pvap":
             prop = self.expt_Pvap
         elif prop_name == "expt_Hvap":
@@ -180,11 +180,11 @@ class EsolvsConstants:
         return bounds
 
     @property
-    def surftens_bounds(self):
+    def surf_tens_bounds(self):
         """Bounds on vapor density in units of kg/m^3"""
 
-        lower_bound = np.min(list(self.expt_surftens.values()))
-        upper_bound = np.max(list(self.expt_surftens.values()))
+        lower_bound = np.min(list(self.expt_surf_tens.values()))
+        upper_bound = np.max(list(self.expt_surf_tens.values()))
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
 
@@ -260,7 +260,7 @@ bnds_eps = [
 
 # # Correlation from 10.1063/1.3253106
 # # gamma = 50.21-0.089*T(C)
-# expt_surftens = {
+# expt_surf_tens = {
 #     378.15: 40.865,
 #     383.15: 40.42,
 #     393.15: 39.53,
@@ -287,7 +287,7 @@ bnds_eps = [
 # }
 
 # uncertainty = {
-#     "expt_surftens": 0.022,
+#     "expt_surf_tens": 0.022,
 # }
 
 # From REFPROP
@@ -300,7 +300,7 @@ expt_liq_density = {
 }
 
 # From REFPROP
-expt_surftens = {
+expt_surf_tens = {
     378.15: 40.939,
     383.15: 40.472,
     393.15: 39.533,
@@ -336,7 +336,7 @@ expt_vap_density = {
 }
 
 uncertainty = {
-    "expt_surftens": 0.01,
+    "expt_surf_tens": 0.01,
     "expt_liq_density": 0.001,
     "expt_vap_density": 0.001,
 }
@@ -353,7 +353,7 @@ EG = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
@@ -437,7 +437,7 @@ expt_liq_density = {
 
 # mN/m (equal to dyn/cm)
 # https://doi.org/10.1016/j.jct.2019.03.014
-expt_surftens = {
+expt_surf_tens = {
     293.15: 63.1,
     303.15: 62.4,
     313.15: 62.0,
@@ -463,7 +463,7 @@ expt_Hvap = {
 
 uncertainty = {
     "expt_liq_density": 0.0021,
-    "expt_surftens": 0.0050,
+    "expt_surf_tens": 0.0050,
     "expt_Pvap": 0.05,
     "expt_Hvap": 0.0081,
 }
@@ -480,7 +480,7 @@ Gly = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=None,
@@ -532,7 +532,7 @@ bnds_eps = [
 
 # (equal to dyn/cm)
 # DOI: 10.1021/ja02201a003
-# expt_surftens = {
+# expt_surf_tens = {
 #     286.95: 29.18,
 #     304.55: 26.81,
 #     315.95: 24.43,
@@ -540,7 +540,7 @@ bnds_eps = [
 #     340.15: 22.35,
 # }
 # From correlation (10.1021/ja02201a003)
-expt_surftens = {
+expt_surf_tens = {
     293.15: 28.23,
     298.15: 27.5961,
     303.15: 26.9675,
@@ -583,7 +583,7 @@ expt_Hvap = {
 
 uncertainty = {
     "expt_liq_density": 0.002,
-    "expt_surftens": 0.01,
+    "expt_surf_tens": 0.01,
     "expt_Pvap": 0.00427,
     "expt_Hvap": 0.0051,
 }
@@ -600,7 +600,7 @@ ACN = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=None,
@@ -652,7 +652,7 @@ bnds_eps = [
 
 # # (equal to dyn/cm)
 # # Table 2.7aa Thermophysical Properties of Methanol along the Saturation Line. From Knovel
-# expt_surftens = {
+# expt_surf_tens = {
 #     200.0: 31.1,
 #     300.0: 22.1,
 #     350.0: 17.9,
@@ -698,7 +698,7 @@ bnds_eps = [
 
 # (equal to dyn/cm)
 # REFPROP
-expt_surftens = {
+expt_surf_tens = {
     200.0: 31.717,
     300.0: 21.993,
     350.0: 17.727,
@@ -736,7 +736,7 @@ expt_Pvap = {
 # REFPROP
 uncertainty = {
     "expt_liq_density": 0.001,
-    "expt_surftens": 0.0126,
+    "expt_surf_tens": 0.0126,
     "expt_vap_density": 0.001,
 }
 
@@ -761,7 +761,7 @@ MeOH = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
@@ -827,7 +827,7 @@ bnds_eps = [
 
 # mN/m (equal to dyn/cm)
 # https://doi.org/10.1139/v70-464
-# expt_surftens = {
+# expt_surf_tens = {
 #     287.81: 36.96,
 #     297.82: 35.83,
 #     307.86: 34.65,
@@ -836,7 +836,7 @@ bnds_eps = [
 # }
 
 # https://doi.org/10.1139/v70-464 (From correlation: Note: Extrapolating outside of temp range)
-# expt_surftens = {
+# expt_surf_tens = {
 #     308.15: 34.9265,
 #     313.15: 34.306,
 #     323.15: 33.6855,
@@ -846,7 +846,7 @@ bnds_eps = [
 
 # DOI: 10.1021/je0201323 (From correlation)
 # gamma = 71.99-0.12158(T(K))
-expt_surftens = {
+expt_surf_tens = {
     308.15: 34.525,
     313.15: 33.917,
     318.15: 33.309,
@@ -882,7 +882,7 @@ expt_Hvap = {
 
 uncertainty = {
     "expt_liq_density": 1.43e-6,
-    "expt_surftens": 0.0065,
+    "expt_surf_tens": 0.0065,
     "expt_Pvap": 0.03428,
     "expt_Hvap": 0.0126,
 }
@@ -899,7 +899,7 @@ DMF = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
@@ -991,7 +991,7 @@ expt_Pvap = {
 
 # mN/m (equal to dyn/cm)
 # # https://doi.org/10.1016/j.jct.2013.02.021
-# expt_surftens = {
+# expt_surf_tens = {
 #     293.15: 36.14,
 #     298.15: 35.90,
 #     303.15: 35.56,
@@ -1000,7 +1000,7 @@ expt_Pvap = {
 # }
 
 # DOI: 10.1021/j100798a501 (45.78 -0.1145*T(C))
-expt_surftens = {
+expt_surf_tens = {
     313.15: 41.2,
     318.15: 40.6275,
     323.15: 40.055,
@@ -1019,7 +1019,7 @@ expt_Hvap = {
 
 uncertainty = {
     "expt_liq_density": 0.003,
-    "expt_surftens": 0.0012,
+    "expt_surf_tens": 0.0012,
     "expt_Pvap": 0.067,
 }
 
@@ -1035,7 +1035,7 @@ DMSO = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
@@ -1131,7 +1131,7 @@ expt_Pvap = {
 
 # mN/m (equal to dyn/cm)
 # https://doi.org/10.1016/j.jct.2013.02.021
-expt_surftens = {
+expt_surf_tens = {
     293.15: 36.14,
     298.15: 35.90,
     303.15: 35.56,
@@ -1148,7 +1148,7 @@ expt_Hvap = {
 
 uncertainty = {
     "expt_liq_density": 1.0 * 10**-7,
-    "expt_surftens": 0.0094,
+    "expt_surf_tens": 0.0094,
     "expt_Pvap": 2.5 * 10**-4,
     "expt_Hvap": 3.9 * 10**-4,
 }
@@ -1165,7 +1165,7 @@ THF = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
@@ -1261,7 +1261,7 @@ expt_Pvap = {
 }
 # mN/m (equal to dyn/cm)
 # DOI: 10.1021/j100345a065 and https://srd.nist.gov/jpcrdreprint/1.3253106.pdf
-expt_surftens = {
+expt_surf_tens = {
     293.15: 27.84,
     298.15: 27.20,
     303.15: 26.56,
@@ -1281,7 +1281,7 @@ expt_Hvap = {
 
 uncertainty = {
     "expt_liq_density": 0.003,
-    "expt_surftens": 0.0094,
+    "expt_surf_tens": 0.0094,
     "expt_Pvap": 0.017,
 }
 
@@ -1297,7 +1297,7 @@ DCM = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
@@ -1393,7 +1393,7 @@ expt_Pvap = {
 
 # mN/m (equal to dyn/cm)
 # https://doi.org/10.1016/j.fluid.2010.03.040
-expt_surftens = {
+expt_surf_tens = {
     273.18: 29.2,
     293.16: 26.8,
     313.19: 24.5,
@@ -1411,7 +1411,7 @@ expt_Hvap = {
 }
 
 uncertainty = {
-    "expt_surftens": 0.0064,
+    "expt_surf_tens": 0.0064,
     "expt_Hvap": 0.0050,
 }
 
@@ -1427,7 +1427,7 @@ DEC = EsolvsConstants(
     bnds_sig=bnds_sig,
     bnds_eps=bnds_eps,
     expt_liq_density=expt_liq_density,
-    expt_surftens=expt_surftens,
+    expt_surf_tens=expt_surf_tens,
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,

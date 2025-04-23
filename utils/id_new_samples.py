@@ -434,7 +434,7 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
         columns={"density": "md_liq_density", "surf_tens": "md_surf_tens"}
     )
     df_all["expt_density"] = df_all["temperature"].map(molecule.expt_liq_density)
-    df_all["expt_surf_tens"] = df_all["temperature"].map(molecule.expt_surftens)
+    df_all["expt_surf_tens"] = df_all["temperature"].map(molecule.expt_surf_tens)
     df_all["is_liquid"] = df_all["md_liq_density"] > liquid_density_threshold
 
     # Scale all values
@@ -442,8 +442,8 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
         "temperature": molecule.temperature_bounds(),
         "md_liq_density": molecule.liq_density_bounds,
         "expt_density": molecule.liq_density_bounds,
-        "md_surf_tens": molecule.surftens_bounds,
-        "expt_surf_tens": molecule.surftens_bounds,
+        "md_surf_tens": molecule.surf_tens_bounds,
+        "expt_surf_tens": molecule.surf_tens_bounds,
     }
 
     # Scale param values
@@ -547,8 +547,8 @@ def rank_samples(samples, gp_model, molecule, property_name, property_offset=0.0
         expt_property = molecule.expt_Pvap
         property_bounds = molecule.Pvap_bounds
     elif property_name == "sim_surf_tens":
-        expt_property = molecule.expt_surftens
-        property_bounds = molecule.surftens_bounds
+        expt_property = molecule.expt_surf_tens
+        property_bounds = molecule.surf_tens_bounds
     print("Property bounds are", property_bounds)
     # Apply GP model and calculate mean squared errors (MSE) between
     # GP model predictions and experimental data for all parameter samples
