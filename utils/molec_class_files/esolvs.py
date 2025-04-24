@@ -490,7 +490,7 @@ Gly = EsolvsConstants(
 
 # Acetonitrile  (ACN)
 mol_wt = 41.05
-rho_c = 1958.09  # kg/m^3 (DOI: 10.1021/j150462a016)
+rho_c = 240.143  # kg/m^3 (DOI: 10.1021/j150462a016)
 Tc = 547.9
 n_atoms = 6
 smiles_str = "CC#N"
