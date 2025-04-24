@@ -144,15 +144,24 @@ def shuffle_and_split(df, param_names, property_name, fraction_train=0.8, shuffl
 
     data = df[param_names + [property_name]].values
     total_entries = data.shape[0]
-    train_entries = int(total_entries * fraction_train)
-    # Shuffle the data before splitting train/test sets
-    if shuffle_seed is not None:
-        np.random.seed(shuffle_seed)
-    np.random.shuffle(data)
 
-    x_train = data[:train_entries, :-1].astype(np.float64)
-    y_train = data[:train_entries, -1].astype(np.float64)
-    x_test = data[train_entries:, :-1].astype(np.float64)
-    y_test = data[train_entries:, -1].astype(np.float64)
+    # Ensure at least one training entry
+    if total_entries == 1:
+        x_train = np.atleast_2d(data[0, :-1].astype(np.float64))
+        y_train = np.atleast_1d(data[0, -1].astype(np.float64))
+        x_test = np.empty((0, x_train.shape[0]), dtype=np.float64)
+        y_test = np.empty((0,), dtype=np.float64)
+    else:
+        train_entries = max(int(total_entries * fraction_train), 1)
+
+        # Shuffle the data before splitting train/test sets
+        if shuffle_seed is not None:
+            np.random.seed(shuffle_seed)
+        np.random.shuffle(data)
+
+        x_train = data[:train_entries, :-1].astype(np.float64)
+        y_train = data[:train_entries, -1].astype(np.float64)
+        x_test = data[train_entries:, :-1].astype(np.float64)
+        y_test = data[train_entries:, -1].astype(np.float64)
 
     return x_train, y_train, x_test, y_test

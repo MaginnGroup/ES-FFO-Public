@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-from fffit.utils import values_scaled_to_real
-from fffit.utils import values_real_to_scaled
-from fffit.utils import variances_scaled_to_real
+from fffit.fffit.utils import values_scaled_to_real
+from fffit.fffit.utils import values_real_to_scaled
+from fffit.fffit.utils import variances_scaled_to_real
 
 mpl_is_inline = 'inline' in matplotlib.get_backend()
 
