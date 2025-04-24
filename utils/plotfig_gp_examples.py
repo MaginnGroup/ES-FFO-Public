@@ -111,11 +111,6 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
         pdf.savefig(plot_model_performance(models, x_test, y_test, prop_bounds))
     return models, x_train, y_train, x_test, y_test
 
-
-def plot_gp_examples(models, data, property_name, x_test, pdf):
-    plot_gp_slices(models, data, property_name, pdf)
-    return None
-
 def plot_gp_slices(models, data, property_name, pdf):
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
     # Plot temperature slices

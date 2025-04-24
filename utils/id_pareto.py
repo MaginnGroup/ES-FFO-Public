@@ -1,4 +1,4 @@
-import sys
+import os
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
@@ -71,7 +71,9 @@ def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
     columns = list(["molecule"]) + list(new_quantities.keys())
     new_df = pd.DataFrame(new_data, columns=columns)
 
-    csv_name = root_dir + "dens-iter-" + str(iter_num) + f"-pareto-params.csv"
+    dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+    os.makedirs(dir_name, exist_ok=True)
+    csv_name = os.path.join(dir_name, "result_errors.csv")
     new_df.to_csv(csv_name)
         
     return new_df
@@ -84,8 +86,8 @@ def select_final_pareto(df_pareto, root_dir, iter_num):
             "md_surf_tens",
             "mse_surf_tens",
             "mse_liq_density",
-            "mse_surf_tens",
-            "mse_liq_density",
+            "mae_surf_tens",
+            "mae_liq_density",
             "is_pareto",
         ]
     )
@@ -98,7 +100,11 @@ def select_final_pareto(df_pareto, root_dir, iter_num):
     ]
 
     # Save CSV files
-    csv_name = root_dir + "dens-iter-" + str(iter_num) + f"-final-params.csv"
+    dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+    os.makedirs(dir_name, exist_ok=True)
+    csv_name = os.path.join(dir_name, "final-params.csv")
+    df_final.to_csv(csv_name)
+    csv_name = root_dir + "final-params.csv"
     df_final.to_csv(csv_name)
 
     return df_final

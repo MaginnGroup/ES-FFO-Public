@@ -298,7 +298,9 @@ def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_
         new_sample_params = [sample.drop(columns=["mse"])]
         # Concatenate into a single dataframe and save to CSV
         new_sample_params = pd.concat(new_sample_params)
-        samp_path = root_dir + "dens-iter-" + str(iter_num) + f"-{phase}-params.csv"
+        dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+        os.makedirs(dir_name, exist_ok=True)
+        samp_path = os.path.join(dir_name, f"{phase}-params.csv")
         new_sample_params.to_csv(samp_path)
         top_samp = new_sample_params.reset_index(drop=True)
         objects[phase] = top_samp
@@ -335,7 +337,7 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
         The dataframe for the next iteration parameters
     """
     target_total = 200
-    final_sample_file = root_dir + "dens-iter-" + str(iter_num + 1) + "-params.csv"
+    final_sample_file = root_dir + "params-iter-" + str(iter_num + 1) + ".csv"
     # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
     target_num_l = np.minimum(200, len(top_liq))
     target_num_v = target_total - target_num_l

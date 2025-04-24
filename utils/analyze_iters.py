@@ -1,4 +1,5 @@
 import signac
+import os
 import sys
 import pandas as pd
 import numpy as np
@@ -15,7 +16,7 @@ from utils.id_new_samples import (
 )
 from utils.molec_class_files import esolvs
 from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
-from utils.plotfig_gp_examples import fit_gp_models
+from utils.plotfig_gp_examples import fit_gp_models, plot_gp_slices, plot_test_sets
 
 sys.path.append("../")
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
@@ -90,7 +91,10 @@ def save_signac_results(project, data_dict, prop_names, save_csv=True):
 
         # Save to csv file for record-keeping
         if save_csv:
-            csv_name = "density_iters/analysis/" +  mol_name  + "/results-iter-" + str(dens_iter) + ".csv"
+            dir_name = "density_iters/analysis/" + mol_name + "/dens-iter-" + str(dens_iter) + "/"
+            # Create the directory if it doesn't exist
+            os.makedirs(dir_name, exist_ok=True)
+            csv_name = os.path.join(dir_name , "results.csv")
             df.to_csv(csv_name)
     
     # Save all data to a single CSV file
@@ -160,7 +164,10 @@ def find_pareto(all_df_data):
         
         df_paramsets = df_paramsets.join(pd.DataFrame(result, columns=["is_pareto"]))
 
-        file_name = root_dir + "dens-iter-" + str(iter_num) + f"-pareto-params.csv"
+        dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+        # Create the directory if it doesn't exist
+        os.makedirs(dir_name, exist_ok=True)
+        file_name = os.path.join(dir_name , "pareto-params.csv")
         df_paramsets[df_paramsets["is_pareto"] == True].to_csv(file_name)
 
         df_final = select_final_pareto(df_paramsets, root_dir, iter_num)
@@ -170,17 +177,24 @@ def find_pareto(all_df_data):
 def plot_gp_examples(all_df_data, gp_shuffle_seed = 42, save_fig=False):
     #Get all data
     for mol_name, data in all_df_data.items():
-        root_dir = "density-iters/analysis/" + mol_name + "/"
+        ld_threshold = data.expt_rhoc
         df_csv = all_df_data[mol_name]
         iter_num = df_csv["dens-iter"].max()
-        ld_threshold = data.expt_rhoc
-        pdf_name = root_dir + "dens-iter-" + str(iter_num) + f"-fig_gp_examples.csv"
+
+        root_dir = "density-iters/analysis/" + mol_name + "/"
+        dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+        os.makedirs(dir_name, exist_ok=True)
+        pdf_name = os.path.join(dir_name , "fig_gp_examples.pdf")
         pdf = PdfPages(pdf_name)
+
         df_all, df_liq, df_vap = prepare_df_density(df_csv, data, ld_threshold)
 
         property_names = ["md_liq_density", "md_surf_tens"]
         # Get the property names from the data
         for prop_name in property_names:
             models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig)
+            plot_gp_slices(models, data, prop_name, pdf)
+            plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
 
         pdf.close()
+    return models
