@@ -7,12 +7,10 @@ import seaborn
 from sklearn.metrics import ConfusionMatrixDisplay
 from numpy.linalg import norm
 from sklearn import svm
-from fffit.utils import (
-    shuffle_and_split,
-)
-from fffit.models import run_gpflow_scipy
 
-from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real
+from fffit.fffit.models import run_gpflow_scipy
+
+from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, shuffle_and_split
 
 def opt_dist(distance, top_samples, constants, target_num, rand_seed=None, eval=False):
     """
@@ -182,17 +180,19 @@ def prep_df_density(mol_name, data, df_csv):
     #Prepare df_density
     ld_threshold = data.expt_rhoc
     
+    print(df_csv.head())
+    df_csv["dens-iter"] = df_csv["dens-iter"].astype(int)
     df_iter1_csv = df_csv[df_csv["dens-iter"] == 1].copy()
     
     df_all, df_liquid, df_vapor = prepare_df_density(
         df_csv, data, ld_threshold
     )
-    df_iter1 = prepare_df_density(
+    df_iter1_all, df_iter1_l, df_iter1_v = prepare_df_density(
         df_iter1_csv, data, ld_threshold
     )
-    root_dir = "density-iters/analysis/" + mol_name + "/"
+    root_dir = "density_iters/analysis/" + mol_name + "/"
 
-    return df_iter1, df_liquid, root_dir
+    return df_iter1_all, df_liquid, root_dir
 
 def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, save_fig=False):
     """
@@ -449,8 +449,8 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
     }
 
     # Scale param values
-    df_all[molecule.param_names] = values_real_to_scaled(
-        df_all[molecule.param_names], molecule.param_bounds
+    df_all[list(molecule.param_names)] = values_real_to_scaled(
+        df_all[list(molecule.param_names)], molecule.param_bounds
     )
 
     # Scale other properties

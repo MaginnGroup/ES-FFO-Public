@@ -1,26 +1,12 @@
-import numpy as np
-import pandas as pd
-import os
-import gpflow
-import matplotlib.pyplot as plt
-import seaborn
-from sklearn.metrics import ConfusionMatrixDisplay
-from numpy.linalg import norm
-from sklearn import svm
-
-sys.path.append("../")
-
-from fffit.models import run_gpflow_scipy
-
-from fffit.fffit.utils import shuffle_and_split
-
 import sys
 import gpflow
 import numpy as np
-from scipy import stats
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
+import gpflow
+
+# sys.path.append("../")
+
+from fffit.fffit.models import run_gpflow_scipy
+from fffit.fffit.utils import shuffle_and_split
 
 from fffit.fffit.plot import (
     plot_model_performance,
@@ -28,8 +14,6 @@ from fffit.fffit.plot import (
     plot_slices_params,
     plot_model_vs_test,
 )
-
-from fffit.models import run_gpflow_scipy
 
 def get_exp_data(molec_object, prop_key):
     """
@@ -87,11 +71,13 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
 
     # Fit model
     models = {}
+
     models["RBF"] = run_gpflow_scipy(
         x_train,
         y_train,
         gpflow.kernels.RBF(lengthscales=np.ones(data.n_params + 1)),
     )
+
     models["Matern32"] = run_gpflow_scipy(
         x_train,
         y_train,
@@ -108,7 +94,9 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
     if save_fig:
         pdf.savefig(plot_model_performance(models, x_train, y_train, prop_bounds))
-        pdf.savefig(plot_model_performance(models, x_test, y_test, prop_bounds))
+        if len(x_test) > 0:
+            pdf.savefig(plot_model_performance(models, x_test, y_test, prop_bounds))
+            
     return models, x_train, y_train, x_test, y_test
 
 def plot_gp_slices(models, data, property_name, pdf):
@@ -136,7 +124,7 @@ def plot_gp_slices(models, data, property_name, pdf):
             param_name,
             data.param_names,
             data.temperature_bounds()[0], # min temperature
-            data.temperature_bounds,
+            data.temperature_bounds(),
             prop_bounds,
             property_name=prop_name,
         )

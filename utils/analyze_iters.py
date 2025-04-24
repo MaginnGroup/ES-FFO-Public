@@ -4,6 +4,8 @@ import sys
 import pandas as pd
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
+
+# sys.path.append("../")
 from utils.id_new_samples import (
     prep_df_density,
     build_classifier,
@@ -14,11 +16,8 @@ from utils.id_new_samples import (
     classify_samples,
     prepare_df_density,
 )
-from utils.molec_class_files import esolvs
 from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
 from utils.plotfig_gp_examples import fit_gp_models, plot_gp_slices, plot_test_sets
-
-sys.path.append("../")
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
 
 def save_signac_results(project, data_dict, prop_names, save_csv=True):
@@ -35,36 +34,40 @@ def save_signac_results(project, data_dict, prop_names, save_csv=True):
     save_csv : bool, default True
         Whether to save the results to a CSV file
     """
-    if type(param_names) not in (list, tuple):
-        raise TypeError("param_names must be a list or tuple")
-    if type(property_names) not in (list, tuple):
-        raise TypeError("property_names must be a list or tuple")
+    if type(prop_names) not in (list, tuple):
+        raise TypeError("prop_names must be a list or tuple")
 
     # Group by project_name and molecules
-    job_groupby = tuple(("mol_name", "dens-iter"))
-    property_names = tuple(property_names)
+    job_groupby = ["mol_name", "dens-iter"]
+    property_names = prop_names
     
     print(f"Extracting the following properties: {property_names}")  
 
     all_data_dict = {}
 
+    project_df = project.to_dataframe()#.sort_values(by=[job_groupby])
+    project_df.columns = [col.replace('sp.', '') for col in project_df.columns]
+    project_df["job"] = project_df.index
+    project_df.reset_index(drop=True, inplace=True)
+
     # Loop over all jobs in project and group by mol name and density iter
-    for (mol_name, dens_iter), job_group in project.groupby(job_groupby):
+    for (mol_name, dens_iter), job_group in project_df.groupby(job_groupby):
         data = [] # Store data here before converting to dataframe
         # Get the unique param sets for each molecule
-        param_names = data_dict[mol_name].param_names
+        param_names = list(data_dict[mol_name].param_names)
+        
         #Loop over each parameter set in the group
-        for param_vals, job_group_params in job_group.groupby(param_names):
-            #Loop over all jobs (temperatures) in the group
-            for job in job_group_params:
+        for (param_vals), group_df in job_group.groupby(param_names):
+            for row in range(len(group_df)):
+                new_job = group_df.sort_values(by=["T"]).iloc[row]
+                job = project.open_job(id=new_job["job"])
                 # Extract the parameters into a dict
                 new_row = {
                     name: param for (name, param) in zip(param_names, param_vals)
                 }
-
                 # Extract the temperature for each job.
                 # Assumes temperature increments >= 1 K
-                temperature = round(job.sp.T)
+                temperature = job.sp.T
                 new_row["temperature"] = temperature
 
                 # Extract property values. Insert N/A if not found
@@ -81,14 +84,6 @@ def save_signac_results(project, data_dict, prop_names, save_csv=True):
         #Create data from dict
         df = pd.DataFrame(data)
 
-        #Add data to all_data_dict
-        # If the molecule name is already in the dictionary, concatenate the dataframes
-        if mol_name in all_data_dict:
-            all_data_dict[mol_name] = pd.concat([all_data_dict[mol_name], df])
-        # If the molecule name is not in the dictionary, add the dataframe
-        else:
-            all_data_dict[mol_name] = df
-
         # Save to csv file for record-keeping
         if save_csv:
             dir_name = "density_iters/analysis/" + mol_name + "/dens-iter-" + str(dens_iter) + "/"
@@ -96,6 +91,16 @@ def save_signac_results(project, data_dict, prop_names, save_csv=True):
             os.makedirs(dir_name, exist_ok=True)
             csv_name = os.path.join(dir_name , "results.csv")
             df.to_csv(csv_name)
+
+        df["dens-iter"] = dens_iter
+
+        #Add data to all_data_dict
+        # If the molecule name is already in the dictionary, concatenate the dataframes
+        if mol_name in all_data_dict:
+            all_data_dict[mol_name] = pd.concat([all_data_dict[mol_name], df])
+        # If the molecule name is not in the dictionary, add the dataframe
+        else:
+            all_data_dict[mol_name] = df
     
     # Save all data to a single CSV file
     for mol_name, data in all_data_dict.items():
@@ -106,12 +111,12 @@ def save_signac_results(project, data_dict, prop_names, save_csv=True):
 
     return all_data_dict
 
-def find_new_samples(all_df_data, verbose = True, save_fig=False, cl_shuffle_seed = 1, gp_shuffle_seed = 42, dist_seed = 1):
+def find_new_samples(all_df_data, data_dict, verbose = True, save_fig=False, cl_shuffle_seed = 1, gp_shuffle_seed = 42, dist_seed = 1):
     #Loop over all molecules:
     next_iter_params_all = {}
-    for mol_name, data in all_df_data.items():
-
-        df_csv = all_df_data[mol_name]
+    for mol_name, df_csv in all_df_data.items():
+        data = data_dict[mol_name]
+        # df_csv = all_df_data[mol_name]
         iter_num = df_csv["dens-iter"].max()
 
         ### Step 1: Prepare df_density
@@ -147,10 +152,10 @@ def find_new_samples(all_df_data, verbose = True, save_fig=False, cl_shuffle_see
 def find_pareto(all_df_data):
     #Loop over all molecules:
     all_final_params = {}
-    for mol_name, data in all_df_data.items():
-        root_dir = "density-iters/analysis/" + mol_name + "/"
+    for mol_name, df_csv in all_df_data.items():
+        root_dir = "density_iters/analysis/" + mol_name + "/"
         #Get all data from last iteration
-        df_csv = all_df_data[mol_name]
+        # df_csv = all_df_data[mol_name]
         iter_num = df_csv["dens-iter"].max()
         #Get only data from the last iteration
         df_this_iter = df_csv[df_csv["dens-iter"] == iter_num]
@@ -174,14 +179,15 @@ def find_pareto(all_df_data):
     all_final_params[mol_name] = df_final
     return all_final_params
 
-def plot_gp_examples(all_df_data, gp_shuffle_seed = 42, save_fig=False):
+def plot_gp_examples(all_df_data, data_dict,  gp_shuffle_seed = 42, save_fig=False):
     #Get all data
-    for mol_name, data in all_df_data.items():
+    for mol_name, df_csv in all_df_data.items():
+        data = data_dict[mol_name]
         ld_threshold = data.expt_rhoc
-        df_csv = all_df_data[mol_name]
+        # df_csv = all_df_data[mol_name]
         iter_num = df_csv["dens-iter"].max()
 
-        root_dir = "density-iters/analysis/" + mol_name + "/"
+        root_dir = "density_iters/analysis/" + mol_name + "/"
         dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
         os.makedirs(dir_name, exist_ok=True)
         pdf_name = os.path.join(dir_name , "fig_gp_examples.pdf")
@@ -189,12 +195,14 @@ def plot_gp_examples(all_df_data, gp_shuffle_seed = 42, save_fig=False):
 
         df_all, df_liq, df_vap = prepare_df_density(df_csv, data, ld_threshold)
 
+        models = None
         property_names = ["md_liq_density", "md_surf_tens"]
         # Get the property names from the data
         for prop_name in property_names:
             models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig)
             plot_gp_slices(models, data, prop_name, pdf)
-            plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
+            if len(x_test) > 0:
+                plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
 
         pdf.close()
     return models
