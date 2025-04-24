@@ -5,6 +5,7 @@ __pycache__/
 *example_output_files
 *Project-*.o*
 *LHS_5*
+*.pdf
 # C extensions
 *.so
 
