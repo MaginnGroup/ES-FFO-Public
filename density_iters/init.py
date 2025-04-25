@@ -16,7 +16,7 @@ sys.path.remove("../")
 from utils.molec_class_files import esolvs
 
 # Load class properies for each training molecule
-mol_names = ["ACN"]  # , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["R125"]  #"EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 
@@ -84,7 +84,7 @@ def init_project():
 
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
-        for temp in [temps[1]]:
+        for temp in [temps[-2]]:
             liq_density = molec_data.expt_liq_density[temp]
             # vap_density = molec_data.expt_vap_density[temp]
             # rho_avg = (liq_density + vap_density) / 2.0

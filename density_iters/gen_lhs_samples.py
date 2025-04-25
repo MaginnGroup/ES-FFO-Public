@@ -9,7 +9,7 @@ from utils.molec_class_files import esolvs
 sys.path.remove("..")
 
 # Load class properies for each training molecule
-mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF", "R125"]
 molec_dict = esolvs.make_dict()
 
 

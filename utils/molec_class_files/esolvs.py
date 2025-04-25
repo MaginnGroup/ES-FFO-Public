@@ -1434,13 +1434,265 @@ DEC = EsolvsConstants(
 )
 
 
+# Dichloromethane (DCM)
+mol_wt = 84.93
+n_atoms = 5
+smiles_str = "C(Cl)Cl"
+param_names = (
+    "sigma_C1",  # C
+    "sigma_H1",  # H
+    "sigma_Cl1",  # Cl
+    "epsilon_C1",
+    "epsilon_H1",
+    "epsilon_Cl1",
+)
+
+# Fix me later
+gaff_params = {
+    "sigma_C1": 3.400,  # C
+    "sigma_H1": 2.293,  # H
+    "sigma_Cl1": 3.471,  # Cl
+    "epsilon_C1": 0.457728 * (1 / 0.0083144598),
+    "epsilon_H1": 0.065693 * (1 / 0.0083144598),
+    "epsilon_Cl1": 1.108758 * (1 / 0.0083144598),
+}
+
+bnds_sig = [
+    [2.0, 4.0],  # C1
+    [1.5, 3.0],  # H1
+    [2.5, 4.5],  # Cl #Check with EM what is reasonable here
+]
+bnds_eps = [
+    [10.0, 75.0],  # C1
+    [2.0, 10.0],  # H2
+    [90.0, 150.0],  # Cl #Check with EM what is reasonable here
+]
+
+rho_c = 444  # kg/m^3 (https://doi.org/10.1002/bbpc.19850890715)
+Tc = 510  # K (https://doi.org/10.1002/bbpc.19850890715)
+
+# #DOI: 10.1021/je60045a018
+# expt_liq_density = {
+#     277.26: 1355.4,
+#     288.45: 1334.4,
+#     313.21: 1287.0,
+#     343.22: 1228.0,
+#     373.93: 1165.9,
+# }
+
+# # https://doi.org/10.1016/j.jct.2010.08.001 (Extrapolated)
+# expt_liq_density = {
+#     270.0: 1367.5,
+#     281.0: 1348.6,
+#     293.15: 1326.3,
+#     310.0: 1294.8,
+#     330.0: 1256.4,
+# }
+
+# expt_vap_density = None
+
+# # From correlation in https://doi.org/10.1016/j.jct.2010.08.001
+# expt_Pvap = {
+#     270.0: (16.35 * u.kPa).to_value(u.bar),
+#     281.0: (27.76 * u.kPa).to_value(u.bar),
+#     293.15: (47.21 * u.kPa).to_value(u.bar),
+#     310.0: (91.02 * u.kPa).to_value(u.bar),
+#     330.0: (197.54 * u.kPa).to_value(u.bar),
+# }
+
+# https://doi.org/10.1016/j.jct.2010.08.001 (Extrapolated)
+# rho(kg/m^3) = (84.932*6426*10^3/(8314*510))*(1/(0.27036)^(1+(1-T(K)/510)^(2/7)))
+expt_liq_density = {
+    293.15: 1326.18,
+    298.15: 1317.19,
+    303.15: 1301.10,
+    308.15: 1298.92,
+    313.15: 1289.65,
+}
+expt_vap_density = None
+
+# From correlation in https://doi.org/10.1016/j.jct.2010.08.001
+# P(kpa) = 6426*exp((6.8708 + 9.2238*(1-T(K)/510)^1.89 + 21.757*(1-T(K)/510)^5.67)*ln(T(K)/510))
+expt_Pvap = {
+    293.15: (47.21 * u.kPa).to_value(u.bar),
+    298.15: (57.89 * u.kPa).to_value(u.bar),
+    303.15: (70.42 * u.kPa).to_value(u.bar),
+    308.15: (85.04 * u.kPa).to_value(u.bar),
+    313.15: (101.98 * u.kPa).to_value(u.bar),
+}
+# mN/m (equal to dyn/cm)
+# DOI: 10.1021/j100345a065 and https://srd.nist.gov/jpcrdreprint/1.3253106.pdf
+expt_surf_tens = {
+    293.15: 27.84,
+    298.15: 27.20,
+    303.15: 26.56,
+    308.15: 25.91,
+    313.15: 25.27,
+}
+
+# https://webbook.nist.gov/cgi/cbook.cgi?ID=C75092&Mask=4#Thermo-Phase (NIST)
+# Unreliable
+expt_Hvap = {
+    248.0: 355.587,
+    279.0: 356.764,
+    308.0: 343.813,
+    313.0: 330.39,
+    326.0: 341.458,
+}
+
+uncertainty = {
+    "expt_liq_density": 0.003,
+    "expt_surf_tens": 0.0094,
+    "expt_Pvap": 0.017,
+}
+
+# Create an instance of the EsolvsConstants class
+DCM = EsolvsConstants(
+    mol_wt=mol_wt,
+    Tc=Tc,
+    rhoc=rho_c,
+    n_atoms=n_atoms,
+    smiles_str=smiles_str,
+    param_names=param_names,
+    gaff_params=gaff_params,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
+    expt_liq_density=expt_liq_density,
+    expt_surf_tens=expt_surf_tens,
+    expt_Pvap=expt_Pvap,
+    expt_Hvap=expt_Hvap,
+    expt_vap_density=expt_vap_density,
+    uncertainty=uncertainty,
+)
+
+# R125 (Test) - All data from REFPROP
+mol_wt = 120.02
+n_atoms = 8
+smiles_str = "C(F)(F)C(F)(F)F"
+param_names = (
+            "sigma_C1",
+            "sigma_C2",
+            "sigma_F1",
+            "sigma_F2",
+            "sigma_H1",
+            "epsilon_C1",
+            "epsilon_C2",
+            "epsilon_F1",
+            "epsilon_F2",
+            "epsilon_H1",
+        )
+
+gaff_params = {
+            "sigma_C1":3.400, #2Fs
+            "sigma_C2": 3.400, #3Fs
+            "sigma_F1":3.118,  
+            "sigma_F2":3.118,
+            "sigma_H1":2.293,
+            "epsilon_C1":55.052, #2Fs
+            "epsilon_C2":55.052, #3Fs
+            "epsilon_F1":30.696,
+            "epsilon_F2":30.696,
+            "epsilon_H1":7.901,
+        }
+
+bnds_sig = [[2.0,4.0], #[3.0, 4.0],  # C
+            [2.0,4.0], #[3.0, 4.0],  # C
+            [2.0,4.0], #[2.5, 3.5],  # F
+            [2.0,4.0], #[2.5, 3.5],  # F
+            [1.5,3.0], #[1.7, 2.7],  # H
+]
+bnds_eps = [[10.0,75.0], #[20.0, 60.0],  # C
+            [10.0,75.0], #[20.0, 60.0],  # C
+            [15.0,50.0], #[15.0, 40.0],  # F
+            [15.0,50.0], #[15.0, 40.0],  # F
+            [2.0, 10.0],  # H
+            ]
+
+rho_c = 571.9 # kg/m^3 
+Tc =  339.4  # K
+
+expt_liq_density = {
+            229.0: 1501.1,
+            249.0: 1425.9,
+            269.0: 1340.6,
+            289.0: 1241.1,
+            298.15: 1189.4,
+            309.0: 1118.0,
+        }
+
+expt_vap_density = {
+            229.0: 8.190,
+            249.0: 18.524,
+            269.0: 37.291,
+            289.0: 69.667,
+            298.15: 90.557,
+            309.0: 126.446,
+        }
+
+expt_Pvap = {
+            229.0: (123.65 * u.kPa).to_value(u.bar),
+            249.0: (290.76 * u.kPa).to_value(u.bar),
+            269.0: (592.27 * u.kPa).to_value(u.bar),
+            289.0: (1082.84 * u.kPa).to_value(u.bar),
+            298.15: (1380.6 * u.kPa).to_value(u.bar),
+            309.0: (1824.93 * u.kPa).to_value(u.bar),
+        }
+
+# mN/m (equal to dyn/cm)
+# https://doi.org/10.1063/1.4768782 From correlation
+#gamma = =10^3*(0.05252*(1-(T/Tc))^(1.237))
+expt_surf_tens = {
+    229.0: 13.069,
+    249.0: 10.201,
+    269.0: 7.480,
+    289.0: 4.939,
+    298.15: 3.8504,
+    309.0: 2.633,
+}
+
+expt_Hvap = {
+            229.0: 162.1,
+            249.0: 149.8,
+            269.0: 135.6,
+            289.0: 118.5,
+            298.15: 110.4,
+            309.0: 96.7,
+        }
+
+uncertainty = {
+            "expt_liq_density": 0.001,
+            "expt_vap_density": 0.001,
+            "expt_surf_tens": 0.0131,
+            "expt_Pvap": 0.0005,
+            "expt_Hvap": 0.005
+        }
+
+# Create an instance of the EsolvsConstants class
+R125 = EsolvsConstants(
+    mol_wt=mol_wt,
+    Tc=Tc,
+    rhoc=rho_c,
+    n_atoms=n_atoms,
+    smiles_str=smiles_str,
+    param_names=param_names,
+    gaff_params=gaff_params,
+    bnds_sig=bnds_sig,
+    bnds_eps=bnds_eps,
+    expt_liq_density=expt_liq_density,
+    expt_surf_tens=expt_surf_tens,
+    expt_Pvap=expt_Pvap,
+    expt_Hvap=expt_Hvap,
+    expt_vap_density=expt_vap_density,
+)
+
+
 def make_dict(mol_names=None):
     """
     Make a dictionary of all the solvents
     """
     solvents = {}
     if mol_names is None:
-        mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "DMF", "THF", "DCM", "DEC"]
+        mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "DMF", "THF", "DCM", "DEC", "R125"]
 
     for name in mol_names:
         if name == "EG":
@@ -1461,6 +1713,8 @@ def make_dict(mol_names=None):
             solvents[name] = DCM
         elif name == "DEC":
             solvents[name] = DEC
+        elif name == "R125":
+            solvents[name] = R125
         else:
             raise ValueError(f"Unknown solvent name: {name}")
 
