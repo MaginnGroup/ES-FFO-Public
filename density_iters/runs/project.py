@@ -12,6 +12,7 @@ from pymser import pymser
 import warnings
 import unyt as u
 from findpeaks import findpeaks
+import math
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -401,21 +402,27 @@ def calculate_props(job):
         #For density get profile from xvg
         if prop == "Density":
             with job:
-                if not os.path.exists(job.fn("inter_prod_density.xvg")):
-                    if os.path.exists(job.fn("inter_prod.xtc")):
-                        file_type_in = "xtc"
-                    else:
-                        file_type_in = "trr"
-                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
-                    subprocess.run(
-                        command, input=f"System", text=True, check=True, shell=True
-                    )
-                prop_data = np.loadtxt(
-                    job.fn(sim_name + "_" + name + ".xvg"), comments=["#", "@"]
-                )
-            density = pd.DataFrame(prop_data)
-            #Calculate the liquid mass density as a fxn of Z
-            property = calc_mass_dens(density.to_numpy())
+                if os.path.exists(job.fn("inter_prod.xtc")):
+                    file_type_in = "xtc"
+                else:
+                    file_type_in = "trr"
+
+                (means_est, vars_est, vars_err) = calc_block_densities(job, sim_name, file_type_in, name)
+            #     if not os.path.exists(job.fn("inter_prod_density.xvg")):
+            #         if os.path.exists(job.fn("inter_prod.xtc")):
+            #             file_type_in = "xtc"
+            #         else:
+            #             file_type_in = "trr"
+            #         command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
+            #         subprocess.run(
+            #             command, input=f"System", text=True, check=True, shell=True
+            #         )
+            #     prop_data = np.loadtxt(
+            #         job.fn(sim_name + "_" + name + ".xvg"), comments=["#", "@"]
+            #     )
+            # density = pd.DataFrame(prop_data)
+            # #Calculate the liquid mass density as a fxn of Z
+            # property = calc_mass_dens(density.to_numpy())
         else:
             with job:
                 if not os.path.exists(job.fn("inter_prod_surf_tens.txt")):
@@ -425,9 +432,11 @@ def calculate_props(job):
                     )
             df = panedr.edr_to_df(job.fn("inter_prod.edr"))
             property = df[prop].values
+            #Use block averaging to calculate the variance of each property
+            (means_est, vars_est, vars_err) = block_average(property)
 
         #Use block averaging to calculate the variance of each property
-        (means_est, vars_est, vars_err) = block_average(property)
+        # (means_est, vars_est, vars_err) = block_average(property)
 
         with open(job.fn(name + "_blk_avg.txt"), "w") as ferr:
             ferr.write("# nblk_ops, mean, vars, vars_err\n")
@@ -438,13 +447,15 @@ def calculate_props(job):
                     "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err)
                 )
         # save average density and stdev
-        mean = np.mean(property)
+        # mean = np.mean(property)
+        mean = mean_est[0]
         std = np.max(np.sqrt(vars_est))
 
         if name == "surf_tens":
             #Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
             mean = float((mean * u.bar * u.nm).in_units(u.mN/u.m).value)/2
             std = float((std * u.bar * u.nm).in_units(u.mN/u.m).value)/2
+
         job.doc[name] = mean
         job.doc[name + "_unc"] = std
 
@@ -453,6 +464,75 @@ def calculate_props(job):
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
+def calc_block_densities(job, sim_name, file_type_in, name):
+    import panedr
+
+    means = []
+    vars_est = []
+    vars_err = []
+
+    with job:
+        df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
+        len_data = len(df_all)
+        time = df_all["Time"].to_numpy()
+
+        #Calculate the maximum number of blocks to use
+        max_blocking_ops = int(np.ceil(np.log2(len_data)/4))
+
+        # Calc stats for mulitple-of-two block lengths
+        for m in range(max_blocking_ops):
+            block_length = 2 ** m  # Number of datapoints in each block
+
+            #Convert datapoints to ps
+            n_blocks = int(
+                len_data / block_length
+            )  # Number of blocks we can get with given block size
+
+            block_data = []
+            for block in range(n_blocks):
+                idx_strt = block*block_length
+                idx_end = (block + 1)*block_length -1
+                t0 = time[idx_strt] #Time in ps to start (ex. 0)
+                te = time[idx_end] #Time in ps to end (ex. 4990)
+
+                #Get the average density for each block over Z
+
+                #Calculate the average density over Z for that block
+                if block + 1 < n_blocks:
+                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}_{block+1}.xvg -d Z -dens mass -sl 500 -b {t0} -e {te}"
+                else:
+                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}_{block+1}.xvg -d Z -dens mass -sl 500 -b {t0}"
+               
+                subprocess.run(
+                        command, input=f"System", text=True, check=True, shell=True
+                    )
+                prop_data = np.loadtxt(
+                    job.fn(f"{sim_name}_{name}_{block+1}.xvg"), comments=["#", "@"]
+                )
+                density = pd.DataFrame(prop_data)
+                #Calculate the liquid mass density as a fxn of Z
+                liq_density = calc_mass_dens(density.to_numpy())
+                mean_liq_dens = np.mean(liq_density, dtype=np.float64)
+                block_data.append(mean_liq_dens)
+
+            block_data = np.asarray(block_data, dtype=np.float64)
+            # Calculate the mean of this new dataset
+            block_data = np.asarray(block_data, dtype=np.float64)
+            # Calculate the mean of this new dataset
+            mean = np.mean(block_data, dtype=np.float64)
+            # Calculate the variance of this new dataset
+            var = np.var(block_data, dtype=np.float64)
+            var_err = math.sqrt(2.0 * var ** 2.0 / (n_blocks - 1) ** 3.0)
+
+            # Save data for blocking op
+            means.append(mean)
+            vars_est.append(var / (n_blocks - 1))
+            vars_err.append(var_err)
+
+    return np.asarray(means), np.asarray(vars_est), np.asarray(vars_err)
+
+    
+
 def calc_mass_dens(density):
     #Find the region attributed to liquid density
     mass_dens_z = density[:,1]
