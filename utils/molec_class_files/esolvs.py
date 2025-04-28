@@ -1582,17 +1582,30 @@ param_names = (
             "epsilon_H1",
         )
 
+# gaff_params = {
+#             "sigma_C1":3.400, #2Fs
+#             "sigma_C2": 3.400, #3Fs
+#             "sigma_F1":3.118,  
+#             "sigma_F2":3.118,
+#             "sigma_H1":2.293,
+#             "epsilon_C1":55.052, #2Fs
+#             "epsilon_C2":55.052, #3Fs
+#             "epsilon_F1":30.696,
+#             "epsilon_F2":30.696,
+#             "epsilon_H1":7.901,
+#         }
+
 gaff_params = {
-            "sigma_C1":3.400, #2Fs
-            "sigma_C2": 3.400, #3Fs
-            "sigma_F1":3.118,  
-            "sigma_F2":3.118,
-            "sigma_H1":2.293,
-            "epsilon_C1":55.052, #2Fs
-            "epsilon_C2":55.052, #3Fs
-            "epsilon_F1":30.696,
-            "epsilon_F2":30.696,
-            "epsilon_H1":7.901,
+            "sigma_C1":3.69463709, #2Fs
+            "sigma_C2":3.10028756, #3Fs
+            "sigma_F1":2.51917801,  #C1 F
+            "sigma_F2":3.15864751, #C2 F
+            "sigma_H1":2.38891812,
+            "epsilon_C1":45.04630943, #2Fs
+            "epsilon_C2":50.45904441, #3Fs
+            "epsilon_F1":31.68405593,
+            "epsilon_F2":28.93799857,
+            "epsilon_H1":6.52832078,
         }
 
 bnds_sig = [[2.0,4.0], #[3.0, 4.0],  # C
@@ -1634,7 +1647,7 @@ expt_Pvap = {
             249.0: (290.76 * u.kPa).to_value(u.bar),
             269.0: (592.27 * u.kPa).to_value(u.bar),
             289.0: (1082.84 * u.kPa).to_value(u.bar),
-            298.15: (1380.6 * u.kPa).to_value(u.bar),
+            298.15: (1377.9 * u.kPa).to_value(u.bar),
             309.0: (1824.93 * u.kPa).to_value(u.bar),
         }
 

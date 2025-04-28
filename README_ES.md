@@ -139,6 +139,7 @@ To run liquid density iterations, follow the following steps:
 8. Calculate density
    ```
      python project.py run -o calculate_props
+     
 9. Extract density using the following after each LD iteration in the analysis/ folder
    ```
      python extract_rXX_density.py ZZ
