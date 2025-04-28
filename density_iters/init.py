@@ -55,7 +55,7 @@ nsteps_npt = 500000  # 500ps (minimum)
 nsteps_nvt2 = 100000  # 100ps
 nsteps_intereq = 15000000  # 15 ns (minimum)
 nsteps_interprod = 50000000  # 50 ns
-nmols = 1000  # Number of molecules in the system
+nmols = 750  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
 
 

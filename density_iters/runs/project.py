@@ -402,7 +402,11 @@ def calculate_props(job):
         if prop == "Density":
             with job:
                 if not os.path.exists(job.fn("inter_prod_density.xvg")):
-                    command = f"gmx density -f {sim_name}.trr -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
+                    if os.path.exists(job.fn("inter_prod.xtc")):
+                        file_type_in = "xtc"
+                    else:
+                        file_type_in = "trr"
+                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
                     subprocess.run(
                         command, input=f"System", text=True, check=True, shell=True
                     )
@@ -892,6 +896,8 @@ def _get_xml_from_molecule(molecule_name):
         molec_xml_function = __generate_DEC_xml
     elif molecule_name == "DMF":
         molec_xml_function = __generate_DMF_xml
+    elif molecule_name == "R125":
+        molec_xml_function = __generate_R125_xml
     else:
         raise ValueError("Molecule name not recognized")
     return molec_xml_function
@@ -944,6 +950,50 @@ def __generate_EG_xml(job):
     )
     return content
 
+def __generate_R125_xml(job):
+    content = """<ForceField>
+ <AtomTypes>
+  <Type name="C1" class="c3" element="C" mass="12.011" def="C(C)(H)(F)(F)" desc="carbon bonded to 2 Fs, an H, and another carbon"/>
+  <Type name="C2" class="c3" element="C" mass="12.011" def="C(C)(F)(F)(F)" desc="carbon bonded to 3 Fs and another carbon"/>
+  <Type name="F1" class="f" element="F" mass="18.998" def="FC(C)(F)H" desc="F bonded to C1"/>
+  <Type name="H1" class="h2" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])[N,O,F,Cl,Br,I,S]" desc="H bonded to aliphatic carbon with 2 d. group"/>
+  <Type name="F2" class="f" element="F" mass="18.998" def="FC(C)(F)F" desc="F bonded to C2"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="c3" length="0.1537" k="251793.143"/>
+  <Bond class1="c3" class2="f" length="0.1350" k="298653.950"/>
+  <Bond class1="c3" class2="h2" length="0.1096" k="277566.579"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="c3" class2="c3" class3="f" angle="1.90660" k="553.125"/>
+  <Angle class1="c3" class2="c3" class3="h2" angle="1.92370" k="386.602"/>
+  <Angle class1="f" class2="c3" class3="h2" angle="1.89874" k="427.605"/>
+  <Angle class1="f" class2="c3" class3="f" angle="1.87379" k="593.291"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="f" class2="c3" class3="c3" class4="f" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="3.141592654" k2="5.02077111"/>
+  <Proper class1="h2" class2="c3" class3="c3" class4="f" periodicity1="3" phase1="0.0" k1="0.65085610"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+  <Atom type="C1" charge="0.224067" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="C2" charge="0.500886" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
+  <Atom type="F1" charge="-0.167131" sigma="{sigma_F1:0.6f}" epsilon="{epsilon_F1:0.6f}"/>
+  <Atom type="H1" charge="0.121583" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="F2" charge="-0.170758" sigma="{sigma_F2:0.6f}" epsilon="{epsilon_F2:0.6f}"/>
+ </NonbondedForce>
+</ForceField>""".format(
+        sigma_C1=job.sp.sigma_C1,
+        sigma_C2=job.sp.sigma_C2,
+        sigma_H1=job.sp.sigma_H1,
+        sigma_F1=job.sp.sigma_F1,
+        sigma_F2=job.sp.sigma_F2,
+        epsilon_C1=job.sp.epsilon_C1,
+        epsilon_C2=job.sp.epsilon_C2,
+        epsilon_H1=job.sp.epsilon_H1,
+        epsilon_F1=job.sp.epsilon_F1,
+        epsilon_F2=job.sp.epsilon_F2,
+    )
+    return content
 
 def __generate_Gly_xml(job):
     content = """<ForceField>
@@ -1359,394 +1409,28 @@ def __generate_THF_xml(job):
 
 
 # Build mdp files
-def _generate_em_mdp(job):
-
-    contents = """
-; MDP file for energy minimization
-
-integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
-emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
-emstep          = 0.01          ; Energy step size
-nsteps		    = 50000	  	    ; Maximum number of (minimization) steps to perform
-
-nstenergy                = 1000
-nstlog                   = 1000
-nstxout-compressed       = 1000
-
-nstlist		    = 1		    ; Frequency to update the neighbor list and long range forces
-cutoff-scheme   = Verlet
-ns-type		    = grid		; Method to determine neighbor list (simple, grid)
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-coulombtype	    = PME		; Treatment of long range electrostatic interactions
-rcoulomb	    = 1.0		; Short-range electrostatic cut-off
-rvdw		    = 1.0		; Short-range Van der Waals cut-off
-pbc		        = xyz 		; Periodic Boundary Conditions (yes/no)
-constraints     = all-bonds
-lincs-order     = 8
-lincs-iter      = 4
-"""
-
-    return contents
-
-
-def _generate_nvt_eq1_mdp(job):
-    # Use 100000 (100 ps) for the first equilibration
-    contents = """
-; MDP file for NVT simulation
-
-; Run parameters
-integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
-dt		                = 0.001		    ; 1 fs
-
-; Output control
-nstxout		            = 10000		    ; save coordinates every 10.0 ps
-nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 10000		    ; save energies every 10.0 ps
-nstlog		            = 10000		    ; update log file every 10.0 ps
-
-; Neighborsearching
-cutoff-scheme           = Verlet
-ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-
-; VDW
-vdwtype                 = Cut-off
-rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
-vdw-modifier            = None
-
-; Electrostatics
-rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
-coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
-pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
-ewald-rtol              = 1e-5
-
-; Temperature coupling is on
-tcoupl		            = v-rescale     ; modified Berendsen thermostat
-tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.1	  		; time constant, in ps
-ref-t		            = {temp}        ; reference temperature, one for each group, in K
-
-; Pressure coupling is off
-pcoupl		            = no
-
-; Periodic boundary conditions
-pbc		                = xyz		    ; 3-D PBC
-
-; Dispersion correction
-DispCorr	            = EnerPres	    ; apply analytical tail corrections
-
-; Velocity generation
-gen-vel		            = yes		    ; assign velocities from Maxwell distribution
-gen-temp	            = {temp}        ; temperature for Maxwell distribution
-gen-seed	            = -1		    ; generate a random seed
-
-constraints             = all-bonds
-lincs-order             = 8
-lincs-iter              = 4
-""".format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_nvt1
-    )
-
-    return contents
-
-
-def _generate_npt_eq_mdp(job):
-    # Use 500000 (500 ps) for the first equilibration
-    contents = """
-; MDP file for NPT simulation
-
-; Run parameters
-integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
-dt		                = 0.001		    ; 1 fs
-
-; Output control
-nstxout		            = 1000		    ; save coordinates every 1.0 ps
-nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 100		    ; save energies every 0.1 ps
-nstlog		            = 100		    ; update log file every 0.1 ps
-
-; Neighborsearching
-cutoff-scheme           = Verlet
-ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-
-; VDW
-vdwtype                 = Cut-off
-rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
-vdw-modifier            = None
-
-; Electrostatics
-rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
-coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
-pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
-ewald-rtol              = 1e-5
-
-; Temperature coupling is on
-tcoupl		            = v-rescale     ; modified Berendsen thermostat
-tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.1	  		; time constant, in ps
-ref-t		            = {temp}        ; reference temperature, one for each group, in K
-
-; Pressure coupling is on
-pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
-pcoupltype              = isotropic             ; uniform scaling of box vectors
-tau_p                   = 2.0                   ; time constant, in ps
-ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 4.5e-5
-nstpcouple              = 1
-;refcoord_scaling       = com
-
-; Periodic boundary conditions
-pbc		                = xyz		    ; 3-D PBC
-
-; Dispersion correction
-DispCorr	            = EnerPres	    ; apply analytical tail corrections
-
-; Velocity generation
-gen-vel		            = yes		    ; assign velocities from Maxwell distribution
-gen-temp	            = {temp}        ; temperature for Maxwell distribution
-gen-seed	            = -1		    ; generate a random seed
-
-constraints             = all-bonds
-lincs-order             = 8
-lincs-iter              = 4
-""".format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
-    )
-
-    return contents
-
-
-def _generate_nvt_eq2_mdp(job):
-    # Use 100000 (100 ps) minimum for the second equilibration
-    contents = """
-; MDP file for NVT simulation
-
-; Run parameters
-integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
-dt		                = 0.001		    ; 1 fs
-
-; Output control
-nstxout		            = 1000		    ; save coordinates every 1.0 ps
-nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 1.0 ps
-nstlog		            = 1000		    ; update log file every 1.0 ps
-
-; Neighborsearching
-cutoff-scheme           = Verlet
-ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-
-; VDW
-vdwtype                 = Cut-off
-rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
-vdw-modifier            = None
-
-; Electrostatics
-rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
-coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
-pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
-ewald-rtol              = 1e-5
-
-; Temperature coupling is on
-tcoupl		            = v-rescale     ; modified Berendsen thermostat
-tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.1	  		; time constant, in ps
-ref-t		            = {temp}        ; reference temperature, one for each group, in K
-
-; Pressure coupling is off
-pcoupl		            = no
-
-; Periodic boundary conditions
-pbc		                = xyz		    ; 3-D PBC
-
-; Dispersion correction
-DispCorr	            = EnerPres	    ; apply analytical tail corrections
-
-; Velocity generation
-gen-vel		            = yes		    ; assign velocities from Maxwell distribution
-gen-temp	            = {temp}        ; temperature for Maxwell distribution
-gen-seed	            = -1		    ; generate a random seed
-
-constraints             = all-bonds
-lincs-order             = 8
-lincs-iter              = 4
-""".format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_nvt2
-    )
-
-    return contents
-
-
-def _generate_inter_eq_mdp(job, cutoff):
-    # Use 15000000 (15 ns) minimum for the interfacial equilibration
-    contents = """
-; MDP file for NVT simulation
-
-; Run parameters
-integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
-dt		                = 0.001		    ; 1 fs
-
-; Output control
-nstxout		            = 1000		    ; save coordinates every 1.0 ps
-nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 1.0 ps
-nstlog		            = 1000		    ; update log file every 1.0 ps
-
-; Neighborsearching
-cutoff-scheme           = Verlet
-ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-
-; VDW
-vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
-vdw-modifier            = None
-
-; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
-coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
-pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
-ewald-rtol              = 1e-5
-
-; Temperature coupling is on
-tcoupl		            = v-rescale     ; modified Berendsen thermostat
-tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.1	  		; time constant, in ps
-ref-t		            = {temp}        ; reference temperature, one for each group, in K
-
-; Pressure coupling is off
-pcoupl		            = no
-
-; Periodic boundary conditions
-pbc		                = xyz		    ; 3-D PBC
-
-; Dispersion correction
-DispCorr	            = no	    ; account for cut-off vdW scheme
-
-; Velocity generation
-gen-vel		            = yes		    ; assign velocities from Maxwell distribution
-gen-temp	            = {temp}        ; temperature for Maxwell distribution
-gen-seed	            = -1		    ; generate a random seed
-
-constraints             = all-bonds
-lincs-order             = 8
-lincs-iter              = 4
-""".format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_intereq, cut=cutoff
-    )
-
-    return contents
-
-
-def _generate_inter_prod_mdp(job, cutoff):
-    # Use 50000000 (50 ns) for the interfacial production
-    contents = """
-; MDP file for NVT simulation
-
-; Run parameters
-integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
-dt		                = 0.001		    ; 1 fs
-
-; Output control
-nstxout		            = 10000		    ; save coordinates every 10.0 ps
-nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 10000		    ; save energies every 10.0 ps
-nstlog		            = 10000		    ; update log file every 10.0 ps
-
-; Neighborsearching
-cutoff-scheme           = Verlet
-ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-
-; VDW
-vdwtype                 = Cut-off
-rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
-vdw-modifier            = None
-
-; Electrostatics
-rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
-coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
-pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
-ewald-rtol              = 1e-5
-
-; Temperature coupling is on
-tcoupl		            = v-rescale     ; modified Berendsen thermostat
-tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.1	  		; time constant, in ps
-ref-t		            = {temp}        ; reference temperature, one for each group, in K
-
-; Pressure coupling is off
-pcoupl		            = no
-
-; Periodic boundary conditions
-pbc		                = xyz		    ; 3-D PBC
-
-; Dispersion correction
-DispCorr                 = no        ; account for cut-off vdW scheme
-
-; Velocity generation
-gen-vel		            = yes		    ; assign velocities from Maxwell distribution
-gen-temp	            = {temp}        ; temperature for Maxwell distribution
-gen-seed	            = -1		    ; generate a random seed
-
-constraints             = all-bonds
-lincs-order             = 8
-lincs-iter              = 4
-""".format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_interprod, cut=cutoff
-    )
-
-    return contents
-
 # def _generate_em_mdp(job):
 
 #     contents = """
 # ; MDP file for energy minimization
 
-# integrator  = steep         ; Algorithm (steep = steepest descent minimization)
-# emtol       = 100.0         ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
-# emstep      = 0.01          ; Minimization step size
-# nsteps      = 100000       ; Maximum number of (minimization) steps to perform
-
+# integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
+# emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
+# emstep          = 0.01          ; Energy step size
+# nsteps		    = 50000	  	    ; Maximum number of (minimization) steps to perform
 
 # nstenergy                = 1000
 # nstlog                   = 1000
 # nstxout-compressed       = 1000
 
-
-# ; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
-# ;nstlist         	 = 1         ; Frequency to update the neighbor list and long range forces
-# cutoff-scheme   	 = Verlet     ; Buffered neighbor searching
-# verlet-buffer-tolerance  = 1e-4
-# ns_type         	 = grid       ; Method to determine neighbor list (simple, grid)
-
-
-# rvdw            	 = 1.2       ; Short-range Van der Waals cut-off
-# vdwtype         	 = Cut-off
-# DispCorr        	 = EnerPres
-
-
-# coulombtype     	 = PME       ; Treatment of long range electrostatic interactions
-# rcoulomb        	 = 1.2       ; Short-range electrostatic cut-off
-
-
-# pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions
+# nstlist		    = 1		    ; Frequency to update the neighbor list and long range forces
+# cutoff-scheme   = Verlet
+# ns-type		    = grid		; Method to determine neighbor list (simple, grid)
+# verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+# coulombtype	    = PME		; Treatment of long range electrostatic interactions
+# rcoulomb	    = 1.0		; Short-range electrostatic cut-off
+# rvdw		    = 1.0		; Short-range Van der Waals cut-off
+# pbc		        = xyz 		; Periodic Boundary Conditions (yes/no)
 # constraints     = all-bonds
 # lincs-order     = 8
 # lincs-iter      = 4
@@ -1761,58 +1445,53 @@ lincs-iter              = 4
 # ; MDP file for NVT simulation
 
 # ; Run parameters
-# integrator              = md        ; leap-frog integrator
-# nsteps                  = {nsteps}    ; 100 ps
-# dt                      = 0.001     ; 1 fs
-
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
 
 # ; Output control
-# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
-# ;nstvout                 = 1000       ; save velocities every 1.0 ps
-# ;nstenergy               = 1000       ; save energies every 1.0 ps
-# ;nstlog                  = 1000       ; update log file every 1.0 ps
+# nstxout		            = 10000		    ; save coordinates every 10.0 ps
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 10000		    ; save energies every 10.0 ps
+# nstlog		            = 10000		    ; update log file every 10.0 ps
 
-# nstenergy                = 50000
-# nstlog                   = 50000
-# nstxout-compressed       = 50000
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
-# ; Nonbonded settings 
-# cutoff-scheme            = Verlet    ; Buffered neighbor searching
-# verlet-buffer-tolerance  = 1e-4
-# ns_type                  = grid      ; search neighboring grid cells
-# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
-# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
-# rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
-# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
-
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
 
 # ; Electrostatics
-# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
-# pme_order               = 4          ; cubic interpolation
-# fourierspacing          = 0.16       ; grid spacing for FFT
-# rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
-
-
+# rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourier-spacing         = 0.12          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
 
 # ; Temperature coupling is on
-# tcoupl                  = V-rescale      ; modified Berendsen thermostat
-# tc-grps                 = System         ; Entire system
-# tau_t                   = 0.1            ; time constant, in ps
-# ref_t                   = 298.15     ; reference temperature, one for each group, in K
-
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 # ; Pressure coupling is off
-# pcoupl                  = no         ; no pressure coupling in NVT
-
+# pcoupl		            = no
 
 # ; Periodic boundary conditions
-# pbc                     = xyz        ; 3-D PBC
+# pbc		                = xyz		    ; 3-D PBC
 
+# ; Dispersion correction
+# DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 # ; Velocity generation
-# gen_vel                 = yes        ; assign velocities from Maxwell distribution
-# gen_temp                = {temp}      ; temperature for Maxwell distribution
-# gen_seed                = -1         ; generate a random seed
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
 
 # constraints             = all-bonds
 # lincs-order             = 8
@@ -1830,64 +1509,59 @@ lincs-iter              = 4
 # ; MDP file for NPT simulation
 
 # ; Run parameters
-# integrator              = md        ; leap-frog integrator
-# nsteps                  = {nsteps}  ; 0.5 ns
-# dt                      = 0.001     ; 1 fs
-
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
 
 # ; Output control
-# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
-# ;nstvout                 = 1000       ; save velocities every 1.0 ps
-# ;nstenergy               = 1000       ; save energies every 1.0 ps
-# ;nstlog                  = 1000       ; update log file every 1.0 ps
+# nstxout		            = 1000		    ; save coordinates every 1.0 ps
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 100		    ; save energies every 0.1 ps
+# nstlog		            = 100		    ; update log file every 0.1 ps
 
-# nstenergy                = 50000
-# nstlog                   = 50000
-# nstxout-compressed       = 50000
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
-
-
-# ; Nonbonded settings 
-# cutoff-scheme            = Verlet    ; Buffered neighbor searching
-# verlet-buffer-tolerance  = 1e-4
-# ns_type                  = grid      ; search neighboring grid cells
-# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
-# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
-# rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
-# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
-
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
 
 # ; Electrostatics
-# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
-# pme_order               = 4          ; cubic interpolation
-# fourierspacing          = 0.16       ; grid spacing for FFT
-# rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
-
-
+# rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourier-spacing         = 0.12          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
 
 # ; Temperature coupling is on
-# tcoupl                  = V-rescale  ; modified Berendsen thermostat
-# tc-grps                 = System     ; Entire system
-# tau_t                   = 0.1        ; time constant, in ps
-# ref_t                   = {temp}    ; reference temperature, one for each group, in K
-
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 # ; Pressure coupling is on
 # pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
 # pcoupltype              = isotropic             ; uniform scaling of box vectors
 # tau_p                   = 2.0                   ; time constant, in ps
-# compressibility         = 4.5e-5                ; isothermal compressibility of water, bar^-1
-# ref_p                   = {press}                 ; reference pressure, in bar
+# ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+# compressibility         = 4.5e-5
 # nstpcouple              = 1
 # ;refcoord_scaling       = com
 
-
 # ; Periodic boundary conditions
-# pbc                     = xyz       ; 3-D PBC
+# pbc		                = xyz		    ; 3-D PBC
 
+# ; Dispersion correction
+# DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 # ; Velocity generation
-# gen_vel                 = no        ; Velocity generation is off 
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
 
 # constraints             = all-bonds
 # lincs-order             = 8
@@ -1905,58 +1579,53 @@ lincs-iter              = 4
 # ; MDP file for NVT simulation
 
 # ; Run parameters
-# integrator              = md        ; leap-frog integrator
-# nsteps                  = {nsteps}    ; 100 ps
-# dt                      = 0.001     ; 1 fs
-
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
 
 # ; Output control
-# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
-# ;nstvout                 = 1000       ; save velocities every 1.0 ps
-# ;nstenergy               = 1000       ; save energies every 1.0 ps
-# ;nstlog                  = 1000       ; update log file every 1.0 ps
+# nstxout		            = 1000		    ; save coordinates every 1.0 ps
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 1000		    ; save energies every 1.0 ps
+# nstlog		            = 1000		    ; update log file every 1.0 ps
 
-# nstenergy                = 50000
-# nstlog                   = 50000
-# nstxout-compressed       = 50000
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
-# ; Nonbonded settings 
-# cutoff-scheme            = Verlet    ; Buffered neighbor searching
-# verlet-buffer-tolerance  = 1e-4
-# ns_type                  = grid      ; search neighboring grid cells
-# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
-# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
-# rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
-# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
-
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
 
 # ; Electrostatics
-# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
-# pme_order               = 4          ; cubic interpolation
-# fourierspacing          = 0.16       ; grid spacing for FFT
-# rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
-
-
+# rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourier-spacing         = 0.12          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
 
 # ; Temperature coupling is on
-# tcoupl                  = V-rescale      ; modified Berendsen thermostat
-# tc-grps                 = System         ; Entire system
-# tau_t                   = 0.1            ; time constant, in ps
-# ref_t                   = 298.15     ; reference temperature, one for each group, in K
-
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 # ; Pressure coupling is off
-# pcoupl                  = no         ; no pressure coupling in NVT
-
+# pcoupl		            = no
 
 # ; Periodic boundary conditions
-# pbc                     = xyz        ; 3-D PBC
+# pbc		                = xyz		    ; 3-D PBC
 
+# ; Dispersion correction
+# DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 # ; Velocity generation
-# gen_vel                 = yes        ; assign velocities from Maxwell distribution
-# gen_temp                = {temp}      ; temperature for Maxwell distribution
-# gen_seed                = -1         ; generate a random seed
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
 
 # constraints             = all-bonds
 # lincs-order             = 8
@@ -1974,61 +1643,53 @@ lincs-iter              = 4
 # ; MDP file for NVT simulation
 
 # ; Run parameters
-# integrator              = md        ; leap-frog integrator
-# nsteps                  = {nsteps}  ; 70 ns
-# dt                      = 0.001     ; 1 fs
-
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
 
 # ; Output control
-# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
-# ;nstvout                 = 1000       ; save velocities every 1.0 ps
-# ;nstenergy               = 1000       ; save energies every 1.0 ps
-# ;nstlog                  = 1000       ; update log file every 1.0 ps
+# nstxout		            = 1000		    ; save coordinates every 1.0 ps
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 1000		    ; save energies every 1.0 ps
+# nstlog		            = 1000		    ; update log file every 1.0 ps
 
-# nstenergy                = 1000
-# nstlog                   = 1000
-# nstxout-compressed       = 1000
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
-
-
-
-# ; Nonbonded settings 
-# cutoff-scheme            = Verlet    ; Buffered neighbor searching
-# verlet-buffer-tolerance  = 1e-4
-# ns_type                  = grid      ; search neighboring grid cells
-# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
-# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
-# rvdw                     = 2	     ;short-range van der Waals cutoff (in nm)
-# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
-
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
 
 # ; Electrostatics
-# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
-# pme_order               = 4          ; cubic interpolation
-# fourierspacing          = 0.16       ; grid spacing for FFT
-# rcoulomb                = 2        ; short-range electrostatic cutoff (in nm)
-
-
+# rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourier-spacing         = 0.12          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
 
 # ; Temperature coupling is on
-# tcoupl                  = V-rescale  ; modified Berendsen thermostat
-# tc-grps                 = System     ; Entire system
-# tau_t                   = 0.1        ; time constant, in ps
-# ref_t                   = {temp}     ; reference temperature, one for each group, in K
-
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 # ; Pressure coupling is off
-# pcoupl                  = no         ; no pressure coupling in NVT
-
+# pcoupl		            = no
 
 # ; Periodic boundary conditions
-# pbc                     = xyz        ; 3-D PBC
+# pbc		                = xyz		    ; 3-D PBC
 
+# ; Dispersion correction
+# DispCorr	            = no	    ; account for cut-off vdW scheme
 
 # ; Velocity generation
-# gen_vel                 = yes        ; assign velocities from Maxwell distribution
-# gen_temp                = {temp}     ; temperature for Maxwell distribution
-# gen_seed                = -1         ; generate a random seed
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
 
 # constraints             = all-bonds
 # lincs-order             = 8
@@ -2046,66 +1707,455 @@ lincs-iter              = 4
 # ; MDP file for NVT simulation
 
 # ; Run parameters
-# integrator              = md        ; leap-frog integrator
-# nsteps                  = {nsteps}  ; 70 ns
-# dt                      = 0.001     ; 1 fs
-
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
 
 # ; Output control
-# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
-# ;nstvout                 = 1000       ; save velocities every 1.0 ps
-# ;nstenergy               = 1000       ; save energies every 1.0 ps
-# ;nstlog                  = 1000       ; update log file every 1.0 ps
+# nstxout		            = 10000		    ; save coordinates every 10.0 ps
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 10000		    ; save energies every 10.0 ps
+# nstlog		            = 10000		    ; update log file every 10.0 ps
 
-# nstenergy                = 1000
-# nstlog                   = 1000
-# nstxout-compressed       = 1000
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
-
-
-
-# ; Nonbonded settings 
-# cutoff-scheme            = Verlet    ; Buffered neighbor searching
-# verlet-buffer-tolerance  = 1e-4
-# ns_type                  = grid      ; search neighboring grid cells
-# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
-# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
-# rvdw                     = 2	     ;short-range van der Waals cutoff (in nm)
-# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
-
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
 
 # ; Electrostatics
-# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
-# pme_order               = 4          ; cubic interpolation
-# fourierspacing          = 0.16       ; grid spacing for FFT
-# rcoulomb                = 2        ; short-range electrostatic cutoff (in nm)
-
-
+# rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourier-spacing         = 0.12          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
 
 # ; Temperature coupling is on
-# tcoupl                  = V-rescale  ; modified Berendsen thermostat
-# tc-grps                 = System     ; Entire system
-# tau_t                   = 0.1        ; time constant, in ps
-# ref_t                   = {temp}     ; reference temperature, one for each group, in K
-
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 # ; Pressure coupling is off
-# pcoupl                  = no         ; no pressure coupling in NVT
-
+# pcoupl		            = no
 
 # ; Periodic boundary conditions
-# pbc                     = xyz        ; 3-D PBC
+# pbc		                = xyz		    ; 3-D PBC
 
+# ; Dispersion correction
+# DispCorr                 = no        ; account for cut-off vdW scheme
 
 # ; Velocity generation
-# gen_vel                 = yes        ; assign velocities from Maxwell distribution
-# gen_temp                = {temp}     ; temperature for Maxwell distribution
-# gen_seed                = -1         ; generate a random seed
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
+
+# constraints             = all-bonds
+# lincs-order             = 8
+# lincs-iter              = 4
 # """.format(
-#         temp=job.sp.T, nsteps=job.sp.nsteps_interprod
+#         temp=job.sp.T, nsteps=job.sp.nsteps_interprod, cut=cutoff
 #     )
 
 #     return contents
+
+def _generate_em_mdp(job):
+
+    contents = """
+; MDP file for energy minimization
+
+integrator  = steep         ; Algorithm (steep = steepest descent minimization)
+emtol       = 100.0         ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
+emstep      = 0.01          ; Minimization step size
+nsteps      = 100000       ; Maximum number of (minimization) steps to perform
+
+
+nstenergy                = 1000
+nstlog                   = 1000
+nstxout-compressed       = 1000
+
+
+; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+;nstlist         	 = 1         ; Frequency to update the neighbor list and long range forces
+cutoff-scheme   	 = Verlet     ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type         	 = grid       ; Method to determine neighbor list (simple, grid)
+
+
+rvdw            	 = 1.2       ; Short-range Van der Waals cut-off
+vdwtype         	 = Cut-off
+DispCorr        	 = EnerPres
+
+
+coulombtype     	 = PME       ; Treatment of long range electrostatic interactions
+rcoulomb        	 = 1.2       ; Short-range electrostatic cut-off
+
+
+pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions
+constraints     = all-bonds
+lincs-order     = 8
+lincs-iter      = 4
+"""
+
+    return contents
+
+
+def _generate_nvt_eq1_mdp(job):
+    # Use 100000 (100 ps) for the first equilibration
+    contents = """
+; MDP file for NVT simulation
+
+; Run parameters
+integrator              = md        ; leap-frog integrator
+nsteps                  = {nsteps}    ; 100 ps
+dt                      = 0.001     ; 1 fs
+
+
+; Output control
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 50000
+nstlog                   = 50000
+nstxout-compressed       = 50000
+
+; Nonbonded settings 
+cutoff-scheme            = Verlet    ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type                  = grid      ; search neighboring grid cells
+nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
+DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+; Electrostatics
+coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+pme_order               = 4          ; cubic interpolation
+fourierspacing          = 0.16       ; grid spacing for FFT
+rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
+
+
+
+; Temperature coupling is on
+tcoupl                  = V-rescale      ; modified Berendsen thermostat
+tc-grps                 = System         ; Entire system
+tau_t                   = 0.1            ; time constant, in ps
+ref_t                   = 298.15     ; reference temperature, one for each group, in K
+
+
+; Pressure coupling is off
+pcoupl                  = no         ; no pressure coupling in NVT
+
+
+; Periodic boundary conditions
+pbc                     = xyz        ; 3-D PBC
+
+
+; Velocity generation
+gen_vel                 = yes        ; assign velocities from Maxwell distribution
+gen_temp                = {temp}      ; temperature for Maxwell distribution
+gen_seed                = -1         ; generate a random seed
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt1
+    )
+
+    return contents
+
+
+def _generate_npt_eq_mdp(job):
+    # Use 500000 (500 ps) for the first equilibration
+    contents = """
+; MDP file for NPT simulation
+
+; Run parameters
+integrator              = md        ; leap-frog integrator
+nsteps                  = {nsteps}  ; 0.5 ns
+dt                      = 0.001     ; 1 fs
+
+
+; Output control
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 50000
+nstlog                   = 50000
+nstxout-compressed       = 50000
+
+
+
+; Nonbonded settings 
+cutoff-scheme            = Verlet    ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type                  = grid      ; search neighboring grid cells
+nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
+DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+; Electrostatics
+coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+pme_order               = 4          ; cubic interpolation
+fourierspacing          = 0.16       ; grid spacing for FFT
+rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
+
+
+
+; Temperature coupling is on
+tcoupl                  = V-rescale  ; modified Berendsen thermostat
+tc-grps                 = System     ; Entire system
+tau_t                   = 0.1        ; time constant, in ps
+ref_t                   = {temp}    ; reference temperature, one for each group, in K
+
+
+; Pressure coupling is on
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
+tau_p                   = 2.0                   ; time constant, in ps
+compressibility         = 4.5e-5                ; isothermal compressibility of water, bar^-1
+ref_p                   = {press}                 ; reference pressure, in bar
+nstpcouple              = 1
+;refcoord_scaling       = com
+
+
+; Periodic boundary conditions
+pbc                     = xyz       ; 3-D PBC
+
+
+; Velocity generation
+gen_vel                 = no        ; Velocity generation is off 
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
+    )
+
+    return contents
+
+
+def _generate_nvt_eq2_mdp(job):
+    # Use 100000 (100 ps) minimum for the second equilibration
+    contents = """
+; MDP file for NVT simulation
+
+; Run parameters
+integrator              = md        ; leap-frog integrator
+nsteps                  = {nsteps}    ; 100 ps
+dt                      = 0.001     ; 1 fs
+
+
+; Output control
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 50000
+nstlog                   = 50000
+nstxout-compressed       = 50000
+
+; Nonbonded settings 
+cutoff-scheme            = Verlet    ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type                  = grid      ; search neighboring grid cells
+nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
+DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+; Electrostatics
+coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+pme_order               = 4          ; cubic interpolation
+fourierspacing          = 0.16       ; grid spacing for FFT
+rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
+
+
+
+; Temperature coupling is on
+tcoupl                  = V-rescale      ; modified Berendsen thermostat
+tc-grps                 = System         ; Entire system
+tau_t                   = 0.1            ; time constant, in ps
+ref_t                   = 298.15     ; reference temperature, one for each group, in K
+
+
+; Pressure coupling is off
+pcoupl                  = no         ; no pressure coupling in NVT
+
+
+; Periodic boundary conditions
+pbc                     = xyz        ; 3-D PBC
+
+
+; Velocity generation
+gen_vel                 = yes        ; assign velocities from Maxwell distribution
+gen_temp                = {temp}      ; temperature for Maxwell distribution
+gen_seed                = -1         ; generate a random seed
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt2
+    )
+
+    return contents
+
+
+def _generate_inter_eq_mdp(job, cutoff):
+    # Use 15000000 (15 ns) minimum for the interfacial equilibration
+    contents = """
+; MDP file for NVT simulation
+
+; Run parameters
+integrator              = md        ; leap-frog integrator
+nsteps                  = {nsteps}  ; 70 ns
+dt                      = 0.001     ; 1 fs
+
+
+; Output control
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 1000
+nstlog                   = 1000
+nstxout-compressed       = 1000
+
+
+
+
+; Nonbonded settings 
+cutoff-scheme            = Verlet    ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type                  = grid      ; search neighboring grid cells
+nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+rvdw                     = 2	     ;short-range van der Waals cutoff (in nm)
+DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+; Electrostatics
+coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+pme_order               = 4          ; cubic interpolation
+fourierspacing          = 0.16       ; grid spacing for FFT
+rcoulomb                = 2        ; short-range electrostatic cutoff (in nm)
+
+
+
+; Temperature coupling is on
+tcoupl                  = V-rescale  ; modified Berendsen thermostat
+tc-grps                 = System     ; Entire system
+tau_t                   = 0.1        ; time constant, in ps
+ref_t                   = {temp}     ; reference temperature, one for each group, in K
+
+
+; Pressure coupling is off
+pcoupl                  = no         ; no pressure coupling in NVT
+
+
+; Periodic boundary conditions
+pbc                     = xyz        ; 3-D PBC
+
+
+; Velocity generation
+gen_vel                 = yes        ; assign velocities from Maxwell distribution
+gen_temp                = {temp}     ; temperature for Maxwell distribution
+gen_seed                = -1         ; generate a random seed
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, nsteps=job.sp.nsteps_intereq, cut=cutoff
+    )
+
+    return contents
+
+
+def _generate_inter_prod_mdp(job, cutoff):
+    # Use 50000000 (50 ns) for the interfacial production
+    contents = """
+; MDP file for NVT simulation
+
+; Run parameters
+integrator              = md        ; leap-frog integrator
+nsteps                  = {nsteps}  ; 70 ns
+dt                      = 0.001     ; 1 fs
+
+
+; Output control
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 1000
+nstlog                   = 1000
+nstxout-compressed       = 1000
+
+
+
+
+; Nonbonded settings 
+cutoff-scheme            = Verlet    ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type                  = grid      ; search neighboring grid cells
+nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+rvdw                     = 2	     ;short-range van der Waals cutoff (in nm)
+DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+; Electrostatics
+coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+pme_order               = 4          ; cubic interpolation
+fourierspacing          = 0.16       ; grid spacing for FFT
+rcoulomb                = 2        ; short-range electrostatic cutoff (in nm)
+
+
+
+; Temperature coupling is on
+tcoupl                  = V-rescale  ; modified Berendsen thermostat
+tc-grps                 = System     ; Entire system
+tau_t                   = 0.1        ; time constant, in ps
+ref_t                   = {temp}     ; reference temperature, one for each group, in K
+
+
+; Pressure coupling is off
+pcoupl                  = no         ; no pressure coupling in NVT
+
+
+; Periodic boundary conditions
+pbc                     = xyz        ; 3-D PBC
+
+
+; Velocity generation
+gen_vel                 = yes        ; assign velocities from Maxwell distribution
+gen_temp                = {temp}     ; temperature for Maxwell distribution
+gen_seed                = -1         ; generate a random seed
+""".format(
+        temp=job.sp.T, nsteps=job.sp.nsteps_interprod
+    )
+
+    return contents
 
 
 if __name__ == "__main__":
