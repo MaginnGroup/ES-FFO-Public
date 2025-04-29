@@ -51,14 +51,15 @@ def determine_density_iter(molec_name):
 
 
 nsteps_nvt_eq = 100000  # 100ps
-nsteps_fl_eq = 100000  # 100ps
-nsteps_npt_pre_eq = 500000  # 500ps
-nsteps_npt_eq = 500000  # 500ps (minimum)
-nsteps_npt_prod = 10000000  # 10 ns
-nsteps_nvt_prod = 3000000  # 3 ns
-nsteps_intereq = 15000000  # 15 ns (minimum)
-nsteps_interprod = 50000000  # 50 ns
-nmols = 750  # Number of molecules in the system
+nsteps_npzzat_eq = 00000  # 100ps
+# nsteps_fl_eq = 100000  # 100ps
+# nsteps_npt_pre_eq = 500000  # 500ps
+# nsteps_npt_eq = 500000  # 500ps (minimum)
+# nsteps_npt_prod = 10000000  # 10 ns
+# nsteps_nvt_prod = 3000000  # 3 ns
+nsteps_intereq = 30000000  # 15 ns (minimum)
+nsteps_interprod = 40000000  # 50 ns
+nmols = 3000  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
 
 
@@ -87,7 +88,7 @@ def init_project():
 
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
-        for temp in [temps[-2]]:
+        for temp in [temps[-3]]:
             liq_density = molec_data.expt_liq_density[temp]
             # vap_density = molec_data.expt_vap_density[temp]
             # rho_avg = (liq_density + vap_density) / 2.0
@@ -103,11 +104,12 @@ def init_project():
                     "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_fl_eq": nsteps_fl_eq,
-                    "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    "nsteps_npt_eq": nsteps_npt_eq,
-                    "nsteps_npt_prod": nsteps_npt_prod,
-                    "nsteps_nvt_prod": nsteps_nvt_prod,
+                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    # "nsteps_fl_eq": nsteps_fl_eq,
+                    # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
+                    # "nsteps_npt_eq": nsteps_npt_eq,
+                    # "nsteps_npt_prod": nsteps_npt_prod,
+                    # "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
                     "cutoff": float(6 * np.max(molec_data.bounds_sig)),

@@ -11,6 +11,8 @@ import templates.ndcrc
 from pymser import pymser
 import warnings
 import unyt as u
+from findpeaks import findpeaks
+import math
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -43,11 +45,12 @@ def create_system(job):
     import unyt as u
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
-    system = mbuild.fill_box(compound, n_compounds=1000, density=job.sp.rho_avg)
+    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density=job.sp.rho_liq)
 
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
-    system_ff = ff.apply(system)
+    # Apply the forcefield to the system even when all dihedrals are zero
+    system_ff = ff.apply(system, assert_dihedral_params = False)
     system_ff.combining_rule = "lorentz"
 
     with job:
@@ -83,9 +86,9 @@ def fix_topology(job):
 
 
 @Project.post.isfile("em.mdp")
-# @Project.post.isfile("nvt1_eq.mdp")
+# @Project.post.isfile("nvt_eq.mdp")
 # @Project.post.isfile("npt_eq.mdp")
-# @Project.post.isfile("nvt2_eq.mdp")
+# @Project.post.isfile("nvt_prod.mdp")
 # @Project.post.isfile("inter_eq.mdp")
 # @Project.post.isfile("inter_prod.mdp")
 @Project.operation
@@ -97,9 +100,9 @@ def generate_inputs(job):
     with open(job.fn("em.mdp"), "w") as inp:
         inp.write(content)
 
-    # content = _generate_nvt1_eq_mdp(job)
+    # content = _generate_nvt_eq_mdp(job)
 
-    # with open(job.fn("nvt1_eq.mdp"), "w") as inp:
+    # with open(job.fn("nvt_eq.mdp"), "w") as inp:
     #     inp.write(content)
 
     # content = _generate_npt_eq_mdp(job)
@@ -107,9 +110,9 @@ def generate_inputs(job):
     # with open(job.fn("npt_eq.mdp"), "w") as inp:
     #     inp.write(content)
 
-    # content = _generate_nvt2_eq_mdp(job)
+    # content = _generate_nvt_prod_mdp(job)
 
-    # with open(job.fn("nvt2_eq.mdp"), "w") as inp:
+    # with open(job.fn("nvt_prod.mdp"), "w") as inp:
     #     inp.write(content)
 
     # content = _generate_inter_eq_mdp(job)
@@ -148,9 +151,9 @@ def generate_inputs(job):
 # Energy Minimization
 @Project.label
 def em_complete(job):
-    if "emin_fin" in job.doc:
-        return True
-    else:
+    try:
+        return check_norm_term(job, "em")
+    except:
         return False
 
 
@@ -164,28 +167,89 @@ def em_sim(job):
     sim_name = "em"
     last_sim_name = "system"
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
-    job.doc.emin_fin = True
 
 
 # Short NVT Equilibration
 @Project.label
-def nvt1_eq_comp(job):
-    if "nvt1_eq_fin" in job.doc:
-        return True
-    else:
+def nvt_eq_comp(job):
+    try:
+        return check_norm_term(job, "nvt_eq")
+    except:
         return False
 
 
 @Project.pre.after(em_sim)
-@Project.post(nvt1_eq_comp)
+@Project.post(nvt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
-def nvt_eq1_sim(job):
+def nvt_eq_sim(job):
     """Run the 1st short NVT simulation"""
-    sim_name = "nvt_eq1"
+    sim_name = "nvt_eq"
     last_sim_name = "em"
-    run_md_wo_eqcheck(job, sim_name, last_sim_name)
-    job.doc.nvt1_eq_fin = True
 
+    content = _generate_nvt_eq_mdp(job)
+
+    with open(job.fn("nvt_eq.mdp"), "w") as inp:
+        inp.write(content)
+
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+# Short NPT at high P to force liquid phase
+@Project.label
+def fl_eq_comp(job):
+    if "fl_eq_fin" in job.doc:
+        return True
+    else:
+        return False
+    
+@Project.pre.after(nvt_eq_sim)
+@Project.post(fl_eq_comp)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+def fl_eq_sim(job):
+    import panedr
+
+    """Run the equilibration simulations"""
+    # Generate the first run
+    sim_name = "fl_eq"
+    last_sim_name = "nvt_eq"
+    property = "Density"
+
+    if not job.isfile("npt_eq.mdp"):
+        with job:
+            content = _generate_fl_eq_mdp(job)
+
+            with open(job.fn("fl_eq.mdp"), "w") as inp:
+                inp.write(content)
+
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+
+# Short NPT at moderate P to get closer to ref P
+@Project.label
+def npt_pre_eq_comp(job):
+    if "npt_pre_eq_fin" in job.doc:
+        return True
+    else:
+        return False
+    
+@Project.pre.after(fl_eq_sim)
+@Project.post(npt_pre_eq_comp)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+def npt_pre_eq_sim(job):
+    import panedr
+
+    """Run the equilibration simulations"""
+    # Generate the first run
+    sim_name = "npt_pre_eq"
+    last_sim_name = "fl_eq"
+
+    if not job.isfile("npt_pre_eq.mdp"):
+        with job:
+            content = _generate_npt_pre_eq_mdp(job)
+
+            with open(job.fn("npt_pre_eq.mdp"), "w") as inp:
+                inp.write(content)
+
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
 # Long Equilibration NPT
 @Project.label
@@ -194,9 +258,8 @@ def npt_eq_comp(job):
         return True
     else:
         return False
-
-
-@Project.pre.after(nvt_eq1_sim)
+    
+@Project.pre.after(npt_pre_eq_sim)
 @Project.post(npt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def npt_eq_sim(job):
@@ -205,60 +268,129 @@ def npt_eq_sim(job):
     """Run the equilibration simulations"""
     # Generate the first run
     sim_name = "npt_eq"
-    last_sim_name = "nvt_eq1"
+    last_sim_name = "npt_pre_eq"
     property = "Density"
+
+    if not job.isfile("npt_eq.mdp"):
+        with job:
+            content = _generate_npt_eq_mdp(job)
+
+            with open(job.fn("npt_eq.mdp"), "w") as inp:
+                inp.write(content)
+
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
-    job.doc.npt_eq_fin = True
 
-
-# Run short NVT pre-equilibration
+# Long Production NPT
 @Project.label
-def nvt2_eq_comp(job):
-    if "xy_box_len" in job.doc and "aspect_ratio" in job.doc:
+def npt_prod_comp(job):
+    if "npt_prod_fin" in job.doc:
+        return True
+    else:
+        return False
+    
+@Project.pre.after(npt_eq_sim)
+@Project.post(npt_prod_comp)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+def npt_prod_sim(job):
+    import panedr
+
+    """Run the equilibration simulations"""
+    # Generate the first run
+    sim_name = "npt_prod"
+    last_sim_name = "npt_eq"
+    property = "Density"
+
+    if not job.isfile("npt_prod.mdp"):
+        with job:
+            content = _generate_npt_prod_mdp(job)
+
+            with open(job.fn("npt_prod.mdp"), "w") as inp:
+                inp.write(content)
+
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+
+@Project.pre.after(npt_prod_sim)
+@Project.post.isfile("init_nvt_prod.gro")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+def init_nvt_prod_sim(job):
+    """Run the minimization simulations"""
+    import panedr
+
+    sim_name = "init_nvt_prod"
+    last_sim_name = "npt_prod"
+    property = "Volume"  # If NPT equilibrated, volume will also equilibrate
+
+    # Get final box lengths from volune
+    df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
+    volume = df[property].values
+    results, adf_test_failed = get_pymser_results(volume)
+    if not adf_test_failed:
+        vol_prod = volume[results["t0"] :]
+    else:
+        raise Exception(
+            "ADF test failed to complete. Ensure NPT equilibration is complete."
+        )
+    ave_length = np.mean(vol_prod) ** (1 / 3)
+    ave_length_rnd = np.round(ave_length, 5)
+    job.doc["box_len_" + sim_name] = ave_length_rnd
+
+    with job:
+        command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro -box {ave_length_rnd} {ave_length_rnd} {ave_length_rnd}"
+        subprocess.run(command, shell=True, check=True)
+
+
+# Run short NVT production
+@Project.label
+def nvt_prod_comp(job):
+    if "box_len_nvt_prod" in job.doc:
         return True
     else:
         return False
 
 
-@Project.pre.after(npt_eq_sim)
-@Project.post(nvt2_eq_comp)
+@Project.pre.after(init_nvt_prod_sim)
+@Project.post(nvt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
-def nvt_eq2_sim(job):
+def nvt_prod_sim(job):
     """Run the minimization simulations"""
-    sim_name = "nvt_eq2"
-    last_sim_name = "npt_eq"
+    sim_name = "nvt_prod"
+    last_sim_name = "init_nvt_prod"
+
+    if not job.isfile("nvt_prod.mdp"):
+        with job:
+            cutoff = np.minimum(
+                 0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+             )
+            content = _generate_nvt_prod_mdp(job, cutoff)
+
+            with open(job.fn("nvt_prod.mdp"), "w") as inp:
+                inp.write(content)
+
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
     # Get final box lengths
     # Extract the last line of the .gro file
-    with open(sim_name + ".gro", "rb") as f:
-        # Move the pointer to the end of the file, but leave space to find the last line
-        f.seek(-2, os.SEEK_END)
-        # Read backward until a newline is found
-        while f.read(1) != b"\n":
-            f.seek(-2, os.SEEK_CUR)
-        # Read the last line after finding the newline
-        last_line = f.readline().decode()
-    # Extract the box length from the last line
-    last_line.strip()
-    ave_length = list(map(float, last_line.split()))[0]
-    job.doc.xy_box_len = ave_length
-    job.doc.aspect_ratio = 3.0
+    ave_length = get_box_len(job, sim_name)
 
 
 # Make Interface for simulation
-@Project.pre.after(nvt_eq2_sim)
+@Project.pre.after(nvt_prod_sim)
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def init_inter_eq_sim(job):
-    box_len = job.doc.xy_box_len
-    xy_cen = job.doc.xy_box_len / 2
-    z_cen = job.doc.xy_box_len * job.doc.aspect_ratio / 2
-    new_z_len = z_cen * 2
-    job.doc.z_box_len = new_z_len
 
-    command = f"gmx editconf -f init_inter_eq.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o init_inter_eq.gro"
-    subprocess.run(command, shell=True, check=True)
+    sim_name = "init_inter_eq"
+    last_sim_name = "nvt_prod"
+    box_len = job.doc["box_len_" + last_sim_name]
+    xy_cen = round(box_len / 2, 5)
+    z_cen = round(box_len * job.sp.aspect_ratio / 2, 5)
+    new_z_len = round(box_len * job.sp.aspect_ratio, 5)
+    job.doc["z_box_len"] = new_z_len
+
+    with job:
+        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {box_len} {box_len} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
+        subprocess.run(command, shell=True, check=True)
 
 
 # Run Interface NVT equilibration
@@ -270,7 +402,7 @@ def inter_eq_comp(job):
         return False
 
 
-@Project.pre.after(nvt_eq2_sim)
+@Project.pre.after(init_inter_eq_sim)
 @Project.post(inter_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def inter_eq_sim(job):
@@ -282,9 +414,19 @@ def inter_eq_sim(job):
         "init_inter_eq"  # Use the same one since the -gro file is created beforehand
     )
     sim_name = "inter_eq"
-    property = "Total-Energy"  # Total Energy Stable = Equilibrated
+    property = "Total Energy"  # Total Energy Stable = Equilibrated
+
+    if not job.isfile("inter_eq.mdp"):
+        with job:
+            cutoff = np.minimum(
+                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+            )
+            content = _generate_inter_eq_mdp(job, cutoff)
+
+            with open(job.fn("inter_eq.mdp"), "w") as inp:
+                inp.write(content)
+
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
-    job.doc.inter_eq_fin = True
 
 
 # Run Interface NVT Production
@@ -296,7 +438,7 @@ def inter_prod_comp(job):
         return False
 
 
-@Project.pre.after(nvt_eq2_sim)
+@Project.pre.after(inter_eq_sim)
 @Project.post(inter_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def inter_prod_sim(job):
@@ -308,34 +450,79 @@ def inter_prod_sim(job):
     )
     sim_name = "inter_prod"
     property = "#Surf*SurfTen"  # Surface tension
+
+    if not job.isfile("inter_prod.mdp"):
+        with job:
+            cutoff = np.minimum(
+                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+            )
+            content = _generate_inter_prod_mdp(job, cutoff)
+
+            with open(job.fn("inter_prod.mdp"), "w") as inp:
+                inp.write(content)
+
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
-    job.doc.inter_prod_fin = True
+    # job.doc.inter_prod_fin = True
 
 
 @Project.pre.after(inter_prod_sim)
-@Project.post(lambda job: "surf_ten" in job.doc)
-@Project.post(lambda job: "surf_ten_unc" in job.doc)
+@Project.post.isfile("inter_prod_density.xvg")
+@Project.post.isfile("inter_prod_surf_tens.txt")
+@Project.post(lambda job: "surf_tens" in job.doc and "density" in job.doc)
+@Project.post(lambda job: "surf_tens_unc" in job.doc and "density_unc" in job.doc)
 @Project.operation
-def calculate_properties(job):
+def calculate_props(job):
     """Calculate the density"""
 
     import panedr
     import numpy as np
-    from block_average import block_average
-
-    # Load the thermo data
-    df = panedr.edr_to_df(job.fn("inter_prod.edr"))
-
+    sys.path.append("../../")
+    from block_average.block_average import block_average
+    sys.path.remove("../../")
+    sim_name = "inter_prod"
+ 
     get_props = ["Density", "#Surf*SurfTen"]
-    names = ["density", "surf_ten"]
+    names = ["density", "surf_tens"]
+    #For surface tension and density
     for prop, name in zip(get_props, names):
-        property = df[prop].values
-        ave = np.mean(property)
+        #For density get profile from xvg
+        if prop == "Density":
+            with job:
+                if os.path.exists(job.fn("inter_prod.xtc")):
+                    file_type_in = "xtc"
+                else:
+                    file_type_in = "trr"
 
-        # save average density
-        job.doc[name] = ave
+                (means_est, vars_est, vars_err) = calc_block_densities(job, sim_name, file_type_in, name)
+            #     if not os.path.exists(job.fn("inter_prod_density.xvg")):
+            #         if os.path.exists(job.fn("inter_prod.xtc")):
+            #             file_type_in = "xtc"
+            #         else:
+            #             file_type_in = "trr"
+            #         command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
+            #         subprocess.run(
+            #             command, input=f"System", text=True, check=True, shell=True
+            #         )
+            #     prop_data = np.loadtxt(
+            #         job.fn(sim_name + "_" + name + ".xvg"), comments=["#", "@"]
+            #     )
+            # density = pd.DataFrame(prop_data)
+            # #Calculate the liquid mass density as a fxn of Z
+            # property = calc_mass_dens(density.to_numpy())
+        else:
+            with job:
+                if not os.path.exists(job.fn("inter_prod_surf_tens.txt")):
+                    command = f"echo '{prop}' | gmx energy -f {sim_name}.edr >> {sim_name}_{name}.txt"
+                    subprocess.run(
+                        command, input=f"System", text=True, check=True, shell=True
+                    )
+            df = panedr.edr_to_df(job.fn("inter_prod.edr"))
+            property = df[prop].values
+            #Use block averaging to calculate the variance of each property
+            (means_est, vars_est, vars_err) = block_average(property)
 
-        (means_est, vars_est, vars_err) = block_average(property)
+        #Use block averaging to calculate the variance of each property
+        # (means_est, vars_est, vars_err) = block_average(property)
 
         with open(job.fn(name + "_blk_avg.txt"), "w") as ferr:
             ferr.write("# nblk_ops, mean, vars, vars_err\n")
@@ -345,14 +532,180 @@ def calculate_properties(job):
                 ferr.write(
                     "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err)
                 )
+        # save average density and stdev
+        # mean = np.mean(property)
+        mean = means_est[0]
+        std = np.max(np.sqrt(vars_est))
 
-        job.doc[name + "_unc"] = np.max(np.sqrt(vars_est))
+        if name == "surf_tens":
+            #Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
+            mean = float((mean * u.bar * u.nm).in_units(u.mN/u.m).value)/2
+            std = float((std * u.bar * u.nm).in_units(u.mN/u.m).value)/2
+
+        job.doc[name] = mean
+        job.doc[name + "_unc"] = std
 
 
 #####################################################################
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
+def calc_block_densities(job, sim_name, file_type_in, name):
+    import panedr
+
+    means = []
+    vars_est = []
+    vars_err = []
+
+    with job:
+        df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
+        len_data = len(df_all)
+        time = df_all["Time"].to_numpy()
+
+        #Calculate the maximum number of blocks to use
+        # max_blocking_ops = int(np.ceil(np.log2(len_data)/4))
+        # block_length = 2 ** max_blocking_ops  # Number of datapoints in each block
+        block_length = int(len_data/10)
+
+        # Calc stats for mulitple-of-two block lengths
+        for block_len in [len_data, block_length]:
+            #Convert datapoints to ps
+            n_blocks = int(
+                len_data / block_len
+            )  # Number of blocks we can get with given block size
+
+            # print(f"Number of blocks: {n_blocks}")
+
+            block_data = []
+            for block in range(n_blocks):
+                idx_strt = block*block_len
+                idx_end = (block + 1)*block_len -1
+                t0 = time[idx_strt] #Time in ps to start (ex. 0)
+                te = time[idx_end] #Time in ps to end (ex. 4990)
+
+                #Get the average density for each block over Z
+
+                #Calculate the average density over Z for that block
+                
+                if block + 1 < n_blocks:
+                    output_file = f"{sim_name}_{name}_{block+1}.xvg"
+                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} -e {te} > /dev/null 2>&1"
+                else:
+                    if n_blocks == 1:
+                        output_file = f"{sim_name}_{name}.xvg"
+                    else:
+                        output_file = f"{sim_name}_{name}_{block+1}.xvg"
+                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} > /dev/null 2>&1"
+               
+                subprocess.run(
+                        command, input=f"System", text=True, check=True, shell=True
+                    )
+                prop_data = np.loadtxt(
+                    job.fn(output_file), comments=["#", "@"]
+                )
+                density = pd.DataFrame(prop_data)
+                #Calculate the liquid mass density as a fxn of Z
+                liq_density = calc_mass_dens(density.to_numpy())
+                mean_liq_dens = np.mean(liq_density, dtype=np.float64)
+                block_data.append(mean_liq_dens)
+
+            # Calculate the mean of this new dataset
+            block_data = np.asarray(block_data, dtype=np.float64)
+            df_block = pd.DataFrame(block_data)
+            df_block.to_csv(job.fn(f"{sim_name}_{name}_block_avg.csv"), index=False)
+
+            # Calculate the mean of this new dataset
+            mean = np.mean(block_data, dtype=np.float64)
+            # Calculate the variance of this new dataset
+            var = np.var(block_data, dtype=np.float64)
+            
+            # Save data for blocking operations
+            if len(block_data) > 1:
+                var_err = math.sqrt(2.0 * var ** 2.0 / (n_blocks - 1) ** 3.0)
+                vars_est.append(var / (n_blocks - 1))
+            else:
+                var_err = 0.0
+                vars_est.append(var)
+
+            means.append(mean)
+            vars_err.append(var_err)
+
+    return np.asarray(means), np.asarray(vars_est), np.asarray(vars_err)
+
+    
+
+def calc_mass_dens(density):
+    #Find the region attributed to liquid density
+    mass_dens_z = density[:,1]
+    find_liq_slab = find_bulk_liq_index(density)
+    range_for_liq_dens = find_liq_slab[0]
+    #Calculate the density
+    prop_vals = mass_dens_z[range_for_liq_dens] #kg/m^3
+    return prop_vals
+
+def find_bulk_liq_index(density):
+    #Use np.diff to approximate the 1st derivative
+    ES_numdens_z = density[:,1]
+    dy = np.gradient(ES_numdens_z, density[:,0])
+    #Use findpeaks to find the peaks and valleys, interpolating to get as close as possible
+    fp = findpeaks(lookahead=1, interpolate=10, verbose = 0)
+    results = fp.fit(dy)["df_interp"]
+    all_peaks = results[results['peak'] | results['valley']].index.values
+    #get the highest peak and the lowest valley, these are the interfaces
+    y_vals = results['y'].iloc[all_peaks]
+    peak_index = all_peaks[np.argmax(y_vals)]
+    valley_index = all_peaks[np.argmin(y_vals)]
+    interfaces = [peak_index, valley_index]
+
+    #Divide the indices by 10 to get the correct index for the density based on interpolation
+    interfaces = [int(i/10) for i in interfaces]
+    range_org_liq = np.arange(interfaces[0], interfaces[1], 1)
+    #Get the median density from the bulk range
+    median_dens_liq = np.median(ES_numdens_z[range_org_liq])
+
+    # Find the first and last index where density >= median
+    valid_idx = np.where(ES_numdens_z[range_org_liq] >= median_dens_liq)[0]
+    #Cut the range to only include indeces where the density is above the median
+    if valid_idx.size > 0:
+        start = valid_idx[0]
+        end = valid_idx[-1] + 1  # +1 to include the last valid index
+        range_for_liq_dens = range_org_liq[start:end]
+    else:
+        range_for_liq_dens = np.array([], dtype=int)
+
+    return range_for_liq_dens, interfaces, ES_numdens_z
+
+def get_pymser_results(eq_col):
+    batch_size = max(1, int(len(eq_col) * 0.0005))
+
+    # Try with ADF test enabled, fallback without it if it fails
+    try:
+        results = pymser.equilibrate(
+            eq_col,
+            LLM=False,
+            batch_size=batch_size,
+            ADF_test=True,
+            uncertainty="uSD",
+            print_results=False,
+        )
+        adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
+    except:
+        results = pymser.equilibrate(
+            eq_col,
+            LLM=False,
+            batch_size=batch_size,
+            ADF_test=False,
+            uncertainty="uSD",
+            print_results=False,
+        )
+        results["adf"], results["critical_values"], adf_test_failed = (
+            None,
+            None,
+            False,
+        )
+    return results, adf_test_failed
+
+
 def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
     res_matrix = []
@@ -363,40 +716,14 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
             eq_col = eq_data_dict[key]["data"]
-            batch_size = max(1, int(len(eq_col) * 0.0005))
-
-            # Try with ADF test enabled, fallback without it if it fails
-            try:
-                results = pymser.equilibrate(
-                    eq_col,
-                    LLM=False,
-                    batch_size=batch_size,
-                    ADF_test=True,
-                    uncertainty="uSD",
-                    print_results=False,
-                )
-                adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
-            except:
-                results = pymser.equilibrate(
-                    eq_col,
-                    LLM=False,
-                    batch_size=batch_size,
-                    ADF_test=False,
-                    uncertainty="uSD",
-                    print_results=False,
-                )
-                results["adf"], results["critical_values"], adf_test_failed = (
-                    None,
-                    None,
-                    False,
-                )
-
+            results, adf_test_failed = get_pymser_results(eq_col)
             equilibrium = len(eq_col) - results["t0"] >= prod_tol
             equil_matrix.append(equilibrium and not adf_test_failed)
             res_matrix.append(results)
 
         for i, is_equilibrated in enumerate(equil_matrix):
             key_name = list(eq_data_dict.keys())[i]
+            key_name_str = key_name.replace(" ", "_")
             col_vals = eq_data_dict[key_name]["data"]
             t_vals = eq_data_dict[key_name]["time_data"]
             # plot all
@@ -426,12 +753,14 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
                 if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
                     statement += f"Only {prod_cycles} production cycles found."
 
-            with open("Equil_Output.txt", "a") as f:
+            with open(key_name_str + "_eqout.txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:
         # This will cause an error in the GEMC operation which lets us know that the job failed
         raise Exception(f"Error processing job {job.id}: {e}")
+
+    return all(equil_matrix)
 
 
 def plot_res_pymser(job, t_col, eq_col, results, name):
@@ -440,7 +769,7 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
     )
 
     ax1.set_ylabel(name, color="black", fontsize=14, fontweight="bold")
-    ax1.set_xlabel("Time (ns)", fontsize=14, fontweight="bold")
+    ax1.set_xlabel("Time (ps)", fontsize=14, fontweight="bold")
 
     ax1.plot(t_col, eq_col, label="Raw data", color="blue")
 
@@ -522,7 +851,8 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
     fig.set_size_inches(9, 5)
     fig.set_dpi(100)
     fig.tight_layout()
-    save_name = "MSER_eq_" + name + ".png"
+    name_nospace = name.replace(" ", "_")
+    save_name = "MSER_eq_" + name_nospace + ".png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
@@ -538,49 +868,50 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
             command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name}" + w_gpu
         else:
             command = (
-                f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-                f"gmx mdrun -v -deffnm {sim_name}" + w_gpu
+                f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name}  &> prep_{sim_name}.out && "
+                f"gmx mdrun -v -deffnm {sim_name}" + w_gpu + f" &> run_{sim_name}.out"
             )
         subprocess.run(command, shell=True, check=True)
+        job.doc[sim_name + "_fin"] = True
 
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
         try:
             if sim_name == "npt_eq":
-                nsteps_eq = job.sp.nsteps_npt
+                nsteps_eq = job.sp.nsteps_npt_eq
             elif sim_name == "inter_eq":
                 nsteps_eq = job.sp.nsteps_intereq
 
+            max_steps_str = "max_eq_steps_" + sim_name
+            nsteps_str = "nsteps_" + sim_name
+            eq_ext_str = "eq_ext_" + sim_name
+            eq_data_dict = {}
             # Set number of iterations per extension and intitialize counter and total number of steps
-            eq_extend = int(nsteps_eq / 4)  # In femtoseconds
+            eq_extend = int(nsteps_eq / 4 / 1000)  # In ps
 
             # Get the total number of equilibration restarts and steps so far
-            existing_eq_steps = (
-                count_steps(sim_name) * 1000
-            )  # Convert to femtoseconds (step timescale is 1 fs)
-            total_eq_steps = existing_eq_steps  # In femtoseconds
-
+            steps, num_pts = count_steps(job, sim_name)
+            existing_eq_steps = steps  # In ps
+            total_eq_steps = existing_eq_steps  # In ps
             # Set the maximum number of steps
-            if max_eq_steps not in job.doc:
-                job.doc.max_eq_steps = total_eq_steps * 2
+            if max_steps_str not in job.doc:
+                job.doc[max_steps_str] = int(nsteps_eq / 1000) + eq_extend * 2
 
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
-            max_eq_steps = np.maximum(
-                job.doc.max_eq_steps, existing_eq_steps + 2 * nsteps_eq
-            )
+            max_eq_steps = np.maximum(job.doc[max_steps_str], job.doc[max_steps_str] + eq_extend * 2)
             # Originally set the document eq_steps to the max number, it will be overwritten later
-            job.doc.nsteps_gemc_eq = int(max_eq_steps)
+            job.doc[nsteps_str] = int(max_eq_steps)
 
             # Continue running while you have not exceeded the max number of steps
-            while total_eq_steps < job.doc.max_eq_steps:
+            while total_eq_steps < max_eq_steps:
                 # If you have enough steps, run the simulation, continue the simulation with more points
                 if total_eq_steps + eq_extend <= max_eq_steps:
                     # If we have no steps, start the simulation
                     if total_eq_steps == 0:
                         command = (
-                            f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} && "
-                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                            f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} &> prep_{sim_name}.out && "
+                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu" + f" &> run_{sim_name}.out"
                         )
                     # Otherwise, check log file for whether previous simulation finished correctly
                     elif check_norm_term(job, sim_name):
@@ -589,11 +920,11 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                             f"gmx convert-tpr -s {sim_name}.tpr -extend "
                             + str(eq_extend)
                             + f" -o {sim_name}.tpr &&"
-                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu "
+                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu" + f" &> run_{sim_name}.out"
                         )
                     # Otherwise restart the simulation from the checkpoint file
                     else:
-                        command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu"
+                        command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu" + f" &> run_{sim_name}.out"
                     subprocess.run(command, shell=True, check=True)
 
                     # Update equilibration data dictionary/files
@@ -605,50 +936,78 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     total_eq_steps += eq_extend
 
                     # Set tolerance for determining equilibrium and check for convergence
-                    prod_tol_eq = (
-                        count_steps(sim_name) / 4
-                    )  # In picoseconds (same units as the data)
+                    steps, num_pts = count_steps(job, sim_name)
+                    prod_tol_eq = num_pts / 4  # In picoseconds (same units as the data)
                     is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
 
                     # If the simulation has converged, break
                     if is_equil:
+                        # Set the step counter to whatever the final number of equilibration steps was
+                        job.doc[nsteps_str] = total_eq_steps
+                        job.doc[eq_ext_str] = False
+                        job.doc[sim_name + "_fin"] = True
                         break
-
-                # Otherwise report an error
-                else:
-                    job.doc.equil_fail = True
-                    raise Exception(
-                        f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
-                    )
-
-            # Set the step counter to whatever the final number of equilibration steps was
-            job.doc.nsteps_gemc_eq = total_eq_steps
-            job.doc.equil_fail = False
+                    # Otherwise report an error
+                    elif total_eq_steps + eq_extend > max_eq_steps:
+                        job.doc[eq_ext_str] = True
+                        raise Exception(
+                            f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
+                        )
         except:
             # If the simulation fails, extend the simulation
-            if "equil_fail" in job.doc.keys() and job.doc.equil_fail:
-                job.doc.max_eq_steps = total_eq_steps * 2
-                del job.doc.nsteps_gemc_eq
-                del job.doc.equil_fail
+            if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
+                job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
+                del job.doc[nsteps_str]
+                del job.doc[eq_ext_str]
             # If another error occurs, set the equilibration failure flag
             else:
-                job.doc["eq_fail"] = True
+                eq_fail_str = "eq_fail_" + sim_name
+                job.doc[eq_fail_str] = True
 
 
 def check_norm_term(job, sim_name):
     selected_file = job.fn(sim_name + ".log")
+    # with open(selected_file, "rb") as f:
+    #     # Move the pointer to the end of the file, but leave space to find the last line
+    #     f.seek(-2, os.SEEK_END)
+    #     # Read backward until a newline is found
+    #     while f.read(1) != b"\n":
+    #         f.seek(-2, os.SEEK_CUR)
+    #     # Read the last line after finding the newline
+    #     last_line = f.readline().decode()
+    num_newlines = 0
     with open(selected_file, "rb") as f:
+        try:
+            f.seek(-2, os.SEEK_END)
+            while num_newlines < 1:  # Get the last line
+                f.seek(-2, os.SEEK_CUR)
+                if f.read(1) == b"\n":
+                    num_newlines += 1
+        except OSError:
+            f.seek(0)
+        last_line = f.readline().decode()
+
+    if "Finished mdrun on rank" in last_line:
+        return True
+    else:
+        return False
+
+
+def get_box_len(job, sim_name):
+    # Get final box lengths
+    # Extract the last line of the .gro file
+    with open(sim_name + ".gro", "rb") as f:
         # Move the pointer to the end of the file, but leave space to find the last line
         f.seek(-2, os.SEEK_END)
         # Read backward until a newline is found
         while f.read(1) != b"\n":
             f.seek(-2, os.SEEK_CUR)
         # Read the last line after finding the newline
-        last_line = f.readline().decode()
-    if "Finished mdrun on rank" in last_line:
-        return True
-    else:
-        return False
+        last_line = f.readline().decode().strip()
+    # Extract the box length from the last line
+    ave_length = list(map(float, last_line.split()))[0]
+    job.doc["box_len_" + sim_name] = ave_length
+    return ave_length
 
 
 def get_eq_data_dict(job, eq_data_dict, sim_name, property):
@@ -657,22 +1016,23 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     with job:
         # Get the density and volume data
         df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
-        if property in df_all.columns:
-            df = df[["Time", property]].copy()
+        # if property in df_all.columns:
+        df = df_all[["Time", property]].copy()
 
-        elif property in ["Volume", "Density"]:
-            command = f"gmx energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
-            subprocess.run(
-                command, input=f"{property}", text=True, check=True, shell=True
-            )
-            prop_data = np.loadtxt(
-                sim_name + "_" + property + ".xvg", comments=["#", "@"]
-            )
-            df = pd.DataFrame(prop_data)
+        # elif property in ["Volume", "Density"]:
+        #     command = f"gmx energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
+        #     subprocess.run(
+        #         command, input=f"{property}", text=True, check=True, shell=True
+        #     )
+        #     prop_data = np.loadtxt(
+        #         sim_name + "_" + property + ".xvg", comments=["#", "@"]
+        #     )
+        #     df = pd.DataFrame(prop_data)
 
         property_data = df.iloc[:, 1].values
         time_data = df.iloc[:, 0].values
-        eq_col_file = job.fn(sim_name + "_" + property + ".csv")
+        prop_save = property.replace(" ", "_")
+        eq_col_file = job.fn(sim_name + "_" + prop_save + ".csv")
         eq_data_dict[property] = {
             "data": property_data,
             "time_data": time_data,
@@ -689,10 +1049,12 @@ def count_steps(job, sim_name):
         # Extract the maximum time recorded
         df = panedr.edr_to_df(job.fn(sim_name + ".edr"))
         time_total = df["Time"].max()  # in picoseconds
+        num_pts = len(df["Time"])
     else:
         time_total = 0
+        num_pts = 0
 
-    return time_total
+    return time_total, num_pts
 
 
 # Build FFs
@@ -713,6 +1075,10 @@ def _get_xml_from_molecule(molecule_name):
         molec_xml_function = __generate_DCM_xml
     elif molecule_name == "DEC":
         molec_xml_function = __generate_DEC_xml
+    elif molecule_name == "DMF":
+        molec_xml_function = __generate_DMF_xml
+    elif molecule_name == "R125":
+        molec_xml_function = __generate_R125_xml
     else:
         raise ValueError("Molecule name not recognized")
     return molec_xml_function
@@ -765,6 +1131,50 @@ def __generate_EG_xml(job):
     )
     return content
 
+def __generate_R125_xml(job):
+    content = """<ForceField>
+ <AtomTypes>
+  <Type name="C1" class="c3" element="C" mass="12.011" def="C(C)(H)(F)(F)" desc="carbon bonded to 2 Fs, an H, and another carbon"/>
+  <Type name="C2" class="c3" element="C" mass="12.011" def="C(C)(F)(F)(F)" desc="carbon bonded to 3 Fs and another carbon"/>
+  <Type name="F1" class="f" element="F" mass="18.998" def="FC(C)(F)H" desc="F bonded to C1"/>
+  <Type name="H1" class="h2" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])[N,O,F,Cl,Br,I,S]" desc="H bonded to aliphatic carbon with 2 d. group"/>
+  <Type name="F2" class="f" element="F" mass="18.998" def="FC(C)(F)F" desc="F bonded to C2"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="c3" length="0.1537" k="251793.143"/>
+  <Bond class1="c3" class2="f" length="0.1350" k="298653.950"/>
+  <Bond class1="c3" class2="h2" length="0.1096" k="277566.579"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="c3" class2="c3" class3="f" angle="1.90660" k="553.125"/>
+  <Angle class1="c3" class2="c3" class3="h2" angle="1.92370" k="386.602"/>
+  <Angle class1="f" class2="c3" class3="h2" angle="1.89874" k="427.605"/>
+  <Angle class1="f" class2="c3" class3="f" angle="1.87379" k="593.291"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="f" class2="c3" class3="c3" class4="f" periodicity1="3" phase1="0.0" k1="0.0" periodicity2="1" phase2="3.141592654" k2="5.02077111"/>
+  <Proper class1="h2" class2="c3" class3="c3" class4="f" periodicity1="3" phase1="0.0" k1="0.65085610"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+  <Atom type="C1" charge="0.224067" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="C2" charge="0.500886" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
+  <Atom type="F1" charge="-0.167131" sigma="{sigma_F1:0.6f}" epsilon="{epsilon_F1:0.6f}"/>
+  <Atom type="H1" charge="0.121583" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="F2" charge="-0.170758" sigma="{sigma_F2:0.6f}" epsilon="{epsilon_F2:0.6f}"/>
+ </NonbondedForce>
+</ForceField>""".format(
+        sigma_C1=job.sp.sigma_C1,
+        sigma_C2=job.sp.sigma_C2,
+        sigma_H1=job.sp.sigma_H1,
+        sigma_F1=job.sp.sigma_F1,
+        sigma_F2=job.sp.sigma_F2,
+        epsilon_C1=job.sp.epsilon_C1,
+        epsilon_C2=job.sp.epsilon_C2,
+        epsilon_H1=job.sp.epsilon_H1,
+        epsilon_F1=job.sp.epsilon_F1,
+        epsilon_F2=job.sp.epsilon_F2,
+    )
+    return content
 
 def __generate_Gly_xml(job):
     content = """<ForceField>
@@ -953,10 +1363,10 @@ def __generate_DMSO_xml(job):
 def __generate_ACN_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
-   <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+  <Type name="N1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="Sp N"/>
+  <Type name="C1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="Sp C"/>
+  <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c1" class2="n1" length="0.1138" k="848933.191"/>
@@ -964,12 +1374,12 @@ def __generate_ACN_xml(job):
   <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle class1="c3" class2="c1" class3="n1" angle="3.115" k="486.180"/>
-  <Angle class1="c1" class2="c3" class3="hc" angle="1.915" k="403.750"/>
-  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="c1" class3="n1" angle="3.11541" k="486.180"/>
+  <Angle class1="c1" class2="c3" class3="hc" angle="1.91550" k="403.750"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.89106" k="329.951"/>
  </HarmonicAngleForce>
  <PeriodicTorsionForce>
-  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.1" k1="0.000"/>
+  <Proper class1="n1" class2="c1" class3="c3" class4="hc" periodicity1="2" phase1="3.141592654" k1="0.0"/>
  </PeriodicTorsionForce>
  <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
   <Atom type="N1" charge="-0.505798" sigma="{sigma_N1:0.6f}" epsilon="{epsilon_N1:0.6f}"/>
@@ -986,6 +1396,65 @@ def __generate_ACN_xml(job):
         epsilon_C1=job.sp.epsilon_C1,
         epsilon_C2=job.sp.epsilon_C2,
         epsilon_H1=job.sp.epsilon_H1,
+    )
+    return content
+
+
+def __generate_DMF_xml(job):
+    content = """<ForceField>
+ <AtomTypes>
+  <Type name="N1" class="n" element="N" mass="14.01" def="[N;X3][C;X3][O&X1,S&X1]" desc="Sp2 nitrogen in amide groups"/>
+  <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+  <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+  <Type name="C2" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
+  <Type name="H2" class="h5" element="H" mass="1.008" def="H[C;!X4]([N,O,F,Cl,Br,I,S])([N,O,F,Cl,Br,I,S])" desc="H bonded to non-sp3 carbon with 2 d. group"/>
+  <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="n" length="0.1460" k="276645.436"/>
+  <Bond class1="c" class2="n" length="0.1345" k="400156.771"/>
+  <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
+  <Bond class1="c" class2="h5" length="0.1105" k="267273.374"/>
+  <Bond class1="c" class2="o" length="0.1214" k="542245.941"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="h1" class2="c3" class3="n" angle="1.90799" k="416.887"/>
+  <Angle class1="h5" class2="c" class3="n" angle="1.95808" k="438.405"/>
+  <Angle class1="n" class2="c" class3="o" angle="2.12983" k="634.543"/>
+  <Angle class1="c3" class2="n" class3="c3" angle="2.01690" k="528.268"/>
+  <Angle class1="c3" class2="n" class3="c" angle="2.11796" k="534.886"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.91201" k="327.856"/>
+  <Angle class1="h5" class2="c" class3="o" angle="2.15129" k="450.943"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="h1" class2="c3" class3="n" class4="c" periodicity1="3" phase1="0.0" k1="69.02990737"/>
+  <Proper class1="h1" class2="c3" class3="n" class4="c3" periodicity1="3" phase1="0.0" k1="57.15386222"/>
+  <Proper class1="h5" class2="c" class3="n" class4="c3" periodicity1="2" phase1="3.141592654" k1="10.46000910"/>
+  <Proper class1="o" class2="c" class3="n" class4="c3" periodicity1="2" phase1="3.141592654" k1="10.46000910"/>
+  <Improper class1="c" class2="c3" class3="n" class4="c3" periodicity1="2" phase1="3.141592654" k1="4.60238738"/>
+  <Improper class1="h5" class2="n" class3="c" class4="o" periodicity1="2" phase1="3.141592654" k1="43.93195509"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+  <Atom type="N1" charge="0.086913" sigma="{sigma_N1:0.6f}" epsilon="{epsilon_N1:0.6f}"/>
+  <Atom type="C1" charge="-0.310731" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="H1" charge="0.115127" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="C2" charge="0.321534" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
+  <Atom type="H2" charge="0.044705" sigma="{sigma_H2:0.6f}" epsilon="{epsilon_H2:0.6f}"/>
+  <Atom type="O1" charge="-0.522452" sigma="{sigma_O1:0.6f}" epsilon="{epsilon_O1:0.6f}"/>
+ </NonbondedForce>
+</ForceField>""".format(
+        sigma_N1=job.sp.sigma_N1,
+        sigma_C1=job.sp.sigma_C1,
+        sigma_C2=job.sp.sigma_C2,
+        sigma_H1=job.sp.sigma_H1,
+        sigma_H2=job.sp.sigma_H2,
+        sigma_O1=job.sp.sigma_O1,
+        epsilon_N1=job.sp.epsilon_N1,
+        epsilon_C1=job.sp.epsilon_C1,
+        epsilon_C2=job.sp.epsilon_C2,
+        epsilon_H1=job.sp.epsilon_H1,
+        epsilon_H2=job.sp.epsilon_H2,
+        epsilon_O1=job.sp.epsilon_O1,
     )
     return content
 
@@ -1129,7 +1598,7 @@ def _generate_em_mdp(job):
 integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
 emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
 emstep          = 0.01          ; Energy step size
-nsteps		    = 50000	  	    ; Maximum number of (minimization) steps to perform
+nsteps		    = 100000	  	    ; Maximum number of (minimization) steps to perform
 
 nstenergy                = 1000
 nstlog                   = 1000
@@ -1143,6 +1612,7 @@ coulombtype	    = PME		; Treatment of long range electrostatic interactions
 rcoulomb	    = 1.2		; Short-range electrostatic cut-off
 rvdw		    = 1.2		; Short-range Van der Waals cut-off
 pbc		        = xyz 		; Periodic Boundary Conditions (yes/no)
+
 constraints     = all-bonds
 lincs-order     = 8
 lincs-iter      = 4
@@ -1151,7 +1621,7 @@ lincs-iter      = 4
     return contents
 
 
-def _generate_nvt1_eq_mdp(job):
+def _generate_nvt_eq_mdp(job):
     # Use 100000 (100 ps) for the first equilibration
     contents = """
 ; MDP file for NVT simulation
@@ -1175,14 +1645,14 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
+fourierspacing         = 0.16          ; effects accuracy of pme
 ewald-rtol              = 1e-5
 
 ; Temperature coupling is on
@@ -1192,11 +1662,7 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = berendsen
-pcoupltype              = isotropic
-ref-p                   = {press}
-tau-p                   = 0.5
-compressibility         = 4.5e-5
+pcoupl		            = no
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1213,14 +1679,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt1
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt_eq
     )
 
     return contents
 
-
-def _generate_npt_eq_mdp(job):
-    # Use 500000 (500 ps) for the first equilibration
+def _generate_fl_eq_mdp(job):
+    # Use 100000 (100 ps) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
 
@@ -1230,10 +1695,14 @@ nsteps		            = {nsteps}	    ;
 dt		                = 0.001		    ; 1 fs
 
 ; Output control
-nstxout		            = 1000		    ; save coordinates every 10.0 ps
-nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 10.0 ps
-nstlog		            = 1000		    ; update log file every 10.0 ps
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 10000      ; Update every 10 ps
+nstlog                   = 10000
+nstxout                  = 10000
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
@@ -1243,14 +1712,14 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
+fourierspacing         = 0.16          ; effects accuracy of pme
 ewald-rtol              = 1e-5
 
 ; Temperature coupling is on
@@ -1275,20 +1744,225 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
-gen_vel                 = no        ; Velocity generation is off 
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
 
 constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
+        temp=job.sp.T, press=job.sp.P*10, nsteps=job.sp.nsteps_fl_eq
+    ) #To force liquid use 10* the reference pressure
+
+    return contents
+
+def _generate_npt_pre_eq_mdp(job):
+    # Use 500000 (500 ps) for the first equilibration
+    contents = """
+; MDP file for NPT simulation
+
+; Run parameters
+integrator	            = md		    ; leap-frog integrator
+nsteps		            = {nsteps}	    ;
+dt		                = 0.001		    ; 1 fs
+
+; Output control
+;nstxout                 = 1000       ; save coordinates every 1.0 ps
+;nstvout                 = 1000       ; save velocities every 1.0 ps
+;nstenergy               = 1000       ; save energies every 1.0 ps
+;nstlog                  = 1000       ; update log file every 1.0 ps
+
+nstenergy                = 10000      ; Update every 10 ps
+nstlog                   = 10000
+nstxout                  = 10000
+
+; Neighborsearching
+cutoff-scheme           = Verlet
+ns-type		            = grid		    ; search neighboring grid cells
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+
+; VDW
+vdwtype                 = Cut-off
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+vdw-modifier            = None
+
+; Electrostatics
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+pme-order	            = 4		        ; cubic interpolation
+fourierspacing         = 0.16          ; effects accuracy of pme
+ewald-rtol              = 1e-5
+
+; Temperature coupling is on
+tcoupl		            = v-rescale     ; modified Berendsen thermostat
+tc-grps		            = System 	    ; Single coupling group
+tau-t		            = 0.1	  		; time constant, in ps
+ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+; Pressure coupling is on
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
+tau_p                   = 2.0                   ; time constant, in ps
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
+;refcoord_scaling       = com
+
+; Periodic boundary conditions
+pbc		                = xyz		    ; 3-D PBC
+
+; Dispersion correction
+DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+; Velocity generation
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, press=job.sp.P*3, nsteps=job.sp.nsteps_npt_pre_eq
+    ) #To prepare for equilibration use 3* the reference pressure
+
+    return contents
+
+def _generate_npt_eq_mdp(job):
+    # Use 500000 (500 ps) for the first equilibration
+    contents = """
+; MDP file for NPT simulation
+
+; Run parameters
+integrator	            = md		    ; leap-frog integrator
+nsteps		            = {nsteps}	    ;
+dt		                = 0.001		    ; 1 fs
+
+; Output control
+nstxout		            = 1000		    ; save coordinates every 1.0 ps
+nstvout		            = 0		        ; don't save velocities
+nstenergy	            = 100		    ; save energies every 0.1 ps
+nstlog		            = 100		    ; update log file every 0.1 ps
+
+; Neighborsearching
+cutoff-scheme           = Verlet
+ns-type		            = grid		    ; search neighboring grid cells
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+
+; VDW
+vdwtype                 = Cut-off
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+vdw-modifier            = None
+
+; Electrostatics
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+pme-order	            = 4		        ; cubic interpolation
+fourierspacing         = 0.16          ; effects accuracy of pme
+ewald-rtol              = 1e-5
+
+; Temperature coupling is on
+tcoupl		            = v-rescale     ; modified Berendsen thermostat
+tc-grps		            = System 	    ; Single coupling group
+tau-t		            = 0.1	  		; time constant, in ps
+ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+; Pressure coupling is on
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
+tau_p                   = 2.0                   ; time constant, in ps
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
+;refcoord_scaling       = com
+
+; Periodic boundary conditions
+pbc		                = xyz		    ; 3-D PBC
+
+; Dispersion correction
+DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+; Velocity generation
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt_eq
+    )
+
+    return contents
+
+def _generate_npt_prod_mdp(job):
+    # Use 10000000 (10 ns) for the production NPT
+    contents = """
+; MDP file for NPT simulation
+
+; Run parameters
+integrator	            = md		    ; leap-frog integrator
+nsteps		            = {nsteps}	    ;
+dt		                = 0.001		    ; 1 fs
+
+; Output control
+nstxout		            = 1000		    ; save coordinates every 1.0 ps
+nstvout		            = 0		        ; don't save velocities
+nstenergy	            = 1000		    ; save energies every 1.0 ps
+nstlog		            = 1000		    ; update log file every 1.0 ps
+
+; Neighborsearching
+cutoff-scheme           = Verlet
+ns-type		            = grid		    ; search neighboring grid cells
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+
+; VDW
+vdwtype                 = Cut-off
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+vdw-modifier            = None
+
+; Electrostatics
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+pme-order	            = 4		        ; cubic interpolation
+fourierspacing         = 0.16          ; effects accuracy of pme
+ewald-rtol              = 1e-5
+
+; Temperature coupling is on
+tcoupl		            = v-rescale     ; modified Berendsen thermostat
+tc-grps		            = System 	    ; Single coupling group
+tau-t		            = 0.1	  		; time constant, in ps
+ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+; Pressure coupling is on
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
+tau_p                   = 2.0                   ; time constant, in ps
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
+;refcoord_scaling       = com
+
+; Periodic boundary conditions
+pbc		                = xyz		    ; 3-D PBC
+
+; Dispersion correction
+DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+; Velocity generation
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt_prod
     )
 
     return contents
 
 
-def _generate_nvt2_eq_mdp(job):
-    # Use 100000 (100 ps) minimum for the second equilibration
+def _generate_nvt_prod_mdp(job, cutoff):
+    # Use 3000000 (3 ns) minimum for the second equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -1311,14 +1985,14 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
+fourierspacing         = 0.16          ; effects accuracy of pme
 ewald-rtol              = 1e-5
 
 ; Temperature coupling is on
@@ -1328,11 +2002,7 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = berendsen
-pcoupltype              = isotropic
-ref-p                   = {press}
-tau-p                   = 0.5
-compressibility         = 4.5e-5
+pcoupl		            = no
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1349,14 +2019,14 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_nvt2
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt_prod, cut =cutoff
     )
 
     return contents
 
 
-def _generate_inter_eq_mdp(job):
-    # Use 25000000 (25 ns) minimum for the interfacial equilibration
+def _generate_inter_eq_mdp(job, cutoff):
+    # Use 15000000 (15 ns) minimum for the interfacial equilibration
     contents = """
 ; MDP file for NVT simulation
 
@@ -1379,14 +2049,14 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
+fourierspacing         = 0.16          ; effects accuracy of pme
 ewald-rtol              = 1e-5
 
 ; Temperature coupling is on
@@ -1396,17 +2066,13 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = berendsen
-pcoupltype              = isotropic
-ref-p                   = {press}
-tau-p                   = 0.5
-compressibility         = 4.5e-5
+pcoupl		            = no
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
 
 ; Dispersion correction
-DispCorr	            = EnerPres	    ; apply analytical tail corrections
+DispCorr	            = no	    ; account for cut-off vdW scheme
 
 ; Velocity generation
 gen-vel		            = yes		    ; assign velocities from Maxwell distribution
@@ -1417,13 +2083,13 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_intereq
+        temp=job.sp.T, nsteps=job.sp.nsteps_intereq, cut=cutoff
     )
 
     return contents
 
 
-def _generate_inter_prod_mdp(job):
+def _generate_inter_prod_mdp(job, cutoff):
     # Use 50000000 (50 ns) for the interfacial production
     contents = """
 ; MDP file for NVT simulation
@@ -1434,10 +2100,10 @@ nsteps		            = {nsteps}	    ;
 dt		                = 0.001		    ; 1 fs
 
 ; Output control
-nstxout		            = 1000		    ; save coordinates every 1.0 ps
+nstxout		            = 10000		    ; save coordinates every 10.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 1.0 ps
-nstlog		            = 1000		    ; update log file every 1.0 ps
+nstenergy	            = 10000		    ; save energies every 10.0 ps
+nstlog		            = 10000		    ; update log file every 10.0 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
@@ -1447,14 +2113,14 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 2.5		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 2.5		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
-fourier-spacing         = 0.12          ; effects accuracy of pme
+fourierspacing         = 0.16          ; effects accuracy of pme
 ewald-rtol              = 1e-5
 
 ; Temperature coupling is on
@@ -1464,11 +2130,7 @@ tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is off
-pcoupl		            = berendsen
-pcoupltype              = isotropic
-ref-p                   = {press}
-tau-p                   = 0.5
-compressibility         = 4.5e-5
+pcoupl		            = no
 
 ; Periodic boundary conditions
 pbc		                = xyz		    ; 3-D PBC
@@ -1477,18 +2139,410 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr                 = no        ; account for cut-off vdW scheme
 
 ; Velocity generation
-gen-vel		            = yes		    ; assign velocities from Maxwell distribution
-gen-temp	            = {temp}        ; temperature for Maxwell distribution
-gen-seed	            = -1		    ; generate a random seed
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
 
 constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_interprod
+        temp=job.sp.T, nsteps=job.sp.nsteps_interprod, cut=cutoff
     )
 
     return contents
+
+# def _generate_em_mdp(job):
+
+#     contents = """
+# ; MDP file for energy minimization
+
+# integrator  = steep         ; Algorithm (steep = steepest descent minimization)
+# emtol       = 100.0         ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
+# emstep      = 0.01          ; Minimization step size
+# nsteps      = 100000       ; Maximum number of (minimization) steps to perform
+
+
+# nstenergy                = 1000
+# nstlog                   = 1000
+# nstxout-compressed       = 1000
+
+
+# ; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+# ;nstlist         	 = 1         ; Frequency to update the neighbor list and long range forces
+# cutoff-scheme   	 = Verlet     ; Buffered neighbor searching
+# verlet-buffer-tolerance  = 1e-4
+# ns_type         	 = grid       ; Method to determine neighbor list (simple, grid)
+
+
+# rvdw            	 = 1.2       ; Short-range Van der Waals cut-off
+# vdwtype         	 = Cut-off
+# DispCorr        	 = EnerPres
+
+
+# coulombtype     	 = PME       ; Treatment of long range electrostatic interactions
+# rcoulomb        	 = 1.2       ; Short-range electrostatic cut-off
+
+
+# pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions
+
+# constraints     = all-bonds
+# lincs-order     = 8
+# lincs-iter      = 4
+# """
+
+#     return contents
+
+
+# def _generate_nvt_eq_mdp(job):
+#     # Use 100000 (100 ps) for the first equilibration
+#     contents = """
+# ; MDP file for NVT simulation
+
+# ; Run parameters
+# integrator              = md        ; leap-frog integrator
+# nsteps                  = {nsteps}    ; 100 ps
+# dt                      = 0.001     ; 1 fs
+
+
+# ; Output control
+# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
+# ;nstvout                 = 1000       ; save velocities every 1.0 ps
+# ;nstenergy               = 1000       ; save energies every 1.0 ps
+# ;nstlog                  = 1000       ; update log file every 1.0 ps
+
+# nstenergy                = 50000
+# nstlog                   = 50000
+# nstxout-compressed       = 50000
+
+# ; Nonbonded settings 
+# cutoff-scheme            = Verlet    ; Buffered neighbor searching
+# verlet-buffer-tolerance  = 1e-4
+# ns_type                  = grid      ; search neighboring grid cells
+# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+# rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
+# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+# ; Electrostatics
+# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+# pme_order               = 4          ; cubic interpolation
+# fourierspacing          = 0.16       ; grid spacing for FFT
+# rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
+
+
+
+# ; Temperature coupling is on
+# tcoupl                  = V-rescale      ; modified Berendsen thermostat
+# tc-grps                 = System         ; Entire system
+# tau_t                   = 0.1            ; time constant, in ps
+# ref_t                   = 298.15     ; reference temperature, one for each group, in K
+
+
+# ; Pressure coupling is off
+# pcoupl                  = no         ; no pressure coupling in NVT
+
+
+# ; Periodic boundary conditions
+# pbc                     = xyz        ; 3-D PBC
+
+
+# ; Velocity generation
+# gen_vel                 = yes        ; assign velocities from Maxwell distribution
+# gen_temp                = {temp}      ; temperature for Maxwell distribution
+# gen_seed                = -1         ; generate a random seed
+
+# constraints             = all-bonds
+# lincs-order             = 8
+# lincs-iter              = 4
+# """.format(
+#         temp=job.sp.T, nsteps=job.sp.nsteps_nvt1
+#     )
+
+#     return contents
+
+
+# def _generate_npt_eq_mdp(job):
+#     # Use 500000 (500 ps) for the first equilibration
+#     contents = """
+# ; MDP file for NPT simulation
+
+# ; Run parameters
+# integrator              = md        ; leap-frog integrator
+# nsteps                  = {nsteps}  ; 0.5 ns
+# dt                      = 0.001     ; 1 fs
+
+
+# ; Output control
+# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
+# ;nstvout                 = 1000       ; save velocities every 1.0 ps
+# ;nstenergy               = 1000       ; save energies every 1.0 ps
+# ;nstlog                  = 1000       ; update log file every 1.0 ps
+
+# nstenergy                = 50000
+# nstlog                   = 50000
+# nstxout-compressed       = 50000
+
+
+
+# ; Nonbonded settings 
+# cutoff-scheme            = Verlet    ; Buffered neighbor searching
+# verlet-buffer-tolerance  = 1e-4
+# ns_type                  = grid      ; search neighboring grid cells
+# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+# rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
+# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+# ; Electrostatics
+# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+# pme_order               = 4          ; cubic interpolation
+# fourierspacing          = 0.16       ; grid spacing for FFT
+# rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
+
+
+
+# ; Temperature coupling is on
+# tcoupl                  = V-rescale  ; modified Berendsen thermostat
+# tc-grps                 = System     ; Entire system
+# tau_t                   = 0.1        ; time constant, in ps
+# ref_t                   = {temp}    ; reference temperature, one for each group, in K
+
+
+# ; Pressure coupling is on
+# pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+# pcoupltype              = isotropic             ; uniform scaling of box vectors
+# tau_p                   = 2.0                   ; time constant, in ps
+# compressibility         = 4.5e-5                ; isothermal compressibility of water, bar^-1
+# ref_p                   = {press}                 ; reference pressure, in bar
+# nstpcouple              = 1
+# ;refcoord_scaling       = com
+
+
+# ; Periodic boundary conditions
+# pbc                     = xyz       ; 3-D PBC
+
+
+# ; Velocity generation
+# gen_vel                 = no        ; Velocity generation is off 
+
+# constraints             = all-bonds
+# lincs-order             = 8
+# lincs-iter              = 4
+# """.format(
+#         temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt
+#     )
+
+#     return contents
+
+
+# def _generate_nvt_prod_mdp(job):
+#     # Use 100000 (100 ps) minimum for the second equilibration
+#     contents = """
+# ; MDP file for NVT simulation
+
+# ; Run parameters
+# integrator              = md        ; leap-frog integrator
+# nsteps                  = {nsteps}    ; 100 ps
+# dt                      = 0.001     ; 1 fs
+
+
+# ; Output control
+# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
+# ;nstvout                 = 1000       ; save velocities every 1.0 ps
+# ;nstenergy               = 1000       ; save energies every 1.0 ps
+# ;nstlog                  = 1000       ; update log file every 1.0 ps
+
+# nstenergy                = 50000
+# nstlog                   = 50000
+# nstxout-compressed       = 50000
+
+# ; Nonbonded settings 
+# cutoff-scheme            = Verlet    ; Buffered neighbor searching
+# verlet-buffer-tolerance  = 1e-4
+# ns_type                  = grid      ; search neighboring grid cells
+# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+# rvdw                     = 1.2	     ;short-range van der Waals cutoff (in nm)
+# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+# ; Electrostatics
+# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+# pme_order               = 4          ; cubic interpolation
+# fourierspacing          = 0.16       ; grid spacing for FFT
+# rcoulomb                = 1.2        ; short-range electrostatic cutoff (in nm)
+
+
+
+# ; Temperature coupling is on
+# tcoupl                  = V-rescale      ; modified Berendsen thermostat
+# tc-grps                 = System         ; Entire system
+# tau_t                   = 0.1            ; time constant, in ps
+# ref_t                   = 298.15     ; reference temperature, one for each group, in K
+
+
+# ; Pressure coupling is off
+# pcoupl                  = no         ; no pressure coupling in NVT
+
+
+# ; Periodic boundary conditions
+# pbc                     = xyz        ; 3-D PBC
+
+
+# ; Velocity generation
+# gen_vel                 = yes        ; assign velocities from Maxwell distribution
+# gen_temp                = {temp}      ; temperature for Maxwell distribution
+# gen_seed                = -1         ; generate a random seed
+
+# constraints             = all-bonds
+# lincs-order             = 8
+# lincs-iter              = 4
+# """.format(
+#         temp=job.sp.T, nsteps=job.sp.nsteps_nvt_eq
+#     )
+
+#     return contents
+
+
+# def _generate_inter_eq_mdp(job, cutoff):
+#     # Use 15000000 (15 ns) minimum for the interfacial equilibration
+#     contents = """
+# ; MDP file for NVT simulation
+
+# ; Run parameters
+# integrator              = md        ; leap-frog integrator
+# nsteps                  = {nsteps}  ; 70 ns
+# dt                      = 0.001     ; 1 fs
+
+
+# ; Output control
+# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
+# ;nstvout                 = 1000       ; save velocities every 1.0 ps
+# ;nstenergy               = 1000       ; save energies every 1.0 ps
+# ;nstlog                  = 1000       ; update log file every 1.0 ps
+
+# nstenergy                = 1000
+# nstlog                   = 1000
+# nstxout-compressed       = 1000
+
+
+
+
+# ; Nonbonded settings 
+# cutoff-scheme            = Verlet    ; Buffered neighbor searching
+# verlet-buffer-tolerance  = 1e-4
+# ns_type                  = grid      ; search neighboring grid cells
+# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+# rvdw                     = 2	     ;short-range van der Waals cutoff (in nm)
+# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+# ; Electrostatics
+# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+# pme_order               = 4          ; cubic interpolation
+# fourierspacing          = 0.16       ; grid spacing for FFT
+# rcoulomb                = 2        ; short-range electrostatic cutoff (in nm)
+
+
+
+# ; Temperature coupling is on
+# tcoupl                  = V-rescale  ; modified Berendsen thermostat
+# tc-grps                 = System     ; Entire system
+# tau_t                   = 0.1        ; time constant, in ps
+# ref_t                   = {temp}     ; reference temperature, one for each group, in K
+
+
+# ; Pressure coupling is off
+# pcoupl                  = no         ; no pressure coupling in NVT
+
+
+# ; Periodic boundary conditions
+# pbc                     = xyz        ; 3-D PBC
+
+
+# ; Velocity generation
+# gen_vel                 = yes        ; assign velocities from Maxwell distribution
+# gen_temp                = {temp}     ; temperature for Maxwell distribution
+# gen_seed                = -1         ; generate a random seed
+
+# constraints             = all-bonds
+# lincs-order             = 8
+# lincs-iter              = 4
+# """.format(
+#         temp=job.sp.T, nsteps=job.sp.nsteps_intereq, cut=cutoff
+#     )
+
+#     return contents
+
+
+# def _generate_inter_prod_mdp(job, cutoff):
+#     # Use 50000000 (50 ns) for the interfacial production
+#     contents = """
+# ; MDP file for NVT simulation
+
+# ; Run parameters
+# integrator              = md        ; leap-frog integrator
+# nsteps                  = {nsteps}  ; 70 ns
+# dt                      = 0.001     ; 1 fs
+
+
+# ; Output control
+# ;nstxout                 = 1000       ; save coordinates every 1.0 ps
+# ;nstvout                 = 1000       ; save velocities every 1.0 ps
+# ;nstenergy               = 1000       ; save energies every 1.0 ps
+# ;nstlog                  = 1000       ; update log file every 1.0 ps
+
+# nstenergy                = 1000
+# nstlog                   = 1000
+# nstxout-compressed       = 1000
+
+
+
+
+# ; Nonbonded settings 
+# cutoff-scheme            = Verlet    ; Buffered neighbor searching
+# verlet-buffer-tolerance  = 1e-4
+# ns_type                  = grid      ; search neighboring grid cells
+# nstlist                  = 100       ; 100 fs, largely irrelevant with Verlet
+# vdwtype                  = Cut-off   ; account for cut-off vdW scheme
+# rvdw                     = 2	     ;short-range van der Waals cutoff (in nm)
+# DispCorr                 = EnerPres  ; account for cut-off vdW scheme
+
+
+# ; Electrostatics
+# coulombtype             = PME        ; Particle Mesh Ewald for long-range electrostatics
+# pme_order               = 4          ; cubic interpolation
+# fourierspacing          = 0.16       ; grid spacing for FFT
+# rcoulomb                = 2        ; short-range electrostatic cutoff (in nm)
+
+
+
+# ; Temperature coupling is on
+# tcoupl                  = V-rescale  ; modified Berendsen thermostat
+# tc-grps                 = System     ; Entire system
+# tau_t                   = 0.1        ; time constant, in ps
+# ref_t                   = {temp}     ; reference temperature, one for each group, in K
+
+
+# ; Pressure coupling is off
+# pcoupl                  = no         ; no pressure coupling in NVT
+
+
+# ; Periodic boundary conditions
+# pbc                     = xyz        ; 3-D PBC
+
+
+# ; Velocity generation
+# gen_vel                 = yes        ; assign velocities from Maxwell distribution
+# gen_temp                = {temp}     ; temperature for Maxwell distribution
+# gen_seed                = -1         ; generate a random seed
+# """.format(
+#         temp=job.sp.T, nsteps=job.sp.nsteps_interprod
+#     )
+
+#     return contents
 
 
 if __name__ == "__main__":

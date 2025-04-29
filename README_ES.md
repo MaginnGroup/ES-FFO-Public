@@ -119,7 +119,7 @@ To run liquid density iterations, follow the following steps:
 5. Create systems
     - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
    ```
-     python project.py run -o create_system
+     python project.py submit -o create_system
    ```
 6. Fix topology
    ```
@@ -129,12 +129,15 @@ To run liquid density iterations, follow the following steps:
    ```
      python project.py submit -o em_sim --bundle=24 --parallel
      python project.py submit -o nvt_eq_sim --bundle=24 --parallel
+     python project.py submit -o npzzat_sim --bundle=24 --parallel
+
      python project.py submit -o fl_eq_sim --bundle=24 --parallel
      python project.py submit -o npt_pre_eq_sim --bundle=24 --parallel
      python project.py submit -o npt_eq_sim --bundle=24 --parallel
      python project.py submit -o npt_prod_sim --bundle=24 --parallel
      python project.py submit -o init_nvt_prod_sim --bundle=24 --parallel
      python project.py submit -o nvt_prod_sim --bundle=24 --parallel
+
      python project.py submit -o init_inter_eq_sim --bundle=24 --parallel
      python project.py submit -o inter_eq_sim --bundle=24 --parallel
      python project.py submit -o inter_prod_sim --bundle=24 --parallel
