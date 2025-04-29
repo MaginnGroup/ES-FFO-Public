@@ -50,9 +50,12 @@ def determine_density_iter(molec_name):
     return dens_iter
 
 
-nsteps_nvt1 = 100000  # 100ps
-nsteps_npt = 500000  # 500ps (minimum)
-nsteps_nvt2 = 100000  # 100ps
+nsteps_nvt_eq = 100000  # 100ps
+nsteps_fl_eq = 100000  # 100ps
+nsteps_npt_pre_eq = 500000  # 500ps
+nsteps_npt_eq = 500000  # 500ps (minimum)
+nsteps_npt_prod = 10000000  # 10 ns
+nsteps_nvt_prod = 3000000  # 3 ns
 nsteps_intereq = 15000000  # 15 ns (minimum)
 nsteps_interprod = 50000000  # 50 ns
 nmols = 750  # Number of molecules in the system
@@ -99,9 +102,12 @@ def init_project():
                     "rho_liq": liq_density,  # kg/m^3
                     "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
-                    "nsteps_nvt1": nsteps_nvt1,
-                    "nsteps_npt": nsteps_npt,
-                    "nsteps_nvt2": nsteps_nvt2,
+                    "nsteps_nvt_eq": nsteps_nvt_eq,
+                    "nsteps_fl_eq": nsteps_fl_eq,
+                    "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
+                    "nsteps_npt_eq": nsteps_npt_eq,
+                    "nsteps_npt_prod": nsteps_npt_prod,
+                    "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
                     "cutoff": float(6 * np.max(molec_data.bounds_sig)),

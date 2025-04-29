@@ -128,10 +128,12 @@ To run liquid density iterations, follow the following steps:
 7. Run simulation
    ```
      python project.py submit -o em_sim --bundle=24 --parallel
-     python project.py submit -o nvt_eq1_sim --bundle=24 --parallel
+     python project.py submit -o nvt_eq_sim --bundle=24 --parallel
+     python project.py submit -o fl_eq_sim --bundle=24 --parallel
+     python project.py submit -o npt_pre_eq_sim --bundle=24 --parallel
      python project.py submit -o npt_eq_sim --bundle=24 --parallel
-     python project.py submit -o init_nvt_eq2_sim --bundle=24 --parallel
-     python project.py submit -o nvt_eq2_sim --bundle=24 --parallel
+     python project.py submit -o init_nvt_prod_sim --bundle=24 --parallel
+     python project.py submit -o nvt_prod_sim --bundle=24 --parallel
      python project.py submit -o init_inter_eq_sim --bundle=24 --parallel
      python project.py submit -o inter_eq_sim --bundle=24 --parallel
      python project.py submit -o inter_prod_sim --bundle=24 --parallel
