@@ -88,7 +88,7 @@ def init_project():
 
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
-        for temp in [temps[-3]]:
+        for temp in [temps[-2]]:
             liq_density = molec_data.expt_liq_density[temp]
             # vap_density = molec_data.expt_vap_density[temp]
             # rho_avg = (liq_density + vap_density) / 2.0
