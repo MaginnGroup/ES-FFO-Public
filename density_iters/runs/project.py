@@ -419,7 +419,7 @@ def inter_eq_sim(job):
     if not job.isfile("inter_eq.mdp"):
         with job:
             cutoff = np.minimum(
-                0.9 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
             )
             content = _generate_inter_eq_mdp(job, cutoff)
 
@@ -454,7 +454,7 @@ def inter_prod_sim(job):
     if not job.isfile("inter_prod.mdp"):
         with job:
             cutoff = np.minimum(
-                0.9 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
             )
             content = _generate_inter_prod_mdp(job, cutoff)
 
