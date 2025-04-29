@@ -1511,7 +1511,7 @@ lincs-iter              = 4
     return contents
 
 def _generate_npzzat_eq_mdp(job, cutoff):
-    # Use 5000000 (5 ns) for the first equilibration
+    # Use 15000000 (15 ns) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
 
