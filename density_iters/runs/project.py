@@ -360,7 +360,7 @@ def nvt_prod_sim(job):
     if not job.isfile("nvt_prod.mdp"):
         with job:
             cutoff = np.minimum(
-                 0.75 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                 0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
              )
             content = _generate_nvt_prod_mdp(job, cutoff)
 
