@@ -164,7 +164,7 @@ def npzzat_eq_sim(job):
     # Generate the first run
     sim_name = "npzzat_eq"
     last_sim_name = "nvt_eq"
-    property = "Volume"
+    property = "Density"
 
     if not job.isfile("npzzat_eq.mdp"):
         with job:
