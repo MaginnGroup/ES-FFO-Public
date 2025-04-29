@@ -168,7 +168,10 @@ def npzzat_eq_sim(job):
 
     if not job.isfile("npzzat_eq.mdp"):
         with job:
-            content = _generate_npzzat_eq_mdp(job)
+            cutoff = np.minimum(
+                 0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+             )
+            content = _generate_npzzat_eq_mdp(job, cutoff)
 
             with open(job.fn("npzzat_eq.mdp"), "w") as inp:
                 inp.write(content)
@@ -240,7 +243,7 @@ def inter_eq_sim(job):
     if not job.isfile("inter_eq.mdp"):
         with job:
             cutoff = np.minimum(
-                0.9 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
             )
             content = _generate_inter_eq_mdp(job, cutoff)
 
@@ -701,6 +704,8 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
         try:
             if sim_name == "npt_eq":
                 nsteps_eq = job.sp.nsteps_npt_eq
+            elif sim_name == "npzzat_eq":
+                nsteps_eq = job.sp.nsteps_npzzat_eq
             elif sim_name == "inter_eq":
                 nsteps_eq = job.sp.nsteps_intereq
 
@@ -1505,7 +1510,7 @@ lincs-iter              = 4
 
     return contents
 
-def _generate_npzzat_eq_mdp(job):
+def _generate_npzzat_eq_mdp(job, cutoff):
     # Use 5000000 (5 ns) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
@@ -1529,11 +1534,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = {cut}		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = {cut}		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourierspacing         = 0.16          ; effects accuracy of pme
@@ -1550,7 +1555,7 @@ pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
 pcoupltype              = semiisotropic             ; uniform scaling of box vectors
 tau_p                   = 2.0                   ; time constant, in ps
 ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 4.5e-5
+compressibility         = 0 4.5e-5
 nstpcouple              = 5
 ;refcoord_scaling       = com
 
@@ -1562,14 +1567,14 @@ DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
 gen_vel                 = yes        ; assign velocities from Maxwell distribution
-gen_temp                = TEMP_INDEX     ; temperature for Maxwell distribution
+gen_temp                = {temp}     ; temperature for Maxwell distribution
 gen_seed                = -1         ; generate a random seed
 
 constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P*4, nsteps=job.sp.nsteps_npzzat_eq
+        temp=job.sp.T, press=job.sp.P*5, nsteps=job.sp.nsteps_npzzat_eq, cut =cutoff
     )
 
     return contents
