@@ -359,7 +359,10 @@ def nvt_prod_sim(job):
 
     if not job.isfile("nvt_prod.mdp"):
         with job:
-            content = _generate_nvt_prod_mdp(job)
+            cutoff = np.minimum(
+                0.9 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+            )
+            content = _generate_nvt_prod_mdp(job, cutoff)
 
             with open(job.fn("nvt_prod.mdp"), "w") as inp:
                 inp.write(content)
@@ -876,7 +879,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
         try:
             if sim_name == "npt_eq":
-                nsteps_eq = job.sp.nsteps_npt
+                nsteps_eq = job.sp.nsteps_npt_eq
             elif sim_name == "inter_eq":
                 nsteps_eq = job.sp.nsteps_intereq
 
@@ -1847,11 +1850,11 @@ verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
-rvdw		            = 1.0		    ; short-range van der Waals cutoff (in nm)
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
 vdw-modifier            = None
 
 ; Electrostatics
-rcoulomb	            = 1.0		    ; short-range electrostatic cutoff (in nm)
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
 fourierspacing         = 0.16          ; effects accuracy of pme
