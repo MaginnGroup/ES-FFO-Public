@@ -71,7 +71,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("runs_npzzat")
+        project = signac.init_project("runs_npzzat_rect")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
