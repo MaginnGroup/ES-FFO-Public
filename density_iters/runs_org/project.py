@@ -35,6 +35,7 @@ def create_forcefield(job):
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
 @Project.post.isfile("unedited.top")
+@Project.post(lambda job: "system" in job.doc)
 @Project.operation
 def create_system(job):
     """Construct the system in mbuild and apply the forcefield"""
@@ -56,7 +57,7 @@ def create_system(job):
     with job:
         system_ff.save("system.gro")
         system_ff.save("unedited.top")
-
+    job.doc["system"] = True
 
 @Project.pre.after(create_system)
 @Project.post.isfile("system.top")
@@ -68,7 +69,6 @@ def fix_topology(job):
     GAFF uses 0.5. This function edits the topology
     file accordingly.
     """
-
     top_contents = []
     with open(job.fn("unedited.top")) as fin:
         for line_number, line in enumerate(fin):
