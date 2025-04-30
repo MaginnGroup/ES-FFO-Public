@@ -1586,7 +1586,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P*8, nsteps=job.sp.nsteps_npzzat_eq, cut =cutoff
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_eq, cut =cutoff
     )
 
     return contents
