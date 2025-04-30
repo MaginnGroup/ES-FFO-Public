@@ -661,7 +661,13 @@ def find_bulk_liq_index(density):
 
     #Divide the indices by 10 to get the correct index for the density based on interpolation
     interfaces = [int(i/10) for i in interfaces]
-    range_org_liq = np.arange(interfaces[0], interfaces[1], 1)
+
+    #Get the range of indices for the bulk liquid density regardless of whether interfaces have shifted
+    if interfaces[0] < interfaces[1]:
+        range_org_liq = list(range(interfaces[0], interfaces[1] + 1))
+    else:
+        range_org_liq = list(range(interfaces[0], len(results)//10)) + list(range(0, interfaces[1] + 1))
+
     #Get the median density from the bulk range
     median_dens_liq = np.median(ES_numdens_z[range_org_liq])
 
