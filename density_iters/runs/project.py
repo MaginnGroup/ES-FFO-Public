@@ -84,6 +84,8 @@ def fix_topology(job):
         for line in top_contents:
             fout.write(line)
 
+            
+
 
 @Project.post.isfile("em.mdp")
 # @Project.post.isfile("nvt_eq.mdp")

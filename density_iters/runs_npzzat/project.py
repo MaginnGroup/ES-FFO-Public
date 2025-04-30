@@ -37,6 +37,7 @@ def create_forcefield(job):
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
 @Project.post.isfile("unedited.top")
+@Project.post(lambda job: "system" in job.doc)
 @Project.operation
 def create_system(job):
     """Construct the system in mbuild and apply the forcefield"""
@@ -58,6 +59,8 @@ def create_system(job):
     with job:
         system_ff.save("system.gro")
         system_ff.save("unedited.top")
+    # Save the system in a new directory
+    job.doc["system"] = True
 
 
 #Create System
@@ -71,7 +74,6 @@ def fix_topology(job):
     GAFF uses 0.5. This function edits the topology
     file accordingly.
     """
-
     top_contents = []
     with open(job.fn("unedited.top")) as fin:
         for line_number, line in enumerate(fin):
@@ -1430,14 +1432,18 @@ nstenergy                = 1000
 nstlog                   = 1000
 nstxout-compressed       = 1000
 
-nstlist		    = 1		    ; Frequency to update the neighbor list and long range forces
-cutoff-scheme   = Verlet
-ns-type		    = grid		; Method to determine neighbor list (simple, grid)
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-coulombtype	    = PME		; Treatment of long range electrostatic interactions
-rcoulomb	    = 1.2		; Short-range electrostatic cut-off
-rvdw		    = 1.2		; Short-range Van der Waals cut-off
-pbc		        = xyz 		; Periodic Boundary Conditions (yes/no)
+cutoff-scheme   	 = Verlet     ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-4
+ns_type         	 = grid       ; Method to determine neighbor list (simple, grid)
+
+rvdw            	 = 1.2       ; Short-range Van der Waals cut-off
+vdwtype         	 = Cut-off
+DispCorr        	 = EnerPres
+
+coulombtype     	 = PME       ; Treatment of long range electrostatic interactions
+rcoulomb        	 = 1.2       ; Short-range electrostatic cut-off
+
+pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions
 
 constraints     = all-bonds
 lincs-order     = 8
@@ -1458,15 +1464,15 @@ nsteps		            = {nsteps}	    ;
 dt		                = 0.001		    ; 1 fs
 
 ; Output control
-nstxout		            = 10000		    ; save coordinates every 10.0 ps
+nstxout		            = 1000		    ; save coordinates every 10.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 10000		    ; save energies every 10.0 ps
-nstlog		            = 10000		    ; update log file every 10.0 ps
+nstenergy	            = 1000		    ; save energies every 10.0 ps
+nstlog		            = 1000		    ; update log file every 10.0 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+nstlist		            = 100		    ; 10 fs, largely irrelevant with Verlet
 verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
@@ -1529,8 +1535,8 @@ nstlog		            = 1000		    ; update log file every 1.0 ps
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+nstlist		            = 50		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 5e-3          ; kJ/mol/ps
 
 ; VDW
 vdwtype                 = Cut-off
@@ -1574,7 +1580,7 @@ constraints             = all-bonds
 lincs-order             = 8
 lincs-iter              = 4
 """.format(
-        temp=job.sp.T, press=job.sp.P*5, nsteps=job.sp.nsteps_npzzat_eq, cut =cutoff
+        temp=job.sp.T, press=job.sp.P*8, nsteps=job.sp.nsteps_npzzat_eq, cut =cutoff
     )
 
     return contents
