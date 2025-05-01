@@ -52,8 +52,8 @@ def determine_density_iter(molec_name):
 
 nsteps_nvt_eq = 100000  # 100ps
 nsteps_npzzat_eq = 15000000  # 100ps
-# nsteps_fl_eq = 100000  # 100ps
-# nsteps_npt_pre_eq = 500000  # 500ps
+nsteps_fl_eq = 100000  # 100ps
+nsteps_npt_pre_eq = 500000  # 500ps
 nsteps_npt_eq = 500000  # 500ps (minimum)
 nsteps_npt_prod = 10000000  # 10 ns
 nsteps_nvt_prod = 3000000  # 3 ns
@@ -71,7 +71,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("runs_npzzat_rect")
+        project = signac.init_project("runs")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -101,17 +101,17 @@ def init_project():
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
                     "rho_liq": liq_density,  # kg/m^3
-                    "rho_avg": rho_avg,  # kg/m^3
-                    "mol_wt": molec_data.molecular_weight,  # g/mol
+                    # "rho_avg": rho_avg,  # kg/m^3
+                    # "mol_wt": molec_data.molecular_weight,  # g/mol
                     "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    # "nsteps_fl_eq": nsteps_fl_eq,
-                    # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    # "nsteps_npt_eq": nsteps_npt_eq,
-                    # "nsteps_npt_prod": nsteps_npt_prod,
-                    # "nsteps_nvt_prod": nsteps_nvt_prod,
+                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_fl_eq": nsteps_fl_eq,
+                    "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
+                    "nsteps_npt_eq": nsteps_npt_eq,
+                    "nsteps_npt_prod": nsteps_npt_prod,
+                    "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
                     "cutoff": float(6 * np.max(molec_data.bounds_sig)),

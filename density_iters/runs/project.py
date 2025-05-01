@@ -17,10 +17,13 @@ import math
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
+
 class Project(FlowProject):
     pass
 
+LD_group = Project.make_group(name = "LD")
 
+@LD_group
 @Project.post.isfile("ff.xml")
 @Project.operation
 def create_forcefield(job):
@@ -31,7 +34,7 @@ def create_forcefield(job):
     with open(job.fn("ff.xml"), "w") as ff:
         ff.write(content)
 
-
+@LD_group
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
 @Project.post.isfile("unedited.top")
@@ -57,7 +60,7 @@ def create_system(job):
         system_ff.save("system.gro")
         system_ff.save("unedited.top")
 
-
+@LD_group
 @Project.pre.after(create_system)
 @Project.post.isfile("system.top")
 @Project.operation
@@ -86,7 +89,7 @@ def fix_topology(job):
 
             
 
-
+@LD_group
 @Project.post.isfile("em.mdp")
 # @Project.post.isfile("nvt_eq.mdp")
 # @Project.post.isfile("npt_eq.mdp")
@@ -158,7 +161,7 @@ def em_complete(job):
     except:
         return False
 
-
+@LD_group
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.pre.after(generate_inputs)
@@ -179,7 +182,7 @@ def nvt_eq_comp(job):
     except:
         return False
 
-
+@LD_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -203,6 +206,7 @@ def fl_eq_comp(job):
     else:
         return False
     
+@LD_group   
 @Project.pre.after(nvt_eq_sim)
 @Project.post(fl_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -232,7 +236,8 @@ def npt_pre_eq_comp(job):
         return True
     else:
         return False
-    
+
+@LD_group    
 @Project.pre.after(fl_eq_sim)
 @Project.post(npt_pre_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -260,8 +265,10 @@ def npt_eq_comp(job):
         return True
     else:
         return False
-    
+
+@LD_group    
 @Project.pre.after(npt_pre_eq_sim)
+@Project.pre(lambda job: "eq_fail_npt_eq" not in job.doc)
 @Project.post(npt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def npt_eq_sim(job):
@@ -289,7 +296,8 @@ def npt_prod_comp(job):
         return True
     else:
         return False
-    
+
+@LD_group    
 @Project.pre.after(npt_eq_sim)
 @Project.post(npt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -311,7 +319,7 @@ def npt_prod_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-
+@LD_group
 @Project.pre.after(npt_prod_sim)
 @Project.post.isfile("init_nvt_prod.gro")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -350,7 +358,7 @@ def nvt_prod_comp(job):
     else:
         return False
 
-
+@LD_group
 @Project.pre.after(init_nvt_prod_sim)
 @Project.post(nvt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -377,6 +385,7 @@ def nvt_prod_sim(job):
 
 
 # Make Interface for simulation
+@LD_group
 @Project.pre.after(nvt_prod_sim)
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -403,8 +412,9 @@ def inter_eq_comp(job):
     else:
         return False
 
-
+@LD_group
 @Project.pre.after(init_inter_eq_sim)
+@Project.pre(lambda job: "eq_fail_inter_eq" not in job.doc)
 @Project.post(inter_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def inter_eq_sim(job):
@@ -439,7 +449,7 @@ def inter_prod_comp(job):
     else:
         return False
 
-
+@LD_group
 @Project.pre.after(inter_eq_sim)
 @Project.post(inter_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -465,7 +475,6 @@ def inter_prod_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
     # job.doc.inter_prod_fin = True
-
 
 @Project.pre.after(inter_prod_sim)
 @Project.post.isfile("inter_prod_density.xvg")
@@ -904,10 +913,11 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
             total_eq_steps = existing_eq_steps  # In ps
             # Set the maximum number of steps
             if max_steps_str not in job.doc:
-                job.doc[max_steps_str] = int(nsteps_eq / 1000) + eq_extend * 2
-
+                # job.doc[max_steps_str] = int(nsteps_eq / 1000) + eq_extend * 2
+                job.doc[max_steps_str] = 2*int(nsteps_eq / 1000)
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
             max_eq_steps = np.maximum(job.doc[max_steps_str], job.doc[max_steps_str] + eq_extend * 2)
+            # max_eq_steps = job.doc[max_steps_str]
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc[nsteps_str] = int(max_eq_steps)
 
@@ -962,11 +972,14 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                             f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
                         )
         except:
-            # If the simulation fails, extend the simulation
+            # If the simulation fails, extend the simulation manually
             if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
                 job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
                 del job.doc[nsteps_str]
                 del job.doc[eq_ext_str]
+
+                eq_fail_str = "eq_fail_" + sim_name
+                job.doc[eq_fail_str] = True
             # If another error occurs, set the equilibration failure flag
             else:
                 eq_fail_str = "eq_fail_" + sim_name
