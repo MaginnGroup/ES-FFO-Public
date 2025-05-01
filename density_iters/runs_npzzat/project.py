@@ -22,6 +22,9 @@ class Project(FlowProject):
 
 
 #Build FF
+LD_group = Project.make_group(name = "LD")
+
+@LD_group
 @Project.post.isfile("ff.xml")
 @Project.operation
 def create_forcefield(job):
@@ -34,6 +37,7 @@ def create_forcefield(job):
 
 
 #Create FF
+@LD_group
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
 @Project.post.isfile("unedited.top")
@@ -64,6 +68,7 @@ def create_system(job):
 
 
 #Create System
+@LD_group
 @Project.pre.after(create_system)
 @Project.post.isfile("system.top")
 @Project.operation
@@ -91,6 +96,7 @@ def fix_topology(job):
 
 
 #Make EM mdp file
+@LD_group
 @Project.post.isfile("em.mdp")
 @Project.operation
 def generate_inputs(job):
@@ -110,7 +116,7 @@ def em_complete(job):
     except:
         return False
 
-
+@LD_group
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.pre.after(generate_inputs)
@@ -131,7 +137,7 @@ def nvt_eq_comp(job):
     except:
         return False
 
-
+@LD_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -155,7 +161,8 @@ def npzzat_eq_comp(job):
         return True
     else:
         return False
-    
+
+@LD_group    
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -182,6 +189,7 @@ def npzzat_eq_sim(job):
 
 
 # Make Interface
+@LD_group
 @Project.pre.after(npzzat_eq_sim)
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -227,7 +235,7 @@ def inter_eq_comp(job):
     else:
         return False
 
-
+@LD_group
 @Project.pre.after(init_inter_eq_sim)
 @Project.post(inter_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -263,7 +271,7 @@ def inter_prod_comp(job):
     else:
         return False
 
-
+@LD_group
 @Project.pre.after(inter_eq_sim)
 @Project.post(inter_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
@@ -289,7 +297,6 @@ def inter_prod_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
     # job.doc.inter_prod_fin = True
-
 
 @Project.pre.after(inter_prod_sim)
 @Project.post.isfile("inter_prod_density.xvg")
