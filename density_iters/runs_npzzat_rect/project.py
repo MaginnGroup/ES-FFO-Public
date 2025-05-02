@@ -50,10 +50,13 @@ def create_system(job):
     import unyt as u
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
-    V_avg = (job.sp.nmols*job.sp.mol_wt*1e27)/(job.sp.rho_avg * 1000* 6.022*1e23)
-    V_liq = V_avg*(job.sp.rho_avg/job.sp.rho_liq)
-    box_z = np.maximum((V_avg)**(1/3), 10*job.sp.cutoff/6)
-    box_xy = np.sqrt(V_liq/box_z)
+    V_liq= (job.sp.nmols*job.sp.mol_wt*1e27)/(job.sp.rho_liq * 1000* 6.022*1e23)
+    box_xy = 13.2*job.sp.max_sigma #nm #Between 5.28 and 6.0 nm
+    box_z = V_liq/box_xy**2 #nm
+
+    if box_z < box_xy:
+        box_xy = box_z = V_liq**(1/3)
+
     box = [box_xy, box_xy, box_z]
     system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
 
@@ -183,7 +186,7 @@ def npzzat_eq_sim(job):
     if not job.isfile("npzzat_eq.mdp"):
         with job:
             cutoff = np.minimum(
-                 0.80 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                 0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
              )
             content = _generate_npzzat_eq_mdp(job, cutoff)
 
@@ -258,7 +261,7 @@ def inter_eq_sim(job):
     if not job.isfile("inter_eq.mdp"):
         with job:
             cutoff = np.minimum(
-                0.80 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
             )
             content = _generate_inter_eq_mdp(job, cutoff)
 
@@ -293,7 +296,7 @@ def inter_prod_sim(job):
     if not job.isfile("inter_prod.mdp"):
         with job:
             cutoff = np.minimum(
-                0.80 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
             )
             content = _generate_inter_prod_mdp(job, cutoff)
 
