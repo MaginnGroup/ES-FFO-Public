@@ -1028,14 +1028,14 @@ def __generate_R125_xml(job):
 def __generate_Gly_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H3" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
-   <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
-   <Type name="H4" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4](C)(O)(H)H" desc="Sp3 C"/>
+   <Type name="H1" class="h1" element="H" mass="1.008" def="[H][C;%C1]" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4](C)(C)(O)H" desc="Sp3 C"/>
+   <Type name="H2" class="h1" element="H" mass="1.008" def="[H][C;%C2]" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2][C;%C1]" desc="Oxygen in hydroxyl group"/>
+   <Type name="H3" class="ho" element="H" mass="1.008" def="[H][O;%O1]" desc="Hydroxyl group"/>
+   <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2][C;%C2]" desc="Oxygen in hydroxyl group"/>
+   <Type name="H4" class="ho" element="H" mass="1.008" def="[H][O;%O2]" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
@@ -1092,7 +1092,6 @@ def __generate_Gly_xml(job):
         epsilon_O2=job.sp.epsilon_O2,
     )
     return content
-
 
 def __generate_MeOH_xml(job):
     content = """<ForceField>
@@ -1311,10 +1310,10 @@ def __generate_DMF_xml(job):
 def __generate_DEC_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H2" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4](C)(H)(H)H" desc="Sp3 C"/>
+   <Type name="H1" class="hc" element="H" mass="1.008" def="[H][C;%C1]" desc="H bonded to aliphatic carbon without d. group"/>
+   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4](C)(O)(H)H" desc="Sp3 C"/>
+   <Type name="H2" class="h1" element="H" mass="1.008" def="[H][C;%C2]" desc="H bonded to aliphatic carbon with 1 d. group"/>
    <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
    <Type name="C3" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
    <Type name="O2" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
@@ -1382,11 +1381,11 @@ def __generate_DEC_xml(job):
 def __generate_THF_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;r5][O]" desc="Sp3 C"/>
    <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="H2" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;r5][C;r5][O]" desc="Sp3 C"/>
+   <Type name="H1" class="h1" element="H" mass="1.008" def="[H][C;r5][O]" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="H2" class="hc" element="H" mass="1.008" def="[H][C;r5][C;r5][O]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="os" length="0.1439" k="252295.702"/>

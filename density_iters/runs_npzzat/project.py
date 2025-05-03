@@ -1024,9 +1024,9 @@ def __generate_Gly_xml(job):
    <Type name="H1" class="h1" element="H" mass="1.008" def="[H][C;%C1]" desc="H bonded to aliphatic carbon with 1 d. group"/>
    <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4](C)(C)(O)H" desc="Sp3 C"/>
    <Type name="H2" class="h1" element="H" mass="1.008" def="[H][C;%C2]" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2](C;%C1)H" desc="Oxygen in hydroxyl group"/>
+   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2][C;%C1]" desc="Oxygen in hydroxyl group"/>
    <Type name="H3" class="ho" element="H" mass="1.008" def="[H][O;%O1]" desc="Hydroxyl group"/>
-   <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2](C;%C2)H"" desc="Oxygen in hydroxyl group"/>
+   <Type name="O2" class="oh" element="O" mass="16.0" def="[O;X2][C;%C2]" desc="Oxygen in hydroxyl group"/>
    <Type name="H4" class="ho" element="H" mass="1.008" def="[H][O;%O2]" desc="Hydroxyl group"/>
  </AtomTypes>
  <HarmonicBondForce>
