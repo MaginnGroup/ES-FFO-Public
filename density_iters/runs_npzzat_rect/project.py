@@ -577,9 +577,13 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
             # plot all
 
             # if not all(equil_matrix):
-            plot_res_pymser(
-                job, t_vals, col_vals, res_matrix[i], prop_names[i % num_cols]
-            )
+            #Skip plotting if it fails on the GPU
+            try:
+                plot_res_pymser(
+                    job, t_vals, col_vals, res_matrix[i], prop_names[i % num_cols]
+                )
+            except:
+                pass
 
             # Display outcome
             prod_cycles = len(col_vals) - res_matrix[i]["t0"]
