@@ -55,11 +55,11 @@ def create_system(job):
     box_z = V_liq/box_xy**2 #nm
 
     with job:
-        # if box_z < box_xy:
-        system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density=job.sp.rho_liq)
-        # else:
-        #     box = [box_xy, box_xy, box_z]
-        #     system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
+        if box_z < box_xy or job.sp.mol_name == "DEC":
+            system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density=job.sp.rho_liq)
+        else:
+            box = [box_xy, box_xy, box_z]
+            system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
 
         ff = foyer.Forcefield(job.fn("ff.xml"))
 
