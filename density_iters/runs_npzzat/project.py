@@ -1374,11 +1374,11 @@ def __generate_DEC_xml(job):
 def __generate_THF_xml(job):
     content = """<ForceField>
  <AtomTypes>
-   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;r5][O]" desc="Sp3 C"/>
    <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
-   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
-   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
-   <Type name="H2" class="hc" element="H" mass="1.008" def="H[C;X4]" desc="H bonded to aliphatic carbon without d. group"/>
+   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;r5][C;r5][O]" desc="Sp3 C"/>
+   <Type name="H1" class="h1" element="H" mass="1.008" def="[H][C;r5][O]" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="H2" class="hc" element="H" mass="1.008" def="[H][C;r5][C;r5][O]" desc="H bonded to aliphatic carbon without d. group"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="c3" class2="os" length="0.1439" k="252295.702"/>
