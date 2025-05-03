@@ -141,10 +141,12 @@ To run liquid density iterations, follow the following steps:
      python project.py submit -o init_inter_eq_sim --bundle=2 --parallel
      python project.py submit -o inter_eq_sim --bundle=2 --parallel
      python project.py submit -o inter_prod_sim --bundle=2 --parallel
+
+     python project.py submit -o LD --bundle=2 --parallel
    ```  
 8. Calculate density
    ```
-     python project.py run -o calculate_props
+     python project.py submit -o calculate_props --bundle=2 --parallel
      
 9. Extract density using the following after each LD iteration in the analysis/ folder
    ```
