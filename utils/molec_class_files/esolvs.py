@@ -1305,7 +1305,7 @@ DCM = EsolvsConstants(
 )
 
 # Diethyl Carbonate (DEC)
-mol_wt = 84.93
+mol_wt = 118.13
 n_atoms = 18
 smiles_str = "CCOC(=O)OCC"
 param_names = (

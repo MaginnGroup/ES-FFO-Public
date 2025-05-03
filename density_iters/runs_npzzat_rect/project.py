@@ -55,7 +55,7 @@ def create_system(job):
     box_z = V_liq/box_xy**2 #nm
 
     with job:
-        if box_z < box_xy or job.sp.mol_name == "DEC":
+        if box_z < box_xy:
             system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density=job.sp.rho_liq)
         else:
             box = [box_xy, box_xy, box_z]
