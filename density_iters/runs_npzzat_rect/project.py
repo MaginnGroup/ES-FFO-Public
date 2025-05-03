@@ -54,19 +54,20 @@ def create_system(job):
     box_xy = 13.2*job.sp.max_sigma #nm #Between 5.28 and 6.0 nm
     box_z = V_liq/box_xy**2 #nm
 
-    if box_z < box_xy:
-        box_xy = box_z = V_liq**(1/3)
-
-    box = [box_xy, box_xy, box_z]
-    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
-
-    ff = foyer.Forcefield(job.fn("ff.xml"))
-
-    # Apply the forcefield to the system even when all dihedrals are zero
-    system_ff = ff.apply(system, assert_dihedral_params = False)
-    system_ff.combining_rule = "lorentz"
-
     with job:
+        # if box_z < box_xy:
+        system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density=job.sp.rho_liq)
+        # else:
+        #     box = [box_xy, box_xy, box_z]
+        #     system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
+
+        ff = foyer.Forcefield(job.fn("ff.xml"))
+
+        # Apply the forcefield to the system even when all dihedrals are zero
+        system_ff = ff.apply(system, assert_dihedral_params = False)
+        system_ff.combining_rule = "lorentz"
+
+    
         system_ff.save("system.gro")
 
         #Change the last line of the .gro file to be 
@@ -635,14 +636,20 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
         label="Equilibrated average",
     )
 
-    ax1.fill_between(
-        t_col,
-        results["average"] - results["uncertainty"],
-        results["average"] + results["uncertainty"],
-        color="lightgreen",
-        alpha=0.3,
-        zorder=4,
-    )
+    # def to_numpy(t):
+    #     return t.detach().cpu().numpy() if hasattr(t, 'cpu') else t
+
+    try:
+        ax1.fill_between(
+            t_col,
+            results["average"] - results["uncertainty"],
+            results["average"] + results["uncertainty"],
+            color="lightgreen",
+            alpha=0.3,
+            zorder=4,
+        )
+    except:
+        pass
 
     # ax1.set_yticks(np.arange(eq_col.min(), eq_col.max(), eq_col.max() / 15))
     ax1.set_xlim(t_col.min(), t_col.max())
@@ -682,15 +689,17 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
         label="Equilibrated average",
     )
 
-    ax2.fill_between(
-        range(ymax),
-        results["average"] - results["uncertainty"],
-        results["average"] + results["uncertainty"],
-        color="lightgreen",
-        alpha=0.3,
-        zorder=4,
-    )
-
+    try:
+        ax2.fill_between(
+            range(ymax),
+            results["average"] - results["uncertainty"],
+            results["average"] + results["uncertainty"],
+            color="lightgreen",
+            alpha=0.3,
+            zorder=4,
+        )
+    except:
+        pass
     ax2.set_xlim(0, ymax)
 
     ax2.grid(alpha=0.5, zorder=1)
