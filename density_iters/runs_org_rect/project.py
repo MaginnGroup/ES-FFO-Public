@@ -272,7 +272,7 @@ def nvt_prod_sim(job):
     if not job.isfile("nvt_prod.mdp"):
         with job:
             cutoff = np.minimum(
-                 0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                 0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
              )
             content = _generate_nvt_prod_mdp(job, cutoff)
 
@@ -332,7 +332,7 @@ def inter_eq_sim(job):
     if not job.isfile("inter_eq.mdp"):
         with job:
             cutoff = np.minimum(
-                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
             )
             content = _generate_inter_eq_mdp(job, cutoff)
 
@@ -367,7 +367,7 @@ def inter_prod_sim(job):
     if not job.isfile("inter_prod.mdp"):
         with job:
             cutoff = np.minimum(
-                0.85 * get_box_len(job, last_sim_name) / 2, job.sp.cutoff
+                0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
             )
             content = _generate_inter_prod_mdp(job, cutoff)
 
