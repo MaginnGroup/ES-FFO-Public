@@ -627,14 +627,17 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
         label="Equilibrated average",
     )
 
-    ax1.fill_between(
-        t_col,
-        results["average"] - results["uncertainty"],
-        results["average"] + results["uncertainty"],
-        color="lightgreen",
-        alpha=0.3,
-        zorder=4,
-    )
+    try:
+        ax1.fill_between(
+            t_col,
+            results["average"] - results["uncertainty"],
+            results["average"] + results["uncertainty"],
+            color="lightgreen",
+            alpha=0.3,
+            zorder=4,
+        )
+    except:
+        pass
 
     # ax1.set_yticks(np.arange(eq_col.min(), eq_col.max(), eq_col.max() / 15))
     ax1.set_xlim(t_col.min(), t_col.max())
@@ -673,15 +676,17 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
         zorder=4,
         label="Equilibrated average",
     )
-
-    ax2.fill_between(
-        range(ymax),
-        results["average"] - results["uncertainty"],
-        results["average"] + results["uncertainty"],
-        color="lightgreen",
-        alpha=0.3,
-        zorder=4,
-    )
+    try:
+        ax2.fill_between(
+            range(ymax),
+            results["average"] - results["uncertainty"],
+            results["average"] + results["uncertainty"],
+            color="lightgreen",
+            alpha=0.3,
+            zorder=4,
+        )
+    except:
+        pass
 
     ax2.set_xlim(0, ymax)
 
