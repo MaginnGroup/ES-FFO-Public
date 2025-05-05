@@ -59,7 +59,8 @@ nsteps_npt_prod = 10000000  # 10 ns
 nsteps_nvt_prod = 3000000  # 3 ns
 nsteps_intereq = 40000000  # 15 ns (minimum)
 nsteps_interprod = 30000000  # 50 ns
-n_particles = 24000  # Number of particles in the system
+n_particles = 10000  # Number of particles in the system
+nmols = 1000  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
 
 
@@ -71,7 +72,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("BA_copy_reprod")
+        project = signac.init_project("config_copy")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -85,7 +86,7 @@ def init_project():
         #Make the GAFF param_set (test)
         scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
         scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
-        nmols = int(n_particles/molec_data.n_atoms) #Number of molecules in the system
+        # nmols = int(n_particles/molec_data.n_atoms) #Number of molecules in the system
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
         for temp in [temps[-3]]:
@@ -106,7 +107,7 @@ def init_project():
                     "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
                     # "nsteps_npt_eq": nsteps_npt_eq,

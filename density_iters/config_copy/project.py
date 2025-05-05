@@ -52,11 +52,7 @@ def create_system(job):
     import unyt as u
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
-    V_liq= (job.sp.nmols*job.sp.mol_wt*1e27)/(job.sp.rho_liq * 1000* 6.022*1e23)
-    box_xy = 13.2*job.sp.max_sigma #nm #Between 5.28 and 6.0 nm
-    box_z = V_liq/box_xy**2 #nm
-    box = [box_xy, box_xy, box_z]
-    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box =box)
+    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density =job.sp.rho_liq)
 
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
@@ -158,43 +154,10 @@ def nvt_eq_sim(job):
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
 
-# NPZZAT Simulation at High P to force liquid state
-@Project.label
-def npzzat_eq_comp(job):
-    if "npzzat_eq_fin" in job.doc:
-        return True
-    else:
-        return False
-
-@LD_group    
-@Project.pre.after(nvt_eq_sim)
-@Project.post(npzzat_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def npzzat_eq_sim(job):
-    import panedr
-
-    """Run the equilibration simulations"""
-    # Generate the first run
-    sim_name = "npzzat_eq"
-    last_sim_name = "nvt_eq"
-    property = "Density"
-
-    if not job.isfile("npzzat_eq.mdp"):
-        with job:
-            cutoff = np.minimum(
-                 0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
-             )
-            content = _generate_npzzat_eq_mdp(job, cutoff)
-
-            with open(job.fn("npzzat_eq.mdp"), "w") as inp:
-                inp.write(content)
-
-    run_md_w_eqcheck(job, sim_name, last_sim_name, property)
-
-
 # Make Interface
 @LD_group
-@Project.pre.after(npzzat_eq_sim)
+@Project.pre.after(nvt_eq_sim)
+@Project.post.isfile("config_mult.gro")
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def init_inter_eq_sim(job):
@@ -202,42 +165,34 @@ def init_inter_eq_sim(job):
     import panedr
 
     sim_name = "init_inter_eq"
-    mid_sim_name = "edited_npzzat_eq"
-    last_sim_name = "npzzat_eq"
+    mid_sim_name = "config_mult"
+    last_sim_name = "nvt_eq"
     property = "Volume"  # If NPT equilibrated, volume will also equilibrate
 
     # Get final box lengths from volune
-    df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
-    volume = df[property].values
-    results, adf_test_failed = get_pymser_results(volume)
-    if not adf_test_failed:
-        vol_prod = volume[results["t0"] :]
-    else:
-        raise Exception(
-            "ADF test failed to complete. Ensure NPT equilibration is complete."
-        )
-   
-    # ave_length = np.mean(vol_prod) ** (1 / 3)
-    # ave_length_rnd = np.round(ave_length, 5)
     xy_len = get_box_len(job, last_sim_name)
-    avg_z_len = np.mean(vol_prod) / (xy_len**2)
-    ave_length_rnd = np.round(xy_len, 5)
-    ave_z_length_rnd = np.round(avg_z_len, 5)
-
+    ave_length_rnd = round(xy_len, 5)
     job.doc["box_len_" + sim_name] = ave_length_rnd
+
+    #Multiply by 3 to get a good liquid slab
+    with job:
+        command = f"gmx genconf -f {last_sim_name}.gro -o {mid_sim_name}.gro -nbox 1 1 3"
+        subprocess.run(command, shell=True, check=True)
+
+    ave_z_length_rnd = round(3*xy_len, 5)
+    job.doc["z_box_len"] = ave_z_length_rnd
 
     xy_cen = round(ave_length_rnd / 2, 5)
     z_cen = round(ave_z_length_rnd * job.sp.aspect_ratio / 2, 5)
     new_z_len = round(ave_z_length_rnd * job.sp.aspect_ratio, 5)
-    job.doc["z_box_len"] = new_z_len
-
+    
     #BA Comparison
     fixed_len = 5.1
     density, vol_BA, length_z_BA = BA_find_equib(job, fixed_len, last_sim_name)
-    job.doc["z_box_len_BA"] = round(length_z_BA * job.sp.aspect_ratio, 5)
+    job.doc["z_box_len_BA"] = length_z_BA
 
     with job:
-        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
+        command = f"gmx editconf -f {mid_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
         subprocess.run(command, shell=True, check=True)
 
 
