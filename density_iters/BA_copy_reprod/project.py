@@ -216,19 +216,28 @@ def init_inter_eq_sim(job):
         raise Exception(
             "ADF test failed to complete. Ensure NPT equilibration is complete."
         )
-
-    ave_length = np.mean(vol_prod) ** (1 / 3)
-    ave_length_rnd = np.round(ave_length, 5)
+   
+    # ave_length = np.mean(vol_prod) ** (1 / 3)
+    # ave_length_rnd = np.round(ave_length, 5)
+    xy_len = get_box_len(job, last_sim_name)
+    avg_z_len = np.mean(vol_prod) / (xy_len**2)
+    ave_length_rnd = np.round(xy_len, 5)
+    ave_z_length_rnd = np.round(avg_z_len, 5)
 
     job.doc["box_len_" + sim_name] = ave_length_rnd
 
     xy_cen = round(ave_length_rnd / 2, 5)
-    z_cen = round(ave_length_rnd * job.sp.aspect_ratio / 2, 5)
-    new_z_len = round(ave_length_rnd * job.sp.aspect_ratio, 5)
+    z_cen = round(ave_z_length_rnd * job.sp.aspect_ratio / 2, 5)
+    new_z_len = round(ave_z_length_rnd * job.sp.aspect_ratio, 5)
     job.doc["z_box_len"] = new_z_len
 
+    #BA Comparison
+    fixed_len = 5.1
+    density, vol_BA, length_z_BA = BA_find_equib(job, fixed_len, last_sim_name)
+    job.doc["z_box_len_BA"] = length_z_BA
+
     with job:
-        command = f"gmx editconf -f {mid_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
+        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
         subprocess.run(command, shell=True, check=True)
 
 
@@ -358,6 +367,16 @@ def calculate_props(job):
             property = df[prop].values
             #Use block averaging to calculate the variance of each property
             (means_est, vars_est, vars_err) = block_average(property)
+            (means_est2, vars_est2, vars_err2) = BA_block_avg(job, df[["Time", prop]])
+
+            with open(job.fn(name + "_blk_avg_BA.txt"), "w") as ferr:
+                ferr.write("# nblk_ops, mean, vars, vars_err\n")
+                for nblk_ops2, (mean_est2, var_est2, var_err2) in enumerate(
+                    zip(means_est2, vars_est2, vars_err2)
+                ):
+                    ferr.write(
+                        "{}\t{}\t{}\t{}\n".format(nblk_ops2, mean_est2, var_est2, var_err2)
+                    )
 
         #Use block averaging to calculate the variance of each property
         # (means_est, vars_est, vars_err) = block_average(property)
@@ -388,6 +407,45 @@ def calculate_props(job):
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
+def BA_block_avg(job, sft_gmx_data_df):
+    num_blocks_array = np.arange(3,20,1)
+    SFT_data_time_length = int(40000)
+    ave_SFT_value_array = np.zeros([len(num_blocks_array)])
+    SFT_var = np.zeros([len(num_blocks_array)])
+    SFT_error_array = np.zeros([len(num_blocks_array)])
+
+    for j in range(len(num_blocks_array)):
+        num_blocks = num_blocks_array[j]
+        sft_values_array = np.zeros([num_blocks])
+        for i in range(num_blocks):
+            data_length = int(SFT_data_time_length//num_blocks)
+            if i == 0:
+                sft_val = (sft_gmx_data_df.iloc[-data_length*(i+1): , -1].mean())/20
+            else:
+                sft_val = (sft_gmx_data_df.iloc[-data_length*(i+1) : -data_length*(i), -1].mean())/20
+                
+            sft_values_array[i] = sft_val
+            
+        ave_SFT_value_array[j] = np.mean(sft_values_array)
+        SFT_value_var_unormalized = np.var(sft_values_array)
+        SFT_value_var_normalized = SFT_value_var_unormalized/(num_blocks - 1)
+        SFT_var[j] = SFT_value_var_normalized
+        SFT_value_err = np.sqrt(SFT_value_var_normalized)
+        SFT_error_array[j] = SFT_value_err
+        
+    index_max = np.argmax(SFT_error_array)
+    final_num_blocks = num_blocks_array[index_max]
+    final_SFT_err = SFT_error_array[index_max]
+    final_SFT_val = ave_SFT_value_array[index_max]
+    final_SFT_var = SFT_var[index_max]
+
+    with job:
+        np.savetxt("SFT_final_ave_value_DIR_INDEX.txt", np.array([final_SFT_val]))
+        np.savetxt("SFT_final_ave_value_error_DIR_INDEX.txt", np.array([final_SFT_err]))
+        np.savetxt("SFT_final_num_blocks_DIR_INDEX.txt", np.array([final_num_blocks]))
+
+    return ave_SFT_value_array, SFT_var, SFT_error_array
+
 def BA_find_equib(job, sft_x_y, sim_name):
     import panedr
 

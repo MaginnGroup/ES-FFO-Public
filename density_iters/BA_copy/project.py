@@ -217,13 +217,12 @@ def init_inter_eq_sim(job):
     fixed_len = 5.1
     
     density, vol_BA, length_z_BA = BA_find_equib(job, fixed_len, last_sim_name)
-    print("volumes", vol_BA, vol_prod)
-    print("lengths (Us/BA)", vol_prod**(1/3), vol_BA**(1/3))
-
+    print("volumes (BA/MC)", vol_BA, vol_prod)
     ave_length = np.mean(vol_prod) ** (1 / 3)
     ave_length_rnd = np.round(ave_length, 5)
 
     job.doc["box_len_" + sim_name] = ave_length_rnd
+    job.doc["box_len_" + sim_name + "_BA"] = fixed_len
 
     xy_cen = round(ave_length_rnd / 2, 5)
     z_cen = round(ave_length_rnd * job.sp.aspect_ratio / 2, 5)
@@ -235,13 +234,14 @@ def init_inter_eq_sim(job):
     xy_cen = round(fixed_len / 2, 5)
     z_cen = round(length_z_BA * job.sp.aspect_ratio / 2, 5)
     new_z_len = round(length_z_BA * job.sp.aspect_ratio, 5)
+    job.doc["z_box_len_BA"] = new_z_len
 
     with job:
-        command = f"gmx editconf -f {mid_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {xy_BA} {xy_BA} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
+        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {xy_BA} {xy_BA} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
         subprocess.run(command, shell=True, check=True)
 
     # with job:
-    #     command = f"gmx editconf -f {mid_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
+    #     command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
     #     subprocess.run(command, shell=True, check=True)
 
 
