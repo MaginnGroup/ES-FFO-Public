@@ -185,11 +185,6 @@ def init_inter_eq_sim(job):
     xy_cen = round(ave_length_rnd / 2, 5)
     z_cen = round(ave_z_length_rnd * job.sp.aspect_ratio / 2, 5)
     new_z_len = round(ave_z_length_rnd * job.sp.aspect_ratio, 5)
-    
-    #BA Comparison
-    fixed_len = 5.1
-    density, vol_BA, length_z_BA = BA_find_equib(job, fixed_len, last_sim_name)
-    job.doc["z_box_len_BA"] = length_z_BA
 
     with job:
         command = f"gmx editconf -f {mid_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
