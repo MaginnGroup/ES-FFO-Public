@@ -1612,7 +1612,7 @@ vdw-modifier            = None
 rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
 coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
 pme-order	            = 4		        ; cubic interpolation
-fourierspacing         = 0.16          ; effects accuracy of pme
+fourierspacing          = 0.16          ; effects accuracy of pme
 ewald-rtol              = 1e-5
 
 ; Temperature coupling is on
