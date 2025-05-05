@@ -217,7 +217,7 @@ def init_inter_eq_sim(job):
     fixed_len = 5.1
     
     density, vol_BA, length_z_BA = BA_find_equib(job, fixed_len, last_sim_name)
-    print("volumes (BA/MC)", vol_BA, vol_prod)
+    print("volumes (BA/MC)", vol_BA, np.mean(vol_prod))
     ave_length = np.mean(vol_prod) ** (1 / 3)
     ave_length_rnd = np.round(ave_length, 5)
 
@@ -1794,7 +1794,7 @@ nstxout-compressed       = 10000
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 50		    ; 10 fs, largely irrelevant with Verlet
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
 verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
@@ -1857,7 +1857,7 @@ nstxout-compressed       = 10000
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 50		    ; 10 fs, largely irrelevant with Verlet
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
 verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW

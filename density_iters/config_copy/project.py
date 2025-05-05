@@ -40,7 +40,9 @@ def create_forcefield(job):
 @LD_group
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
+@Project.post.isfile("system_ex.gro")
 @Project.post.isfile("unedited.top")
+@Project.post.isfile("unedited_ex.top")
 @Project.post(lambda job: "system" in job.doc)
 @Project.operation
 def create_system(job):
@@ -52,10 +54,15 @@ def create_system(job):
     import unyt as u
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
-    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, density =job.sp.rho_liq)
-
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
+    #Calculate the volume such that the liquid density is correct and len_z = 3*x_len = 3*y_len and 2*xy_len > 12*max_sigma 
+    V_liq= (job.sp.nmols*job.sp.mol_wt*1e27)/(job.sp.rho_liq * 1000* 6.022*1e23)
+    xy_len = round((V_liq/3)**(1/3), 5)
+    z_len = round(xy_len * 3, 5)
+    box = [xy_len, xy_len, z_len]
+
+    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
     # Apply the forcefield to the system even when all dihedrals are zero
     system_ff = ff.apply(system, assert_dihedral_params = False)
     system_ff.combining_rule = "lorentz"
@@ -63,6 +70,7 @@ def create_system(job):
     with job:
         system_ff.save("system.gro")
         system_ff.save("unedited.top")
+
     # Save the system in a new directory
     job.doc["system"] = True
 
@@ -71,6 +79,7 @@ def create_system(job):
 @LD_group
 @Project.pre.after(create_system)
 @Project.post.isfile("system.top")
+@Project.post.isfile("system_ex.top")
 @Project.operation
 def fix_topology(job):
     """Fix the LJ14 section of the topology file
@@ -79,20 +88,25 @@ def fix_topology(job):
     GAFF uses 0.5. This function edits the topology
     file accordingly.
     """
-    top_contents = []
-    with open(job.fn("unedited.top")) as fin:
-        for line_number, line in enumerate(fin):
-            top_contents.append(line)
-            if line.strip() == "[ defaults ]":
-                defaults_line = line_number
+    for file in [job.fn("unedited.top"), job.fn("unedited_ex.top")]:
+        top_contents = []
+        with open(job.fn("unedited.top")) as fin:
+            for line_number, line in enumerate(fin):
+                top_contents.append(line)
+                if line.strip() == "[ defaults ]":
+                    defaults_line = line_number
 
-    top_contents[defaults_line + 2] = (
-        "1               2               yes              0.5       0.8333333\n"  # changed no to yes
-    )
+        top_contents[defaults_line + 2] = (
+            "1               2               yes              0.5       0.8333333\n"  # changed no to yes
+        )
 
-    with open(job.fn("system.top"), "w") as fout:
-        for line in top_contents:
-            fout.write(line)
+        if file == job.fn("unedited.top"):
+            name = "system"
+        else:
+            name = "system_ex"
+        with open(job.fn(f"{name}.top"), "w") as fout:
+            for line in top_contents:
+                fout.write(line)
 
 
 #Make EM mdp file
@@ -153,6 +167,9 @@ def nvt_eq_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
+#NPT equilibration
+#Check if NPT gives us a vapor and do not run interface sims if it does, instead, calculate the density and leave the ST as nan or zero
+#NVT equilibration at new density
 
 # Make Interface
 @LD_group

@@ -1790,7 +1790,7 @@ nstxout-compressed       = 10000
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 50		    ; 10 fs, largely irrelevant with Verlet
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
 verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
@@ -1853,7 +1853,7 @@ nstxout-compressed       = 10000
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 50		    ; 10 fs, largely irrelevant with Verlet
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
 verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
 
 ; VDW
