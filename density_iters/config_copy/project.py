@@ -296,21 +296,6 @@ def calculate_props(job):
                     file_type_in = "trr"
 
                 (means_est, vars_est, vars_err) = calc_block_densities(job, sim_name, file_type_in, name)
-            #     if not os.path.exists(job.fn("inter_prod_density.xvg")):
-            #         if os.path.exists(job.fn("inter_prod.xtc")):
-            #             file_type_in = "xtc"
-            #         else:
-            #             file_type_in = "trr"
-            #         command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {sim_name}_{name}.xvg -d Z -dens mass -sl 500"
-            #         subprocess.run(
-            #             command, input=f"System", text=True, check=True, shell=True
-            #         )
-            #     prop_data = np.loadtxt(
-            #         job.fn(sim_name + "_" + name + ".xvg"), comments=["#", "@"]
-            #     )
-            # density = pd.DataFrame(prop_data)
-            # #Calculate the liquid mass density as a fxn of Z
-            # property = calc_mass_dens(density.to_numpy())
         else:
             with job:
                 if not os.path.exists(job.fn("inter_prod_surf_tens.txt")):
@@ -1655,74 +1640,6 @@ lincs-order             = 8
 lincs-iter              = 4
 """.format(
         temp=job.sp.T, nsteps=job.sp.nsteps_nvt_eq
-    )
-
-    return contents
-
-def _generate_npzzat_eq_mdp(job, cutoff):
-    # Use 15000000 (15 ns) for the first equilibration
-    contents = """
-; MDP file for NPT simulation
-
-; Run parameters
-integrator	            = md		    ; leap-frog integrator
-nsteps		            = {nsteps}	    ;
-dt		                = 0.001		    ; 1 fs
-
-; Output control
-nstenergy                = 10000
-nstlog                   = 10000
-nstxout-compressed       = 10000
-
-; Neighborsearching
-cutoff-scheme           = Verlet
-ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 50		    ; 10 fs, largely irrelevant with Verlet
-verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
-
-; VDW
-vdwtype                 = Cut-off
-rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
-vdw-modifier            = None
-
-; Electrostatics
-rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
-coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
-pme-order	            = 4		        ; cubic interpolation
-fourierspacing         = 0.16          ; effects accuracy of pme
-ewald-rtol              = 1e-5
-
-; Temperature coupling is on
-tcoupl		            = v-rescale     ; modified Berendsen thermostat
-tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.5	  		; time constant, in ps
-ref-t		            = {temp}        ; reference temperature, one for each group, in K
-
-; Pressure coupling is on
-pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
-pcoupltype              = semiisotropic             ; uniform scaling of box vectors
-tau_p                   = 2.0                   ; time constant, in ps
-ref-p                   = 100 100               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 0 4.5e-5
-nstpcouple              = 5
-;refcoord_scaling       = com
-
-; Periodic boundary conditions
-pbc		                = xyz		    ; 3-D PBC
-
-; Dispersion correction
-DispCorr	            = EnerPres	    ; apply analytical tail corrections
-
-; Velocity generation
-gen_vel                 = yes        ; assign velocities from Maxwell distribution
-gen_temp                = {temp}     ; temperature for Maxwell distribution
-gen_seed                = -1         ; generate a random seed
-
-constraints             = all-bonds
-lincs-order             = 8
-lincs-iter              = 4
-""".format(
-        temp=job.sp.T, nsteps=job.sp.nsteps_npzzat_eq
     )
 
     return contents
