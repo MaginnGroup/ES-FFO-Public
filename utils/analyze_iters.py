@@ -183,7 +183,7 @@ def plot_gp_examples(all_df_data, data_dict,  gp_shuffle_seed = 42, save_fig=Fal
     #Get all data
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
-        ld_threshold = data.expt_rhoc
+        ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
         # df_csv = all_df_data[mol_name]
         iter_num = df_csv["dens-iter"].max()
 

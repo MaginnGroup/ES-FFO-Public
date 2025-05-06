@@ -25,6 +25,7 @@ def unpack_molec_values(class_data, state_point, sample):
     Unpacks scaled sample values given the molecule under study
     """
     param_names = class_data.param_names
+    max_sigma = 0
     for i, param in enumerate(param_names):
         # Unpack the sample, set to 0.0 if the value is less than 1e-14
         if sample[i] > 1.0 * 1e-14:
@@ -32,9 +33,13 @@ def unpack_molec_values(class_data, state_point, sample):
         else:
             sample_use = 0.0
 
+        if "sigma" in param:
+            if sample_use > max_sigma:
+                max_sigma = sample_use
+
         state_point[param] = sample_use
 
-    return state_point
+    return state_point, max_sigma
 
 
 def determine_density_iter(molec_name):
@@ -51,14 +56,14 @@ def determine_density_iter(molec_name):
 
 
 nsteps_nvt_eq = 100000  # 100ps
-nsteps_npzzat_eq = 15000000  # 100ps
+nsteps_npzzat_eq = 5000000  # 5 ns
 nsteps_fl_eq = 100000  # 100ps
 nsteps_npt_pre_eq = 500000  # 500ps
 nsteps_npt_eq = 500000  # 500ps (minimum)
-nsteps_npt_prod = 10000000  # 10 ns
-nsteps_nvt_prod = 3000000  # 3 ns
-nsteps_intereq = 40000000  # 15 ns (minimum)
-nsteps_interprod = 30000000  # 50 ns
+nsteps_npt_prod = 1000000  # 1 ns
+nsteps_nvt_prod = 100000  # 100 ps
+nsteps_intereq = 15000000  # 15 ns (minimum)
+nsteps_interprod = 30000000  # 30 ns
 n_particles = 10000  # Number of particles in the system
 nmols = 1000  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
@@ -92,6 +97,9 @@ def init_project():
         for temp in [temps[-3]]:
             liq_density = molec_data.expt_liq_density[temp]
             vap_density = molec_data.expt_vap_density[temp]
+            max_vd = molec_data.expt_vap_density[max(temps)]
+            min_ld = molec_data.expt_liq_density[max(temps)]
+            rho_thresh = (max_vd + min_ld)/2.0
             rho_avg = (liq_density + vap_density) / 2.0
             for sample in scaled_params[0].reshape(1, -1):
                 # Define the state point w/ unchanging characteristics
@@ -102,23 +110,24 @@ def init_project():
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
                     "rho_liq": liq_density,  # kg/m^3
+                    "rho_thresh": rho_thresh,  # kg/m^3
                     # "rho_avg": rho_avg,  # kg/m^3
                     "mol_wt": molec_data.molecular_weight,  # g/mol
-                    "nmols": nmols,  # Number of molecules
+                    # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
                     # "nsteps_npt_eq": nsteps_npt_eq,
                     # "nsteps_npt_prod": nsteps_npt_prod,
-                    # "nsteps_nvt_prod": nsteps_nvt_prod,
+                    "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
-                    "max_sigma": float(np.max(molec_data.bounds_sig)),
                 }
 
-                state_point = unpack_molec_values(molec_data, state_point, sample)
+                state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
+                state_point["max_sigma"] = max_sigma
 
                 job = project.open_job(state_point)
                 job.init()

@@ -40,9 +40,7 @@ def create_forcefield(job):
 @LD_group
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
-@Project.post.isfile("system_ex.gro")
 @Project.post.isfile("unedited.top")
-@Project.post.isfile("unedited_ex.top")
 @Project.post(lambda job: "system" in job.doc)
 @Project.operation
 def create_system(job):
@@ -55,14 +53,26 @@ def create_system(job):
 
     compound = mbuild.load(job.sp.smiles, smiles=True)
     ff = foyer.Forcefield(job.fn("ff.xml"))
-
-    #Calculate the volume such that the liquid density is correct and len_z = 3*x_len = 3*y_len and 2*xy_len > 12*max_sigma 
-    V_liq= (job.sp.nmols*job.sp.mol_wt*1e27)/(job.sp.rho_liq * 1000* 6.022*1e23)
-    xy_len = round((V_liq/3)**(1/3), 5)
-    z_len = round(xy_len * 3, 5)
+    ##Calculate the number of moles such that the liquid density is correct, len_z/3 = x_len = y_len > 13.2*max_sigma, and at least 2000 molecules are used 
+    nmols = 2000 #Use no fewer than 2000 molecules (8000 particles)
+    density = job.sp.rho_liq
+    #Calculate the box lengths from the system density using 2000 molecules
+    V = (nmols*job.sp.mol_wt*1e27)/(density * 1000* 6.022*1e23)
+    xy_len = (V/job.sp.aspect_ratio)**(1/3)
+    
+    #If 2000 molecules is not enough to satisfy xy_len > 13.2*max_sigma
+    if xy_len < 13.2*job.sp.max_sigma:
+        #Calculatue box lengths from system density and 13.2*max_sigma
+        xy_len = 13.2*job.sp.max_sigma
+        new_V = job.sp.aspect_ratio*xy_len**3
+        #Calculate the number of molecules from the new volume and the given density
+        nmols = int(np.floor(density*1000*6.022*1e23*new_V/(job.sp.mol_wt*1e27)))
+    
+    job.doc["nmols"] = nmols
+    z_len = job.sp.aspect_ratio*xy_len
     box = [xy_len, xy_len, z_len]
 
-    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
+    system = mbuild.fill_box(compound, n_compounds=nmols, box = box)
     # Apply the forcefield to the system even when all dihedrals are zero
     system_ff = ff.apply(system, assert_dihedral_params = False)
     system_ff.combining_rule = "lorentz"
@@ -167,46 +177,150 @@ def nvt_eq_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-#NPT equilibration
-#Check if NPT gives us a vapor and do not run interface sims if it does, instead, calculate the density and leave the ST as nan or zero
-#NVT equilibration at new density
-
-# Make Interface
-@LD_group
+# Equilibration NPzzAT
+@Project.label
+def npzzat_eq_comp(job):
+    if "npzzat_eq_fin" in job.doc:
+        return True
+    else:
+        return False
+    
+@LD_group    
 @Project.pre.after(nvt_eq_sim)
-@Project.post.isfile("config_mult.gro")
-@Project.post.isfile("init_inter_eq.gro")
+@Project.post(npzzat_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def init_inter_eq_sim(job):
-    """Run the minimization simulations"""
+def npzzat_eq_sim(job):
     import panedr
 
-    sim_name = "init_inter_eq"
-    mid_sim_name = "config_mult"
+    """Run the equilibration simulations"""
+    # Generate the first run
+    sim_name = "npzzat_eq"
     last_sim_name = "nvt_eq"
+    property = "Density"
+
+    if not job.isfile("npzzat_eq.mdp"):
+        with job:
+            content = _generate_npzzat_eq_mdp(job)
+
+            with open(job.fn("npzzat_eq.mdp"), "w") as inp:
+                inp.write(content)
+
+    run_md_w_eqcheck(job, sim_name, last_sim_name, property)
+
+
+@LD_group
+@Project.pre.after(npzzat_eq_sim)
+@Project.post.isfile("init_nvt_prod.gro")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
+def init_nvt_prod_sim(job):
+    """Run the minimization simulations"""
+    import panedr
+    sys.path.append("../../")
+    from block_average.block_average import block_average
+    sys.path.remove("../../")
+
+    sim_name = "init_nvt_prod"
+    last_sim_name = "npzzat_eq"
     property = "Volume"  # If NPT equilibrated, volume will also equilibrate
 
     # Get final box lengths from volune
-    xy_len = get_box_len(job, last_sim_name)
-    ave_length_rnd = round(xy_len, 5)
-    job.doc["box_len_" + sim_name] = ave_length_rnd
+    df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
+    volume = df[property].values
+    results, adf_test_failed = get_pymser_results(volume)
+    if not adf_test_failed:
+        vol_prod = volume[results["t0"] :]
+    else:
+        raise Exception(
+            "ADF test failed to complete. Ensure NPT equilibration is complete."
+        )
 
-    #Multiply by 3 to get a good liquid slab
+    #Compute the density of the simulation
+    density = df["Density"].values
+    dens_eq = np.mean(density[results["t0"] :])
+    
+    xy_length = get_box_len(job, last_sim_name) 
+    z_length = np.mean(vol_prod)/(xy_length**2)
+    xy_length_rnd = np.round(xy_length, 5)
+    z_length_rnd = np.round(z_length, 5)
+    job.doc["box_len_" + sim_name] = xy_length_rnd
+
+    #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
+    if dens_eq > job.sp.rho_thresh:
+        with job:
+            command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro -box {xy_length_rnd} {xy_length_rnd} {z_length_rnd}"
+            subprocess.run(command, shell=True, check=True)
+    #If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
+    else:   
+        df = panedr.edr_to_df(job.fn(f"{last_sim_name}.edr"))
+        property = df["Density"].values
+        #Use block averaging to calculate the variance of each property
+        (means_est, vars_est, vars_err) = block_average(property)
+
+        with open(job.fn("density_blk_avg.txt"), "w") as ferr:
+            ferr.write("# nblk_ops, mean, vars, vars_err\n")
+            for nblk_ops, (mean_est, vars_est, vars_err) in enumerate(
+                zip(means_est, vars_est, vars_err)
+            ):
+                ferr.write(
+                    "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, vars_est, vars_err)
+                )
+        mean = means_est[0]
+        std = np.max(np.sqrt(vars_est))
+        #Skip calculate_props
+        job.doc["density"] = mean
+        job.doc["density_unc"] = std
+        job.doc["surf_tens"] = np.nan
+        job.doc["surf_tens_unc"] = np.nan
+        #Skip interface simulations
+        job.doc["inter_eq_fin"] = True
+        job.doc["inter_prod_fin"] = True
+        
+
+# Run short NVT equilibration at new density
+@Project.label
+def nvt_prod_comp(job):
+    if "nvt_prod_fin" in job.doc:
+        return True
+    else:
+        return False
+
+@LD_group
+@Project.pre.after(init_nvt_prod_sim)
+@Project.post(nvt_prod_comp)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
+def nvt_prod_sim(job):
+    """Run the minimization simulations"""
+    sim_name = "nvt_prod"
+    last_sim_name = "init_nvt_prod"
+
+    if not job.isfile("nvt_prod.mdp"):
+        with job:
+            content = _generate_nvt_prod_mdp(job)
+
+            with open(job.fn("nvt_prod.mdp"), "w") as inp:
+                inp.write(content)
+
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+
+# Make Interface for simulation
+@LD_group
+@Project.pre.after(nvt_prod_sim)
+@Project.post.isfile("init_inter_eq.gro")
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
+def init_inter_eq_sim(job):
+
+    sim_name = "init_inter_eq"
+    last_sim_name = "nvt_prod"
+    xy_len, z_len = get_box_coords(job, last_sim_name)
+    xy_cen = round(xy_len / 2, 5)
+    z_cen = round(z_len * job.sp.aspect_ratio / 2, 5)
+    new_z_len = round(z_len * job.sp.aspect_ratio, 5)
+    job.doc["z_box_len"] = new_z_len
+
     with job:
-        command = f"gmx genconf -f {last_sim_name}.gro -o {mid_sim_name}.gro -nbox 1 1 3"
+        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {xy_len} {xy_len} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
         subprocess.run(command, shell=True, check=True)
-
-    ave_z_length_rnd = round(3*xy_len, 5)
-    job.doc["z_box_len"] = ave_z_length_rnd
-
-    xy_cen = round(ave_length_rnd / 2, 5)
-    z_cen = round(ave_z_length_rnd * job.sp.aspect_ratio / 2, 5)
-    new_z_len = round(ave_z_length_rnd * job.sp.aspect_ratio, 5)
-
-    with job:
-        command = f"gmx editconf -f {mid_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {ave_length_rnd} {ave_length_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
-        subprocess.run(command, shell=True, check=True)
-
 
 # Run Interface NVT equilibration
 @Project.label
@@ -229,13 +343,11 @@ def inter_eq_sim(job):
         "init_inter_eq"  # Use the same one since the -gro file is created beforehand
     )
     sim_name = "inter_eq"
-    property = "Total Energy"  # Total Energy Stable = Equilibrated
+    property = "Constr. rmsd"  # Total Energy Stable = Equilibrated
 
     if not job.isfile("inter_eq.mdp"):
         with job:
-            cutoff = np.minimum(
-                0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
-            )
+            cutoff = 6*job.sp.max_sigma
             content = _generate_inter_eq_mdp(job, cutoff)
 
             with open(job.fn("inter_eq.mdp"), "w") as inp:
@@ -268,9 +380,7 @@ def inter_prod_sim(job):
 
     if not job.isfile("inter_prod.mdp"):
         with job:
-            cutoff = np.minimum(
-                0.85 * get_box_len(job, last_sim_name) / 2, 6*job.sp.max_sigma
-            )
+            cutoff =  6*job.sp.max_sigma
             content = _generate_inter_prod_mdp(job, cutoff)
 
             with open(job.fn("inter_prod.mdp"), "w") as inp:
@@ -280,8 +390,8 @@ def inter_prod_sim(job):
     # job.doc.inter_prod_fin = True
 
 @Project.pre.after(inter_prod_sim)
-@Project.post.isfile("inter_prod_density.xvg")
-@Project.post.isfile("inter_prod_surf_tens.txt")
+# @Project.post.isfile("inter_prod_density.xvg")
+# @Project.post.isfile("inter_prod_surf_tens.txt")
 @Project.post(lambda job: "surf_tens" in job.doc and "density" in job.doc)
 @Project.post(lambda job: "surf_tens_unc" in job.doc and "density_unc" in job.doc)
 @Project.operation(directives={"omp_num_threads": 16})
@@ -572,7 +682,6 @@ def calc_block_densities(job, sim_name, file_type_in, name):
 
     return np.asarray(means), np.asarray(vars_est), np.asarray(vars_err)
 
-    
 
 def calc_mass_dens(density):
     #Find the region attributed to liquid density
@@ -977,6 +1086,22 @@ def get_box_len(job, sim_name):
     job.doc["box_len_" + sim_name] = ave_length
     return ave_length
 
+def get_box_coords(job, sim_name):
+    # Get final box lengths
+    # Extract the last line of the .gro file
+    with open(sim_name + ".gro", "rb") as f:
+        # Move the pointer to the end of the file, but leave space to find the last line
+        f.seek(-2, os.SEEK_END)
+        # Read backward until a newline is found
+        while f.read(1) != b"\n":
+            f.seek(-2, os.SEEK_CUR)
+        # Read the last line after finding the newline
+        last_line = f.readline().decode().strip()
+    # Extract the box length from the last line
+    ave_length = list(map(float, last_line.split()))[0]
+    ave_z_len = list(map(float, last_line.split()))[2]
+    job.doc["box_len_" + sim_name] = ave_length
+    return ave_length, ave_z_len
 
 def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     import panedr
@@ -984,20 +1109,13 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     with job:
         # Get the density and volume data
         df_all = panedr.edr_to_df(job.fn(sim_name + ".edr"))
-        # if property in df_all.columns:
         df = df_all[["Time", property]].copy()
-
-        # elif property in ["Volume", "Density"]:
-        #     command = f"gmx energy -f {sim_name}.edr -s {sim_name}.tpr -o {sim_name}_{property}.xvg"
-        #     subprocess.run(
-        #         command, input=f"{property}", text=True, check=True, shell=True
-        #     )
-        #     prop_data = np.loadtxt(
-        #         sim_name + "_" + property + ".xvg", comments=["#", "@"]
-        #     )
-        #     df = pd.DataFrame(prop_data)
-
-        property_data = df.iloc[:, 1].values
+        
+        #For constrain RMSD, normalize the data by the max value
+        if property == "Constr. rmsd":
+            property_data = df.iloc[:, 1].values/max(df.iloc[:, 1].values)
+        else:
+            property_data = df.iloc[:, 1].values
         time_data = df.iloc[:, 0].values
         prop_save = property.replace(" ", "_")
         eq_col_file = job.fn(sim_name + "_" + prop_save + ".csv")
@@ -1652,6 +1770,138 @@ lincs-order             = 8
 lincs-iter              = 4
 """.format(
         temp=job.sp.T, nsteps=job.sp.nsteps_nvt_eq
+    )
+
+    return contents
+
+def _generate_npzzat_eq_mdp(job):
+    # Use 5000000 (5 ns) for the first equilibration
+    contents = """
+; MDP file for NPT simulation
+
+; Run parameters
+integrator	            = md		    ; leap-frog integrator
+nsteps		            = {nsteps}	    ;
+dt		                = 0.001		    ; 1 fs
+
+; Output control
+nstxout-compressed      = 1000        ; save compressed coordinates every 1.0 ps
+nstvout		            = 0		        ; don't save velocities
+nstenergy	            = 1000		    ; save energies every 1.0 ps
+nstlog		            = 1000		    ; update log file every 1.0 ps
+
+; Neighborsearching
+cutoff-scheme           = Verlet
+ns-type		            = grid		    ; search neighboring grid cells
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+
+; VDW
+vdwtype                 = Cut-off
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+vdw-modifier            = None
+
+; Electrostatics
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+pme-order	            = 4		        ; cubic interpolation
+fourierspacing          = 0.16          ; effects accuracy of pme
+ewald-rtol              = 1e-5
+
+; Temperature coupling is on
+tcoupl		            = v-rescale     ; modified Berendsen thermostat
+tc-grps		            = System 	    ; Single coupling group
+tau-t		            = 0.5	  		; time constant, in ps
+ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+; Pressure coupling is on
+
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT ; berendsen
+pcoupltype              = semiisotropic             ; uniform scaling of box vectors
+tau_p                   = 2.0                   ; time constant, in ps
+ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 0 4.5e-5
+nstpcouple              = 5
+;refcoord_scaling       = com
+
+; Periodic boundary conditions
+pbc		                = xyz		    ; 3-D PBC
+
+; Dispersion correction
+DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+; Velocity generation
+gen_vel                 = yes        ; assign velocities from Maxwell distribution
+gen_temp                = {temp}     ; temperature for Maxwell distribution
+gen_seed                = -1         ; generate a random seed
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_eq
+    )
+
+
+def _generate_nvt_prod_mdp(job):
+    # Use 3000000 (3 ns) minimum for the second equilibration
+    contents = """
+; MDP file for NVT simulation
+
+; Run parameters
+integrator	            = md		    ; leap-frog integrator
+nsteps		            = {nsteps}	    ;
+dt		                = 0.001		    ; 1 fs
+
+; Output control
+nstxout-compressed      = 1000        ; save compressed coordinates every 1.0 ps
+nstvout		            = 0		        ; don't save velocities
+nstenergy	            = 1000		    ; save energies every 1.0 ps
+nstlog		            = 1000		    ; update log file every 1.0 ps
+
+; Neighborsearching
+cutoff-scheme           = Verlet
+ns-type		            = grid		    ; search neighboring grid cells
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+
+; VDW
+vdwtype                 = Cut-off
+rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+vdw-modifier            = None
+
+; Electrostatics
+rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+pme-order	            = 4		        ; cubic interpolation
+fourierspacing          = 0.16          ; effects accuracy of pme
+ewald-rtol              = 1e-5
+
+; Temperature coupling is on
+tcoupl		            = v-rescale     ; modified Berendsen thermostat
+tc-grps		            = System 	    ; Single coupling group
+tau-t		            = 0.1	  		; time constant, in ps
+ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+; Pressure coupling is off
+pcoupl		            = no
+
+; Periodic boundary conditions
+pbc		                = xyz		    ; 3-D PBC
+
+; Dispersion correction
+DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+; Velocity generation
+gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+gen-temp	            = {temp}        ; temperature for Maxwell distribution
+gen-seed	            = -1		    ; generate a random seed
+
+constraints             = all-bonds
+lincs-order             = 8
+lincs-iter              = 4
+""".format(
+        temp=job.sp.T, nsteps=job.sp.nsteps_nvt_prod
     )
 
     return contents

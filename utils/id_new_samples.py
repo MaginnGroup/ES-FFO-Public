@@ -178,7 +178,7 @@ def prep_df_density(mol_name, data, df_csv):
         The root directory for saving the results
     """
     #Prepare df_density
-    ld_threshold = data.expt_rhoc
+    ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
     
     print(df_csv.head())
     df_csv["dens-iter"] = df_csv["dens-iter"].astype(int)
