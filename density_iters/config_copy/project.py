@@ -208,18 +208,114 @@ def npzzat_eq_sim(job):
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
 
+# @LD_group
+# @Project.pre.after(npzzat_eq_sim)
+# @Project.post.isfile("init_nvt_prod.gro")
+# @Project.operation(cmd=False, directives={"omp_num_threads": 16})
+# def init_nvt_prod_sim(job):
+#     """Run the minimization simulations"""
+#     import panedr
+#     sys.path.append("../../")
+#     from block_average.block_average import block_average
+#     sys.path.remove("../../")
+
+#     sim_name = "init_nvt_prod"
+#     last_sim_name = "npzzat_eq"
+#     property = "Volume"  # If NPT equilibrated, volume will also equilibrate
+
+#     with job:
+#         # Get final box lengths from volune
+#         df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
+#         volume = df[property].values
+#         results, adf_test_failed = get_pymser_results(volume)
+#         if not adf_test_failed:
+#             vol_prod = volume[results["t0"] :]
+#         else:
+#             raise Exception(
+#                 "ADF test failed to complete. Ensure NPT equilibration is complete."
+#             )
+
+#         #Compute the density of the simulation
+#         density = df["Density"].values
+#         dens_eq = np.mean(density[results["t0"] :])
+        
+#         xy_length = get_box_len(job, last_sim_name) 
+#         z_length = np.mean(vol_prod)/(xy_length**2)
+#         xy_length_rnd = np.round(xy_length, 5)
+#         z_length_rnd = np.round(z_length, 5)
+#         job.doc["box_len_" + sim_name] = xy_length_rnd
+
+#         #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
+#         if dens_eq > job.sp.rho_thresh:
+#             command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro -box {xy_length_rnd} {xy_length_rnd} {z_length_rnd}"
+#             subprocess.run(command, shell=True, check=True)
+#         #If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
+#         else:   
+#             df = panedr.edr_to_df(job.fn(f"{last_sim_name}.edr"))
+#             property = df["Density"].values
+#             #Use block averaging to calculate the variance of each property
+#             (means_est, vars_est, vars_err) = block_average(property)
+
+#             with open(job.fn("density_blk_avg.txt"), "w") as ferr:
+#                 ferr.write("# nblk_ops, mean, vars, vars_err\n")
+#                 for nblk_ops, (mean_est, vars_est, vars_err) in enumerate(
+#                     zip(means_est, vars_est, vars_err)
+#                 ):
+#                     ferr.write(
+#                         "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, vars_est, vars_err)
+#                     )
+#             mean = means_est[0]
+#             std = np.max(np.sqrt(vars_est))
+#             #Skip calculate_props
+#             job.doc["density"] = mean
+#             job.doc["density_unc"] = std
+#             job.doc["surf_tens"] = np.nan
+#             job.doc["surf_tens_unc"] = np.nan
+#             #Skip interface simulations
+#             job.doc["inter_eq_fin"] = True
+#             job.doc["inter_prod_fin"] = True
+        
+
+# Run short NVT equilibration at new density
+# @Project.label
+# def nvt_prod_comp(job):
+#     if "nvt_prod_fin" in job.doc:
+#         return True
+#     else:
+#         return False
+
+# @LD_group
+# @Project.pre.after(init_nvt_prod_sim)
+# @Project.post(nvt_prod_comp)
+# @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
+# def nvt_prod_sim(job):
+#     """Run the minimization simulations"""
+#     sim_name = "nvt_prod"
+#     last_sim_name = "init_nvt_prod"
+
+#     if not job.isfile("nvt_prod.mdp"):
+#         with job:
+#             content = _generate_nvt_prod_mdp(job)
+
+#             with open(job.fn("nvt_prod.mdp"), "w") as inp:
+#                 inp.write(content)
+
+#     run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+
+# Make Interface for simulation
 @LD_group
 @Project.pre.after(npzzat_eq_sim)
-@Project.post.isfile("init_nvt_prod.gro")
+@Project.post.isfile("init_inter_eq.gro")
 @Project.operation(cmd=False, directives={"omp_num_threads": 16})
-def init_nvt_prod_sim(job):
+def init_inter_eq_sim(job):
     """Run the minimization simulations"""
     import panedr
     sys.path.append("../../")
     from block_average.block_average import block_average
     sys.path.remove("../../")
 
-    sim_name = "init_nvt_prod"
+    sim_name = "init_inter_eq"
     last_sim_name = "npzzat_eq"
     property = "Volume"  # If NPT equilibrated, volume will also equilibrate
 
@@ -239,15 +335,19 @@ def init_nvt_prod_sim(job):
         density = df["Density"].values
         dens_eq = np.mean(density[results["t0"] :])
         
-        xy_length = get_box_len(job, last_sim_name) 
-        z_length = np.mean(vol_prod)/(xy_length**2)
-        xy_length_rnd = np.round(xy_length, 5)
-        z_length_rnd = np.round(z_length, 5)
-        job.doc["box_len_" + sim_name] = xy_length_rnd
+        xy_len = get_box_len(job, last_sim_name) 
+        xy_cen = round(xy_len / 2, 5)
+        z_len = np.mean(vol_prod)/(xy_len**2)
+        z_cen = round(z_len * job.sp.aspect_ratio / 2, 5)
+        xy_len_rnd = np.round(xy_len, 5)
+        z_len_rnd = np.round(z_len, 5)
+        job.doc["box_len_" + sim_name] = xy_len_rnd
+        new_z_len = round(z_len * job.sp.aspect_ratio, 5)
+        job.doc["z_box_len"] = new_z_len
 
         #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
         if dens_eq > job.sp.rho_thresh:
-            command = f"gmx editconf -f {last_sim_name}.gro -o {sim_name}.gro -box {xy_length_rnd} {xy_length_rnd} {z_length_rnd}"
+            command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {xy_len_rnd} {xy_len_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
             subprocess.run(command, shell=True, check=True)
         #If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
         else:   
@@ -275,52 +375,6 @@ def init_nvt_prod_sim(job):
             job.doc["inter_eq_fin"] = True
             job.doc["inter_prod_fin"] = True
         
-
-# Run short NVT equilibration at new density
-@Project.label
-def nvt_prod_comp(job):
-    if "nvt_prod_fin" in job.doc:
-        return True
-    else:
-        return False
-
-@LD_group
-@Project.pre.after(init_nvt_prod_sim)
-@Project.post(nvt_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def nvt_prod_sim(job):
-    """Run the minimization simulations"""
-    sim_name = "nvt_prod"
-    last_sim_name = "init_nvt_prod"
-
-    if not job.isfile("nvt_prod.mdp"):
-        with job:
-            content = _generate_nvt_prod_mdp(job)
-
-            with open(job.fn("nvt_prod.mdp"), "w") as inp:
-                inp.write(content)
-
-    run_md_wo_eqcheck(job, sim_name, last_sim_name)
-
-
-# Make Interface for simulation
-@LD_group
-@Project.pre.after(nvt_prod_sim)
-@Project.post.isfile("init_inter_eq.gro")
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def init_inter_eq_sim(job):
-
-    sim_name = "init_inter_eq"
-    last_sim_name = "nvt_prod"
-    xy_len, z_len = get_box_coords(job, last_sim_name)
-    xy_cen = round(xy_len / 2, 5)
-    z_cen = round(z_len * job.sp.aspect_ratio / 2, 5)
-    new_z_len = round(z_len * job.sp.aspect_ratio, 5)
-    job.doc["z_box_len"] = new_z_len
-
-    with job:
-        command = f"gmx editconf -f {last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {xy_len} {xy_len} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
-        subprocess.run(command, shell=True, check=True)
 
 # Run Interface NVT equilibration
 @Project.label
