@@ -347,7 +347,7 @@ def inter_eq_sim(job):
 
     if not job.isfile("inter_eq.mdp"):
         with job:
-            cutoff = 6*job.sp.max_sigma
+            cutoff = round(6*job.sp.max_sigma,5)
             content = _generate_inter_eq_mdp(job, cutoff)
 
             with open(job.fn("inter_eq.mdp"), "w") as inp:
@@ -380,7 +380,7 @@ def inter_prod_sim(job):
 
     if not job.isfile("inter_prod.mdp"):
         with job:
-            cutoff =  6*job.sp.max_sigma
+            cutoff =  round(6*job.sp.max_sigma, 5)
             content = _generate_inter_prod_mdp(job, cutoff)
 
             with open(job.fn("inter_prod.mdp"), "w") as inp:
