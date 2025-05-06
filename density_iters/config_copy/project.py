@@ -1842,6 +1842,8 @@ lincs-iter              = 4
         temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_eq
     )
 
+    return contents
+
 
 def _generate_nvt_prod_mdp(job):
     # Use 3000000 (3 ns) minimum for the second equilibration
