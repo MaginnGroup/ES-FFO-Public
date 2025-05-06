@@ -309,7 +309,8 @@ def inter_prod_sim(job):
             with open(job.fn("inter_prod.mdp"), "w") as inp:
                 inp.write(content)
 
-    run_md_prod(job, sim_name, last_sim_name)
+    # run_md_prod(job, sim_name, last_sim_name)
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
     # job.doc.inter_prod_fin = True
 
 @Project.pre.after(inter_prod_sim)
@@ -875,6 +876,7 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
 
 def run_md_prod(job, sim_name, last_sim_name):
     with job:
+        # print(os.getcwd())
         if sim_name != "em":
             w_gpu = " -ntomp 16 -nb gpu -pme gpu -bonded gpu"
         else:
@@ -884,7 +886,7 @@ def run_md_prod(job, sim_name, last_sim_name):
         else:
             command = (
                 f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -t {last_sim_name}.cpt -p system.top -o {sim_name}.tpr  &> prep_{sim_name}.out && "
-                f"gmx mdrun -s {sim_name}.tpr -cpi {last_sim_name}.cpt -v -deffnm {sim_name}" + w_gpu + f" &> run_{sim_name}.out"
+                f"gmx mdrun -s {sim_name}.tpr -cpi {last_sim_name}.cpt -v -noappend -deffnm {sim_name}" + w_gpu + f" &> run_{sim_name}.out"
             )
         subprocess.run(command, shell=True, check=True)
         job.doc[sim_name + "_fin"] = True
