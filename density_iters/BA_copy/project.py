@@ -313,7 +313,8 @@ def inter_prod_sim(job):
             with open(job.fn("inter_prod.mdp"), "w") as inp:
                 inp.write(content)
 
-    run_md_prod(job, sim_name, last_sim_name)
+    # run_md_prod(job, sim_name, last_sim_name)
+    run_md_wo_eqcheck(job, sim_name, last_sim_name)
     # job.doc.inter_prod_fin = True
 
 @Project.pre.after(inter_prod_sim)
