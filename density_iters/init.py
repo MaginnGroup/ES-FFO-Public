@@ -57,6 +57,7 @@ def determine_density_iter(molec_name):
 
 nsteps_nvt_eq = 100000  # 100ps
 nsteps_npzzat_eq = 5000000  # 5 ns
+nsteps_npzzat_prod = 10000000  # 10 ns
 nsteps_fl_eq = 100000  # 100ps
 nsteps_npt_pre_eq = 500000  # 500ps
 nsteps_npt_eq = 500000  # 500ps (minimum)
@@ -77,7 +78,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_check_only")
+        project = signac.init_project("npzzat_rect_constr")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -113,14 +114,15 @@ def init_project():
                     "rho_thresh": rho_thresh,  # kg/m^3
                     # "rho_avg": rho_avg,  # kg/m^3
                     "mol_wt": molec_data.molecular_weight,  # g/mol
-                    # "nmols": nmols,  # Number of molecules
+                    "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    "nsteps_npt_eq": nsteps_npt_eq,
-                    "nsteps_npt_prod": nsteps_npt_prod,
+                    # "nsteps_npt_eq": nsteps_npt_eq,
+                    # "nsteps_npt_prod": nsteps_npt_prod,
                     # "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
