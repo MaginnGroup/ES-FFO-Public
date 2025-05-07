@@ -89,7 +89,6 @@ def create_system(job):
 @LD_group
 @Project.pre.after(create_system)
 @Project.post.isfile("system.top")
-@Project.post.isfile("system_ex.top")
 @Project.operation
 def fix_topology(job):
     """Fix the LJ14 section of the topology file
@@ -98,25 +97,20 @@ def fix_topology(job):
     GAFF uses 0.5. This function edits the topology
     file accordingly.
     """
-    for file in [job.fn("unedited.top"), job.fn("unedited_ex.top")]:
-        top_contents = []
-        with open(job.fn("unedited.top")) as fin:
-            for line_number, line in enumerate(fin):
-                top_contents.append(line)
-                if line.strip() == "[ defaults ]":
-                    defaults_line = line_number
+    top_contents = []
+    with open(job.fn("unedited.top")) as fin:
+        for line_number, line in enumerate(fin):
+            top_contents.append(line)
+            if line.strip() == "[ defaults ]":
+                defaults_line = line_number
 
-        top_contents[defaults_line + 2] = (
-            "1               2               yes              0.5       0.8333333\n"  # changed no to yes
-        )
+    top_contents[defaults_line + 2] = (
+        "1               2               yes              0.5       0.8333333\n"  # changed no to yes
+    )
 
-        if file == job.fn("unedited.top"):
-            name = "system"
-        else:
-            name = "system_ex"
-        with open(job.fn(f"{name}.top"), "w") as fout:
-            for line in top_contents:
-                fout.write(line)
+    with open(job.fn("system.top"), "w") as fout:
+        for line in top_contents:
+            fout.write(line)
 
 
 #Make EM mdp file
