@@ -1794,11 +1794,11 @@ ewald-rtol              = 1e-5
 ; Temperature coupling is on
 tcoupl		            = v-rescale     ; modified Berendsen thermostat
 tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.5	  		; time constant, in ps
+tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is on
-pcoupl                  = berendsen     ; Pressure coupling on in NPT
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
 pcoupltype              = isotropic             ; uniform scaling of box vectors
 tau_p                   = 1.0                   ; time constant, in ps
 ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
