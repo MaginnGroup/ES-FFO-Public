@@ -416,14 +416,14 @@ def calculate_props(job):
                         )
             (means_est, vars_est, vars_err) = calc_blk_avg_energ(job, sim_name, name)
 
+        # save average density and stdev
+        mean = means_est[0]
+        std = np.max(np.sqrt(vars_est))
+
         if name == "surf_tens":
             #Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
             mean = float((mean * u.bar * u.nm).in_units(u.mN/u.m).value)/2
             std = float((std * u.bar * u.nm).in_units(u.mN/u.m).value)/2
-
-        # save average density and stdev
-        mean = means_est[0]
-        std = np.max(np.sqrt(vars_est))
 
         job.doc[name] = mean
         job.doc[name + "_unc"] = std
