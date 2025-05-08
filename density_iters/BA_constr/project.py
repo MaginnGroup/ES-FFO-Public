@@ -414,7 +414,7 @@ def calculate_props(job):
 # Calculation Functions
 def BA_block_avg(job, sft_gmx_data_df):
     num_blocks_array = np.arange(3,20,1)
-    SFT_data_time_length = int(40000)
+    SFT_data_time_length = int(4000)
     ave_SFT_value_array = np.zeros([len(num_blocks_array)])
     SFT_var = np.zeros([len(num_blocks_array)])
     SFT_error_array = np.zeros([len(num_blocks_array)])

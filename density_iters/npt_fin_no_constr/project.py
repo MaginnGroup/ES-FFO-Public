@@ -13,6 +13,7 @@ import warnings
 import unyt as u
 from findpeaks import findpeaks
 import math
+import re
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -171,63 +172,63 @@ def nvt_eq_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-# NPZZAT Simulation at Pvap
+
+# Long Equilibration NPT
 @Project.label
-def npzzat_eq_comp(job):
-    if "npzzat_eq_fin" in job.doc:
+def npt_eq_comp(job):
+    if "npt_eq_fin" in job.doc:
         return True
     else:
         return False
 
 @LD_group    
 @Project.pre.after(nvt_eq_sim)
-@Project.post(npzzat_eq_comp)
+@Project.post(npt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def npzzat_eq_sim(job):
+def npt_eq_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
     # Generate the first run
-    sim_name = "npzzat_eq"
+    sim_name = "npt_eq"
     last_sim_name = "nvt_eq"
     property = "Density"
 
-    if not job.isfile("npzzat_eq.mdp"):
+    if not job.isfile("npt_eq.mdp"):
         with job:
-            content = _generate_npzzat_eq_mdp(job)
+            content = _generate_npt_eq_mdp(job)
 
-            with open(job.fn("npzzat_eq.mdp"), "w") as inp:
+            with open(job.fn("npt_eq.mdp"), "w") as inp:
                 inp.write(content)
 
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
-
-# NPzzAT Production
+# Long Production NPT
 @Project.label
-def npzzat_prod_comp(job):
-    if "npzzat_prod_fin" in job.doc:
+def npt_prod_comp(job):
+    if "npt_prod_fin" in job.doc:
         return True
     else:
         return False
-
+    
 @LD_group    
-@Project.pre.after(npzzat_eq_sim)
-@Project.post(npzzat_prod_comp)
+@Project.pre.after(npt_eq_sim)
+@Project.post(npt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def npzzat_prod_sim(job):
+def npt_prod_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
     # Generate the first run
-    sim_name = "npzzat_prod"
-    last_sim_name = "npzzat_eq"
+    sim_name = "npt_prod"
+    last_sim_name = "npt_eq"
     property = "Density"
 
-    if not job.isfile("npzzat_prod.mdp"):
+    if not job.isfile("npt_prod.mdp"):
         with job:
-            content = _generate_npzzat_prod_mdp(job)
+            content = _generate_npt_prod_mdp(job)
 
-            with open(job.fn("npzzat_prod.mdp"), "w") as inp:
+            with open(job.fn("npt_prod.mdp"), "w") as inp:
                 inp.write(content)
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
@@ -235,7 +236,7 @@ def npzzat_prod_sim(job):
 
 # Make Interface for simulation
 @LD_group
-@Project.pre.after(npzzat_prod_sim)
+@Project.pre.after(npt_prod_sim)
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(cmd=False, directives={"omp_num_threads": 16})
 def init_inter_eq_sim(job):
@@ -246,14 +247,30 @@ def init_inter_eq_sim(job):
     sys.path.remove("../../")
 
     sim_name = "init_inter_eq"
-    last_sim_name = "npzzat_prod"
-    property = "Volume"  # If NPT equilibrated, volume will also equilibrate
+    last_sim_name = "npt_prod"
+    property = "Density"  # If NPT equilibrated, volume will also equilibrate
 
     with job:
         # Get the average density value from the NPT Production run
         df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
-        density = df["Density"].values
+        density = df[property].values
         dens_eq = np.mean(density)
+
+        #Use block averaging to calculate the variance of each property
+        (means_est, vars_est, vars_err) = block_average(property)
+
+        with open(job.fn("density_blk_avg.txt"), "w") as ferr:
+            ferr.write("# nblk_ops, mean, vars, vars_err\n")
+            for nblk_ops, (mean_est, vars_est, vars_err) in enumerate(
+                zip(means_est, vars_est, vars_err)
+            ):
+                ferr.write(
+                    "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, vars_est, vars_err)
+                )
+        std = np.max(np.sqrt(vars_est))
+        #Save these values to the job document
+        job.doc["density"] = dens_eq
+        job.doc["density_unc"] = std
 
         #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
         if dens_eq > job.sp.rho_thresh:
@@ -271,25 +288,8 @@ def init_inter_eq_sim(job):
             subprocess.run(command, shell=True, check=True)
 
         #If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
-        else:   
-            df = panedr.edr_to_df(job.fn(f"{last_sim_name}.edr"))
-            property = df["Density"].values
-            #Use block averaging to calculate the variance of each property
-            (means_est, vars_est, vars_err) = block_average(property)
-
-            with open(job.fn("density_blk_avg.txt"), "w") as ferr:
-                ferr.write("# nblk_ops, mean, vars, vars_err\n")
-                for nblk_ops, (mean_est, vars_est, vars_err) in enumerate(
-                    zip(means_est, vars_est, vars_err)
-                ):
-                    ferr.write(
-                        "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, vars_est, vars_err)
-                    )
-            mean = means_est[0]
-            std = np.max(np.sqrt(vars_est))
-            #Skip calculate_props
-            job.doc["density"] = mean
-            job.doc["density_unc"] = std
+        else:               
+            #Skip calculate_props for interface simulations 
             job.doc["surf_tens"] = np.nan
             job.doc["surf_tens_unc"] = np.nan
             #Skip interface simulations
@@ -322,7 +322,10 @@ def inter_eq_sim(job):
 
     if not job.isfile("inter_eq.mdp"):
         with job:
-            cutoff = round(6*job.sp.max_sigma,5)
+            #Set the cutoff as 95% of half the box length or 6*max_sigma, whichever is smaller
+            xy_len, z_len = get_box_coords(job, last_sim_name) 
+            min_coord = np.minimum(xy_len, z_len)
+            cutoff = np.minimum(round(0.95*min_coord/2,5), round(6*job.sp.max_sigma,5))
             content = _generate_inter_eq_mdp(job, cutoff)
 
             with open(job.fn("inter_eq.mdp"), "w") as inp:
@@ -355,7 +358,10 @@ def inter_prod_sim(job):
 
     if not job.isfile("inter_prod.mdp"):
         with job:
-            cutoff =  round(6*job.sp.max_sigma, 5)
+            #Set the cutoff as 95% of half the box length or 6*max_sigma, whichever is smaller
+            xy_len, z_len = get_box_coords(job, last_sim_name) 
+            min_coord = np.minimum(xy_len, z_len)
+            cutoff = np.minimum(round(0.95*min_coord/2,5), round(6*job.sp.max_sigma,5))
             content = _generate_inter_prod_mdp(job, cutoff)
 
             with open(job.fn("inter_prod.mdp"), "w") as inp:
@@ -382,60 +388,42 @@ def calculate_props(job):
     sim_name = "inter_prod"
  
     get_props = ["Density", "#Surf*SurfTen"]
-    names = ["density", "surf_tens"]
+    names = ["ift_dens", "surf_tens"]
     #For surface tension and density
     for prop, name in zip(get_props, names):
-        #For density get profile from xvg
+        ##Use block averaging to calculate the variance of each property
         if prop == "Density":
             with job:
-                if os.path.exists(job.fn("inter_prod.xtc")):
-                    file_type_in = "xtc"
-                else:
-                    file_type_in = "trr"
+                (means_est, vars_est, vars_err) = calc_block_densities(job, sim_name, name)
 
-                (means_est, vars_est, vars_err) = calc_block_densities(job, sim_name, file_type_in, name)
+            #Save results to the job document
+            with open(job.fn(name + "_blk_avg.txt"), "w") as ferr:
+                ferr.write("# nblk_ops, mean, vars, vars_err\n")
+                for nblk_ops, (mean_est, var_est, var_err) in enumerate(
+                    zip(means_est, vars_est, vars_err)
+                ):
+                    ferr.write(
+                        "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err)
+                    )
+
         else:
             with job:
                 if not os.path.exists(job.fn("inter_prod_surf_tens.txt")):
-                    command = f"echo '{prop}' | gmx energy -f {sim_name}.edr >> {sim_name}_{name}.txt"
-                    subprocess.run(
-                        command, input=f"System", text=True, check=True, shell=True
-                    )
-            df = panedr.edr_to_df(job.fn("inter_prod.edr"))
-            property = df[prop].values
-            #Use block averaging to calculate the variance of each property
-            (means_est, vars_est, vars_err) = block_average(property)
-            (means_est2, vars_est2, vars_err2) = BA_block_avg(job, df[["Time", prop]])
-
-            with open(job.fn(name + "_blk_avg_BA.txt"), "w") as ferr:
-                ferr.write("# nblk_ops, mean, vars, vars_err\n")
-                for nblk_ops2, (mean_est2, var_est2, var_err2) in enumerate(
-                    zip(means_est2, vars_est2, vars_err2)
-                ):
-                    ferr.write(
-                        "{}\t{}\t{}\t{}\n".format(nblk_ops2, mean_est2, var_est2, var_err2)
-                    )
-
-        #Use block averaging to calculate the variance of each property
-        # (means_est, vars_est, vars_err) = block_average(property)
-
-        with open(job.fn(name + "_blk_avg.txt"), "w") as ferr:
-            ferr.write("# nblk_ops, mean, vars, vars_err\n")
-            for nblk_ops, (mean_est, var_est, var_err) in enumerate(
-                zip(means_est, vars_est, vars_err)
-            ):
-                ferr.write(
-                    "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, var_est, var_err)
-                )
-        # save average density and stdev
-        # mean = np.mean(property)
-        mean = means_est[0]
-        std = np.max(np.sqrt(vars_est))
+                    for i in range(3,11):
+                        command = f"echo '{prop}' | gmx energy -f {sim_name}.edr -nbmin {i} -nbmax {i} >> {sim_name}_{name}.txt"
+                        subprocess.run(
+                            command, text=True, check=True, shell=True
+                        )
+            (means_est, vars_est, vars_err) = calc_blk_avg_energ(job, sim_name, name)
 
         if name == "surf_tens":
             #Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
             mean = float((mean * u.bar * u.nm).in_units(u.mN/u.m).value)/2
             std = float((std * u.bar * u.nm).in_units(u.mN/u.m).value)/2
+
+        # save average density and stdev
+        mean = means_est[0]
+        std = np.max(np.sqrt(vars_est))
 
         job.doc[name] = mean
         job.doc[name + "_unc"] = std
@@ -445,138 +433,31 @@ def calculate_props(job):
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
 # Calculation Functions
-def BA_block_avg(job, sft_gmx_data_df):
-    num_blocks_array = np.arange(3,20,1)
-    SFT_data_time_length = int(4000)
-    ave_SFT_value_array = np.zeros([len(num_blocks_array)])
-    SFT_var = np.zeros([len(num_blocks_array)])
-    SFT_error_array = np.zeros([len(num_blocks_array)])
+def calc_blk_avg_energ(job, sim_name, name):
+    with open(job.fn(f'{sim_name}_{name}.txt')) as f:
+        text = f.read()
+    data_lines = re.findall(r'-{5,}[\r\n]+([^\r\n]+)', text)
 
-    for j in range(len(num_blocks_array)):
-        num_blocks = num_blocks_array[j]
-        sft_values_array = np.zeros([num_blocks])
-        for i in range(num_blocks):
-            data_length = int(SFT_data_time_length//num_blocks)
-            if i == 0:
-                sft_val = (sft_gmx_data_df.iloc[-data_length*(i+1): , -1].mean())/20
-            else:
-                sft_val = (sft_gmx_data_df.iloc[-data_length*(i+1) : -data_length*(i), -1].mean())/20
-                
-            sft_values_array[i] = sft_val
-            
-        ave_SFT_value_array[j] = np.mean(sft_values_array)
-        SFT_value_var_unormalized = np.var(sft_values_array)
-        SFT_value_var_normalized = SFT_value_var_unormalized/(num_blocks - 1)
-        SFT_var[j] = SFT_value_var_normalized
-        SFT_value_err = np.sqrt(SFT_value_var_normalized)
-        SFT_error_array[j] = SFT_value_err
-        
-    index_max = np.argmax(SFT_error_array)
-    final_num_blocks = num_blocks_array[index_max]
-    final_SFT_err = SFT_error_array[index_max]
-    final_SFT_val = ave_SFT_value_array[index_max]
-    final_SFT_var = SFT_var[index_max]
+    # Parse each line into components
+    entries = [line.split() for line in data_lines if len(line.split()) >= 5]
 
-    with job:
-        np.savetxt("SFT_final_ave_value_DIR_INDEX.txt", np.array([final_SFT_val]))
-        np.savetxt("SFT_final_ave_value_error_DIR_INDEX.txt", np.array([final_SFT_err]))
-        np.savetxt("SFT_final_num_blocks_DIR_INDEX.txt", np.array([final_num_blocks]))
+    # Extract numeric columns
+    nblocks = np.array(list(range(3,11)))
+    means_est = np.array([float(e[1]) for e in entries])
+    vars_est   = np.array([float(e[2]) for e in entries])
+    vars_err    = np.sqrt(2.0 * vars_est ** 2.0 / (nblocks - 1) ** 3.0)
 
-    return ave_SFT_value_array, SFT_var, SFT_error_array
+    with open(job.fn(name + "_blk_avg.txt"), "w") as ferr:
+        ferr.write("# nblk_ops, mean, vars, vars_err\n")
+        for nblk_ops, (mean_est, var_est, var_err) in enumerate(
+            zip(means_est, vars_est, vars_err)
+        ):
+            ferr.write(
+                "{}\t{}\t{}\t{}\n".format(nblk_ops + 3, mean_est, var_est, var_err)
+            )
+    return (means_est, vars_est, vars_err)
 
-def BA_find_equib(job, sft_x_y, sim_name):
-    import panedr
-
-    def running_average(file):
-        running_ave = np.zeros([len(file.iloc[:,0]), len(file.iloc[0,:])])
-        for i in range(len(file.iloc[0,:])):
-            for j in range(len(file.iloc[:,0])):
-                mov_average = file.iloc[0:j+1,i].mean() 
-                running_ave[j,i] = mov_average
-        return(running_ave)
-
-    def relative_abs_error(a,b):
-        error = np.abs(a-b)
-        rae = error/a
-        return rae
-
-    def test_equilibration(running_average_data):  #5e-4
-        start_index_frac = 0.2
-        test_index_frac = 0.1999
-        test_index_array = np.arange(start_index_frac, 0.8001, 0.005)  #0.8001
-        test_index = test_index_array*len(running_average_data)
-        test_points_index = test_index.astype(int)
-        
-        equilibration_point = 0
-        for i in range(len(test_points_index)):
-            check_index = test_points_index[i]
-            equilibration_point = check_index
-            for j in range(len(running_average_data[0,:])):
-                test_index_len = test_index_frac * len(running_average_data)
-                check_range = np.arange(0, test_index_len, 1)   
-                check_range = check_range.astype(int)
-                for k in check_range:
-                    if relative_abs_error(running_average_data[check_index,j], running_average_data[(check_index+k),j]) > 0.001:
-                        break
-                else:
-                    continue
-                break
-            else:
-                break
-        return equilibration_point, test_points_index
-
-    # Output_data = np.loadtxt("time_density.xvg", comments=["#" , "@"])
-    # Output_data_df = pd.DataFrame(Output_data)
-    # Get the data from the edr file
-    with job:
-        df = panedr.edr_to_df(job.fn(sim_name + ".edr"))
-        Output_data_df = df[["Time", "Density"]]
-
-        run_ave_Output_data = running_average(Output_data_df.iloc[:,:])
-        equilibration_start = test_equilibration(run_ave_Output_data)
-        equilibration_time_index = equilibration_start[0]
-        for_rem = 500      # 500
-        rem = equilibration_time_index%for_rem 
-
-        to_add = 0
-        if rem != 0:
-            to_add = for_rem - rem
-        final_equib_time = equilibration_time_index + to_add
-        final_equib_time = int(final_equib_time)
-        final_equib_time_stored = np.array([final_equib_time])*1000
-
-        np.savetxt('final_equib_time_INDEX1.txt', final_equib_time_stored)
-
-        density_equib_data = Output_data_df.iloc[final_equib_time:,1]
-        density_equib_data = np.array([density_equib_data])
-        ave_density_rep = np.mean(density_equib_data)
-        ave_density = np.array([ave_density_rep])
-        np.savetxt('ave_density_INDEX1_nouq.txt', ave_density)
-
-
-        # Output_data_2 = np.loadtxt("time_volume.xvg", comments=["#" , "@"])
-        # Output_data_2_df = pd.DataFrame(Output_data_2)
-        df2 = panedr.edr_to_df(job.fn(sim_name + ".edr"))
-        Output_data_2_df = df2[["Time", "Volume"]]
-
-        vol_equib_data = Output_data_2_df.iloc[final_equib_time:,1]
-        vol_equib_data = np.array([vol_equib_data])
-        ave_vol = np.mean(vol_equib_data)
-        ave_length = ave_vol**(1/3)
-        ave_length_rd = round(ave_length, 5)
-        ave_length_sft_z = ave_vol/(sft_x_y**2)
-        ave_length_sft_z_rd_rep = round(ave_length_sft_z, 5)
-
-        ave_vol = np.array([ave_vol])
-        ave_length_rd = np.array([ave_length_rd])
-        ave_length_sft_z_rd = np.array([ave_length_sft_z_rd_rep])
-        np.savetxt('ave_vol_INDEX1_nouq.txt', ave_vol)
-        np.savetxt('ave_length_INDEX1_nouq.txt',  [ave_length_rd], fmt='%.5f')
-        np.savetxt('ave_length_sft_z_INDEX1.txt',  [ave_length_sft_z_rd_rep], fmt='%.5f')
-
-    return ave_density_rep, ave_vol, ave_length_sft_z_rd_rep
-
-def calc_block_densities(job, sim_name, file_type_in, name):
+def calc_block_densities(job, sim_name, name):
     import panedr
 
     means = []
@@ -615,13 +496,13 @@ def calc_block_densities(job, sim_name, file_type_in, name):
                 
                 if block + 1 < n_blocks:
                     output_file = f"{sim_name}_{name}_{block+1}.xvg"
-                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} -e {te} > /dev/null 2>&1"
+                    command = f"gmx density -f {sim_name}.xtc -s {sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} -e {te} > /dev/null 2>&1"
                 else:
                     if n_blocks == 1:
                         output_file = f"{sim_name}_{name}.xvg"
                     else:
                         output_file = f"{sim_name}_{name}_{block+1}.xvg"
-                    command = f"gmx density -f {sim_name}.{file_type_in} -s {sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} > /dev/null 2>&1"
+                    command = f"gmx density -f {sim_name}.xtc -s {sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} > /dev/null 2>&1"
                
                 subprocess.run(
                         command, input=f"System", text=True, check=True, shell=True
@@ -1742,8 +1623,8 @@ gen-seed	            = -1		    ; generate a random seed
 
     return contents
 
-def _generate_npzzat_eq_mdp(job):
-    # Use 5000000 (5 ns) for the first equilibration
+def _generate_npt_eq_mdp(job):
+    # Use 500000 (500 ps) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
 
@@ -1755,8 +1636,8 @@ dt		                = 0.001		    ; 1 fs
 ; Output control
 nstxout-compressed      = 1000        ; save compressed coordinates every 1.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 1.0 ps
-nstlog		            = 1000		    ; update log file every 1.0 ps
+nstenergy	            = 1000		    ; save energies every 0.1 ps
+nstlog		            = 1000		    ; update log file every 0.1 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
@@ -1779,17 +1660,16 @@ ewald-rtol              = 1e-5
 ; Temperature coupling is on
 tcoupl		            = v-rescale     ; modified Berendsen thermostat
 tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.5	  		; time constant, in ps
+tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is on
-
-pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT ; berendsen
-pcoupltype              = semiisotropic             ; uniform scaling of box vectors
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
 tau_p                   = 2.0                   ; time constant, in ps
-ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 0 4.5e-5
-nstpcouple              = 5
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
 ;refcoord_scaling       = com
 
 ; Periodic boundary conditions
@@ -1799,15 +1679,15 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
-gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_eq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt_eq
     )
 
     return contents
 
-def _generate_npzzat_prod_mdp(job):
-    # Use 10000000 (10 ns) for the first equilibration
+def _generate_npt_prod_mdp(job):
+    # Use 10000000 (10 ns) for the production NPT
     contents = """
 ; MDP file for NPT simulation
 
@@ -1843,17 +1723,16 @@ ewald-rtol              = 1e-5
 ; Temperature coupling is on
 tcoupl		            = v-rescale     ; modified Berendsen thermostat
 tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.5	  		; time constant, in ps
+tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is on
-
-pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT ; berendsen
-pcoupltype              = semiisotropic             ; uniform scaling of box vectors
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
 tau_p                   = 2.0                   ; time constant, in ps
-ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 0 4.5e-5
-nstpcouple              = 5
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
 ;refcoord_scaling       = com
 
 ; Periodic boundary conditions
@@ -1863,10 +1742,10 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
-gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
-continuation            = yes           ; Continuation from NPzzAT equilibration
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
+continuation            = yes           ; Continuation from NPT equilibration
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_prod
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt_prod
     )
 
     return contents

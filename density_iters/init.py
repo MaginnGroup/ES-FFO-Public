@@ -78,7 +78,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_rect_constr")
+        project = signac.init_project("npt_fin")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -114,7 +114,7 @@ def init_project():
                     "rho_thresh": rho_thresh,  # kg/m^3
                     # "rho_avg": rho_avg,  # kg/m^3
                     "mol_wt": molec_data.molecular_weight,  # g/mol
-                    "nmols": nmols,  # Number of molecules
+                    # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
                     # "nsteps_npzzat_eq": nsteps_npzzat_eq,
