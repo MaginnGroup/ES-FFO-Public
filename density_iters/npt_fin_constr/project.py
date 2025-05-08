@@ -253,11 +253,11 @@ def init_inter_eq_sim(job):
     with job:
         # Get the average density value from the NPT Production run
         df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
-        density = df[property].values
+        density = np.array(df[property].values)
         dens_eq = np.mean(density)
 
         #Use block averaging to calculate the variance of each property
-        (means_est, vars_est, vars_err) = block_average(property)
+        (means_est, vars_est, vars_err) = block_average(density)
 
         with open(job.fn("density_blk_avg.txt"), "w") as ferr:
             ferr.write("# nblk_ops, mean, vars, vars_err\n")

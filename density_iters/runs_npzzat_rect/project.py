@@ -252,7 +252,7 @@ def init_inter_eq_sim(job):
     with job:
         # Get the average density value from the NPT Production run
         df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
-        density = df[property].values
+        density = np.array(df[property].values)
         dens_eq = np.mean(density)
         print(f"Density: {dens_eq}")
 
@@ -273,10 +273,8 @@ def init_inter_eq_sim(job):
 
         #If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
         else:   
-            df = panedr.edr_to_df(job.fn(f"{last_sim_name}.edr"))
-            property = df[property].values
             #Use block averaging to calculate the variance of each property
-            (means_est, vars_est, vars_err) = block_average(property)
+            (means_est, vars_est, vars_err) = block_average(density)
 
             with open(job.fn("density_blk_avg.txt"), "w") as ferr:
                 ferr.write("# nblk_ops, mean, vars, vars_err\n")
