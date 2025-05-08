@@ -381,7 +381,7 @@ def calculate_props(job):
     sim_name = "inter_prod"
  
     get_props = ["Density", "#Surf*SurfTen"]
-    names = ["density", "surf_tens"]
+    names = ["ift_density", "surf_tens"]
     #For surface tension and density
     for prop, name in zip(get_props, names):
         #For density get profile from xvg
