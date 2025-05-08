@@ -254,7 +254,6 @@ def init_inter_eq_sim(job):
         df = panedr.edr_to_df(job.fn(last_sim_name + ".edr"))
         density = np.array(df[property].values)
         dens_eq = np.mean(density)
-        print(f"Density: {dens_eq}")
 
         #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
         if dens_eq > job.sp.rho_thresh:
@@ -381,7 +380,7 @@ def calculate_props(job):
     sim_name = "inter_prod"
  
     get_props = ["Density", "#Surf*SurfTen"]
-    names = ["ift_density", "surf_tens"]
+    names = ["density", "surf_tens"]
     #For surface tension and density
     for prop, name in zip(get_props, names):
         #For density get profile from xvg
