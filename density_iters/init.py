@@ -16,7 +16,7 @@ sys.path.remove("../")
 from utils.molec_class_files import esolvs
 
 # Load class properies for each training molecule
-mol_names = ["R125"]  #"EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 
@@ -78,7 +78,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npzzat_fin_unconstr")
+        project = signac.init_project("npt_fin_unconstr")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -90,12 +90,12 @@ def init_project():
         # Convert scaled latin hypercube samples to physical values
         scaled_params = values_scaled_to_real(lhs_samples, bounds)
         #Make the GAFF param_set (test)
-        scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
-        scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
+        # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
+        # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
         # nmols = int(n_particles/molec_data.n_atoms) #Number of molecules in the system
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
-        for temp in [temps[-3]]:
+        for temp in [temps[-1]]:
             liq_density = molec_data.expt_liq_density[temp]
             vap_density = molec_data.expt_vap_density[temp]
             max_vd = molec_data.expt_vap_density[max(temps)]
@@ -117,12 +117,12 @@ def init_project():
                     # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
+                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    # "nsteps_npzzat_prod": nsteps_npzzat_prod,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    # "nsteps_npt_eq": nsteps_npt_eq,
-                    # "nsteps_npt_prod": nsteps_npt_prod,
+                    "nsteps_npt_eq": nsteps_npt_eq,
+                    "nsteps_npt_prod": nsteps_npt_prod,
                     # "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
