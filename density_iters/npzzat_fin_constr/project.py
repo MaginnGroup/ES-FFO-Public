@@ -175,15 +175,15 @@ def nvt_eq_sim(job):
 
 # Long Equilibration NPT
 @Project.label
-def npt_eq_comp(job):
-    if "npt_eq_fin" in job.doc:
+def npzzat_eq_comp(job):
+    if "npzzat_eq_fin" in job.doc:
         return True
     else:
         return False
 
 @LD_group    
 @Project.pre.after(nvt_eq_sim)
-@Project.post(npt_eq_comp)
+@Project.post(npzzat_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def npzzat_eq_sim(job):
     import panedr
@@ -215,7 +215,7 @@ def npzzat_prod_comp(job):
 @Project.pre.after(npzzat_eq_sim)
 @Project.post(npzzat_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
-def npt_prod_sim(job):
+def npzzat_prod_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
@@ -236,7 +236,7 @@ def npt_prod_sim(job):
 
 # Make Interface for simulation
 @LD_group
-@Project.pre.after(npt_prod_sim)
+@Project.pre.after(npzzat_prod_sim)
 @Project.post.isfile("init_inter_eq.gro")
 @Project.operation(cmd=False, directives={"omp_num_threads": 16})
 def init_inter_eq_sim(job):
