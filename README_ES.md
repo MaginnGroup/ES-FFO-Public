@@ -142,7 +142,9 @@ To run liquid density iterations, follow the following steps:
      python project.py submit -o inter_eq_sim --bundle=2 --parallel
      python project.py submit -o inter_prod_sim --bundle=2 --parallel
 
-     python project.py submit -o LD --bundle=2 --parallel
+     python project.py submit -o LD --bundle=8 --parallel (npt_fin_unconstr)
+     python project.py submit -o LD --bundle=4 --parallel (npt_fin_constr)
+     python project.py submit -o LD --bundle=2 --parallel (core)
    ```  
 8. Calculate density
    ```
