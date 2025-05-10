@@ -79,8 +79,10 @@ def create_system(job):
     system_ff.combining_rule = "lorentz"
 
     with job:
-        system_ff.save("system.gro")
-        system_ff.save("unedited.top")
+        if not os.path.exists("system.gro"):
+            system_ff.save("system.gro")
+        if not os.path.exists("unedited.top"):
+            system_ff.save("unedited.top")
 
     # Save the system in a new directory
     job.doc["system"] = True
