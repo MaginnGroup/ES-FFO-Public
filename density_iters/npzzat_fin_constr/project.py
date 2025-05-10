@@ -140,7 +140,7 @@ def em_complete(job):
 @Project.pre.after(fix_topology)
 @Project.pre.after(generate_inputs)
 @Project.post(em_complete)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 4})
 def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
@@ -159,7 +159,7 @@ def nvt_eq_comp(job):
 @LD_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 4})
 def nvt_eq_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq"
@@ -184,7 +184,7 @@ def npzzat_eq_comp(job):
 @LD_group    
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 4})
 def npzzat_eq_sim(job):
     import panedr
 
@@ -214,7 +214,7 @@ def npzzat_prod_comp(job):
 @LD_group    
 @Project.pre.after(npzzat_eq_sim)
 @Project.post(npzzat_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 4})
 def npzzat_prod_sim(job):
     import panedr
 
@@ -238,7 +238,7 @@ def npzzat_prod_sim(job):
 @LD_group
 @Project.pre.after(npzzat_prod_sim)
 @Project.post.isfile("init_inter_eq.gro")
-@Project.operation(cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(cmd=False, directives={"omp_num_threads": 4})
 def init_inter_eq_sim(job):
     """Run the minimization simulations"""
     import panedr
@@ -308,7 +308,7 @@ def inter_eq_comp(job):
 @LD_group
 @Project.pre.after(init_inter_eq_sim)
 @Project.post(inter_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 4})
 def inter_eq_sim(job):
     """Run the interface equilibration simulations"""
     import panedr
@@ -345,7 +345,7 @@ def inter_prod_comp(job):
 @LD_group
 @Project.pre.after(inter_eq_sim)
 @Project.post(inter_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 4})
 def inter_prod_sim(job):
     """Run the production simulations"""
 
@@ -376,7 +376,7 @@ def inter_prod_sim(job):
 # @Project.post.isfile("inter_prod_surf_tens.txt")
 @Project.post(lambda job: "surf_tens" in job.doc and "density" in job.doc)
 @Project.post(lambda job: "surf_tens_unc" in job.doc and "density_unc" in job.doc)
-@Project.operation(directives={"omp_num_threads": 2})
+@Project.operation(directives={"omp_num_threads": 4})
 def calculate_props(job):
     """Calculate the density"""
 
@@ -778,7 +778,7 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
     with job:
         if sim_name != "em":
-            w_gpu = " -ntomp 2 -nb gpu -pme gpu -bonded gpu -pin on"
+            w_gpu = " -ntomp 4 -nb gpu -pme gpu -bonded gpu -pin on"
         else:
             w_gpu = ""
         if os.path.exists(sim_name + ".cpt"):
@@ -794,7 +794,7 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
 def run_md_prod(job, sim_name, last_sim_name):
     with job:
         if sim_name != "em":
-            w_gpu = " -ntomp 2 -nb gpu -pme gpu -bonded gpu -pin on"
+            w_gpu = " -ntomp 4 -nb gpu -pme gpu -bonded gpu -pin on"
         else:
             w_gpu = ""
         if os.path.exists(sim_name + ".cpt"):
@@ -845,7 +845,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                 if total_eq_steps == 0:
                     command = (
                         f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_sim_name}.gro -p system.top -o {sim_name} &> prep_{sim_name}.out && "
-                        f"gmx mdrun -v -deffnm {sim_name} -ntomp 2 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> run_{sim_name}.out"
+                        f"gmx mdrun -v -deffnm {sim_name} -ntomp 4 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> run_{sim_name}.out"
                     )
                 # Otherwise, check log file for whether previous simulation finished correctly
                 elif check_norm_term(job, sim_name):
@@ -854,11 +854,11 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                         f"gmx convert-tpr -s {sim_name}.tpr -extend "
                         + str(eq_extend)
                         + f" -o {sim_name}.tpr &&"
-                        f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 2 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> run_{sim_name}.out"
+                        f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 4 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> run_{sim_name}.out"
                     )
                 # Otherwise restart the simulation from the checkpoint file
                 else:
-                    command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 2 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> run_{sim_name}.out"
+                    command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 4 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> run_{sim_name}.out"
                 subprocess.run(command, shell=True, check=True)
 
                 # Update equilibration data dictionary/files
