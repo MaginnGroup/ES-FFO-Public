@@ -99,11 +99,10 @@ def init_project():
         # Initialize project
         project = signac.init_project("npt_robust")
 
-        # Use GenLHS samples to generate LHS samples in the analysis folder
-        # Load the lhs_samples and bounds
+        # Load samples from the vle iteration folder
         bounds = molec_data.param_bounds
         lhs_samples = pd.read_csv(
-            "analysis/" + molec_name + "/params-iter-" + str(dens_iter) + ".csv",
+            "analysis/" + molec_name + "/vle_iters/params-iter-" + str(dens_iter) + ".csv",
             index_col=0,
         )
         # Convert scaled latin hypercube samples to physical values
@@ -125,7 +124,7 @@ def init_project():
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
-                    "dens-iter": dens_iter,
+                    "iter": dens_iter,
                     "smiles": molec_data.smiles_str,
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar

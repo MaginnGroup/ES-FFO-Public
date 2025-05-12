@@ -6,7 +6,7 @@ from utils.id_new_samples import check_mse_10
 
 #Set iters to analyze and properties to analyze
 iters = [1]  # Change me as needed
-property_names = ["liq_density"]  # Change me as needed
+property_names = ["liq_density", "surf_tens"]  # Change me as needed
 mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"] # Change me as needed
 
 
@@ -24,7 +24,7 @@ verbose = True
 ##############################################################################
 ##############################################################################
 #Get Project
-base_name = "ld_iters/" #Name of the project folder
+base_name = "vle_iters/" #Name of the project folder
 project = signac.get_project(base_name)
 molec_dict = esolvs.make_dict(mol_names)
 

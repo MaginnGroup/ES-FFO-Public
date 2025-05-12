@@ -106,7 +106,7 @@ def init_project():
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
-                    "dens-iter": dens_iter,
+                    "iter": dens_iter,
                     "smiles": molec_data.smiles_str,
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar

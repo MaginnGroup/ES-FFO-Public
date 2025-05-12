@@ -241,7 +241,7 @@ def npt_prod_sim(job):
 # Make Interface for simulation
 @LD_group
 @Project.pre.after(npt_prod_sim)
-@Project.post.isfile("init_inter_eq.gro")
+@Project.post.isfile("init_inter_eq/init_inter_eq.gro")
 @Project.operation(cmd=False, directives={"omp_num_threads": 8})
 def init_inter_eq_sim(job):
     """Run the minimization simulations"""
@@ -258,7 +258,7 @@ def init_inter_eq_sim(job):
 
     with job:  
         # Get the average density value from the NPT Production run
-        df = panedr.edr_to_df(job.fn(f"{last_dir}/{last_sim_name}.edr"))
+        df = panedr.edr_to_df(job.fn(f"{last_sim_name}/{last_sim_name}.edr"))
         density = np.array(df[property].values)
         dens_eq = np.mean(density)
 
@@ -1734,7 +1734,6 @@ DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
 gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
-continuation            = yes           ; Continuation from NPT equilibration
 
 constraints             = all-bonds
 lincs-order             = 8
@@ -1858,7 +1857,6 @@ DispCorr                 = no        ; account for cut-off vdW scheme
 
 ; Velocity generation
 gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
-continuation            = yes           ; Continuation from NVT equilibration
 
 constraints             = all-bonds
 lincs-order             = 8

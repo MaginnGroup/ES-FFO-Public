@@ -7,6 +7,7 @@ import seaborn
 from sklearn.metrics import ConfusionMatrixDisplay
 from numpy.linalg import norm
 from sklearn import svm
+from functools import reduce
 
 from fffit.fffit.models import run_gpflow_scipy
 
@@ -159,7 +160,7 @@ def bisection(
     return final_distance, final_eval - target_num
 
 
-def prep_df_density(mol_name, data, df_csv):
+def prep_df_density(mol_name, data, df_csv, iter_type = "dens_iters"):
     """
     Prepare the density dataframe for a given molecule.
 
@@ -180,17 +181,17 @@ def prep_df_density(mol_name, data, df_csv):
     #Prepare df_density
     ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
     
-    print(df_csv.head())
-    df_csv["dens-iter"] = df_csv["dens-iter"].astype(int)
-    df_iter1_csv = df_csv[df_csv["dens-iter"] == 1].copy()
+    df_csv["iter"] = df_csv["iter"].astype(int)
+    df_iter1_csv = df_csv[df_csv["iter"] == 1].copy()
     
-    df_all, df_liquid, df_vapor = prepare_df_density(
+    df_all, df_liquid, df_vapor = prepare_df_props(
         df_csv, data, ld_threshold
     )
-    df_iter1_all, df_iter1_l, df_iter1_v = prepare_df_density(
+    
+    df_iter1_all, df_iter1_l, df_iter1_v = prepare_df_props(
         df_iter1_csv, data, ld_threshold
     )
-    root_dir = "density_iters/analysis/" + mol_name + "/"
+    root_dir = f"analysis/{mol_name}"
 
     return df_iter1_all, df_liquid, root_dir
 
@@ -244,27 +245,43 @@ def fit_gp_model(df_liquid, data, gp_shuffle_seed=42):
     param_names = list(data.param_names) + ["temperature"]
     models = {}
 
-    for property_name in ["md_liq_density", "md_surf_tens"]:
-        x_train, y_train, x_test, y_test = shuffle_and_split(
-        df_liquid, param_names, property_name, shuffle_seed=gp_shuffle_seed
-    )
-        models[property_name] = run_gpflow_scipy(
-            x_train,
-            y_train,
-            gpflow.kernels.RBF(lengthscales=np.ones(data.n_params + 1)),
+    for property_name in ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]:
+        # Check if the property exists in the dataframe and make a GP model if it does
+        if property_name in df_liquid.columns:
+            x_train, y_train, x_test, y_test = shuffle_and_split(
+            df_liquid, param_names, property_name, shuffle_seed=gp_shuffle_seed
         )
+            models[property_name] = run_gpflow_scipy(
+                x_train,
+                y_train,
+                gpflow.kernels.RBF(lengthscales=np.ones(data.n_params + 1)),
+            )
     return models
+    
+def rank_vle_samples(all_samples, models, data, verbose=True):
+    top_liquid_samples, top_vapor_samples = rank_vl_samples(all_samples, None, models, data, verbose)
+    viable_samples = top_liquid_samples.drop(columns="mse")
+
+    # Calculate other properties
+    vle_predicted_mses = {prop: rank_samples(viable_samples, model, data, prop) for prop, model in models.items()}
+    for prop, df in vle_predicted_mses.items():
+        vle_predicted_mses[prop] = df.rename(columns={"mse": f"mse_{prop}"})
+
+    vle_mses = reduce(lambda left, right: left.merge(right, on=data.param_names), vle_predicted_mses.values())
+
+    return vle_mses
 
 def rank_vl_samples(liquid_samples, vapor_samples, models, data, verbose=True):
     # Find the lowest MSE points from the GP in both sets
-    ranked_liquid_samples = rank_samples(liquid_samples, models["md_liq_density"], data, "sim_liq_density")
-    ranked_vapor_samples = rank_samples(
-        vapor_samples, models["md_liq_density"], data, "sim_liq_density"
-    )  # both l and g compared to liquid density
-
+    ranked_liquid_samples = rank_samples(liquid_samples, models["sim_liq_density"], data, "sim_liq_density")
     # Make a set of the lowest MSE parameter sets
     top_liquid_samples = ranked_liquid_samples[ranked_liquid_samples["mse"] < 625.0]
-    top_vapor_samples = ranked_vapor_samples[ranked_vapor_samples["mse"] < 625.0]
+
+    if vapor_samples is not None:
+        ranked_vapor_samples = rank_samples(vapor_samples, models["sim_liq_density"], data, "sim_liq_density")
+        top_vapor_samples = ranked_vapor_samples[ranked_vapor_samples["mse"] < 625.0]
+    else:
+        top_vapor_samples = None
 
     if verbose:
         print(
@@ -272,16 +289,21 @@ def rank_vl_samples(liquid_samples, vapor_samples, models, data, verbose=True):
             top_liquid_samples.shape[0],
             "liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
         )
-        print(
-            "There are:",
-            top_vapor_samples.shape[0],
-            " vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
-        )
+        if vapor_samples is not None:
+            print(
+                "There are:",
+                top_vapor_samples.shape[0],
+                " vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities",
+            )
     return top_liquid_samples, top_vapor_samples
 
 def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_num, save_fig=False):
     column_names = list(data.param_names)
     objects = {}
+
+    dir_name = f"{root_dir}/iter-{str(iter_num)}/"
+    os.makedirs(dir_name, exist_ok=True)
+    
     for i, sample in enumerate([top_liquid_samples, top_vapor_samples]):
         if i ==0:
             phase = "liq"
@@ -291,15 +313,15 @@ def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_
         g = seaborn.pairplot(sample.drop(columns=["mse"]))
         g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
 
+
         if save_fig:
-            g.savefig(root_dir + f"{phase}_mse_below625.pdf")
+            g.savefig(dir_name + f"{phase}_mse_below625.pdf")
 
         #Drop the mse column for 
         new_sample_params = [sample.drop(columns=["mse"])]
         # Concatenate into a single dataframe and save to CSV
         new_sample_params = pd.concat(new_sample_params)
-        dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
-        os.makedirs(dir_name, exist_ok=True)
+        
         samp_path = os.path.join(dir_name, f"{phase}-params.csv")
         new_sample_params.to_csv(samp_path)
         top_samp = new_sample_params.reset_index(drop=True)
@@ -337,7 +359,7 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
         The dataframe for the next iteration parameters
     """
     target_total = 200
-    final_sample_file = root_dir + "params-iter-" + str(iter_num + 1) + ".csv"
+    final_sample_file = root_dir + "/params-iter-" + str(iter_num + 1) + ".csv"
     # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
     target_num_l = np.minimum(200, len(top_liq))
     target_num_v = target_total - target_num_l
@@ -396,11 +418,11 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
         next_iter_params = pd.concat([top_liq, new_points_v], axis=0)
     return next_iter_params, final_sample_file
 
-def prepare_df_density(df_csv, molecule, liquid_density_threshold):
+def prepare_df_props(df_csv, molecule, liquid_density_threshold):
     """Prepare a pandas dataframe for fitting a GP model to density data
 
     Performs the following actions:
-       - Renames "density" to "md_liq_density"
+       - Renames "density" to "sim_liq_density"
        - Adds "expt_density"
        - Adds "is_liquid"
        - Converts all values from physical values to scaled values
@@ -423,8 +445,13 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
     df_vapor : pd.DataFrame
         `df_all` where `is_liquid` is False
     """
-    if "density" not in df_csv.columns or "surf_tens" not in df_csv.columns:
-        raise ValueError("df_csv must contain column 'density' and 'surf_tens'")
+
+    #Get a list of the column names that do not include sigma, epsilon, or temperature
+    excluded_keywords = ["sigma", "epsilon", "temperature"]
+    filtered_cols = [col for col in df_csv.columns if not any(k in col.lower() for k in excluded_keywords)]
+
+    if "liq_density" not in filtered_cols:
+        raise ValueError("df_csv must contain column 'liq_density'")
     if "temperature" not in df_csv.columns:
         raise ValueError("df_csv must contain column 'temperature'")
     for param in list(molecule.param_names):
@@ -432,21 +459,32 @@ def prepare_df_density(df_csv, molecule, liquid_density_threshold):
             raise ValueError(f"df_csv must contain a column for parameter: '{param}'")
 
     # Add expt density and is_liquid
-    df_all = df_csv.rename(
-        columns={"density": "md_liq_density", "surf_tens": "md_surf_tens"}
-    )
+    df_all = df_csv.rename(columns={"liq_density": "sim_liq_density"})
     df_all["expt_density"] = df_all["temperature"].map(molecule.expt_liq_density)
-    df_all["expt_surf_tens"] = df_all["temperature"].map(molecule.expt_surf_tens)
-    df_all["is_liquid"] = df_all["md_liq_density"] > liquid_density_threshold
-
-    # Scale all values
+    df_all["is_liquid"] = df_all["sim_liq_density"] > liquid_density_threshold
+       
+    # Create scalinf for all values
     scaling_info = {
-        "temperature": molecule.temperature_bounds(),
-        "md_liq_density": molecule.liq_density_bounds,
-        "expt_density": molecule.liq_density_bounds,
-        "md_surf_tens": molecule.surf_tens_bounds,
-        "expt_surf_tens": molecule.surf_tens_bounds,
+    "temperature": molecule.temperature_bounds(),
+    "sim_liq_density": molecule.liq_density_bounds,
+    "expt_density": molecule.liq_density_bounds,}
+
+    # Optional columns and corresponding bounds + expt mappings
+    optional_props = {
+        "surf_tens": ("expt_surf_tens", molecule.surf_tens_bounds, molecule.expt_surf_tens),
+        "Pvap": ("expt_Pvap", molecule.Pvap_bounds, molecule.expt_Pvap),
+        "Hvap": ("expt_Hvap", molecule.Hvap_bounds, molecule.expt_Hvap),
+        "vap_density": ("expt_vap_density", molecule.vap_density_bounds, molecule.expt_vap_density),
     }
+
+    # Add optional columns if they exist
+    for old_col, (expt_col, bounds_func, expt_map) in optional_props.items():
+        if old_col in df_all.columns:
+            sim_col = "sim_" + old_col
+            df_all = df_csv.rename(columns={old_col: sim_col})
+            df_all[expt_col] = df_all["temperature"].map(expt_map)
+            scaling_info[sim_col] = bounds_func
+            scaling_info[expt_col] = bounds_func
 
     # Scale param values
     df_all[list(molecule.param_names)] = values_real_to_scaled(
@@ -530,6 +568,7 @@ def rank_samples(samples, gp_model, molecule, property_name, property_offset=0.0
         "sim_vap_density",
         "sim_Pvap",
         "sim_surf_tens",
+        "sim_Hvap"
     ]
 
     if property_name not in valid_property_names:
@@ -551,6 +590,9 @@ def rank_samples(samples, gp_model, molecule, property_name, property_offset=0.0
     elif property_name == "sim_surf_tens":
         expt_property = molecule.expt_surf_tens
         property_bounds = molecule.surf_tens_bounds
+    elif property_name == "sim_Hvap":
+        expt_property = molecule.expt_Hvap
+        property_bounds = molecule.Hvap_bounds
     print("Property bounds are", property_bounds)
     # Apply GP model and calculate mean squared errors (MSE) between
     # GP model predictions and experimental data for all parameter samples
@@ -598,3 +640,81 @@ def _calc_gp_mse(
         col_idx += 1
 
     return np.mean(all_errs**2, axis=1)
+
+def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv=True):
+    num_mse_less10 = {}
+    
+    for mol_name, df_csv in df_all_molec.items():
+        root_dir = f"analysis/{mol_name}/"
+        iter_type = "dens_iters"
+        molecule = data_dict[mol_name]
+        #Pull the results from all iterations + calculate the MSE
+        df_results = df_csv
+        df_results["expt_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+        df_results["sq_err"] = (df_results["density"] - df_results["expt_density"]) ** 2
+        df_mse = (df_results.groupby(list(molecule.param_names))["sq_err"].mean().reset_index(name="mse"))
+        
+        #Scale the parameter values for the results to compare to the original parameter values
+        scaled_param_values = values_real_to_scaled(df_mse[list(molecule.param_names)], molecule.param_bounds)
+        #Pull all parameter values we have tested
+        df_params = []
+        for i in range(1, df_csv["iter"].max() + 1):
+            param_name_file = os.path.join(root_dir, iter_type, "params-iter-" + str(i) + ".csv")
+            df_params.append(pd.read_csv(param_name_file, index_col=0))
+
+        df_params = pd.concat(df_params).reset_index(drop=True)
+        df_results = df_results.reset_index(drop=True)
+
+        #Match indeces of the scaled values to the original parameter values
+        param_idxs = []
+        param_vals = []
+        # Get the parameter values for the scaled values
+        for params1 in scaled_param_values:
+            for idx, params2 in enumerate(df_params[list(molecule.param_names)].values):
+                if np.allclose(params1, params2):
+                    param_idxs.append(idx)
+                    param_vals.append(params2)
+                    break
+        df_mse["param_idx"] = param_idxs
+        df_mse[list(molecule.param_names)] = param_vals
+
+        top_param_set = df_mse[df_mse["mse"] < 100]
+
+        from numpy.linalg import norm
+
+        target_num_l = target_total
+        zero_array = np.zeros(top_param_set.shape[1])
+        one_array = np.ones(top_param_set.shape[1])
+        ub_array = one_array - zero_array
+
+        lower_bound = 0
+        #IL norm between the highest high parameter space, and lowest low parameter space value
+        upper_bound = norm(ub_array, 1) # This number will be 10, the number of dimensions
+        error_tol = 1e-8
+
+        new_points_vle = top_param_set
+
+        #If we have enough liquid samples, we want to find the distance that will give us the target number of liquid samples
+        if len(top_param_set) >= target_num_l:
+            distance_opt_l,number_points_l = bisection(lower_bound, upper_bound, error_tol, top_param_set, molecule, target_num_l, dist_seed)
+            print('\nRequired Distance for liquid is : %0.8f and there are %0.1f points too many' % (distance_opt_l, number_points_l) )
+            new_points_vle = opt_dist(distance_opt_l, top_param_set, molecule, target_num_l, rand_seed=dist_seed , eval = True)
+            print(len(new_points_vle), "top liquid density points are left after removing similar points using a distance of", np.round(distance_opt_l,5))
+            new_dir = os.path.join(root_dir, "vle-iters")
+            os.makedirs(new_dir, exist_ok=True)
+            out_csv = os.path.join(root_dir, "vle-iters", "params-iter-1.csv")
+        else:
+            #Print total number of top liquid samples
+            print("Total number of top liquid samples is", len(top_param_set))
+            print(top_param_set)
+            #Add this analysis to the dens-iters folder
+            out_csv = os.path.join(root_dir, iter_type, "mse-less10.csv")
+            
+        num_mse_less10[mol_name] = new_points_vle
+        print(f"Number of {mol_name} samples with MSE < 10 kg/m^3 is", len(new_points_vle))
+        if save_csv:
+            new_points_vle.drop(columns=["mse"], inplace=True)
+            new_points_vle.drop(columns=["param_idx"], inplace=True)
+            new_points_vle.to_csv(out_csv)
+
+    return num_mse_less10

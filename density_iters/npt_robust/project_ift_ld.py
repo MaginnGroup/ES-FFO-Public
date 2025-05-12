@@ -233,7 +233,7 @@ def npt_prod_sim(job):
 #Get density from NPT simulations
 @LD_group    
 @Project.pre.after(npt_prod_sim)
-@Project.post(lambda job: "density" in job.doc and "density_unc" in job.doc)
+@Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
 @Project.operation(cmd=False, directives={"omp_num_threads": 8})
 def npt_dens_calc(job):
     import panedr
@@ -265,14 +265,14 @@ def npt_dens_calc(job):
                 )
         std = np.max(np.sqrt(vars_est))
         #Save these values to the job document
-        job.doc["density"] = dens_eq
-        job.doc["density_unc"] = std
+        job.doc["liq_density"] = dens_eq
+        job.doc["liq_density_unc"] = std
 
 
 # Make Interface for simulation
 @IFT_group
 @Project.pre.after(npt_dens_calc)
-@Project.post.isfile("init_inter_eq.gro")
+@Project.post.isfile("init_inter_eq/init_inter_eq.gro")
 @Project.operation(cmd=False, directives={"omp_num_threads": 8})
 def init_inter_eq_sim(job):
     """Run the minimization simulations"""
@@ -383,8 +383,8 @@ def inter_prod_sim(job):
 
 @IFT_group
 @Project.pre.after(inter_prod_sim)
-@Project.post(lambda job: "surf_tens" in job.doc and "ift_dens" in job.doc)
-@Project.post(lambda job: "surf_tens_unc" in job.doc and "ift_dens_unc" in job.doc)
+@Project.post(lambda job: "surf_tens" in job.doc and "ift_liq_dens" in job.doc)
+@Project.post(lambda job: "surf_tens_unc" in job.doc and "ift_liq_dens_unc" in job.doc)
 @Project.operation(directives={"omp_num_threads": 8})
 def calculate_props(job):
     """Calculate the density"""
@@ -401,7 +401,7 @@ def calculate_props(job):
     last_dir = f"../{last_sim_name}/"
  
     get_props = ["Density", "#Surf*SurfTen"]
-    names = ["ift_dens", "surf_tens"]
+    names = ["ift_liq_dens", "surf_tens"]
     #For surface tension and density
     for prop, name in zip(get_props, names):
         ##Use block averaging to calculate the variance of each property
@@ -1735,7 +1735,6 @@ DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
 gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
-continuation            = yes           ; Continuation from NPT equilibration
 
 constraints             = all-bonds
 lincs-order             = 8
@@ -1859,7 +1858,6 @@ DispCorr                 = no        ; account for cut-off vdW scheme
 
 ; Velocity generation
 gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
-continuation            = yes           ; Continuation from NVT equilibration
 
 constraints             = all-bonds
 lincs-order             = 8
