@@ -291,7 +291,7 @@ def init_inter_eq_sim(job):
 
     with job:  
         #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
-        if job.doc.density > job.sp.rho_thresh:
+        if job.doc["liq_density"] > job.sp.rho_thresh:
             #Calculate box lengths from equilibrated NVT
             xy_len, z_len = get_box_coords(job, last_sim_name) 
             xy_cen = round(xy_len / 2, 5)
