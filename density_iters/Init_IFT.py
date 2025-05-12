@@ -130,6 +130,8 @@ def init_project():
                 }
 
                 state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
+                state_point, nmols = calc_nmols(state_point)
+                state_point["nmols"] = nmols
                 # state_point["max_sigma"] = max_sigma
 
                 job = project.open_job(state_point)
