@@ -216,9 +216,6 @@ def npt_prod_comp(job):
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def npt_prod_sim(job):
     import panedr
-    sys.path.append("../../")
-    from block_average.block_average import block_average
-    sys.path.remove("../../")
 
     """Run the equilibration simulations"""
     # Generate the first run
