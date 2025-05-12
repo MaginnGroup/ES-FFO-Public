@@ -19,6 +19,25 @@ from utils.molec_class_files import esolvs
 mol_names = ["R125"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
+def calc_nmols(sp):
+    """
+    Calculate the number of molecules in the system based on the density and box length
+    """
+    nmols = 2000 #Use no fewer than 2000 molecules (8000 particles)
+    density = sp["rho_liq"]
+    #Calculate the box lengths from the system density using 2000 molecules
+    V = (nmols*sp["mol_wt"]*1e27)/(density * 1000* 6.022*1e23)
+    xy_len = (V/sp["aspect_ratio"])**(1/3)
+    
+    #If 2000 molecules is not enough to satisfy xy_len > 13.2*max_sigma
+    if xy_len < 13.2*sp["max_sigma"]:
+        #Calculatue box lengths from system density and 13.2*max_sigma
+        xy_len = 13.2*sp["max_sigma"]
+        new_V = sp["aspect_ratio"]*xy_len**3
+        #Calculate the number of molecules from the new volume and the given density
+        nmols = int(np.floor(density*1000*6.022*1e23*new_V/(sp["mol_wt"]*1e27)))
+
+    return sp, nmols
 
 def unpack_molec_values(class_data, state_point, sample):
     """
