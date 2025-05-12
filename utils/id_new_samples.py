@@ -263,6 +263,7 @@ def rank_vle_samples(all_samples, models, data, verbose=True):
     viable_samples = top_liquid_samples.drop(columns="mse")
 
     # Calculate other properties
+    
     vle_predicted_mses = {prop: rank_samples(viable_samples, model, data, prop) for prop, model in models.items()}
     for prop, df in vle_predicted_mses.items():
         vle_predicted_mses[prop] = df.rename(columns={"mse": f"mse_{prop}"})
@@ -417,6 +418,41 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
             )
         next_iter_params = pd.concat([top_liq, new_points_v], axis=0)
     return next_iter_params, final_sample_file
+
+
+def get_next_vle_params(top_liq, data, root_dir, iter_num, target_total=25, dist_seed=1, verbose=True):
+    final_sample_file = root_dir + "/params-iter-" + str(iter_num + 1) + ".csv"
+    # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
+    target_num_l = target_total
+    zero_array = np.zeros(top_liq.shape[1])
+    one_array = np.ones(top_liq.shape[1])
+    ub_array = one_array - zero_array
+
+    # lower_bound = 1e-8
+    lower_bound = 0
+    # IL norm between the highest high parameter space, and lowest low parameter space value
+    upper_bound = norm(ub_array, 1)  # This number will be 10, the number of dimensions
+    error_tol = 1e-8
+
+    distance_opt_l, number_points_l = bisection(lower_bound, upper_bound, error_tol, top_liq, data, target_num_l, dist_seed)
+    new_points_l = opt_dist(distance_opt_l, top_liq, data, target_num_l, rand_seed=dist_seed, eval=True)
+    if verbose:
+        print(
+            "\nRequired Distance for liquid is : %0.8f and there are %0.1f points too many"
+            % (distance_opt_l, number_points_l)
+        )
+
+    new_points_l.drop(
+    columns=[
+        "mse_liq_density",
+        "mse_vap_density",
+        "mse_Pvap",
+        "mse_Hvap",
+        "is_pareto",
+    ],
+    inplace=True,)
+
+    return new_points_l, final_sample_file
 
 def prepare_df_props(df_csv, molecule, liquid_density_threshold):
     """Prepare a pandas dataframe for fitting a GP model to density data

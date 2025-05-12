@@ -14,7 +14,7 @@ from utils.id_new_samples import (
     vis_top_samples,
     get_next_iter_params,
     classify_samples,
-    prepare_df_density, rank_vle_samples
+    prepare_df_density, rank_vle_samples, get_next_vle_params
 )
 from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
 from utils.plotfig_gp_examples import fit_gp_models, plot_gp_slices, plot_test_sets
@@ -119,6 +119,7 @@ def save_signac_results(all_data_dict, iter_type = "dens_iters", save_csv=True):
 def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, cl_shuffle_seed = 1, gp_shuffle_seed = 42, dist_seed = 1):
 
     max_mse = 25**2 #(kg/m^3)^2
+    target_total = 25
     #Loop over all molecules:
     next_iter_params_all = {}
     for mol_name, df_csv in all_df_data.items():
@@ -131,7 +132,7 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, cl_s
         df_iter1, df_liquid, root_dir = prep_df_density(mol_name, data, df_csv)
 
         #Get LD root directory
-        root_dir_ld = os.path.join(root_dir, iter_type)
+        root_dir_vle = os.path.join(root_dir, iter_type)
 
         ### Fit GP Model
         models = fit_gp_model(df_liquid, data, gp_shuffle_seed=gp_shuffle_seed)
@@ -152,12 +153,24 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, cl_s
         vle_samples.drop(columns=list(data.param_names)).values, is_pareto_efficient)
         vle_samples = vle_samples.join(pd.DataFrame(result, columns=["is_pareto"]))
 
-        pareto_points = vle_mses[vle_mses["is_pareto"] == True]
+        pareto_points = vle_samples[vle_samples["is_pareto"] == True]
+
+        # Create the directory if it doesn't exist
+        dir_name = os.path.join(root_dir_vle , "iter-" + str(iter_num) )
+        os.makedirs(dir_name, exist_ok=True)
+        file_name = os.path.join(dir_name , "pareto-params.csv")
+        pareto_points.to_csv(file_name)
         print(f"A total of {len(pareto_points)} pareto efficient points were found.")
 
-        #### Get next set of 200 samples
-        target_total = 200
-        next_iter_params, final_sample_file = get_next_iter_params(top_liq, top_vap, data, root_dir_ld, iter_num, target_total, dist_seed, verbose)
+        # Get the best row for each property from pareto_points
+        mse_columns = [col for col in pareto_points.columns if "mse" in col]
+        best_vals = [pareto_points.sort_values(col).iloc[[0]] for col in mse_columns]
+        new_points = pd.concat(best_vals)
+
+        # Drop the selected points from pareto_points to ensure new samples are selected
+        pareto_points.drop(index=new_points.index, inplace=True)
+
+        next_iter_params, final_sample_file = get_next_vle_params(pareto_points, data, root_dir_vle, iter_num, target_total, dist_seed, verbose)
         next_iter_params.to_csv(final_sample_file)
         next_iter_params_all[mol_name] = next_iter_params
     return next_iter_params_all
@@ -204,35 +217,35 @@ def find_new_samples(all_df_data, data_dict, verbose = True, save_fig=False, cl_
         next_iter_params_all[mol_name] = next_iter_params
     return next_iter_params_all
 
-def find_pareto(all_df_data):
-    #Loop over all molecules:
-    all_final_params = {}
-    for mol_name, df_csv in all_df_data.items():
-        root_dir = f"analysis/{mol_name}/"
-        #Get all data from last iteration
-        # df_csv = all_df_data[mol_name]
-        iter_num = df_csv["iter"].max()
+# def find_pareto(all_df_data):
+#     #Loop over all molecules:
+#     all_final_params = {}
+#     for mol_name, df_csv in all_df_data.items():
+#         root_dir = f"analysis/{mol_name}/"
+#         #Get all data from last iteration
+#         # df_csv = all_df_data[mol_name]
+#         iter_num = df_csv["iter"].max()
 
-        df_
+#         df_
 
-        #Prepare error data to find pareto points
-        df_paramsets = prepare_df_dens_errors(df_this_iter, mol_name, root_dir, iter_num)
-        result, pareto_points, dominated_points = find_pareto_set(
-            df_paramsets.filter(["mse_liq_density", "mse_surf_tens"]).values,
-            is_pareto_efficient
-        )
+#         #Prepare error data to find pareto points
+#         df_paramsets = prepare_df_dens_errors(df_this_iter, mol_name, root_dir, iter_num)
+#         result, pareto_points, dominated_points = find_pareto_set(
+#             df_paramsets.filter(["mse_liq_density", "mse_surf_tens"]).values,
+#             is_pareto_efficient
+#         )
         
-        df_paramsets = df_paramsets.join(pd.DataFrame(result, columns=["is_pareto"]))
+#         df_paramsets = df_paramsets.join(pd.DataFrame(result, columns=["is_pareto"]))
 
-        dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
-        # Create the directory if it doesn't exist
-        os.makedirs(dir_name, exist_ok=True)
-        file_name = os.path.join(dir_name , "pareto-params.csv")
-        df_paramsets[df_paramsets["is_pareto"] == True].to_csv(file_name)
+#         dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+#         # Create the directory if it doesn't exist
+#         os.makedirs(dir_name, exist_ok=True)
+#         file_name = os.path.join(dir_name , "pareto-params.csv")
+#         df_paramsets[df_paramsets["is_pareto"] == True].to_csv(file_name)
 
-        df_final = select_final_pareto(df_paramsets, root_dir, iter_num)
-    all_final_params[mol_name] = df_final
-    return all_final_params
+#         df_final = select_final_pareto(df_paramsets, root_dir, iter_num)
+#     all_final_params[mol_name] = df_final
+#     return all_final_params
 
 def plot_gp_examples(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffle_seed = 42, save_fig=False):
     #Get all data
