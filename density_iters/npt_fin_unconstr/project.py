@@ -27,6 +27,7 @@ LD_group = Project.make_group(name = "LD")
 IFT_group = Project.make_group(name = "IFT")
 
 @LD_group
+@IFT_group
 @Project.post.isfile("ff.xml")
 @Project.operation
 def create_forcefield(job):
@@ -40,6 +41,7 @@ def create_forcefield(job):
 
 #Create FF
 @LD_group
+@IFT_group
 @Project.pre.after(create_forcefield)
 @Project.post.isfile("system.gro")
 @Project.post.isfile("unedited.top")
@@ -82,6 +84,7 @@ def create_system(job):
 
 #Create System
 @LD_group
+@IFT_group
 @Project.pre.after(create_system)
 @Project.post.isfile("system.top")
 @Project.operation
@@ -117,6 +120,7 @@ def em_complete(job):
         return False
 
 @LD_group
+@IFT_group
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.post(em_complete)
@@ -145,6 +149,7 @@ def nvt_eq_comp(job):
         return False
 
 @LD_group
+@IFT_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
@@ -171,7 +176,8 @@ def npt_eq_comp(job):
     else:
         return False
 
-@LD_group    
+@LD_group
+@IFT_group    
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
@@ -203,7 +209,8 @@ def npt_prod_comp(job):
     else:
         return False
     
-@LD_group    
+@LD_group
+@IFT_group    
 @Project.pre.after(npt_eq_sim)
 @Project.post(npt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
@@ -231,7 +238,8 @@ def npt_prod_sim(job):
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
 #Get density from NPT simulations
-@LD_group    
+@LD_group
+@IFT_group    
 @Project.pre.after(npt_prod_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
 @Project.operation(cmd=False, directives={"omp_num_threads": 8})

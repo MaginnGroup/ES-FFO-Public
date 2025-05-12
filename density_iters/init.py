@@ -23,12 +23,19 @@ def calc_nmols(sp):
     """
     Calculate the number of molecules in the system based on the density and box length
     """
+    nmols = 2000 #Use no fewer than 2000 molecules (8000 particles)
     density = sp["rho_liq"]
-    #Calculatue box lengths from system density and 2.5*cutoff (3.0 = 2.5*1.2 A)
-    xy_len = 3.0
-    new_V = sp["aspect_ratio"]*xy_len**3
-    #Calculate the number of molecules from the new volume and the given density
-    nmols = int(np.floor(density*1000*6.022*1e23*new_V/(sp["mol_wt"]*1e27)))
+    #Calculate the box lengths from the system density using 2000 molecules
+    V = (nmols*sp["mol_wt"]*1e27)/(density * 1000* 6.022*1e23)
+    xy_len = (V/sp["aspect_ratio"])**(1/3)
+    
+    #If 2000 molecules is not enough to satisfy xy_len > 13.2*max_sigma
+    if xy_len < 13.2*sp["max_sigma"]:
+        #Calculatue box lengths from system density and 13.2*max_sigma
+        xy_len = 13.2*sp["max_sigma"]
+        new_V = sp["aspect_ratio"]*xy_len**3
+        #Calculate the number of molecules from the new volume and the given density
+        nmols = int(np.floor(density*1000*6.022*1e23*new_V/(sp["mol_wt"]*1e27)))
 
     return sp, nmols
 
@@ -69,8 +76,8 @@ def determine_density_iter(molec_name):
 
 
 nsteps_nvt_eq = 100000  # 100ps
-nsteps_npzzat_eq = 5000000  # 5 ns
-nsteps_npzzat_prod = 10000000  # 10 ns
+nsteps_npzzat_eq = 500000 #5000000  # 5 ns
+nsteps_npzzat_prod = 2500000 #10000000  # 10 ns
 nsteps_fl_eq = 100000  # 100ps
 nsteps_npt_pre_eq = 500000  # 500ps
 nsteps_npt_eq = 500000  # 500ps (minimum)
@@ -91,7 +98,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_fin_constr")
+        project = signac.init_project("npzzat_fin_constr")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -130,12 +137,12 @@ def init_project():
                     # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    # "nsteps_npzzat_prod": nsteps_npzzat_prod,
+                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    "nsteps_npt_eq": nsteps_npt_eq,
-                    "nsteps_npt_prod": nsteps_npt_prod,
+                    # "nsteps_npt_eq": nsteps_npt_eq,
+                    # "nsteps_npt_prod": nsteps_npt_prod,
                     # "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
@@ -143,6 +150,8 @@ def init_project():
                 }
 
                 state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
+                state_point, nmols = calc_nmols(state_point)
+                state_point["nmols"] = nmols
                 # state_point["max_sigma"] = max_sigma
 
                 job = project.open_job(state_point)
