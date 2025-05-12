@@ -19,6 +19,19 @@ from utils.molec_class_files import esolvs
 mol_names = ["R125"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
+def calc_nmols(sp):
+    """
+    Calculate the number of molecules in the system based on the density and box length
+    """
+    density = sp["rho_liq"]
+    #Calculatue box lengths from system density and 2.5*cutoff (3.0 = 2.5*1.2 A)
+    xy_len = 3.0
+    new_V = sp["aspect_ratio"]*xy_len**3
+    #Calculate the number of molecules from the new volume and the given density
+    nmols = int(np.floor(density*1000*6.022*1e23*new_V/(sp["mol_wt"]*1e27)))
+
+    return sp, nmols
+
 
 def unpack_molec_values(class_data, state_point, sample):
     """
@@ -65,8 +78,8 @@ nsteps_npt_prod = 2500000  # 2.5 ns
 nsteps_nvt_prod = 100000  # 100 ps
 nsteps_intereq = 30000000  # 15 ns (minimum)
 nsteps_interprod = 40000000  # 30 ns
-n_particles = 10000  # Number of particles in the system
-nmols = 1000  # Number of molecules in the system
+# n_particles = 10000  # Number of particles in the system
+# nmols = 1000  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
 
 
@@ -78,7 +91,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_robust")
+        project = signac.init_project("npt_fin_constr")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
