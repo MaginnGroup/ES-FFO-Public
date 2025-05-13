@@ -96,7 +96,7 @@ def get_signac_results(project, data_dict, prop_names):
 
     return all_data_dict
 
-def save_signac_results(all_data_dict, iter_type = "dens_iters", save_csv=True):
+def save_signac_results(all_data_dict, iter_type = "ld_iters", save_csv=True):
     #Loop over all molecules
     for mol_name, all_data_df in all_data_dict.items():
         #Save all data to one file for easy access
@@ -180,7 +180,7 @@ def find_new_samples(all_df_data, data_dict, verbose = True, save_fig=False, cl_
         data = data_dict[mol_name]
         # df_csv = all_df_data[mol_name]
         iter_num = df_csv["iter"].max()
-        iter_type = "dens_iters"
+        iter_type = "ld_iters"
 
         ### Step 1: Prepare df_density
         df_iter1, df_liquid, root_dir = prep_df_density(mol_name, data, df_csv)
@@ -250,7 +250,7 @@ def find_pareto(all_df_data, data_dict):
     all_final_params[mol_name] = df_final
     return all_final_params
 
-def get_best_models(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffle_seed = 42, save_fig=False):
+def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
     #Get all data
     models_molecs = {}
     for mol_name, df_csv in all_df_data.items():
@@ -288,7 +288,7 @@ def get_best_models(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffle
 
     return models_molecs
 
-def plot_gp_examples(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffle_seed = 42, save_fig=False):
+def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
     #Get all data
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]

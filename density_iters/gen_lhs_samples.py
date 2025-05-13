@@ -24,7 +24,7 @@ for n in [200, 500000]:  # Number of points to generate
         lhs_samples.columns = list(class_data.param_names)
         os.makedirs("analysis/" + molec_name, exist_ok=True)
         if n == 200:
-            filename = "analysis/" + molec_name + "/params-iter-1.csv"
+            filename = f"analysis/{molec_name}/ld_iters/params-iter-1.csv"
         else:
             filename = "analysis/" + molec_name + "/LHS_500000.csv"
         lhs_samples.to_csv(filename, index=True)

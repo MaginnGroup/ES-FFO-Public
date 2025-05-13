@@ -160,7 +160,7 @@ def bisection(
     return final_distance, final_eval - target_num
 
 
-def prep_df_density(mol_name, data, df_csv, iter_type = "dens_iters"):
+def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
     """
     Prepare the density dataframe for a given molecule.
 
@@ -687,7 +687,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
     
     for mol_name, df_csv in df_all_molec.items():
         root_dir = f"analysis/{mol_name}/"
-        iter_type = "dens_iters"
+        iter_type = "ld_iters"
         molecule = data_dict[mol_name]
         #Pull the results from all iterations + calculate the MSE
         df_results = df_csv

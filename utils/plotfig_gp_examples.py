@@ -2,11 +2,12 @@ import sys
 import gpflow
 import numpy as np
 import gpflow
+import matplotlib.pyplot as plt
 
 # sys.path.append("../")
 
 from fffit.fffit.models import run_gpflow_scipy
-from fffit.fffit.utils import shuffle_and_split
+from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real
 
 from fffit.fffit.plot import (
     plot_model_performance,
@@ -99,6 +100,74 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
             
     return models, x_train, y_train, x_test, y_test
 
+def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=None, save_fig=False):
+    """Plot the predictions vs. result for one or more GP models
+
+    Parameters
+    ----------
+    models : dict { label : model }
+        Each model to be plotted (value, GPFlow model) is provided
+        with a label (key, string)
+    x_data : np.array
+        data to create model predictions for
+    y_data : np.ndarray
+        correct answer
+    property_bounds : array-like
+        bounds for scaling density between physical
+        and dimensionless values
+    xylim : array-like, shape=(2,), optional
+        lower and upper x and y limits of the plot
+
+    Returns
+    -------
+    matplotlib.Figure.figure
+    """
+    y_data_physical = values_scaled_to_real(y_data, property_bounds)
+    min_xylim = np.min(y_data_physical)
+    max_xylim = np.max(y_data_physical)
+
+    fig, ax = plt.subplots()
+
+    mse_min = np.inf
+    mse_model = None
+    for (label, model) in models.items():
+        gp_mu, gp_var = model.predict_f(x_data)
+        gp_mu_physical = values_scaled_to_real(gp_mu, property_bounds)
+        ax.scatter(y_data_physical, gp_mu_physical, label=label, zorder=2.5, alpha=0.4)
+        meansqerr = np.mean(
+            (gp_mu_physical - y_data_physical.reshape(-1, 1)) ** 2
+        )
+        if meansqerr < mse_min:
+            mse_min = meansqerr
+            mse_model = model
+        print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
+        if np.min(gp_mu_physical) < min_xylim:
+            min_xylim = np.min(gp_mu_physical)
+        if np.max(gp_mu_physical) > max_xylim:
+            max_xylim = np.max(gp_mu_physical)
+
+    if xylim is None:
+        xylim = [min_xylim, max_xylim]
+
+    ax.plot(
+        np.arange(xylim[0], xylim[1] + 100, 100),
+        np.arange(xylim[0], xylim[1] + 100, 100),
+        color="xkcd:blue grey",
+        label="y=x",
+    )
+
+    ax.set_xlim(xylim[0], xylim[1])
+    ax.set_ylim(xylim[0], xylim[1])
+    ax.set_xlabel("Actual")
+    ax.set_ylabel("Model Prediction")
+    ax.legend()
+    ax.set_aspect("equal", "box")
+
+    if save_fig:
+        pdf.savefig(fig)
+
+    return mse_model
+    
 def plot_gp_slices(models, data, property_name, pdf):
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
     # Plot temperature slices
