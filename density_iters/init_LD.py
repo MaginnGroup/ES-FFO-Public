@@ -24,7 +24,7 @@ def calc_nmols(sp):
     Calculate the number of molecules in the system based on the density and box length
     """
     density = sp["rho_liq"]
-    #Calculatue box lengths from system density and 3.0*cutoff (3.7 = 3.0*1.2 A)
+    #Calculatue box lengths from system density and 3.0*cutoff (3.6 = 3.0*1.2 A)
     xy_len = 3.6
     new_V = sp["aspect_ratio"]*xy_len**3
     #Calculate the number of molecules from the new volume and the given density
@@ -91,7 +91,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_fin_unconstr")
+        project = signac.init_project("ld_iters")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
