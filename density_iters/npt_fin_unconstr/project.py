@@ -249,6 +249,7 @@ def npt_dens_calc(job):
     sim_name = "calc_props"
     last_sim_name = "npt_prod"
     os.makedirs(job.fn(sim_name), exist_ok=True)
+    property = "Density"
 
     with job:  
         from_file = job.fn(f"{last_sim_name}/{last_sim_name}" + ".edr")
