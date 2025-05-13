@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
+import pickle
 
 # sys.path.append("../")
 from utils.id_new_samples import (
@@ -17,7 +18,7 @@ from utils.id_new_samples import (
     prepare_df_density, rank_vle_samples, get_next_vle_params, prepare_df_props
 )
 from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
-from utils.plotfig_gp_examples import fit_gp_models, plot_gp_slices, plot_test_sets
+from utils.plotfig_gp_examples import fit_gp_models, plot_gp_slices, plot_test_sets, get_exp_data, plot_model_performance
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
 
 def get_signac_results(project, data_dict, prop_names):
@@ -127,9 +128,11 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_s
         # df_csv = all_df_data[mol_name]
         iter_num = df_csv["iter"].max()
         iter_type = "vle_iters"
+        ld_threshold = 0
+        root_dir = f"analysis/{mol_name}/"
 
         ### Step 1: Prepare df_density
-        df_iter1, df_liquid, root_dir = prep_df_density(mol_name, data, df_csv)
+        df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
 
         #Get LD root directory
         root_dir_vle = os.path.join(root_dir, iter_type)
@@ -247,6 +250,44 @@ def find_pareto(all_df_data, data_dict):
     all_final_params[mol_name] = df_final
     return all_final_params
 
+def get_best_models(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffle_seed = 42, save_fig=False):
+    #Get all data
+    models_molecs = {}
+    for mol_name, df_csv in all_df_data.items():
+        data = data_dict[mol_name]
+        ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
+        # df_csv = all_df_data[mol_name]
+        iter_num = df_csv["iter"].max()
+
+        dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
+        os.makedirs(dir_name, exist_ok=True)
+        if save_fig:
+            pdf_name = os.path.join(dir_name , "fig_gp_examples.pdf")
+            pdf = PdfPages(pdf_name)
+        else:
+            pdf = None
+
+        df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
+
+        models_props = {}
+        property_names = ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
+        # Get the property names from the data
+        for prop_name in property_names:
+            #Make GP models for each property that exists
+            if prop_name in df_liq.columns:
+                models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig = False)
+                exp_data, property_bounds, name = get_exp_data(data, prop_name)
+                model_best = plot_model_performance(models, x_test, y_test, property_bounds, pdf, save_fig)
+                models_props[prop_name] = model_best
+
+        models_molecs[mol_name] = models_props
+
+    dir2 = f"analysis/all_mols/{iter_type}/iter-{str(iter_num)}"
+    with open(dir2 + "/gp_models.pkl", "wb") as f:
+        pickle.dump(models_molecs, f)
+
+    return models_molecs
+
 def plot_gp_examples(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffle_seed = 42, save_fig=False):
     #Get all data
     for mol_name, df_csv in all_df_data.items():
@@ -260,18 +301,20 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "dens_iters", gp_shuffl
         pdf_name = os.path.join(dir_name , "fig_gp_examples.pdf")
         pdf = PdfPages(pdf_name)
 
-        df_all, df_liq, df_vap = prepare_df_density(df_csv, data, ld_threshold)
+        df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
 
-        models = None
         property_names = ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
         # Get the property names from the data
         for prop_name in property_names:
             #Make GP models for each property that exists
             if prop_name in df_liq.columns:
                 models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig)
+                exp_data, property_bounds, name = get_exp_data(data, prop_name)
+                model_best = plot_model_performance(models, x_test, y_test, property_bounds, pdf, xylim=None, save_fig=False)
+                with open(dir_name + "/gp_models.pkl", "wb") as f:
+                    pickle.dump(model_best, f)
                 plot_gp_slices(models, data, prop_name, pdf)
                 if len(x_test) > 0:
                     plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
 
         pdf.close()
-    return models
