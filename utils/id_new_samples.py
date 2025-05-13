@@ -493,6 +493,11 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold):
     for param in list(molecule.param_names):
         if param not in df_csv.columns:
             raise ValueError(f"df_csv must contain a column for parameter: '{param}'")
+        
+    if "vap_enthalpy" in df_csv.columns:
+        df_all.drop(columns="vap_enthalpy", inplace=True)
+    if "liq_enthalpy" in df_csv.columns:
+        df_all.drop(columns="liq_enthalpy", inplace=True)
 
     # Add expt density and is_liquid
     df_all = df_csv.rename(columns={"liq_density": "sim_liq_density"})
