@@ -6,6 +6,7 @@ import pandas as pd
 import sys
 import glob
 import os
+import pickle
 
 sys.path.append("../")
 from utils.molec_class_files import esolvs
@@ -61,17 +62,42 @@ def unpack_molec_values(class_data, state_point, sample):
     return state_point, max_sigma
 
 
-def determine_density_iter(molec_name):
+def determine_iter(molec_name):
     # Check the analysis folder for analysis/MolName/density-iter-X folders
     # Find the highest density-iter-X folder
-    files = sorted(glob.glob("analysis/" + molec_name + "/params-iter-*.csv"))
+    files = sorted(glob.glob("analysis/" + molec_name + "/vle_iters/params-iter-*.csv"))
     if len(files) == 0:
-        dens_iter = 1
+        iter = 1
     else:
         # Get the highest density-iter-X folder from the last character of the last file minus the .csv part
         base = os.path.splitext(os.path.basename(files[-1]))[0]
-        dens_iter = base[-1]
-    return dens_iter
+        iter = base[-1]
+    return iter
+
+def get_gp_models(molec_name, vle_iter_num):
+    #For the 1st VLE iteration, load the GP models from the LD iterations
+    if vle_iter_num == 1:
+        files = sorted(glob.glob(f"analysis/{molec_name}/ld_iters/iter-*/gp_models.pkl"))
+    #For all other VLE iterations, load the GP models from the VLE iterations
+    else:
+        files = sorted(glob.glob(f"analysis/{molec_name}/vle_iters/iter-*/gp_models.pkl"))
+    #Load the last file (most recent)
+    with open(files[-1], "rb") as f:
+        gp_model = pickle.load(f)
+        ld_model = gp_model["sim_liq_density"]
+    return ld_model
+
+def get_ld_est(gp_model, temps, samples):
+    #Get the LD estimate for the given molecule
+    samples_repeat = samples.loc[np.repeat(samples.index, len(temps))].reset_index(drop=True)
+    # Add temperature column
+    samples_repeat["temperature"] = temps * len(samples_repeat)
+    #Order the samples by temperature then by the rest of the parameters
+    samples_repeat = samples_repeat.sort_values(by=["temperature"])
+    # Get the LD estimate
+    samples_array = samples_repeat.to_numpy()
+    ld_est = gp_model.predict(samples_array).reshape(len(temps), len(samples))
+    return ld_est
 
 
 nsteps_nvt_eq = 100000  # 100ps
@@ -94,37 +120,42 @@ def init_project():
     for molec_name, molec_data in molec_dict.items():
         # Determine Density iter based off of the analysis folder
         # For now use dens-iter = 1
-        dens_iter = determine_density_iter(molec_name)
+        vle_iter = determine_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_robust")
+        project = signac.init_project("vle_iters")
 
         # Load samples from the vle iteration folder
         bounds = molec_data.param_bounds
-        lhs_samples = pd.read_csv(
-            "analysis/" + molec_name + "/vle_iters/params-iter-" + str(dens_iter) + ".csv",
+        new_samples = pd.read_csv(
+            "analysis/" + molec_name + "/vle_iters/params-iter-" + str(vle_iter) + ".csv",
             index_col=0,
         )
-        # Convert scaled latin hypercube samples to physical values
-        scaled_params = values_scaled_to_real(lhs_samples, bounds)
+
+        # Define temps (from constants files)
+        temps = list(molec_data.expt_Pvap.keys())
+
+        # Load the GP models for the given molecule and get the LD estimates
+        ld_model = get_gp_models(molec_name, vle_iter)
+        ld_estimates = get_ld_est(ld_model, temps, new_samples)
+
+        # Convert scaled samples to physical values
+        scaled_params = values_scaled_to_real(new_samples, bounds)
         #Make the GAFF param_set (test)
         scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
         scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
         # nmols = int(n_particles/molec_data.n_atoms) #Number of molecules in the system
-        # Define temps (from constants files)
-        temps = list(molec_data.expt_Pvap.keys())
-        for temp in [temps[-3]]:
-            liq_density = molec_data.expt_liq_density[temp]
-            vap_density = molec_data.expt_vap_density[temp]
+        for i, temp in enumerate([temps[-3]]):
             max_vd = molec_data.expt_vap_density[max(temps)]
             min_ld = molec_data.expt_liq_density[max(temps)]
             rho_thresh = (max_vd + min_ld)/2.0
-            rho_avg = (liq_density + vap_density) / 2.0
-            for sample in scaled_params[0].reshape(1, -1):
+            for j, sample in enumerate(scaled_params[0].reshape(1, -1)):
+                #Get the LD estimate for the given sample
+                liq_density = ld_estimates[i,j]
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
-                    "iter": dens_iter,
+                    "iter": iter,
                     "smiles": molec_data.smiles_str,
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
@@ -146,7 +177,7 @@ def init_project():
                     "nsteps_interprod": nsteps_interprod,
                     "max_sigma" : np.max(molec_data.bounds_sig)
                 }
-
+                #Calculate the number of molecules in the system based on the density and box length (defined by max_sigma)
                 state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
                 state_point, nmols = calc_nmols(state_point)
                 state_point["nmols"] = nmols
