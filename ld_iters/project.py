@@ -124,7 +124,7 @@ def em_complete(job):
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.post(em_complete)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
+@Project.operation(with_job=True, cmd=False)
 def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
@@ -152,7 +152,7 @@ def nvt_eq_comp(job):
 @IFT_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
+@Project.operation(with_job=True, cmd=False)
 def nvt_eq_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq"
@@ -180,7 +180,7 @@ def npzzat_eq_comp(job):
 @IFT_group    
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
+@Project.operation(with_job=True, cmd=False)
 def npzzat_eq_sim(job):
     import panedr
 
@@ -213,7 +213,7 @@ def npzzat_prod_comp(job):
 @IFT_group    
 @Project.pre.after(npzzat_eq_sim)
 @Project.post(npzzat_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
+@Project.operation(with_job=True, cmd=False)
 def npzzat_prod_sim(job):
     import panedr
 
@@ -239,7 +239,7 @@ def npzzat_prod_sim(job):
 @IFT_group    
 @Project.pre.after(npzzat_prod_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
-@Project.operation(cmd=False, directives={"omp_num_threads": 1})
+@Project.operation(cmd=False)
 def npzzat_dens_calc(job):
     import panedr
     sys.path.append("../../")
