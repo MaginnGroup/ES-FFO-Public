@@ -124,7 +124,7 @@ def em_complete(job):
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.post(em_complete)
-@Project.operation(with_job=True, cmd=False)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
@@ -152,7 +152,7 @@ def nvt_eq_comp(job):
 @IFT_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
-@Project.operation(with_job=True, cmd=False)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def nvt_eq_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq"
@@ -170,8 +170,8 @@ def nvt_eq_sim(job):
 
 # Long Equilibration NPT
 @Project.label
-def npzzat_eq_comp(job):
-    if "npzzat_eq_fin" in job.doc:
+def npt_eq_comp(job):
+    if "npt_eq_fin" in job.doc:
         return True
     else:
         return False
@@ -179,57 +179,57 @@ def npzzat_eq_comp(job):
 @LD_group
 @IFT_group    
 @Project.pre.after(nvt_eq_sim)
-@Project.post(npzzat_eq_comp)
-@Project.operation(with_job=True, cmd=False)
-def npzzat_eq_sim(job):
+@Project.post(npt_eq_comp)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
+def npt_eq_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
     # Generate the first run
-    sim_name = "npzzat_eq"
+    sim_name = "npt_eq"
     last_sim_name = "nvt_eq"
     property = "Density"
 
-    os.makedirs(job.fn("npzzat_eq"), exist_ok=True)
+    os.makedirs(job.fn("npt_eq"), exist_ok=True)
 
-    if not job.isfile("npzzat_eq/npzzat_eq.mdp"):
+    if not job.isfile("npt_eq/npt_eq.mdp"):
         with job:
-            content = _generate_npzzat_eq_mdp(job)
+            content = _generate_npt_eq_mdp(job)
 
-            with open(job.fn("npzzat_eq/npzzat_eq.mdp"), "w") as inp:
+            with open(job.fn("npt_eq/npt_eq.mdp"), "w") as inp:
                 inp.write(content)
 
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
 # Long Production NPT
 @Project.label
-def npzzat_prod_comp(job):
-    if "npzzat_prod_fin" in job.doc:
+def npt_prod_comp(job):
+    if "npt_prod_fin" in job.doc:
         return True
     else:
         return False
     
 @LD_group
 @IFT_group    
-@Project.pre.after(npzzat_eq_sim)
-@Project.post(npzzat_prod_comp)
-@Project.operation(with_job=True, cmd=False)
-def npzzat_prod_sim(job):
+@Project.pre.after(npt_eq_sim)
+@Project.post(npt_prod_comp)
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
+def npt_prod_sim(job):
     import panedr
 
     """Run the equilibration simulations"""
     # Generate the first run
-    sim_name = "npzzat_prod"
-    last_sim_name = "npzzat_eq"
+    sim_name = "npt_prod"
+    last_sim_name = "npt_eq"
     property = "Density"
 
-    os.makedirs(job.fn("npzzat_prod"), exist_ok=True)
+    os.makedirs(job.fn("npt_prod"), exist_ok=True)
 
-    if not job.isfile("npzzat_prod/npzzat_prod.mdp"):
+    if not job.isfile("npt_prod/npt_prod.mdp"):
         with job:
-            content = _generate_npzzat_prod_mdp(job)
+            content = _generate_npt_prod_mdp(job)
 
-            with open(job.fn("npzzat_prod/npzzat_prod.mdp"), "w") as inp:
+            with open(job.fn("npt_prod/npt_prod.mdp"), "w") as inp:
                 inp.write(content)
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
@@ -237,17 +237,17 @@ def npzzat_prod_sim(job):
 #Get density from NPT simulations
 @LD_group
 @IFT_group    
-@Project.pre.after(npzzat_prod_sim)
+@Project.pre.after(npt_prod_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
-@Project.operation(cmd=False)
-def npzzat_dens_calc(job):
+@Project.operation(cmd=False, directives={"omp_num_threads": 1})
+def npt_dens_calc(job):
     import panedr
     sys.path.append("../../")
     from block_average.block_average import block_average
     sys.path.remove("../../")
 
     sim_name = "calc_props"
-    last_sim_name = "npzzat_prod"
+    last_sim_name = "npt_prod"
     os.makedirs(job.fn(sim_name), exist_ok=True)
     property = "Density"
 
@@ -1261,8 +1261,8 @@ gen-seed	            = -1		    ; generate a random seed
 
     return contents
 
-def _generate_npzzat_eq_mdp(job):
-    # Use 5000000 (5 ns) for the first equilibration
+def _generate_npt_eq_mdp(job):
+    # Use 500000 (500 ps) for the first equilibration
     contents = """
 ; MDP file for NPT simulation
 
@@ -1274,8 +1274,8 @@ dt		                = 0.001		    ; 1 fs
 ; Output control
 nstxout-compressed      = 1000        ; save compressed coordinates every 1.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 1000		    ; save energies every 1.0 ps
-nstlog		            = 1000		    ; update log file every 1.0 ps
+nstenergy	            = 1000		    ; save energies every 0.1 ps
+nstlog		            = 1000		    ; update log file every 0.1 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
@@ -1298,17 +1298,16 @@ ewald-rtol              = 1e-5
 ; Temperature coupling is on
 tcoupl		            = v-rescale     ; modified Berendsen thermostat
 tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.5	  		; time constant, in ps
+tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is on
-
-pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT ; berendsen
-pcoupltype              = semiisotropic             ; uniform scaling of box vectors
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
 tau_p                   = 2.0                   ; time constant, in ps
-ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 0 4.5e-5
-nstpcouple              = 5
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
 ;refcoord_scaling       = com
 
 ; Periodic boundary conditions
@@ -1318,15 +1317,15 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
-gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_eq
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt_eq
     )
 
     return contents
 
-def _generate_npzzat_prod_mdp(job):
-    # Use 10000000 (10 ns) for the first equilibration
+def _generate_npt_prod_mdp(job):
+    # Use 10000000 (10 ns) for the production NPT
     contents = """
 ; MDP file for NPT simulation
 
@@ -1362,17 +1361,16 @@ ewald-rtol              = 1e-5
 ; Temperature coupling is on
 tcoupl		            = v-rescale     ; modified Berendsen thermostat
 tc-grps		            = System 	    ; Single coupling group
-tau-t		            = 0.5	  		; time constant, in ps
+tau-t		            = 0.1	  		; time constant, in ps
 ref-t		            = {temp}        ; reference temperature, one for each group, in K
 
 ; Pressure coupling is on
-
-pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT ; berendsen
-pcoupltype              = semiisotropic             ; uniform scaling of box vectors
+pcoupl                  = Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
 tau_p                   = 2.0                   ; time constant, in ps
-ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
-compressibility         = 0 4.5e-5
-nstpcouple              = 5
+ref-p                   = {press}               ; reference pressure, in bar (from the system defined pressure)
+compressibility         = 4.5e-5
+nstpcouple              = 1
 ;refcoord_scaling       = com
 
 ; Periodic boundary conditions
@@ -1382,9 +1380,9 @@ pbc		                = xyz		    ; 3-D PBC
 DispCorr	            = EnerPres	    ; apply analytical tail corrections
 
 ; Velocity generation
-gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
+gen-vel		            = no		    ; Do not assign velocities from Maxwell distribution
 """.format(
-        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_prod
+        temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npt_prod
     )
 
     return contents

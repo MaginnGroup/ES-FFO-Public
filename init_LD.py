@@ -22,7 +22,8 @@ def calc_nmols(sp):
     density = sp["rho_liq"]
     #Calculatue box lengths from system density and 3.0*cutoff (3.6 = 3.0*1.2 A)
     xy_len = 3.6
-    new_V = sp["aspect_ratio"]*xy_len**3
+    # new_V = sp["aspect_ratio"]*xy_len**3 #Rectangular box
+    new_V = xy_len**3 #Square box
     #Calculate the number of molecules from the new volume and the given density
     nmols = int(np.floor(density*1000*6.022*1e23*new_V/(sp["mol_wt"]*1e27)))
 
