@@ -103,7 +103,7 @@ def fix_topology(job):
                 defaults_line = line_number
 
     top_contents[defaults_line + 2] = (
-        "1               2               yes              0.5       0.8333333\n"  # changed no to yes
+        "1               2               yes              0.5       0.6666667\n"  # changed no to yes
     )
 
     with open(job.fn("system.top"), "w") as fout:
@@ -1085,11 +1085,11 @@ def __generate_R125_xml(job):
   <Proper class1="h2" class2="c3" class3="c3" class4="f" periodicity1="3" phase1="0.0" k1="0.65085610"/>
  </PeriodicTorsionForce>
  <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
-  <Atom type="C1" charge="0.179254" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
-  <Atom type="C2" charge="0.400688" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
-  <Atom type="F1" charge="-0.133705" sigma="{sigma_F1:0.6f}" epsilon="{epsilon_F1:0.6f}"/>
-  <Atom type="H1" charge="0.097266" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
-  <Atom type="F2" charge="-0.136606" sigma="{sigma_F2:0.6f}" epsilon="{epsilon_F2:0.6f}"/>
+  <Atom type="C1" charge="0.224067" sigma="{sigma_C1:0.6f}" epsilon="{epsilon_C1:0.6f}"/>
+  <Atom type="C2" charge="0.500886" sigma="{sigma_C2:0.6f}" epsilon="{epsilon_C2:0.6f}"/>
+  <Atom type="F1" charge="-0.167131" sigma="{sigma_F1:0.6f}" epsilon="{epsilon_F1:0.6f}"/>
+  <Atom type="H1" charge="0.121583" sigma="{sigma_H1:0.6f}" epsilon="{epsilon_H1:0.6f}"/>
+  <Atom type="F2" charge="-0.170758" sigma="{sigma_F2:0.6f}" epsilon="{epsilon_F2:0.6f}"/>
  </NonbondedForce>
 </ForceField>""".format(
         sigma_C1=job.sp.sigma_C1,
