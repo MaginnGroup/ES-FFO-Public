@@ -429,7 +429,7 @@ def calculate_props(job):
             with job:
                 if not os.path.exists(job.fn(f"{sim_name}/{name}.txt")):
                     for i in range(3,11):
-                        command = f"echo '{prop}' | gmx energy -f {last_dir}{last_sim_name}.edr -nbmin {i} -nbmax {i} >> {sim_name}/{name}.txt"
+                        command = f"echo '{prop}' | gmx energy -f {last_dir}{last_sim_name}.edr -nbmin {i} -nbmax {i} >> {name}.txt"
                         subprocess.run(
                             command, text=True, check=True, shell=True, cwd = sim_name
                         )
@@ -529,7 +529,7 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
                         command, input=f"System", text=True, check=True, shell=True, cwd = sim_name
                     )
                 prop_data = np.loadtxt(
-                    job.fn(output_file), comments=["#", "@"]
+                    job.fn(f"{sim_name}/{output_file}"), comments=["#", "@"]
                 )
                 density = pd.DataFrame(prop_data)
                 #Calculate the liquid mass density as a fxn of Z
