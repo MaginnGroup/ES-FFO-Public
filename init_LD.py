@@ -12,7 +12,7 @@ from fffit.fffit.utils import values_scaled_to_real
 from utils.molec_class_files import esolvs
 
 # Load class properies for each training molecule
-mol_names = ["MeOH"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["R125"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 def calc_nmols(sp):
@@ -100,19 +100,19 @@ def init_project():
         # Convert scaled latin hypercube samples to physical values
         scaled_params = values_scaled_to_real(lhs_samples, bounds)
         #Make the GAFF param_set (test)
-        # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
-        # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
+        scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
+        scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
         # nmols = int(n_particles/molec_data.n_atoms) #Number of molecules in the system
         # Define temps (from constants files)
         temps = list(molec_data.expt_Pvap.keys())
-        for temp in temps:
+        for temp in [temps[-3]]:
             liq_density = molec_data.expt_liq_density[temp]
             vap_density = molec_data.expt_vap_density[temp]
             max_vd = molec_data.expt_vap_density[max(temps)]
             min_ld = molec_data.expt_liq_density[max(temps)]
             rho_thresh = (max_vd + min_ld)/2.0
             rho_avg = (liq_density + vap_density) / 2.0
-            for sample in scaled_params[0:5]:
+            for sample in scaled_params[0].reshape(1, -1):
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
