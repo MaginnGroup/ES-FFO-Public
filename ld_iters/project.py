@@ -515,7 +515,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                 job.doc[max_steps_str] = int(nsteps_eq / 1000)*5 #Assume NPT equilibrated after max of 2.5 ns
 
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
-            max_eq_steps = np.maximum(job.doc[max_steps_str], job.doc[max_steps_str] + eq_extend * 2)
+            max_eq_steps = np.maximum(job.doc[max_steps_str], total_eq_steps + eq_extend * 2)
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc[nsteps_str] = int(max_eq_steps)
 
@@ -557,7 +557,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
 
                     # If the simulation has converged, break
-                    if is_equil or total_eq_steps >= int(nsteps_eq / 1000)*10:
+                    if is_equil or steps >= int(nsteps_eq / 1000)*5:
                         # Set the step counter to whatever the final number of equilibration steps was
                         job.doc[nsteps_str] = total_eq_steps
                         job.doc[eq_ext_str] = False
