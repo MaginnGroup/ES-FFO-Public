@@ -61,8 +61,10 @@ def create_system(job):
     density = job.sp.rho_liq
     #Calculate the box lengths from the system density using nmols molecules
     V = (job.sp.nmols*job.sp.mol_wt*1e27)/(density * 1000* 6.022*1e23)
-    xy_len = (V/job.sp.aspect_ratio)**(1/3)
-    z_len = job.sp.aspect_ratio*xy_len
+    # xy_len = (V/job.sp.aspect_ratio)**(1/3)
+    # z_len = job.sp.aspect_ratio*xy_len #Rectangular box
+    xy_len = (V)**(1/3) #Cubic box
+    z_len = xy_len
     box = [xy_len, xy_len, z_len]
 
     system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
