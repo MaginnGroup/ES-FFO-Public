@@ -1,7 +1,11 @@
 import signac
 import sys
+
+sys.path.append("..")
 from utils.molec_class_files import esolvs
 from utils.analyze_iters import get_signac_results, save_signac_results, new_samples_vle, find_pareto, get_best_models, plot_gp_examples
+sys.path.remove("..")
+
 
 #Set iters to analyze and properties to analyze
 iters = [1]  # Change me as needed
