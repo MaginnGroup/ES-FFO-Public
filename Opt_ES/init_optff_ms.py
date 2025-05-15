@@ -81,12 +81,10 @@ for molec_name, molec_data in molec_dict.items():
                             "smiles": molec_data.smiles_str,
                             "N_atoms": molec_data.n_atoms,
                             "T": float(temp),  # K
-                            "P": float(press[int(temp)]),  # bar
+                            "P": float(press[temp]),  # bar
                             "N_vap": n_vap,
                             "N_liq": n_liq,
-                            "expt_liq_density": molec_data.expt_liq_density[
-                                int(temp)
-                            ],  # kg/m^3
+                            "expt_liq_density": molec_data.expt_liq_density[temp],  # kg/m^3
                             "nsteps_nvt": 2500,
                             "nsteps_npt": 5000,
                             "nsteps_gemc_eq": 10000, #We will actually be using sweeps and not steps as units here

@@ -14,18 +14,9 @@ from matplotlib.backends.backend_pdf import PdfPages
 # Set params for what you want to analyze
 save_data = True  # Data to save
 obj_choice = "ExpVal"  # Objective to consider
-at_number = 6  # atom type to consider
+at_number = 1  # atom type to consider (1 or 2)
 seed = 1  # Seed to use
-molec_names = [
-    "R14",
-    "R32",
-    "R50",
-    "R170",
-    "R125",
-    "R134a",
-    "R143a",
-    "R41",
-]  # Training data to consider
+molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
 
 # Get best_run data saved in one csv from all jobs
 project = signac.get_project("opt_at_params")
