@@ -14,11 +14,9 @@ def make_atom_type_class(at_number):
     -------
     class, The atom type class
     """
-    if at_number == 1:
+    if at_number == 1: #C, H, O, N, S, Cl
         return AT_Scheme_01()
-    elif at_number == 0:
-        return AT_Scheme_00()
-    elif at_number == 2:
+    elif at_number == 2: #GAFF
         return AT_Scheme_02()
     else:
         raise ValueError("Invalid atom type number")
@@ -144,9 +142,9 @@ class Atom_Types:
 
         return len(tuple_list) != len(set(tuple_list))
 
-class AT_Scheme_00(Atom_Types):
+class AT_Scheme_01(Atom_Types):
     """
-    Class for Atom Type Scheme 1 (C, F, H)
+    Class for Atom Type Scheme 1 (C, H, O, N, S, Cl)
 
     Methods
     -------
@@ -155,431 +153,166 @@ class AT_Scheme_00(Atom_Types):
 
     def __init__(self):
         # Get Bounds
-        at_param_bounds_l = [
-            2,
-            1.5,
-            2,
-            10,
-            2,
-            15,
-        ]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
-        at_param_bounds_u = [4, 3, 4, 75, 15, 50]
+        at_param_bounds_l = [2.0, 0.0, 2.0, 2.0, 2.5, 2.5,
+                             10.0, 0.0, 40.0, 40.0, 90.0, 90.0]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
+        at_param_bounds_u = [4.0, 3.0, 4.0, 4.0, 4.5, 4.5,
+                             135.0, 10.0, 135.0, 100.0, 150.0, 150.0]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
         at_bounds = np.array([at_param_bounds_l, at_param_bounds_u]).T
-        self.scheme_name = "at_00"
-        self.scheme_plot_name = "AT-3"
+        self.scheme_name = "at_01"
+        self.scheme_plot_name = "AT-4" #C, H, O, N (S, Cl)
         # Get Names
         at_keys = [
             "sigma_C",
             "sigma_H",
-            "sigma_F",
+            "sigma_O",
+            "sigma_N",
+            "sigma_S",
+            "sigma_Cl",
             "epsilon_C",
             "epsilon_H",
-            "epsilon_F",
-        ]
-        assert (
-            len(at_keys) == len(at_param_bounds_l) == len(at_param_bounds_u)
-        ), "Length of at_keys, at_param_bounds_l, and at_param_bounds_u must be the same"
-
-        # Create a file that maps param names (keys) to at_param names for atom type 0 (values) for each molecule
-        r14_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r32_map_dict = {
-            "sigma_C": "sigma_C",
-            "sigma_H": "sigma_H",
-            "sigma_F": "sigma_F",
-            "epsilon_C": "epsilon_C",
-            "epsilon_H": "epsilon_H",
-            "epsilon_F": "epsilon_F",
-        }
-
-        r50_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-        }
-
-        r125_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
-        }
-
-        r134a_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
-        }
-
-        r143a_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r170_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-        }
-
-        # Test molecules
-        r41_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r23_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r161_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_H2": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_H2": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r152a_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_H2": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_H2": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r152_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r143_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H",
-            "sigma_H2": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_H2": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
-        }
-
-        r134_map_dict = {
-            "sigma_C": "sigma_C",
-            "sigma_H": "sigma_H",
-            "sigma_F": "sigma_F",
-            "epsilon_C": "epsilon_C",
-            "epsilon_H": "epsilon_H",
-            "epsilon_F": "epsilon_F",
-        }
-
-        r116_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        at_names = at_keys.copy()
-
-        molec_map_dicts = {
-            "R14": r14_map_dict,
-            "R32": r32_map_dict,
-            "R50": r50_map_dict,
-            "R125": r125_map_dict,
-            "R134a": r134a_map_dict,
-            "R143a": r143a_map_dict,
-            "R170": r170_map_dict,
-            "R41": r41_map_dict,
-            "R23": r23_map_dict,
-            "R161": r161_map_dict,
-            "R152a": r152a_map_dict,
-            "R152": r152_map_dict,
-            "R143": r143_map_dict,
-            "R134": r134_map_dict,
-            "R116": r116_map_dict,
-        }
-
-        super().__init__(at_bounds, at_names, molec_map_dicts)
-        # Get scaled bounds
-        self.scale_bounds()
-class AT_Scheme_01(Atom_Types):
-    """
-    Class for Atom Type Scheme 1 (C1, C2, F, H)
-
-    Methods
-    -------
-    __init__(self)
-    """
-
-    def __init__(self):
-        # Get Bounds
-        at_param_bounds_l = [
-            2,
-            2,
-            1.5,
-            2,
-            10,
-            10,
-            2,
-            15,
-        ]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
-        at_param_bounds_u = [4, 4, 3, 4, 75, 75, 15, 50]
-        at_bounds = np.array([at_param_bounds_l, at_param_bounds_u]).T
-        self.scheme_name = "at_01"
-        self.scheme_plot_name = "AT-4"
-        # Get Names
-        at_keys = [
-            "sigma_C1",
-            "sigma_C2",
-            "sigma_H",
-            "sigma_F",
-            "epsilon_C1",
-            "epsilon_C2",
-            "epsilon_H",
-            "epsilon_F",
+            "epsilon_O",
+            "epsilon_N",
+            "epsilon_S",
+            "epsilon_Cl",
         ]
         assert (
             len(at_keys) == len(at_param_bounds_l) == len(at_param_bounds_u)
         ), "Length of at_keys, at_param_bounds_l, and at_param_bounds_u must be the same"
         # Get weight information
-        # at_weights = np.zeros(len(at_keys))
-        # gaff_params = np.array(at_param_bounds_l) #set initial gaff parameters as lower bounds
-        # mask_names = list(["sigma_C2_2", "sigma_F_1", "epsilon_C1", "epsilon_C2_1", "epsilon_F_1"])
-        # mask = np.isin(at_keys, mask_names)
-        # GAFF_params = np.array([3.400, 3.118, 55.052, 55.052, 30.696])
-        # #For all of these, a value of 0.15 difference from GAFF is weighted as 5% of the average best objective for ExpVal
-        # g_weights = np.array([0.05/0.15**2, 0.05/0.15**2, 0.2/0.15**2, 0.05/0.15**2, 0.05/0.15**2])
-        # at_weights[mask] = g_weights
-        # gaff_params[mask] = GAFF_params
-        # self.weighted_params = mask_names
-        # self.at_weights = at_weights
-        # self.gaff_params = gaff_params
+        self.no_opt = ["sigma_Cl", "sigma_S", "epsilon_Cl", "epsilon_S"]
 
         # Create a file that maps param names (keys) to at_param names for atom type 11 (values) for each molecule
-        r14_map_dict = {
-            "sigma_C1": "sigma_C1",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C1",
-            "epsilon_F1": "epsilon_F",
+        EG_map_dict = {
+            "sigma_C1": "sigma_C",
+            "sigma_H2": "sigma_H",# Attached to O
+            "sigma_H1": "sigma_H",  # Attached to C
+            "sigma_O1": "sigma_O",
+            "epsilon_C1": "epsilon_C",
+            "epsilon_H2": "epsilon_H",
+            "epsilon_H1": "epsilon_H",  # Attached to C
+            "epsilon_O1": "epsilon_O",
         }
 
-        r32_map_dict = {
-            "sigma_C": "sigma_C1",
-            "sigma_H": "sigma_H",
-            "sigma_F": "sigma_F",
-            "epsilon_C": "epsilon_C1",
-            "epsilon_H": "epsilon_H",
-            "epsilon_F": "epsilon_F",
+        Gly_map_dict = {
+            "sigma_C1": "sigma_C",  # Outside Cs
+            "sigma_C2": "sigma_C",  # Middle C
+            "sigma_H3": "sigma_H",  # Attached to O1
+            "sigma_H4": "sigma_H",  # Attached to O2
+            "sigma_H1": "sigma_H",  # Attached to C1
+            "sigma_H2": "sigma_H",  # Attached to C2
+            "sigma_O1": "sigma_O",  # Outside O
+            "sigma_O2": "sigma_O",  # Inside O
+            "epsilon_C1": "epsilon_C",  # Outside Cs
+            "epsilon_C2": "epsilon_C",  # Middle C
+            "epsilon_H3": "epsilon_H",  # Attached to O1
+            "epsilon_H4": "epsilon_H",  # Attached to O2
+            "epsilon_H1": "epsilon_H",  # Attached to C1
+            "epsilon_H2": "epsilon_H",  # Attached to C2
+            "epsilon_O1": "epsilon_O",  # Outside O
+            "epsilon_O2": "epsilon_O",  # Inside O
         }
 
-        r50_map_dict = {
-            "sigma_C1": "sigma_C1",
-            "sigma_H1": "sigma_H",
-            "epsilon_C1": "epsilon_C1",
-            "epsilon_H1": "epsilon_H",
+        ACN_map_dict = {
+            "sigma_C1": "sigma_C",  # C attached to N
+            "sigma_C2": "sigma_C",  # C attached to H
+            "sigma_H1": "sigma_H",  # Attached to C2
+            "sigma_N1": "sigma_N",
+            "epsilon_C1": "epsilon_C",  # C attached to N
+            "epsilon_C2": "epsilon_C",  # C attached to H
+            "epsilon_H1": "epsilon_H",  # Attached to C2
+            "epsilon_N1": "epsilon_N",
         }
 
-        r125_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_C2": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_C2": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
+        MeOH_map_dict = {
+            "sigma_C1": "sigma_C",  # C attached to H
+            "sigma_H1": "sigma_H",  # Attached to C
+            "sigma_H2": "sigma_H",  # Attached to O
+            "sigma_O1": "sigma_O",
+            "epsilon_C1": "epsilon_C",  # C attached to H
+            "epsilon_H1": "epsilon_H",  # Attached to C
+            "epsilon_H2": "epsilon_H",  # Attached to O
+            "epsilon_O1": "epsilon_O",
         }
 
-        r134a_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_C2": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_C2": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
+        DMF_map_dict = {
+            "sigma_C1": "sigma_C",  # C attached to N and H
+            "sigma_C2": "sigma_C",  # C attached to O, and N
+            "sigma_H2": "sigma_H",  # Attached to C2
+            "sigma_H1": "sigma_H",  # Attached to C1
+            "sigma_O1": "sigma_O",
+            "sigma_N1": "sigma_N",
+            "epsilon_C1": "epsilon_C",  # C attached to N and H
+            "epsilon_C2": "epsilon_C",  # C attached to O, and N
+            "epsilon_H2": "epsilon_H",  # Attached to C2
+            "epsilon_H1": "epsilon_H",  # Attached to C1
+            "epsilon_O1": "epsilon_O",
+            "epsilon_N1": "epsilon_N",
         }
 
-        r143a_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_C2": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_C2": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
+        DMSO_map_dict = {
+            "sigma_C1": "sigma_C",  # C attached to S
+            "sigma_H1": "sigma_H",  # Attached to C1
+            "sigma_O1": "sigma_O",  # Attached to S
+            "sigma_S1": "sigma_S",
+            "epsilon_C1": "epsilon_C",  # C attached to S
+            "epsilon_H1": "epsilon_H",  # Attached to C1
+            "epsilon_O1": "epsilon_O",  # Attached to S
+            "epsilon_S1": "epsilon_S",
         }
 
-        r170_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
+        THF_map_dict = {
+            "sigma_C1": "sigma_C",  # C attached to O
+            "sigma_C2": "sigma_C",  # C not attached to O
+            "sigma_H2": "sigma_H",  # Attached to C2
+            "sigma_H1": "sigma_H",  # Attached to C1
+            "sigma_O1": "sigma_O",
+            "epsilon_C1": "epsilon_C",  # C attached to O
+            "epsilon_C2": "epsilon_C",  # C not attached to O
+            "epsilon_H2": "epsilon_H",  # Attached to C2
+            "epsilon_H1": "epsilon_H",  # Attached to C1
+            "epsilon_O1": "epsilon_O",
+        }
+
+        DEC_map_dict = {
+            "sigma_C3": "sigma_C",  # C attached to three O
+            "sigma_C1": "sigma_C",  # Outsidemost C
+            "sigma_C2": "sigma_C",  # C attached to one O
+            "sigma_H1": "sigma_H",  # H attached to C1
+            "sigma_H2": "sigma_H",  # H attached to C2
+            "sigma_O2": "sigma_O",  # O with double bond
+            "sigma_O1": "sigma_O",  # O with no double bond
+            "epsilon_C3": "epsilon_C",  # C attached to three O
+            "epsilon_C1": "epsilon_C",  # Outsidemost C
+            "epsilon_C2": "epsilon_C",  # C attached to one O
+            "epsilon_H1": "epsilon_H",  # H attached to C1
+            "epsilon_H2": "epsilon_H",  # H attached to C2
+            "epsilon_O2": "epsilon_O",  # O with double bond
+            "epsilon_O1": "epsilon_O",  # O with no double bond
         }
 
         # Test molecules
-        r41_map_dict = {
-            "sigma_C1": "sigma_C1",
+        DCM_map_dict = {
+            "sigma_C1": "sigma_C",
             "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C1",
+            "sigma_Cl1": "sigma_Cl",
+            "epsilon_C1": "epsilon_C",
             "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
+            "epsilon_Cl1": "epsilon_Cl",
         }
 
-        r23_map_dict = {
-            "sigma_C1": "sigma_C1",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C1",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r161_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_C2": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_H2": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_C2": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_H2": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r152a_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_C2": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_H2": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_C2": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_H2": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r152_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r143_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_C2": "sigma_C2",
-            "sigma_H1": "sigma_H",
-            "sigma_H2": "sigma_H",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_C2": "epsilon_C2",
-            "epsilon_H1": "epsilon_H",
-            "epsilon_H2": "epsilon_H",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
-        }
-
-        r134_map_dict = {
-            "sigma_C": "sigma_C2",
-            "sigma_H": "sigma_H",
-            "sigma_F": "sigma_F",
-            "epsilon_C": "epsilon_C2",
-            "epsilon_H": "epsilon_H",
-            "epsilon_F": "epsilon_F",
-        }
-
-        r116_map_dict = {
-            "sigma_C1": "sigma_C2",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C2",
-            "epsilon_F1": "epsilon_F",
-        }
 
         at_names = at_keys.copy()
 
         molec_map_dicts = {
-            "R14": r14_map_dict,
-            "R32": r32_map_dict,
-            "R50": r50_map_dict,
-            "R125": r125_map_dict,
-            "R134a": r134a_map_dict,
-            "R143a": r143a_map_dict,
-            "R170": r170_map_dict,
-            "R41": r41_map_dict,
-            "R23": r23_map_dict,
-            "R161": r161_map_dict,
-            "R152a": r152a_map_dict,
-            "R152": r152_map_dict,
-            "R143": r143_map_dict,
-            "R134": r134_map_dict,
-            "R116": r116_map_dict,
+            "EG": EG_map_dict,
+            "Gly": Gly_map_dict,
+            "ACN": ACN_map_dict,
+            "MeOH": MeOH_map_dict,
+            "DMF": DMF_map_dict,
+            "DMSO": DMSO_map_dict,
+            "THF": THF_map_dict,
+            "DEC": DEC_map_dict,
+            "DCM": DCM_map_dict,
         }
 
         super().__init__(at_bounds, at_names, molec_map_dicts)
@@ -596,227 +329,198 @@ class AT_Scheme_02(Atom_Types):
 
     def __init__(self):
         # Get Bounds
-        at_param_bounds_l = [
-            2,
-            1.5,
-            1.5,
-            1.5,
-            1.5,
-            2,
-            10,
-            2,
-            2,
-            2,
-            2,
-            15,
-        ]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
-        at_param_bounds_u = [4, 3, 3, 3, 3, 4, 75, 15, 15, 15, 15, 50]
+        at_param_bounds_l = [2.0, 2.0, 2.0, 1.5, 0.0, 1.5, 1.5, 1.5, 2.0, 2.0, 2.0, 2.0, 2.0, 2.5, 2.5,
+                             10.0, 75.0, 10.0, 2.0, 0.0, 2.0, 2.0, 2.0, 75.0, 75.0, 40.0, 40.0, 40.0, 90.0, 90.0]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
+        at_param_bounds_u = [4.0, 4.0, 4.0, 3.0, 0.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.5, 4.5,
+                             75.0, 135.0, 75.0, 10.0, 0.0, 10.0, 10.0, 10.0, 135.0, 135.0, 100.00, 100.00, 100.0, 150.0, 150.0]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
         at_bounds = np.array([at_param_bounds_l, at_param_bounds_u]).T
         self.scheme_name = "at_02"
-        self.scheme_plot_name = "AT-6a"
+        self.scheme_plot_name = "AT-7" #C3, O, Os, Oh, Hc, H1, Ho
         # Get Names
         at_keys = [
             "sigma_C",
+            "sigma_C1",
+            "sigma_C3",
             "sigma_Hc",
+            "sigma_Ho",
             "sigma_H1",
             "sigma_H2",
-            "sigma_H3",
-            "sigma_F",
+            "sigma_H5",
+            "sigma_O",
+            "sigma_Oh",
+            "sigma_Os",
+            "sigma_N",
+            "sigma_N1",
+            "sigma_S4",
+            "sigma_Cl",
             "epsilon_C",
+            "epsilon_C1",
+            "epsilon_C3",
             "epsilon_Hc",
+            "epsilon_Ho",
             "epsilon_H1",
             "epsilon_H2",
-            "epsilon_H3",
-            "epsilon_F",
+            "epsilon_H5",
+            "epsilon_O",
+            "epsilon_Oh",
+            "epsilon_Os",
+            "epsilon_N",
+            "epsilon_N1",
+            "epsilon_S4",
+            "epsilon_Cl",
         ]
         assert (
             len(at_keys) == len(at_param_bounds_l) == len(at_param_bounds_u)
         ), "Length of at_keys, at_param_bounds_l, and at_param_bounds_u must be the same"
         # Get weight information
-        # at_weights = np.zeros(len(at_keys))
-        # gaff_params = np.array(at_param_bounds_l) #set initial gaff parameters as lower bounds
-        # mask_names = list(["sigma_C2_2", "sigma_F_1", "epsilon_C1", "epsilon_C2_1", "epsilon_F_1"])
-        # mask = np.isin(at_keys, mask_names)
-        # GAFF_params = np.array([3.400, 3.118, 55.052, 55.052, 30.696])
-        # #For all of these, a value of 0.15 difference from GAFF is weighted as 5% of the average best objective for ExpVal
-        # g_weights = np.array([0.05/0.15**2, 0.05/0.15**2, 0.2/0.15**2, 0.05/0.15**2, 0.05/0.15**2])
-        # at_weights[mask] = g_weights
-        # gaff_params[mask] = GAFF_params
-        # self.weighted_params = mask_names
-        # self.at_weights = at_weights
-        # self.gaff_params = gaff_params
+        self.no_opt = ["sigma_C", 
+                  "sigma_C1", 
+                  "sigma_H2", 
+                  "sigma_H5", 
+                  "sigma_N", 
+                  "sigma_N1", 
+                  "sigma_S4", 
+                  "sigma_Cl", 
+                  "epsilon_C", 
+                  "epsilon_C1", 
+                  "epsilon_H2", 
+                  "epsilon_H5", 
+                  "epsilon_N", 
+                  "epsilon_N1", 
+                  "epsilon_S4", 
+                  "epsilon_Cl"]
 
         # Create a file that maps param names (keys) to at_param names for atom type 11 (values) for each molecule
-        r14_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_F1": "epsilon_F",
+        EG_map_dict = {"sigma_C1":"sigma_C3",
+                       "sigma_H2": "sigma_Ho",# Attached to O
+                        "sigma_H1": "sigma_H1",  # Attached to C
+                        "sigma_O1": "sigma_Oh",
+                        "epsilon_C1": "epsilon_C3",
+                        "epsilon_H2" : "epsilon_Ho",
+                        "epsilon_H1": "epsilon_H1",  # Attached to C
+                        "epsilon_O1": "epsilon_Oh",
         }
 
-        r32_map_dict = {
-            "sigma_C": "sigma_C",
-            "sigma_H": "sigma_H2",
-            "sigma_F": "sigma_F",
-            "epsilon_C": "epsilon_C",
-            "epsilon_H": "epsilon_H2",
-            "epsilon_F": "epsilon_F",
+        Gly_map_dict = {
+            "sigma_C1": "sigma_C3",  # Outside Cs
+            "sigma_C2": "sigma_C3",  # Middle C
+            "sigma_H3": "sigma_Ho",  # Attached to O1
+            "sigma_H4": "sigma_Ho",  # Attached to O2
+            "sigma_H1": "sigma_H1",  # Attached to C1
+            "sigma_H2": "sigma_H1",  # Attached to C2
+            "sigma_O1": "sigma_Oh",  # Outside O
+            "sigma_O2": "sigma_Oh",  # Inside O
+            "epsilon_C1": "epsilon_C3",  # Outside Cs
+            "epsilon_C2": "epsilon_C3",  # Middle C
+            "epsilon_H3": "epsilon_Ho",  # Attached to O1
+            "epsilon_H4": "epsilon_Ho",  # Attached to O2
+            "epsilon_H1": "epsilon_H1",  # Attached to C1
+            "epsilon_H2": "epsilon_H1",  # Attached to C2
+            "epsilon_O1": "epsilon_Oh",  # Outside O
+            "epsilon_O2": "epsilon_Oh",  # Inside O
         }
 
-        r50_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_Hc",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_Hc",
+        ACN_map_dict = {
+            "sigma_C1": "sigma_C1",  # C attached to N
+            "sigma_C2": "sigma_C3",  # C attached to H
+            "sigma_H1": "sigma_Hc",  # Attached to C2
+            "sigma_N1": "sigma_N1",
+            "epsilon_C1": "epsilon_C1",  # C attached to N
+            "epsilon_C2": "epsilon_C3",  # C attached to H
+            "epsilon_H1": "epsilon_Hc",  # Attached to C2
+            "epsilon_N1": "epsilon_N1",
         }
 
-        r125_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H2",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H2",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
+        MeOH_map_dict = {
+            "sigma_C1": "sigma_C3",  # C attached to H
+            "sigma_H1": "sigma_Ho",  # Attached to C
+            "sigma_H2": "sigma_H1",  # Attached to O
+            "sigma_O1": "sigma_Oh",
+            "epsilon_C1": "epsilon_C3",  # C attached to H
+            "epsilon_H1": "epsilon_Ho",  # Attached to C
+            "epsilon_H2": "epsilon_H1",  # Attached to O
+            "epsilon_O1": "epsilon_Oh",
         }
 
-        r134a_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_H1",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_H1",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
+        DMF_map_dict = {
+            "sigma_C1": "sigma_C",  # C attached to N and H
+            "sigma_C2": "sigma_C3",  # C attached to O, and N
+            "sigma_H2": "sigma_H1",  # Attached to C2
+            "sigma_H1": "sigma_H5",  # Attached to C1
+            "sigma_O1": "sigma_O",
+            "sigma_N1": "sigma_N",
+            "epsilon_C1": "epsilon_C",  # C attached to N and H
+            "epsilon_C2": "epsilon_C3",  # C attached to O, and N
+            "epsilon_H2": "epsilon_H1",  # Attached to C2
+            "epsilon_H1": "epsilon_H5",  # Attached to C1
+            "epsilon_O1": "epsilon_O",
+            "epsilon_N1": "epsilon_N",
         }
 
-        r143a_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H1": "sigma_Hc",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H1": "epsilon_Hc",
-            "epsilon_F1": "epsilon_F",
+        DMSO_map_dict = {
+            "sigma_C1": "sigma_C3",  # C attached to S
+            "sigma_H1": "sigma_H1",  # Attached to C1
+            "sigma_O1": "sigma_O",  # Attached to S
+            "sigma_S1": "sigma_S4",
+            "epsilon_C1": "epsilon_C3",  # C attached to S
+            "epsilon_H1": "epsilon_H1",  # Attached to C1
+            "epsilon_O1": "epsilon_O",  # Attached to S
+            "epsilon_S1": "epsilon_S4",
         }
 
-        r170_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_Hc",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_Hc",
+        THF_map_dict = {
+            "sigma_C1": "sigma_C3",  # C attached to O
+            "sigma_C2": "sigma_C3",  # C not attached to O
+            "sigma_H2": "sigma_Hc",  # Attached to C2
+            "sigma_H1": "sigma_H1",  # Attached to C1
+            "sigma_O1": "sigma_Os",
+            "epsilon_C1": "epsilon_C3",  # C attached to O
+            "epsilon_C2": "epsilon_C3",  # C not attached to O
+            "epsilon_H2": "epsilon_Hc",  # Attached to C2
+            "epsilon_H1": "epsilon_H1",  # Attached to C1
+            "epsilon_O1": "epsilon_Os",
+        }
+
+        DEC_map_dict = {
+            "sigma_C3": "sigma_C",  # C attached to three O
+            "sigma_C1": "sigma_C3",  # Outsidemost C
+            "sigma_C2": "sigma_C3",  # C attached to one O
+            "sigma_H1": "sigma_Hc",  # H attached to C1
+            "sigma_H2": "sigma_H1",  # H attached to C2
+            "sigma_O2": "sigma_O",  # O with double bond
+            "sigma_O1": "sigma_Os",  # O with no double bond
+            "epsilon_C3": "epsilon_C",  # C attached to three O
+            "epsilon_C1": "epsilon_C3",  # Outsidemost C
+            "epsilon_C2": "epsilon_C3",  # C attached to one O
+            "epsilon_H1": "epsilon_Hc",  # H attached to C1
+            "epsilon_H2": "epsilon_H1",  # H attached to C2
+            "epsilon_O2": "epsilon_O",  # O with double bond
+            "epsilon_O1": "epsilon_Os",  # O with no double bond
         }
 
         # Test molecules
-        r41_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H1",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H1",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r23_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H3",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H3",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r161_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H2": "sigma_Hc",
-            "sigma_H1": "sigma_H1",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H2": "epsilon_Hc",
-            "epsilon_H1": "epsilon_H1",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r152a_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H2": "sigma_Hc",
+        DCM_map_dict = {
+            "sigma_C1": "sigma_C3",
             "sigma_H1": "sigma_H2",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H2": "epsilon_Hc",
+            "sigma_Cl1": "sigma_Cl",
+            "epsilon_C1": "epsilon_C3",
             "epsilon_H1": "epsilon_H2",
-            "epsilon_F1": "epsilon_F",
+            "epsilon_Cl1": "epsilon_Cl",
         }
 
-        r152_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_H1": "sigma_H1",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_H1": "epsilon_H1",
-            "epsilon_F1": "epsilon_F",
-        }
-
-        r143_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_C2": "sigma_C",
-            "sigma_H2": "sigma_H1",
-            "sigma_H1": "sigma_H2",
-            "sigma_F1": "sigma_F",
-            "sigma_F2": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_C2": "epsilon_C",
-            "epsilon_H2": "epsilon_H1",
-            "epsilon_H1": "epsilon_H2",
-            "epsilon_F1": "epsilon_F",
-            "epsilon_F2": "epsilon_F",
-        }
-
-        r134_map_dict = {
-            "sigma_C": "sigma_C",
-            "sigma_H": "sigma_H2",
-            "sigma_F": "sigma_F",
-            "epsilon_C": "epsilon_C",
-            "epsilon_H": "epsilon_H2",
-            "epsilon_F": "epsilon_F",
-        }
-
-        r116_map_dict = {
-            "sigma_C1": "sigma_C",
-            "sigma_F1": "sigma_F",
-            "epsilon_C1": "epsilon_C",
-            "epsilon_F1": "epsilon_F",
-        }
 
         at_names = at_keys.copy()
 
         molec_map_dicts = {
-            "R14": r14_map_dict,
-            "R32": r32_map_dict,
-            "R50": r50_map_dict,
-            "R125": r125_map_dict,
-            "R134a": r134a_map_dict,
-            "R143a": r143a_map_dict,
-            "R170": r170_map_dict,
-            "R41": r41_map_dict,
-            "R23": r23_map_dict,
-            "R161": r161_map_dict,
-            "R152a": r152a_map_dict,
-            "R152": r152_map_dict,
-            "R143": r143_map_dict,
-            "R134": r134_map_dict,
-            "R116": r116_map_dict,
+            "EG": EG_map_dict,
+            "Gly": Gly_map_dict,
+            "ACN": ACN_map_dict,
+            "MeOH": MeOH_map_dict,
+            "DMF": DMF_map_dict,
+            "DMSO": DMSO_map_dict,
+            "THF": THF_map_dict,
+            "DEC": DEC_map_dict,
+            "DCM": DCM_map_dict,
         }
 
         super().__init__(at_bounds, at_names, molec_map_dicts)
