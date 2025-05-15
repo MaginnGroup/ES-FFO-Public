@@ -68,6 +68,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
     dir_train_test = path_gps + "/train_test_sets/"
     os.makedirs(dir_train_test, exist_ok=True)
     gp_model_path = os.path.join(path_gps, "gp_models.pkl")
+    best_model_path = os.path.join(path_gps, "best_gp_models.pkl")
 
     if os.path.exists(gp_model_path):
         # Load the GP models from the file
@@ -100,6 +101,11 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
             pickle.dump((models_props, best_labels), f)
 
     models_best = {prop : models_props[prop][best_labels[prop]] for prop in models_props.keys()}
+
+    if not os.path.exists(best_model_path):
+        with open(best_model_path, "wb") as f:
+            # Save the best models to a filewith open(gp_model_path, "wb") as f:
+            pickle.dump(models_best, f)
 
     return models_best, models_props, dir_train_test
 
