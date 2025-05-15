@@ -11,121 +11,12 @@ from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, 
 from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, variances_scaled_to_real
 from fffit.fffit.plot import plot_model_performance, plot_model_vs_test, plot_slices_temperature, plot_slices_params, plot_model_vs_exp, plot_obj_contour
-from .molec_class_files import r14, r32, r50, r125, r134a, r143a, r170, r41, r23, r161, r152a, r152, r134, r143, r116
+from .molec_class_files import esolvs
 
-R14 = r14.R14Constants()
-R32 = r32.R32Constants()
-R50 = r50.R50Constants()
-R125 = r125.R125Constants()
-R134a = r134a.R134aConstants()
-R143a = r143a.R143aConstants()
-R170 = r170.R170Constants()
-R41 = r41.R41Constants()
-R23 = r23.R23Constants()
-R161 = r161.R161Constants()
-R152a = r152a.R152aConstants()
-R152 = r152.R152Constants()
-R143 = r143.R143Constants()
-R134 = r134.R134Constants()
-R116 = r116.R116Constants()
+mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+molec_dict = esolvs.make_dict(mol_names)
 
-molec_dict = {"R14": R14,
-                "R32": R32,
-                "R50": R50,
-                "R125": R125,
-                "R134a": R134a,
-                "R143a": R143a,
-                "R170": R170,
-                "R41": R41,
-                "R23": R23,
-                "R161":R161,
-                "R152a":R152a,
-                "R152": R152,
-                "R143": R143,
-                "R134": R134,
-                "R116": R116}
-
-def block_average(data):
-    """
-    Calculate block averages
-
-    Implements the technique of Flyvbjerg and Peterson
-    J. Chem. Phys. 91, 461 (1989). Also described in
-    Appendix D of Frenkel and Smit. This function implements
-    equation D.3.4 of Frenkel and Smit.
-
-    The data should be provided as a numpy ndarray with
-    shape=(npoints,). The function performs N blocking
-    operations, where the block size is 2^N and the
-    maximum number of blocking operations is determined
-    from the number of points in ``data``
-
-    Parameters:
-    -----------
-    data : numpy.ndarray, shape=(npoints,)
-        numpy array with shape (npoints,) where npoints
-        is the number of data point in the sample
-
-    Returns:
-    -------
-    means, vars_est, vars_err
-
-    means : np.ndarray, shape=(n_avg_ops,)
-        mean values calculated from different numbers
-        of blocking operations
-    vars_est : np.ndarray, shape=(n_avg_ops,)
-        estimates of the variances of the average from different
-        numbers of blocking operations
-    vars_err: np.ndarray, shape=(n_avg_ops,)
-        estimates of the error in the variances from different
-        numbers of blocking operations
-    """
-
-    try:
-        data = np.asarray(data)
-    except:
-        raise TypeError("data should be provided as a numpy.ndarray")
-
-    means = []
-    vars_est = []
-    vars_err = []
-
-    n_samples = data.shape[0]
-
-    max_blocking_ops = 0
-    block_length = 1
-    while block_length < 1.0 / 4.0 * n_samples:
-        max_blocking_ops += 1
-        block_length = 2 ** max_blocking_ops
-
-    # Calc stats for mulitple-of-two block lengths
-    for m in range(max_blocking_ops):
-        block_length = 2 ** m  # Number of datapoints in each block
-        n_blocks = int(
-            n_samples / block_length
-        )  # Number of blocks we can get with given block size
-        # Calculate the 'new' dataset by block averaging
-        block_data = [
-            np.mean(
-                data[i * block_length : (i + 1) * block_length],
-                dtype=np.float64,
-            )
-            for i in range(n_blocks)
-        ]
-        block_data = np.asarray(block_data, dtype=np.float64)
-        # Calculate the mean of this new dataset
-        mean = np.mean(block_data, dtype=np.float64)
-        # Calculate the variance of this new dataset
-        var = np.var(block_data, dtype=np.float64)
-        var_err = math.sqrt(2.0 * var ** 2.0 / (n_blocks - 1) ** 3.0)
-
-        # Save data for blocking op
-        means.append(mean)
-        vars_est.append(var / (n_blocks - 1))
-        vars_err.append(var_err)
-
-    return np.asarray(means), np.asarray(vars_est), np.asarray(vars_err)
-
+#See if we can consolidate this with another function
 def prepare_df_vle(df_csv, molec_dict, csv_name = None, drop_one = False):
     """Prepare a pandas dataframe for fitting a GP model to density data
 
@@ -239,6 +130,7 @@ def calc_critical(df):
         
     return Tc, rhoc
 
+#See if we can consolidate this with another function
 def prepare_df_vle_errors(df, molec_dict, csv_name = None):
     """Create a dataframe with mean square error (mse) and mean absolute
     percent error (mape) for each unique parameter set. The critical
@@ -787,9 +679,9 @@ def plot_err_avg_props(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     #     df_mse = pd.read_csv(MSE_path_dict[key], header = 0, index_col = "molecule")
     #     df_mse_list.append(df_mse.reindex(molec_names))
 
-    props = ["liq_density", "vap_density", "Pvap", "Hvap"]
+    props = ["liq_density", "vap_density", "Pvap", "Hvap", "surf_tens"]
     cols = [obj + "_" + prop for prop in props]
-    names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$"]
+    names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
     cols = [item for item in cols for _ in range(2)]
     names = [item for item in names for _ in range(2)]
     
@@ -800,7 +692,7 @@ def plot_err_avg_props(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
     df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-3)] + ['gray', 'olive', 'olive']
 
-    train_molecs = ["R14", "R32", "R50", "R170", "R125", "R134a", "R143a", "R41"]
+    train_molecs = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
     #Get indeces where train molecules are in all molecules
     len_train = len(set(molec_names).intersection(train_molecs))
     left_labels = molec_names[:len_train]
@@ -878,7 +770,7 @@ def plot_err_avg_props(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     fig.text(0.05, 0.99, "Training Set", ha="left", va="top", fontsize=20)
     fig.text(0.99, 0.99, "Testing Set", ha="right", va="top", fontsize=20)
 
-    fig.suptitle(obj.upper() + ' Comparison for Different Refrigerants', fontsize = 20)
+    fig.suptitle(obj.upper() + ' Comparison for Different Solvents', fontsize = 20)
     fig.supxlabel('Molecule', fontsize = 20)
     fig.supylabel('Average ' + obj.upper(), fontsize = 20)
     plt.tight_layout(rect=[0.01, 0.0, 1, 1])
