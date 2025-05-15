@@ -239,24 +239,6 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
     if save_fig:
         plt.savefig(root_dir + "classifier.pdf")
     return classifier
-
-def fit_gp_model(df_liquid, data, gp_shuffle_seed=42):
-    # Create training/test set
-    param_names = list(data.param_names) + ["temperature"]
-    models = {}
-
-    for property_name in ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]:
-        # Check if the property exists in the dataframe and make a GP model if it does
-        if property_name in df_liquid.columns:
-            x_train, y_train, x_test, y_test = shuffle_and_split(
-            df_liquid, param_names, property_name, shuffle_seed=gp_shuffle_seed
-        )
-            models[property_name] = run_gpflow_scipy(
-                x_train,
-                y_train,
-                gpflow.kernels.RBF(lengthscales=np.ones(data.n_params + 1)),
-            )
-    return models
     
 def rank_vle_samples(all_samples, models, data, verbose=True):
     top_liquid_samples, top_vapor_samples = rank_vl_samples(all_samples, None, models, data, verbose)

@@ -3,6 +3,9 @@ import gpflow
 import numpy as np
 import gpflow
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
+import pickle
 
 # sys.path.append("../")
 
@@ -61,8 +64,52 @@ def get_exp_data(molec_object, prop_key):
         )
     return exp_data, property_bounds, property_name
 
+def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
+    dir_train_test = path_gps + "/train_test_sets/"
+    os.makedirs(dir_train_test, exist_ok=True)
+    gp_model_path = os.path.join(path_gps, "gp_models.pkl")
+
+    if os.path.exists(gp_model_path):
+        # Load the GP models from the file
+        with open(gp_model_path, "rb") as f:
+            models_props, best_labels = pickle.load(f)
+    else:
+        models_props = {}
+        best_labels = {}
+        property_names = ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
+        param_names = list(data.param_names) + ["temperature"]
+        # Get the property names from the data
+        for prop_name in property_names:
+            #Make GP models for each property that exists
+            if prop_name in df_data.columns:
+                models, x_train, y_train, x_test, y_test = fit_gp_models(df_data, data, prop_name, None, gp_shuffle_seed, False)
+                exp_data, property_bounds, name = get_exp_data(data, prop_name)
+                model_best, best_label = plot_model_performance(models, x_test, y_test, property_bounds, None, False)
+                models_props[prop_name] = models
+                best_labels[prop_name] = best_label
+                # Save training and test data to a file
+                df_xtrain = pd.DataFrame(x_train, columns=param_names)
+                df_xtest = pd.DataFrame(x_test, columns=param_names)
+                df_xtrain.to_csv(f"{dir_train_test}/{prop_name}_x_train", index=False)
+                df_xtest.to_csv(f"{dir_train_test}/{prop_name}_x_test", index=False)
+                df_ytrain = pd.DataFrame(y_train, columns=[prop_name])
+                df_ytest = pd.DataFrame(y_test, columns=[prop_name])
+                df_ytrain.to_csv(f"{dir_train_test}/{prop_name}_y_train", index=False)
+                df_ytest.to_csv(f"{dir_train_test}/{prop_name}_y_test", index=False)
+        with open(gp_model_path, "wb") as f:
+            pickle.dump((models_props, best_labels), f)
+
+    models_best = {prop : models_props[prop][best_labels[prop]] for prop in models_props.keys()}
+
+    return models_best, models_props, dir_train_test
 
 def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_fig = False):
+
+    gpConfig={'useWhiteKernel':False,
+            'trainLikelihood':True,
+            'anisotropic':True,
+            'mean_function':"Linear"}
+    
     ### Fit GP Model to liquid density
     param_names = list(data.param_names) + ["temperature"]
     
@@ -73,23 +120,9 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
     # Fit model
     models = {}
 
-    models["RBF"] = run_gpflow_scipy(
-        x_train,
-        y_train,
-        gpflow.kernels.RBF(lengthscales=np.ones(data.n_params + 1)),
-    )
-
-    models["Matern32"] = run_gpflow_scipy(
-        x_train,
-        y_train,
-        gpflow.kernels.Matern32(lengthscales=np.ones(data.n_params + 1)),
-    )
-
-    models["Matern52"] = run_gpflow_scipy(
-        x_train,
-        y_train,
-        gpflow.kernels.Matern52(lengthscales=np.ones(data.n_params + 1)),
-    )
+    for kernel in ["RBF", "Matern32", "Matern52", "RQ"]:
+        gpConfig["kernel"] = kernel
+        models[kernel] = run_gpflow_scipy(x_train, y_train, gpConfig, restarts = 1)
  
     # Plot model performance on train and test points
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
@@ -166,7 +199,7 @@ def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=N
     if save_fig:
         pdf.savefig(fig)
 
-    return mse_model
+    return mse_model, label
     
 def plot_gp_slices(models, data, property_name, pdf):
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)

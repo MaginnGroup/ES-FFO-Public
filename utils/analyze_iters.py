@@ -10,15 +10,16 @@ import pickle
 from utils.id_new_samples import (
     prep_df_density,
     build_classifier,
-    fit_gp_model,
     rank_vl_samples,
     vis_top_samples,
     get_next_iter_params,
     classify_samples,
-    prepare_df_density, rank_vle_samples, get_next_vle_params, prepare_df_props
+    rank_vle_samples, 
+    get_next_vle_params, 
+    prepare_df_props
 )
 from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
-from utils.plotfig_gp_examples import fit_gp_models, plot_gp_slices, plot_test_sets, get_exp_data, plot_model_performance
+from utils.plotfig_gp_examples import plot_gp_slices, plot_test_sets, get_exp_data, plot_model_performance, get_prop_best_model
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
 
 def get_signac_results(project, data_dict, prop_names):
@@ -138,7 +139,9 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_s
         root_dir_vle = os.path.join(root_dir, iter_type)
 
         ### Fit GP Model
-        models = fit_gp_model(df_liquid, data, gp_shuffle_seed=gp_shuffle_seed)
+        path_gps = f"{root_dir_vle}/iter-{str(iter_num)}"
+
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liquid, data, path_gps, gp_shuffle_seed)
 
         ### Step 3: Find new parameters for MD simulations
         # SVM to classify hypercube regions as liquid or vapor
@@ -151,7 +154,7 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_s
         
         
         #### Find Low MSE parameter sets
-        vle_samples = rank_vle_samples(latin_hypercube, models, data, verbose)
+        vle_samples = rank_vle_samples(latin_hypercube, models_best, data, verbose)
         result, pareto_points, dominated_points = find_pareto_set(
         vle_samples.drop(columns=list(data.param_names)).values, is_pareto_efficient)
         vle_samples = vle_samples.join(pd.DataFrame(result, columns=["is_pareto"]))
@@ -191,7 +194,8 @@ def find_new_samples(all_df_data, data_dict, verbose = True, save_fig=False, cl_
         classifier = build_classifier(df_iter1, root_dir_ld, data, cl_shuffle_seed, verbose, save_fig)
 
         ### Fit GP Model
-        models = fit_gp_model(df_liquid, data, gp_shuffle_seed=gp_shuffle_seed)
+        path_gps = f"{root_dir_ld}/iter-{str(iter_num)}"
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liquid, data, path_gps, gp_shuffle_seed)
 
         ### Step 3: Find new parameters for MD simulations
         # SVM to classify hypercube regions as liquid or vapor
@@ -202,7 +206,7 @@ def find_new_samples(all_df_data, data_dict, verbose = True, save_fig=False, cl_
             skip_header=1,
         )[:, 1:]
         liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier)
-        top_liquid_samples, top_vapor_samples = rank_vl_samples(liquid_samples, vapor_samples, models, data, verbose)
+        top_liquid_samples, top_vapor_samples = rank_vl_samples(liquid_samples, vapor_samples, models_best, data, verbose)
 
         #### Find and Visualize Low MSE parameter sets
         top_liq, top_vap = vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir_ld, iter_num, save_fig)
@@ -269,18 +273,10 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
 
-        models_props = {}
-        property_names = ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
-        # Get the property names from the data
-        for prop_name in property_names:
-            #Make GP models for each property that exists
-            if prop_name in df_liq.columns:
-                models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig = False)
-                exp_data, property_bounds, name = get_exp_data(data, prop_name)
-                model_best = plot_model_performance(models, x_test, y_test, property_bounds, pdf, save_fig)
-                models_props[prop_name] = model_best
-
-        models_molecs[mol_name] = models_props
+        path_gps = os.path.join(dir_name, "gp_models.pkl")
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, path_gps, gp_shuffle_seed)
+            
+        models_molecs[mol_name] = models_best
 
     dir2 = f"analysis/all_mols/{iter_type}/iter-{str(iter_num)}"
     with open(dir2 + "/gp_models.pkl", "wb") as f:
@@ -302,19 +298,31 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
         pdf = PdfPages(pdf_name)
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
+        path_gps = os.path.join(dir_name, "gp_models.pkl")
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, path_gps, gp_shuffle_seed)
+        
+        for prop_name, models in all_models.items():
+            # Load data
+            exp_data, property_bounds, name = get_exp_data(data, prop_name)
+            df_x_train = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_train.csv"), header = 1, index_col = False)
+            df_y_train = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_y_train.csv"), header = 1, index_col = False)
+            df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
+            df_y_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_y_test.csv"), header = 1, index_col = False)
+            df_x_all = pd.concat([df_x_train, df_x_test], ignore_index=True)
+            df_y_all = pd.concat([df_y_train, df_y_test], ignore_index=True)
 
-        property_names = ["sim_liq_density", "sim_surf_tens", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
-        # Get the property names from the data
-        for prop_name in property_names:
-            #Make GP models for each property that exists
-            if prop_name in df_liq.columns:
-                models, x_train, y_train, x_test, y_test = fit_gp_models(df_liq, data, prop_name, pdf, gp_shuffle_seed, save_fig)
-                exp_data, property_bounds, name = get_exp_data(data, prop_name)
-                model_best = plot_model_performance(models, x_test, y_test, property_bounds, pdf, xylim=None, save_fig=False)
-                with open(dir_name + "/gp_models.pkl", "wb") as f:
-                    pickle.dump(model_best, f)
-                plot_gp_slices(models, data, prop_name, pdf)
-                if len(x_test) > 0:
-                    plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
+            #Plot model performance
+            plot_model_performance(models, df_x_all, df_y_all, property_bounds, pdf, xylim=None, save_fig=False)
+            plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, xylim=None, save_fig=False)
+            plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, xylim=None, save_fig=False)
+
+        for prop_name, models in all_models.items():
+            #Plot test sets
+            df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
+            if len(df_x_test) > 0:
+                x_test = df_x_test.to_numpy()
+                plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
+            #Plot GP slices
+            plot_gp_slices(models, data, prop_name, pdf) 
 
         pdf.close()
