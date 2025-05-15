@@ -9,25 +9,7 @@ import json
 import sys
 
 sys.path.append("..")
-from utils.molec_class_files import (
-    r14,
-    r32,
-    r50,
-    r125,
-    r134a,
-    r143a,
-    r170,
-    r41,
-    r23,
-    r161,
-    r152a,
-    r152,
-    r134,
-    r143,
-    r116,
-)
-from utils import atom_type, opt_atom_types
-
+from utils import opt_atom_types
 sys.path.remove("..")
 
 # Ignore warnings caused by "nan" values
@@ -42,12 +24,14 @@ from sklearn.exceptions import ConvergenceWarning
 simplefilter("ignore", category=ConvergenceWarning)
 
 
+
 class ProjectOPT(FlowProject):
     def __init__(self):
         current_path = Path(os.getcwd()).absolute()
         # Set Project Path to be that of the current working directory
         super().__init__(path=current_path)
 
+Opt_group = ProjectOPT.make_group(name = "OptGenFF")
 
 @ProjectOPT.label
 def pareto_set_exists(job):
@@ -67,8 +51,9 @@ def pareto_set_exists(job):
         return job.doc["pareto_info"]
 
 # Only run this operation for the first repeat job
+@Opt_group
 @ProjectOPT.pre(
-    lambda job: job.sp.repeat_number == 1 and job.sp.atom_type in [0, 1, 2, 3, 4, 5, 6, 8, 11]
+    lambda job: job.sp.repeat_number == 1 and job.sp.atom_type in [1,2]
 )
 @ProjectOPT.post(pareto_set_exists)
 @ProjectOPT.operation()
@@ -100,7 +85,7 @@ def results_computed(job):
     # Write script that checks whether the intermediate job files are there
     return job.isfile("opt_at_results.csv") and job.isfile("sorted_at_res.csv")
 
-
+@Opt_group
 @ProjectOPT.pre(pareto_set_exists)
 @ProjectOPT.post(results_computed)
 @ProjectOPT.operation()
@@ -120,13 +105,6 @@ def run_obj_alg(job):
     driver = opt_atom_types.Opt_ATs(
         training_molecules, job.sp.atom_type, total_repeats, seed, obj_choice
     )
-
-    if job.sp.obj_choice == "ExpValPrior":
-        # Save weight scaler to job document
-        job.doc["weight_sclr"] = driver.weight_sclr
-        # Add weights to job document
-        job.doc.weights = driver.at_class.at_weights
-        job.doc.wt_params = driver.at_class.weighted_params
 
     # Create param sets for the AT optimization based on seed.
     # Save these to the Results folder in the directory above for reuse
