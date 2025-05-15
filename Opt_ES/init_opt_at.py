@@ -4,14 +4,14 @@ import json
 project = signac.init_project("opt_at_params")
 
 # Set Initial Parameters
-Atom_Types = [0, 1, 2, 3, 4, 5, 6, 8, 11]
+Atom_Types = [1,2]
 repeats = 25  # Repeats for full optimization
 repeats_ind = 25  # Repeats for individual molecule optimization
 lhs_pts = int(1e5)  # Number of LHS points to generate
 seed = 1
 save_data = True
 training_molecules = list(
-    ["R14", "R32", "R50", "R170", "R125", "R134a", "R143a", "R41"]
+    ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 )
 
 if isinstance(training_molecules, list):
