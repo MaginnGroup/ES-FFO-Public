@@ -2,11 +2,15 @@ from scipy.stats import qmc
 import pandas as pd
 import os
 import sys
+
+sys.path.append("..")
 from utils.molec_class_files import esolvs
+sys.path.remove("..")
 
 # Load class properies for each training molecule
 mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF", "R125"]
 molec_dict = esolvs.make_dict()
+
 
 
 seed = 7  # Seed of data

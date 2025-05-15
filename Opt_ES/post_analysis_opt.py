@@ -1,6 +1,5 @@
 # Imports
-from utils.molec_class_files import r14, r32, r50, r125, r134a, r143a, r170
-from utils import atom_type, opt_atom_types
+import sys
 import numpy as np
 import unyt as u
 import pandas as pd
@@ -10,6 +9,11 @@ import scipy
 import signac
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+
+sys.path.append("..")
+from utils.molec_class_files import esolvs
+from utils import atom_type, opt_atom_types
+sys.path.remove("..")
 
 # Set params for what you want to analyze
 save_data = True  # Data to save

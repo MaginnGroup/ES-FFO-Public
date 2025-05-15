@@ -6,10 +6,11 @@ import pandas as pd
 import sys
 import glob
 import os
+
+sys.path.append("..")
 from utils.molec_class_files import esolvs
 from fffit.fffit.utils import values_scaled_to_real
-
-from utils.molec_class_files import esolvs
+sys.path.remove("..")
 
 # Load class properies for each training molecule
 mol_names = ["R125"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
