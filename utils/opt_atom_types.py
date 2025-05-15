@@ -10,6 +10,7 @@ import pandas as pd
 import pickle
 import gpflow
 import json
+import glob
 
 from fffit.fffit.utils import (
     values_real_to_scaled,
@@ -35,23 +36,7 @@ import tensorflow as tf
 from itertools import combinations
 import numdifftools as nd
 from sklearn.metrics import mean_absolute_percentage_error
-from .molec_class_files import (
-    r14,
-    r32,
-    r50,
-    r125,
-    r134a,
-    r143a,
-    r170,
-    r41,
-    r23,
-    r161,
-    r152a,
-    r152,
-    r134,
-    r143,
-    r116,
-)
+from .molec_class_files import esolvs
 from .atom_type import make_atom_type_class
 from pathlib import Path
 
@@ -66,13 +51,13 @@ def get_gp_data_from_pkl(key_list):
 
     Parameters
     ----------
-    key_list: list of keys to consider. Must be valid Keys: "R14", "R32", "R50", "R125", "R143a", "R134a", "R170"
+    key_list: list of keys to consider. Must be valid Keys: "EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"
 
     Returns:
     --------
     all_gp_dict: dict, dictionary of dictionary of training molecule gps for each property
     """
-    valid_keys = ["R14", "R32", "R50", "R125", "R143a", "R134a", "R170", "R41"]
+    valid_keys = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
     assert isinstance(key_list, list), "at_names must be a list"
     assert (
         all(isinstance(name, str) for name in key_list) == True
@@ -82,20 +67,20 @@ def get_gp_data_from_pkl(key_list):
     ), "all key in key_list must be valid keys"
     # Make a dict of the gp dictionaries for each molecule
     all_gp_dict = {}
-    # Ensure we are working out of generalizedFF
-    if Path(os.getcwd()).parent.name == "generalizedFF":
+    # Ensure we are working out of ES-FFO
+    if Path(os.getcwd()).parent.name == "ES-FFO":
         path_use = Path(Path(os.getcwd()).parent)
     else:
         path_use = Path(os.getcwd())
-    # loop over molecules
+    # Get path to the GP data from the last VLE iteration
     for key in key_list:
         # Get dict of vle gps
-        # OPTIONAL append the MD density gp to the VLE density gp dictionary w/ key "MD Density"
-        file = path_use / "molec_gp_data" / (key + "-vlegp/vle-gps.pkl")
-        assert (
-            file.exists()
-        ), f"{os.path.abspath(file)} does not exist. Check file path carefully."
-        with open(file, "rb") as pickle_file:
+        files = sorted(glob.glob(f"Build_GPs/analysis/{key}/vle_iters/iter-*/best_gp_models.pkl"))
+        file_fin = files[-1]
+        #Ensure the file exists
+        assert (file_fin.exists()), f"{os.path.abspath(file_fin)} does not exist. Check file path carefully."
+        #Load the last file (most recent VLE iter GPs)     
+        with open(file_fin, "rb") as pickle_file:
             all_gp_dict[key] = pickle.load(pickle_file)
 
     return all_gp_dict
@@ -135,44 +120,15 @@ class Problem_Setup:
         at_class: at_number, int with which to create class for atom typing
         obj_choice: str, the objective choice. "SSE" (SSE) or "ExpVal" (Expected Value of SSE) or "ExpValPrior" (Expected Value of SSE with GAFF Prior)
         """
-        # Load class properies for each molecule
-        r14_class = r14.R14Constants()
-        r32_class = r32.R32Constants()
-        r50_class = r50.R50Constants()
-        r125_class = r125.R125Constants()
-        r134a_class = r134a.R134aConstants()
-        r143a_class = r143a.R143aConstants()
-        r170_class = r170.R170Constants()
-        r41_class = r41.R41Constants()
 
-        r23_class = r23.R23Constants()
-        r161_class = r161.R161Constants()
-        r152a_class = r152a.R152aConstants()
-        r152_class = r152.R152Constants()
-        r143_class = r143.R143Constants()
-        r134_class = r134.R134Constants()
-        r116_class = r116.R116Constants()
-        # Set a dictionary of all molecule data
-        self.all_train_molec_data = {
-            "R14": r14_class,
-            "R32": r32_class,
-            "R50": r50_class,
-            "R170": r170_class,
-            "R125": r125_class,
-            "R134a": r134a_class,
-            "R143a": r143a_class,
-            "R41": r41_class,
-        }
+        # Load class properies for each training molecule
+        mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+        molec_dict = esolvs.make_dict(mol_names)
 
-        self.all_test_molec_data = {
-            "R23": r23_class,
-            "R161": r161_class,
-            "R152a": r152a_class,
-            "R152": r152_class,
-            "R134": r134_class,
-            "R143": r143_class,
-            "R116": r116_class,
-        }
+        # Set a dictionary of all molecule data (if we want training and testing make 2 dicts)
+        self.all_train_molec_data = molec_dict
+
+        self.all_test_molec_data = molec_dict
 
         try:
             self.all_train_gp_dict = get_gp_data_from_pkl(
@@ -182,36 +138,12 @@ class Problem_Setup:
             warnings.warn(
                 "No gp data found. Many functions will not work without GP Data"
             )
-        self.valid_mol_keys = [
-            "R14",
-            "R32",
-            "R50",
-            "R125",
-            "R143a",
-            "R134a",
-            "R170",
-            "R23",
-            "R41",
-            "R161",
-            "R152a",
-            "R152",
-            "R134",
-            "R143",
-            "R116",
-        ]
-        self.valid_train_mol_keys = [
-            "R14",
-            "R32",
-            "R50",
-            "R125",
-            "R143a",
-            "R134a",
-            "R170",
-            "R41",
-        ]
+        self.valid_mol_keys = mol_names
+        self.valid_train_mol_keys = mol_names
         self.valid_prop_keys = [
             "sim_vap_density",
             "sim_liq_density",
+            "sim_surf_tens"
             "sim_Pvap",
             "sim_Hvap",
         ]
@@ -219,8 +151,7 @@ class Problem_Setup:
         assert obj_choice in [
             "ExpVal",
             "SSE",
-            "ExpValPrior",
-        ], "obj_choice must be SSE, ExpVal, or ExpValPrior"
+        ], "obj_choice must be SSE or ExpVal"
 
         # Set training and testing data dictionaries
         self.molec_data_dict = {}
@@ -242,7 +173,7 @@ class Problem_Setup:
         self.seed = 1
 
         # Ensure we are working out of generalizedFF
-        if Path(os.getcwd()).parent.name == "generalizedFF":
+        if Path(os.getcwd()).parent.name == "ES-FFO":
             self.use_root = Path(Path(os.getcwd()).parent)
         else:
             self.use_root = Path(os.getcwd())
@@ -252,75 +183,6 @@ class Problem_Setup:
         self.use_dir_name = self.make_results_dir(
             list(self.molec_data_dict.keys()), obj_choice=obj_choice
         )
-
-        # If using ExpValPrior, check that you can calculate the average value of the pareto set of ExpVal
-        if obj_choice == "ExpValPrior":
-            # If a weight value is not set
-            if weight_sclr == None:
-                calc_Esse_avg = True
-                molecule_str = self.molec_names_to_str(molec_names)
-                # See if a calculated weight exists
-                weight_sclr_file = (
-                    self.use_root
-                    / ("Results")
-                    / ("at_" + str(at_number))
-                    / ("weight_sclrs.json")
-                )
-                if weight_sclr_file.exists():
-                    # If the file exists, load the data
-                    with open(weight_sclr_file, "r") as json_file:
-                        weight_sclr_data = json.load(json_file)
-
-                    if molecule_str in weight_sclr_data:
-                        self.weight_sclr = weight_sclr_data[molecule_str]
-                        calc_Esse_avg = False
-
-                # If the data doesn't exist, create it using the results from ExpVal Data
-                if calc_Esse_avg:
-                    assert hasattr(
-                        self.at_class, "gaff_params"
-                    ), "at_class must have attribute gaff_params"
-                    assert hasattr(
-                        self.at_class, "at_weights"
-                    ), "at_class must have attribute at_weights"
-                    assert (
-                        len(self.at_class.gaff_params)
-                        == len(self.at_class.at_weights)
-                        == len(self.at_class.at_names)
-                    ), "at_class gaff_params must have same length as at_weights"
-                    # Get g_avg from average ExpVal Data if it exists
-                    best_info = self.__get_ExpVal_info()
-                    # print("best_info: ", best_info)
-                    if best_info is None:
-                        warnings.warn(
-                            "No best info found for ExpVal. Cannot calculate weight_sclr. Setting all weights to 0"
-                        )
-                        # If no data is available, set weight to 0, this is equivalent to the ExpVal method
-                        Esse_avg = 0
-                    else:
-                        # Get average value of best sets for each parameter
-                        Esse_avg = best_info["Min Obj"].mean()
-                    # Set scaler to 2 significant figures
-                    self.weight_sclr = float(
-                        "{:g}".format(float("{:.2g}".format(Esse_avg)))
-                    )
-                    weight_sclr_data = {molecule_str: self.weight_sclr}
-
-                # Add it to the Json dictionary
-                if calc_Esse_avg and best_info is not None:
-                    if weight_sclr_file.exists():
-                        # load it
-                        with open(weight_sclr_file, "r") as json_file:
-                            file_data = json.loads(json_file.read())
-                        # change it
-                        file_data[molecule_str] = self.weight_sclr
-                    else:
-                        file_data = weight_sclr_data
-                    # write it all back
-                    with open(weight_sclr_file, "w") as json_file:
-                        json_file.write(json.dumps(file_data))
-            else:
-                self.weight_sclr = weight_sclr
 
         # Make results directory if it doesn't exist
         os.makedirs(self.use_dir_name, exist_ok=True)
@@ -337,7 +199,6 @@ class Problem_Setup:
             list(self.molec_data_dict.keys()), obj_choice="ExpVal"
         )
         file_end = "best_per_run.csv"  # pareto_info.csv
-        prop_names = ["sim_liq_density", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
         best_info = None
         file = dir_name / (file_end)
         # print(file)
@@ -382,14 +243,13 @@ class Problem_Setup:
         assert isinstance(obj_choice, str) and obj_choice in [
             "ExpVal",
             "SSE",
-            "ExpValPrior",
         ], "obj_choice must be a string or None"
         assert isinstance(
             molecules, (str, list, np.ndarray)
         ), "molecules must be a string or list/np.ndarray of strings"
         molecule_str = self.molec_names_to_str(molecules)
 
-        if Path(os.getcwd()).parent.name == "generalizedFF":
+        if Path(os.getcwd()).parent.name == "ES-FFO":
             use_dir_name = Path(Path(os.getcwd()).parent)
         else:
             use_dir_name = Path(os.getcwd())
@@ -430,6 +290,10 @@ class Problem_Setup:
                     exp_data = molec_object.expt_Hvap
                     property_bounds = molec_object.Hvap_bounds
                     property_name = "Enthalpy of Vaporization [kJ/kg]"
+                elif "surf_tens" in prop_key:
+                    exp_data = molec_object.expt_surf_tens
+                    property_bounds = molec_object.surf_tens_bounds
+                    property_name = "Surface Tension [mN/m]"
 
                 values = np.array(list(exp_data.values()))
                 y_unc = molec_object.uncertainties[prop_key]
@@ -556,6 +420,10 @@ class Problem_Setup:
             exp_data = molec_object.expt_Hvap
             property_bounds = molec_object.Hvap_bounds
             property_name = "Enthalpy of Vaporization [kJ/kg]"
+        elif "surf_tens" in prop_key:
+            exp_data = molec_object.expt_surf_tens
+            property_bounds = molec_object.surf_tens_bounds
+            property_name = "Surface Tension [mN/m]"
         else:
             raise (
                 ValueError,
@@ -602,26 +470,18 @@ class Problem_Setup:
         train_data = {}
         for strng in ["train", "test"]:
             # OPTIONAL (but not implemented here) append the MD density gp to the VLE density gp dictionary w/ key "MD Density"
-            file_x = (
-                self.use_root
-                / "molec_gp_data"
-                / (molec_key + "-vlegp/x_" + strng + ".csv")
-            )
-            assert (
-                file_x.exists()
-            ), "molec_gp_data/key-vlegp/x_****.csv does not exist. Check key list carefully"
-            x = np.loadtxt(file_x, delimiter=",", skiprows=1)
+            files = sorted(glob.glob(f"Build_GPs/analysis/{molec_key}/vle_iters/iter-*/best_gp_models.pkl"))
+            file_fin = files[-1]
+            dir_fin = os.path.join(os.path.dirname(file_fin), "train_test_sets")
             dict = train_data if strng == "train" else test_data
-            dict["x"] = x
 
             for prop_key in prop_keys:
-                file_y = (
-                    self.use_root
-                    / "molec_gp_data"
-                    / (molec_key + "-vlegp/" + prop_key + "_y_" + strng + ".csv")
-                )
+                file_x = os.path.join(dir_fin, f"{prop_name}_x_{strng}.csv")
+                file_y =  os.path.join(dir_fin, f"{prop_key}_y_{strng}.csv")
+                x = np.loadtxt(file_x, delimiter=",", skiprows=1)            
                 prop_data = np.loadtxt(file_y, delimiter=",", skiprows=1)
                 dict[prop_key] = prop_data
+                dict[prop_key + "_x"] = x
 
         return train_data, test_data
 
@@ -651,18 +511,8 @@ class Problem_Setup:
             gp_theta_guess, np.ndarray
         ), "gp_theta_guess must be an np.ndarray"
         assert isinstance(
-            molec_object,
-            (
-                r14.R14Constants,
-                r32.R32Constants,
-                r50.R50Constants,
-                r125.R125Constants,
-                r134a.R134aConstants,
-                r143a.R143aConstants,
-                r170.R170Constants,
-                r41.R41Constants,
-            ),
-        ), "molec_object must be a class object from r***.py"
+            molec_object,esolvs.EsolvsConstants
+        ), "molec_object must be a class object of EsolvsConstants from esolvs.py"
 
         # Scale X data
         gp_Xexp = values_real_to_scaled(Xexp, molec_object.temperature_bounds)
@@ -885,26 +735,8 @@ class Problem_Setup:
             # print("sum_var_ratios: ", sum_var_ratios)
             expected_sse_val = sse + sum_var_ratios
             obj = expected_sse_val
-
-        # If we have pareto info saved, get the average value of the pareto set
-        if self.obj_choice == "ExpValPrior":
-            # Calculate weights for each parameter
-            # A difference from GAFF parameters are weighted % increase of ExpVal best objective
-            inv_w2 = self.weight_sclr * self.at_class.at_weights
-            # Get scaled parameter values
-            theta_scl = values_real_to_scaled(
-                theta_guess.reshape(1, -1), self.at_class.at_bounds_nm_kjmol
-            ).flatten()
-            gaff_params_2D = self.at_class.gaff_params.flatten()
-            gaff_real = self.values_pref_to_real(gaff_params_2D)
-            gaff_scl = values_real_to_scaled(
-                gaff_real.reshape(1, -1), self.at_class.at_bounds_nm_kjmol
-            ).flatten()
-            # Add objective value to difference
-            gaff_penalty = np.sum(inv_w2 * (theta_scl - gaff_scl) ** 2)
-            obj += gaff_penalty
-        else:
-            gaff_penalty = 0
+       
+        gaff_penalty = 0
 
         # print(obj)
         return float(obj), sse_pieces, var_ratios, gaff_penalty
@@ -949,9 +781,6 @@ class Problem_Setup:
             # Add variance ratios for each property when not using SSE
             if self.obj_choice != "SSE":
                 df_sums += prop_var_ratios
-            # Add GAFF penalty equally among all properties if using GAFF Prior objective
-            if self.obj_choice == "ExpValPrior":
-                df_sums += gaff_penalty / num_props
 
             # Set columns for costs
             if s == 0:
@@ -1076,7 +905,7 @@ class Problem_Setup:
             save_csv_path3 = os.path.join(dir_name, "Z_matrix", save_label + ".csv")
             # Transform to Pandas df and save to csv
             df_ranked_indices = pd.DataFrame(
-                {"Indices": ranked_indices, "Norm Values":ranked_norm_vals, "AT Names": at_names_ranked}
+                {"Indeces": ranked_indices, "Norm Values":ranked_norm_vals, "AT Names": at_names_ranked}
             )
             # df_ranked_indices = pd.DataFrame(ranked_indices)
             df_ndata = pd.DataFrame([n_data])
@@ -2031,7 +1860,7 @@ class Vis_Results(Analyze_opt_res):
                 # Plot model performance
                 pdf.savefig(
                     plot_model_performance(
-                        {label: gp_model}, test_data["x"], test_data[key], y_bounds
+                        {label: gp_model}, test_data[key+"_x"], test_data[key], y_bounds
                     )
                 )
                 plt.close()
@@ -2039,7 +1868,7 @@ class Vis_Results(Analyze_opt_res):
                 #Calculate and save MAPD
                 y_data_physical = values_scaled_to_real(test_data[key], y_bounds)
                 for label, model in {label: gp_model}.items():
-                    gp_mu, gp_var = model.predict_f(test_data["x"])
+                    gp_mu, gp_var = model.predict_f(test_data[key + "_x"])
                     gp_mu_physical = values_scaled_to_real(gp_mu, y_bounds)
                     mapd = 100*np.mean(
                             np.abs(
@@ -2083,20 +1912,20 @@ class Vis_Results(Analyze_opt_res):
                         del figs
                 if get_train_test:
                     # #Plot test vs train for each parameter set
-                    for test_params in test_data["x"][:, : molec_object.n_params]:
+                    for test_params in test_data[key+"_x"][:, : molec_object.n_params]:
                         # Find points in test set with correct param value
                         # Locate rows where parameter set == test parameter set
                         match_test = np.unique(
                             np.where(
                                 (
-                                    test_data["x"][:, : molec_object.n_params]
+                                    test_data[key+"_x"][:, : molec_object.n_params]
                                     == test_params
                                 ).all(axis=1)
                             )[0]
                         )
                         test_points = np.concatenate(
                             (
-                                test_data["x"][match_test, -1].reshape(-1, 1),
+                                test_data[key+"_x"][match_test, -1].reshape(-1, 1),
                                 test_data[key][match_test].reshape(-1, 1),
                             ),
                             axis=1,
@@ -2105,14 +1934,14 @@ class Vis_Results(Analyze_opt_res):
                         match_trn = np.unique(
                             np.where(
                                 (
-                                    train_data["x"][:, : molec_object.n_params]
+                                    train_data[key+"_x"][:, : molec_object.n_params]
                                     == test_params
                                 ).all(axis=1)
                             )[0]
                         )
                         train_points = np.concatenate(
                             (
-                                train_data["x"][match_trn, -1].reshape(-1, 1),
+                                train_data[key+"_x"][match_trn, -1].reshape(-1, 1),
                                 train_data[key][match_trn].reshape(-1, 1),
                             ),
                             axis=1,
@@ -2383,7 +2212,7 @@ class Vis_Results(Analyze_opt_res):
 
     def plot_avg_MAPD(self, mapd_dfs, df_labels, df_colors, title=None):
         fig, ax = plt.subplots()
-        cols = ["mapd_liq_density", "mapd_vap_density", "mapd_Pvap", "mapd_Hvap"]
+        cols = ["mapd_liq_density", "mapd_vap_density", "mapd_Pvap", "mapd_Hvap", "mapd_st"]
         bar_width = 0.1
         molec_names = list(mapd_dfs[0]["molecule"])
         indices = np.arange(len(mapd_dfs[0]))
@@ -2437,7 +2266,7 @@ class Vis_Results(Analyze_opt_res):
         return fig
 
     def plot_MAPD(self, mapd_dfs, df_labels, df_colors, title):
-        cols = ["mapd_liq_density", "mapd_vap_density", "mapd_Pvap", "mapd_Hvap"]
+        cols = ["mapd_liq_density", "mapd_vap_density", "mapd_Pvap", "mapd_Hvap", "mapd_st"]
         names = [
             "Liquid Density",
             "Vapor Density",
