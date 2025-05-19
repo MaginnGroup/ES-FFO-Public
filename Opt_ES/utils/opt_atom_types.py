@@ -476,7 +476,7 @@ class Problem_Setup:
             dict = train_data if strng == "train" else test_data
 
             for prop_key in prop_keys:
-                file_x = os.path.join(dir_fin, f"{prop_name}_x_{strng}.csv")
+                file_x = os.path.join(dir_fin, f"{prop_key}_x_{strng}.csv")
                 file_y =  os.path.join(dir_fin, f"{prop_key}_y_{strng}.csv")
                 x = np.loadtxt(file_x, delimiter=",", skiprows=1)            
                 prop_data = np.loadtxt(file_y, delimiter=",", skiprows=1)
