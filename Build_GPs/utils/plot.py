@@ -3,16 +3,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+import sys
 
-from .models import get_prop_best_model, get_exp_data
+sys.path.append("../..")
 from utils.prep_ms_data import prepare_df_props
-
 from fffit.fffit.utils import values_scaled_to_real
 from fffit.fffit.plot import (
     plot_model_performance,
     plot_slices_temperature,
     plot_slices_params,
     plot_model_vs_test)
+sys.path.remove("../..")
+
+from .models import get_prop_best_model, get_exp_data
 
 def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
     #Get all data

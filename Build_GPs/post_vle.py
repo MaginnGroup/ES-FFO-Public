@@ -3,8 +3,12 @@ import sys
 
 sys.path.append("..")
 from utils.molec_class_files import esolvs
-from utils.analyze_iters import get_signac_results, save_signac_results, new_samples_vle, find_pareto, get_best_models, plot_gp_examples
 sys.path.remove("..")
+
+from utils.signac import get_signac_results, save_signac_results
+from utils.id_new_samples import new_samples_vle, find_pareto
+from utils.models import get_best_models, plot_gp_examples
+
 
 
 #Set iters to analyze and properties to analyze

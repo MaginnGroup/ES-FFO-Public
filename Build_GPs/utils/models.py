@@ -11,15 +11,15 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn import svm
 
 # sys.path.append("../")
-
+sys.path.append("../..")
 from utils.prep_ms_data import prepare_df_props
-
 from fffit.fffit.models import run_gpflow_scipy
-from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real
-
+from fffit.fffit.utils import shuffle_and_split
 from fffit.fffit.plot import (
     plot_model_performance,
 )
+sys.path.remove("../..")
+
 
 def get_exp_data(molec_object, prop_key):
     """

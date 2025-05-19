@@ -3,9 +3,11 @@ import sys
 
 sys.path.append("..")
 from utils.molec_class_files import esolvs
-from utils.analyze_iters import get_signac_results, save_signac_results, find_new_samples, plot_gp_examples, get_best_models
-from utils.id_new_samples import check_mse_10
 sys.path.remove("..")
+
+from utils.signac import get_signac_results, save_signac_results
+from utils.id_new_samples import new_samples_ld, check_mse_10
+from utils.models import get_best_models, plot_gp_examples
 
 
 #Set iters to analyze and properties to analyze
@@ -46,5 +48,5 @@ for key, value in mse_less10.items():
         print(f"{key} : All samples have MSE less than {mse_less_10_thresh}. Proceed to VLE.")
     else:
         print(f"{key} : Total samples with MSE less than {mse_less_10_thresh}, {value}")
-        next_samples = find_new_samples(df_all_molec, molec_dict, verbose, save_fig, cl_shuffle_seed, gp_shuffle_seed, dist_seed)
+        next_samples = new_samples_ld(df_all_molec, molec_dict, verbose, save_fig, cl_shuffle_seed, gp_shuffle_seed, dist_seed)
         

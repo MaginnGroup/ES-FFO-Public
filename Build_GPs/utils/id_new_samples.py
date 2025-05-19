@@ -1,20 +1,18 @@
 import numpy as np
 import pandas as pd
 import os
-import gpflow
-import matplotlib.pyplot as plt
+import sys
 import seaborn
-from sklearn.metrics import ConfusionMatrixDisplay
 from numpy.linalg import norm
-from sklearn import svm
 from functools import reduce
-from scipy.stats import linregress
 #Need import from the utils folder
-from utils.prep_ms_data import prepare_df_props
-from .models import get_prop_best_model, build_classifier
-from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, shuffle_and_split
+sys.path.append("../..")
+from utils.prep_ms_data import prepare_df_props, prepare_df_errors
+from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
+sys.path.remove("../..")
 
+from .models import get_prop_best_model, build_classifier
 
 def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_shuffle_seed = 42, dist_seed = 1):
 
@@ -709,3 +707,79 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
             new_points_vle.to_csv(out_csv)
 
     return num_mse_less10
+
+def find_pareto(all_df_data, data_dict):
+    #Loop over all molecules:
+    all_final_params = {}
+    for mol_name, df_csv in all_df_data.items():
+        root_dir = f"analysis/{mol_name}/"
+        root_dir_vle = os.path.join(root_dir, "vle_iters")
+        #Get all data from last iteration
+        # df_csv = all_df_data[mol_name]
+        iter_num = df_csv["iter"].max()
+        ld_threshold = 0
+        data = data_dict[mol_name]
+
+        #Get all result data
+        df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale=False)
+        
+        #Prepare error data to find pareto points
+        df_paramsets = prepare_df_errors(df_all, mol_name)
+        #Save data to csv
+        dir_name = root_dir_vle + "iter-" + str(iter_num) + "/"
+        os.makedirs(dir_name, exist_ok=True)
+        csv_name = os.path.join(dir_name, "result_errors.csv")
+        df_paramsets.to_csv(csv_name)
+
+
+        mse_columns = [col for col in df_paramsets.columns if "mse" in col]
+        result, pareto_points, dominated_points = find_pareto_set(
+            df_paramsets.filter(mse_columns).values,
+            is_pareto_efficient)
+        
+        df_paramsets = df_paramsets.join(pd.DataFrame(result, columns=["is_pareto"]))
+        pareto_points = df_paramsets[df_paramsets["is_pareto"] == True]
+        print(f"A total of {len(pareto_points)} pareto efficient points were found.")
+
+        # Create the directory if it doesn't exist and store pareto points
+        dir_name = os.path.join(root_dir_vle, "iter-" + str(iter_num))
+        os.makedirs(dir_name, exist_ok=True)
+        file_name = os.path.join(dir_name , "pareto-params.csv")
+        pareto_points.to_csv(file_name)
+
+        df_final = select_final_pareto(pareto_points, root_dir, iter_num)
+    all_final_params[mol_name] = df_final
+    return all_final_params
+
+
+
+def select_final_pareto(df_pareto, root_dir, iter_num):
+    # Filter for parameter sets with less than 5 % error in all properties
+    df_final = df_pareto.drop(
+        columns=[
+            "sim_liq_density",
+            "sim_surf_tens",
+            "mse_surf_tens",
+            "mse_liq_density",
+            "mae_surf_tens",
+            "mae_liq_density",
+            "is_pareto",
+        ]
+    )
+
+    ### Choosing Final Parameter Sets (R-32)
+    # Filter for parameter sets with less than 5 % error in all properties
+    df_final = df_final[
+        (df_final["mape_surf_tens"] <= 5.0)
+        & (df_final["mape_liq_density"] <= 5.0)
+    ]
+
+    # Save CSV files
+    dir_name = root_dir + "iter-" + str(iter_num) + "/"
+    os.makedirs(dir_name, exist_ok=True)
+    csv_name = os.path.join(dir_name, "final-params.csv")
+    df_final.to_csv(csv_name)
+    csv_name = root_dir + "final-params.csv"
+    df_final.to_csv(csv_name)
+
+    return df_final
