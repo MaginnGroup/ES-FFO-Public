@@ -11,6 +11,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 import scipy 
 sys.path.append("..")
 from utils.molec_class_files import esolvs
+from utils.id_new_samples import prepare_df_props
+from utils.id_pareto import prepare_df_errors
 from utils.analyze_opt_ms import prepare_df_vle, prepare_df_vle_errors, plot_vle_envelopes,plot_pvap_hvap, plot_err_each_prop, plot_err_avg_props
 sys.path.remove("..")
 
@@ -58,11 +60,15 @@ def get_mse_data(at_num_str, obj_choice_str, param_set_str, molec_dict, project_
         df_molec = save_signac_results(project, "mol_name", property_names, csv_name= csv_name_unproc + ".csv")
     #process data and save
     csv_name_final = os.path.join(csv_root_final, project_path)
-    df_all = prepare_df_vle(df_molec, molec_dict, csv_name=csv_name_final + ".csv", drop_one = True)
+    df_all, df_liq, df_vap = prepare_df_props(df_molec, molec_dict, ld_threshold = 0, scale = False)
+    df_all = df_all.groupby(["molecule", "temperature"]).filter(lambda x: len(x) > 1)
+    df_all.to_csv(csv_name_final + ".csv")
     
     #Calculate MAPD and MSE for each T point
-    df_paramsets = prepare_df_vle_errors(df_all, molec_dict, csv_name = csv_name_final + "_err.csv")
+    df_paramsets = prepare_df_errors(df_all, molec_dict)
     csv_name_final_err = csv_name_final + "_err.csv"
+    df_paramsets.to_csv(csv_name_final_err)
+    
 
     return df_all, csv_name_final_err, df_paramsets
 
