@@ -16,207 +16,208 @@ from .molec_class_files import esolvs
 mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
-#See if we can consolidate this with another function
-def prepare_df_vle(df_csv, molec_dict, csv_name = None, drop_one = False):
-    """Prepare a pandas dataframe for fitting a GP model to density data
+#Deprecated
+# def prepare_df_vle(df_csv, molec_dict, csv_name = None, drop_one = False):
+#     """Prepare a pandas dataframe for fitting a GP model to density data
 
-    Performs the following actions:
-       - Renames "liq_density" to "sim_liq_density" (units kg/m3 assumed)
-       - Renames "vap_density" to "sim_vap_density" (units kg/m3 assumed)
-       - Renames "Pvap" to "sim_Pvap" (units bar assumed)
-       - Removes "liq_enthalpy" and "vap_enthalpy" and adds "sim_Hvap" (units kJ/kg returned)
-            - Units kJ/mol assumed for Hvap and kJ/kg for Hvap kJ/kg
+#     Performs the following actions:
+#        - Renames "liq_density" to "sim_liq_density" (units kg/m3 assumed)
+#        - Renames "vap_density" to "sim_vap_density" (units kg/m3 assumed)
+#        - Renames "Pvap" to "sim_Pvap" (units bar assumed)
+#        - Removes "liq_enthalpy" and "vap_enthalpy" and adds "sim_Hvap" (units kJ/kg returned)
+#             - Units kJ/mol assumed for Hvap and kJ/kg for Hvap kJ/kg
 
-    Parameters
-    ----------
-    df_csv : pd.DataFrame
-        The dataframe as loaded from a CSV file with the signac results
-    molec_dict : {"Rxx": RxxConstants, ...}
-        A dictionary mapping molecule names to classes
-    n_molecules : int
-        The number of molecules in the simulation
+#     Parameters
+#     ----------
+#     df_csv : pd.DataFrame
+#         The dataframe as loaded from a CSV file with the signac results
+#     molec_dict : {"Rxx": RxxConstants, ...}
+#         A dictionary mapping molecule names to classes
+#     n_molecules : int
+#         The number of molecules in the simulation
 
-    Returns
-    -------
-    df_all : pd.DataFrame
-        The dataframe with scaled parameters and MD/expt. properties
-    """
+#     Returns
+#     -------
+#     df_all : pd.DataFrame
+#         The dataframe with scaled parameters and MD/expt. properties
+#     """
 
-    def rename_col(df, property_name, units):
-        prop_units = property_name + " " + units
-        if property_name == "temperature":
-            sim_str = ""
-        else:
-            sim_str = "sim_"
-        if prop_units in df.columns:
-            df.rename(columns={prop_units: sim_str + property_name}, inplace=True)
-        elif property_name in df.columns:
-            df.rename(columns={property_name: sim_str + property_name}, inplace=True)
-        else:
-            raise ValueError(f"df must contain either {property_name} or {prop_units}")
+#     def rename_col(df, property_name, units):
+#         prop_units = property_name + " " + units
+#         if property_name == "temperature":
+#             sim_str = ""
+#         else:
+#             sim_str = "sim_"
+#         if prop_units in df.columns:
+#             df.rename(columns={prop_units: sim_str + property_name}, inplace=True)
+#         elif property_name in df.columns:
+#             df.rename(columns={property_name: sim_str + property_name}, inplace=True)
+#         else:
+#             raise ValueError(f"df must contain either {property_name} or {prop_units}")
         
-        return df
+#         return df
     
-    # Convert Hvap to kJ/kg if in kJ/mol
-    if "Hvap" in df_csv.columns:
-        #Add Hvap in kJ/kg
-        df_csv["Hvap kJ/kg"] = df_csv["Hvap"]*1000.0/df_csv["molecule"].apply(
-            lambda molec: molec_dict[molec].molecular_weight)
-        #And drop kJ/mol column
-        df_csv.drop("Hvap", axis=1)
+#     # # Convert Hvap to kJ/kg if in kJ/mol
+#     # if "Hvap" in df_csv.columns:
+#     #     #Add Hvap in kJ/kg
+#     #     df_csv["Hvap kJ/kg"] = df_csv["Hvap"]*1000.0/df_csv["molecule"].apply(
+#     #         lambda molec: molec_dict[molec].molecular_weight)
+#     #     #And drop kJ/mol column
+#     #     df_csv.drop("Hvap", axis=1)
     
-    # Rename properties to MD
-    props = ["liq_density", "vap_density", "Pvap", "Hvap", "temperature"]
-    units = ["kg/m3", "kg/m3", "bar", "kJ/kg", "K"]
-    for prop, unit in zip(props, units):
-        rename_col(df_csv, prop, unit)
+#     # Rename properties to MD
+#     props = ["liq_density", "vap_density", "Pvap", "Hvap", "temperature"]
+#     units = ["kg/m3", "kg/m3", "bar", "kJ/kg", "K"]
+#     for prop, unit in zip(props, units):
+#         rename_col(df_csv, prop, unit)
         
-    #sort by molecule and temperature -- added by Ning Wang
-    df_csv.dropna(subset=["sim_liq_density", "sim_vap_density"], how = "any", inplace=True)
-    df_csv.sort_values(by=["molecule", "temperature"], inplace=True)
+#     #sort by molecule and temperature -- added by Ning Wang
+#     df_csv.dropna(subset=["sim_liq_density", "sim_vap_density"], how = "any", inplace=True)
+#     df_csv.sort_values(by=["molecule", "temperature"], inplace=True)
 
-    #Add Tc and Rhoc predictions
-    Tc, rhoc = calc_critical(df_csv)
-    df_csv["sim_Tc"] = Tc
-    df_csv["sim_rhoc"] = rhoc
+#     #Add Tc and Rhoc predictions
+#     Tc, rhoc = calc_critical(df_csv)
+#     df_csv["sim_Tc"] = Tc
+#     df_csv["sim_rhoc"] = rhoc
 
-    #Drop any molecule and temperature with only 1 data point
-    if drop_one:
-        df_csv = df_csv.groupby(["molecule", "temperature"]).filter(lambda x: len(x) > 1)
+#     #Drop any molecule and temperature with only 1 data point
+#     if drop_one:
+#         df_csv = df_csv.groupby(["molecule", "temperature"]).filter(lambda x: len(x) > 1)
 
-    if csv_name != None:
-        df_csv.to_csv(csv_name)
+#     if csv_name != None:
+#         df_csv.to_csv(csv_name)
            
-    return df_csv
+#     return df_csv
 
-def calc_critical(df):
-    """Compute the critical temperature and density
+#Moved to id_new_samples.py
+# def calc_critical(df):
+#     """Compute the critical temperature and density
 
-    Accepts a dataframe with "T_K", "rholiq_kgm3" and "rhovap_kgm3"
-    Returns the critical temperature (K) and density (kg/m3)
+#     Accepts a dataframe with "T_K", "rholiq_kgm3" and "rhovap_kgm3"
+#     Returns the critical temperature (K) and density (kg/m3)
 
-    Computes the critical properties with the law of rectilinear diameters
-    """
-    Tc = []
-    rhoc = []
-    for group, values in df.groupby(['molecule']):    
-        #Need to group by molecule and do this for each molecule
-        temps = values["temperature"].values
-        liq_density = values["sim_liq_density"].values
-        vap_density = values["sim_vap_density"].values
+#     Computes the critical properties with the law of rectilinear diameters
+#     """
+#     Tc = []
+#     rhoc = []
+#     for group, values in df.groupby(['molecule']):    
+#         #Need to group by molecule and do this for each molecule
+#         temps = values["temperature"].values
+#         liq_density = values["sim_liq_density"].values
+#         vap_density = values["sim_vap_density"].values
 
-        #Check that all temps are not the same
-        if all(x == temps[0] for x in temps):
-            Tc += [np.nan]*len(temps)
-            rhoc += [np.nan]*len(temps)
-        else:
-            # Critical Point (Law of rectilinear diameters)
-            slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
-                temps,(liq_density + vap_density) / 2.0,)
+#         #Check that all temps are not the same
+#         if all(x == temps[0] for x in temps):
+#             Tc += [np.nan]*len(temps)
+#             rhoc += [np.nan]*len(temps)
+#         else:
+#             # Critical Point (Law of rectilinear diameters)
+#             slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
+#                 temps,(liq_density + vap_density) / 2.0,)
 
-            try:
-                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                    temps,(liq_density - vap_density)**(1/0.32),)
-            except:
-                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                    temps,abs((liq_density - vap_density))**(1/0.32),)
+#             try:
+#                 slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
+#                     temps,(liq_density - vap_density)**(1/0.32),)
+#             except:
+#                 slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
+#                     temps,abs((liq_density - vap_density))**(1/0.32),)
 
-            Tc_mol = np.abs(intercept2 / slope2)
-            rhoc_mol = intercept1 + slope1 * Tc_mol
+#             Tc_mol = np.abs(intercept2 / slope2)
+#             rhoc_mol = intercept1 + slope1 * Tc_mol
 
-            # if len(temps) == 5:
-            Tc += list([Tc_mol])*len(temps)
-            rhoc += list([rhoc_mol])*len(temps)
+#             # if len(temps) == 5:
+#             Tc += list([Tc_mol])*len(temps)
+#             rhoc += list([rhoc_mol])*len(temps)
         
-    return Tc, rhoc
+#     return Tc, rhoc
 
-#See if we can consolidate this with another function
-def prepare_df_vle_errors(df, molec_dict, csv_name = None):
-    """Create a dataframe with mean square error (mse) and mean absolute
-    percent error (mape) for each unique parameter set. The critical
-    temperature and density are also evaluated.
+#Integrated into prepare_df_errors
+# def prepare_df_vle_errors(df, molec_dict, csv_name = None):
+#     """Create a dataframe with mean square error (mse) and mean absolute
+#     percent error (mape) for each unique parameter set. The critical
+#     temperature and density are also evaluated.
 
-    Parameters
-    ----------
-    df : pandas.Dataframe
-        per simulation results
-    molecule : R143a
-        molecule class with bounds/experimental data
+#     Parameters
+#     ----------
+#     df : pandas.Dataframe
+#         per simulation results
+#     molecule : R143a
+#         molecule class with bounds/experimental data
 
-    Returns
-    -------
-    df_new : pandas.Dataframe
-        dataframe with one row per parameter set and including
-        the MSE and MAPD for liq_density, vap_density, pvap, hvap,
-        critical temperature, critical density
-    """
-    new_data = []
+#     Returns
+#     -------
+#     df_new : pandas.Dataframe
+#         dataframe with one row per parameter set and including
+#         the MSE and MAPD for liq_density, vap_density, pvap, hvap,
+#         critical temperature, critical density
+#     """
+#     new_data = []
 
-    #sort by molecule and temperature -- added by Ning Wang
-    df=df.sort_values(by=["molecule", "temperature"])
-    molecules = df['molecule'].unique().tolist()
-    for group, values in df.groupby(['molecule']):
-        new_quantities = {}
-        #The molecule is listed as the first value in the group
-        molecule = molec_dict[values["molecule"].values[0]]
-        if group[0] not in ["R134", "R152"] and len(values) > 0:
-            # Temperatures
-            temps = values["temperature"].values
+#     #sort by molecule and temperature -- added by Ning Wang
+#     df=df.sort_values(by=["molecule", "temperature"])
+#     molecules = df['molecule'].unique().tolist()
+#     for group, values in df.groupby(['molecule']):
+#         new_quantities = {}
+#         #The molecule is listed as the first value in the group
+#         molecule = molec_dict[values["molecule"].values[0]]
+#         if group[0] not in ["R134", "R152"] and len(values) > 0:
+#             # Temperatures
+#             temps = values["temperature"].values
 
-            #Add experimental data (if not R134, 143 or R152)
-            values["expt_liq_density"] = values["temperature"].apply(
-                lambda temp: molecule.expt_liq_density[int(temp)])
-            values["expt_vap_density"] = values["temperature"].apply(
-                lambda temp: molecule.expt_vap_density[int(temp)] )
-            values["expt_Pvap"] = values["temperature"].apply(
-                lambda temp: molecule.expt_Pvap[int(temp)])
-            values["expt_Hvap"] = values["temperature"].apply(
-                lambda temp: molecule.expt_Hvap[int(temp)])
-            # Critical Point (Law of rectilinear diameters)
-            values["expt_Tc"] =  molecule.expt_Tc
-            values["expt_rhoc"] = molecule.expt_rhoc
+#             #Add experimental data (if not R134, 143 or R152)
+#             values["expt_liq_density"] = values["temperature"].apply(
+#                 lambda temp: molecule.expt_liq_density[int(temp)])
+#             values["expt_vap_density"] = values["temperature"].apply(
+#                 lambda temp: molecule.expt_vap_density[int(temp)] )
+#             values["expt_Pvap"] = values["temperature"].apply(
+#                 lambda temp: molecule.expt_Pvap[int(temp)])
+#             values["expt_Hvap"] = values["temperature"].apply(
+#                 lambda temp: molecule.expt_Hvap[int(temp)])
+#             # Critical Point (Law of rectilinear diameters)
+#             values["expt_Tc"] =  molecule.expt_Tc
+#             values["expt_rhoc"] = molecule.expt_rhoc
         
-            def calculate_objs(expt_values, sim_values, property_name, molecule_name):
-                try:
-                    fin_sim = sim_values[np.isfinite(sim_values)]
-                    fin_expt = expt_values[np.isfinite(sim_values)]
-                    mse = mean_squared_error(fin_expt, fin_sim)
-                    mapd = mean_absolute_percentage_error(fin_expt, fin_sim) * 100.0
-                    mae = mean_absolute_error(fin_expt, fin_sim)
-                except ValueError as e:
-                    print(f"Error in calculating {property_name} for {molecule_name}: {e}. Setting MSE, MAE, and MAPD to NaN")
-                    print("Exp", expt_values, "\n Sim", sim_values)
-                    mse, mapd, mae = np.nan, np.nan, np.nan
-                return mse, mapd, mae
+#             def calculate_objs(expt_values, sim_values, property_name, molecule_name):
+#                 try:
+#                     fin_sim = sim_values[np.isfinite(sim_values)]
+#                     fin_expt = expt_values[np.isfinite(sim_values)]
+#                     mse = mean_squared_error(fin_expt, fin_sim)
+#                     mapd = mean_absolute_percentage_error(fin_expt, fin_sim) * 100.0
+#                     mae = mean_absolute_error(fin_expt, fin_sim)
+#                 except ValueError as e:
+#                     print(f"Error in calculating {property_name} for {molecule_name}: {e}. Setting MSE, MAE, and MAPD to NaN")
+#                     print("Exp", expt_values, "\n Sim", sim_values)
+#                     mse, mapd, mae = np.nan, np.nan, np.nan
+#                 return mse, mapd, mae
 
-            for prop in ["liq_density", "vap_density", "Pvap", "Hvap"]:
-                mse, mapd, mae = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, group[0])
-                new_quantities["mse_" + prop] = mse
-                new_quantities["mapd_" + prop] = mapd
-                new_quantities["mae_" + prop] = mae
+#             for prop in ["liq_density", "vap_density", "Pvap", "Hvap"]:
+#                 mse, mapd, mae = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, group[0])
+#                 new_quantities["mse_" + prop] = mse
+#                 new_quantities["mapd_" + prop] = mapd
+#                 new_quantities["mae_" + prop] = mae
 
-            for prop in ["Tc", "rhoc"]:
-                mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, group[0])
-                new_quantities["mse_" + prop] = mse
-                new_quantities["mapd_" + prop] = mapd
-                new_quantities["mae_" + prop] = mae
-        else:
-            for prop in ["liq_density", "vap_density", "Pvap", "Hvap", "Tc", "rhoc"]:
-                new_quantities["mse_" + prop] = np.nan
-                new_quantities["mapd_" + prop] = np.nan
-                new_quantities["mae_" + prop] = np.nan
+#             for prop in ["Tc", "rhoc"]:
+#                 mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, group[0])
+#                 new_quantities["mse_" + prop] = mse
+#                 new_quantities["mapd_" + prop] = mapd
+#                 new_quantities["mae_" + prop] = mae
+#         else:
+#             for prop in ["liq_density", "vap_density", "Pvap", "Hvap", "Tc", "rhoc"]:
+#                 new_quantities["mse_" + prop] = np.nan
+#                 new_quantities["mapd_" + prop] = np.nan
+#                 new_quantities["mae_" + prop] = np.nan
         
-        data_to_append = list(group) + list(new_quantities.values())
-        # print(data_to_append)
-        new_data.append(data_to_append)
+#         data_to_append = list(group) + list(new_quantities.values())
+#         # print(data_to_append)
+#         new_data.append(data_to_append)
 
-    columns = list(["molecule"]) + list(new_quantities.keys())
-    new_df = pd.DataFrame(new_data, columns=columns)
+#     columns = list(["molecule"]) + list(new_quantities.keys())
+#     new_df = pd.DataFrame(new_data, columns=columns)
 
-    if csv_name != None:
-        new_df.to_csv(csv_name)
+#     if csv_name != None:
+#         new_df.to_csv(csv_name)
 
-    return new_df
+#     return new_df
 
 # def get_min_max(curr_min, curr_max, new_vals, std_dev = None):
 #     if isinstance(new_vals, float):
