@@ -11,18 +11,17 @@ from matplotlib.backends.backend_pdf import PdfPages
 import scipy 
 sys.path.append("..")
 from utils.molec_class_files import esolvs
-from utils.id_new_samples import prepare_df_props
-from utils.id_pareto import prepare_df_errors
-from utils.analyze_opt_ms import prepare_df_vle, prepare_df_vle_errors, plot_vle_envelopes,plot_pvap_hvap, plot_err_each_prop, plot_err_avg_props
+from utils.prep_ms_data import prepare_df_props, prepare_df_errors
 sys.path.remove("..")
 
+from utils.plot import plot_vle_envelopes, plot_surf_tens, plot_pvap_hvap, plot_err_each_prop, plot_err_avg_props
 
 #After jobs are finished
 #save signac results for each atom for a given atom typing scheme and number of training parameters
 import signac
 import sys
 
-from fffit.fffit.signac import save_signac_results
+from .signac import save_signac_results
 
 #Load class properies for each training and testing molecule
 
@@ -122,6 +121,7 @@ full_at_dir = os.path.join("Results_MS", "AT-" + "".join(map(str, at_numbers)), 
 os.makedirs(full_at_dir, exist_ok=True)
 pdf_vle = PdfPages(os.path.join(full_at_dir ,"vle.pdf"))
 pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
+pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
 #For each molecule
 molecules = df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
@@ -142,9 +142,12 @@ for molec in molecules:
         plt.close()
         pdf_hpvap.savefig(plot_pvap_hvap(one_molec_dict, ff_molec_dict), bbox_inches='tight')
         plt.close()
+        pdf_st.savefig(plot_surf_tens(one_molec_dict, ff_molec_dict), bbox_inches='tight')
+        plt.close()
 #Close figures    
 pdf_vle.close()
 pdf_hpvap.close()
+pdf_st.close()
 
 df_err_dict = {}
 molec_names = mol_names

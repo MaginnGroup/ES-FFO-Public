@@ -269,6 +269,116 @@ def get_min_max(curr_min, curr_max, new_vals, std_dev=None):
     
     return curr_min, curr_max
 
+def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
+    molec = list(molec_dict.keys())[0]
+    mol_data = molec_dict[molec]
+    # Plot VLE envelopes
+    fig, ax2 = plt.subplots(1, 1, figsize=(6,6))    
+    
+    df_keys, df_ffs =  zip(*df_ff_dict.items())
+    df_labels = list(df_keys)
+    df_ff_list = list(df_ffs)
+
+    cmap = plt.get_cmap("cool")  # Get the rainbow colormap
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
+    # df_labels, df_ffs = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
+    # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
+    # df_markers = ['o', 's', '^', '*', 'p', 'd']
+    # df_z_order = [6,3,2,1,5,4]
+
+    #Initialize min and max values
+    if molec not in ["R152", "R134"]:
+        min_temp = min(mol_data.expt_surf_tens.keys())
+        max_temp = max(mol_data.expt_surf_tens.keys())
+        min_st = min(mol_data.expt_surf_tens.values())
+        max_st = max(mol_data.expt_surf_tens.values())
+    else:
+        for df in df_ff_list:
+            if df is not None:
+                min_temp = min(df["temperature"].values)
+                max_temp = max(df["temperature"].values)
+                min_st = min(df["sim_surf_tens"].values)
+                max_st = max(df["sim_surf_tens"].values)
+                break
+
+    for i in range(len(df_ff_list)):
+        df_label = df_labels[i]
+        df_ff = df_ff_list[i]
+
+        if "AT-" in df_label:
+            df_z_order = len(df_ff_list)
+            df_marker = "o"
+        elif "GAFF" in df_label:
+            df_z_order = 3
+            df_marker = "s"
+        elif "Potoff" in df_label:
+            df_z_order = 2
+            df_marker = "^"
+        elif "TraPPE" in df_label:
+            df_z_order = 1
+            df_marker = "*"
+        else:
+            df_z_order = 4
+            df_marker = "p"
+
+        df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
+        
+        if df_ff is not None:
+            all_props = ["sim_surf_tens"]
+            grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
+            
+            x_props = ["sim_surf_tens"]
+            # Calculate mean and standard deviation for each group
+            means = grouped.mean().reset_index()
+            stds = grouped.std(ddof=0).reset_index()
+
+            for x_prop in x_props:
+                #Set new max and mins
+                min_st, max_st = get_min_max( min_st, max_st, means[x_prop].values, stds[x_prop].values)
+                
+                # #Plot opt_scheme_ms vle curve
+                ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
+                            color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                            zorder = df_z_order,)
+
+    #Plot experimental data
+    if molec not in ["R152", "R134"]:
+        ax2.scatter(mol_data.expt_surf_tens.values(),mol_data.expt_surf_tens.keys(),
+            color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
+
+    #Set Axes
+    ax2.set_xlim(min_st*0.95,max_st*1.05)
+    number_of_ticks = int(np.ceil((ax2.get_xlim()[1] - ax2.get_xlim()[0]) / 500))
+    if number_of_ticks > 2:
+        ax2.xaxis.set_major_locator(MultipleLocator(500))
+    else:
+        ax2.xaxis.set_major_locator(MultipleLocator(200))
+    ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
+    
+    ax2.set_ylim(min_temp*0.95, max_temp*1.05)
+    ax2.yaxis.set_major_locator(MultipleLocator(40))
+    ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
+    
+    ax2.tick_params("both", direction="in", which="both", length=4, labelsize=26, pad=10)
+    ax2.tick_params("both", which="major", length=8)
+    ax2.xaxis.set_ticks_position("both")
+    ax2.yaxis.set_ticks_position("both")
+
+    ax2.set_ylabel("T (K)", fontsize=32, labelpad=10)
+    ax2.set_xlabel(r"$\mathregular{\gamma}$ (mN/m)", fontsize=32, labelpad=15)
+    for axis in ['top','bottom','left','right']:
+        ax2.spines[axis].set_linewidth(2.0)
+
+    if molec not in ["R14", "R50", "R170", "R116"]:
+        #Substitute mole string R w/ HFC
+        molec = molec.replace("R","HFC")
+    # handles, labels = ax2.get_legend_handles_labels()
+    # for h in handles: h.set_linestyle("")
+    ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    ax2.text(0.60,  0.82, molec, fontsize=30, transform=ax2.transAxes)
+    fig.subplots_adjust(bottom=0.2, top=0.75, left=0.15, right=0.95, wspace=0.55)
+
+    return fig
 
 def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     molec = list(molec_dict.keys())[0]
