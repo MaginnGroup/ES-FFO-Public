@@ -9,10 +9,112 @@ from numpy.linalg import norm
 from sklearn import svm
 from functools import reduce
 from scipy.stats import linregress
-
-from fffit.fffit.models import run_gpflow_scipy
-
+#Need import from the utils folder
+from utils.prep_ms_data import prepare_df_props
+from .models import get_prop_best_model, build_classifier
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, shuffle_and_split
+from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
+
+
+def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_shuffle_seed = 42, dist_seed = 1):
+
+    max_mse = 25**2 #(kg/m^3)^2
+    target_total = 25
+    #Loop over all molecules:
+    next_iter_params_all = {}
+    for mol_name, df_csv in all_df_data.items():
+        data = data_dict[mol_name]
+        # df_csv = all_df_data[mol_name]
+        iter_num = df_csv["iter"].max()
+        iter_type = "vle_iters"
+        ld_threshold = 0
+        root_dir = f"analysis/{mol_name}/"
+
+        ### Step 1: Prepare df_density
+        df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
+
+        #Get LD root directory
+        root_dir_vle = os.path.join(root_dir, iter_type)
+
+        ### Fit GP Model
+        path_gps = f"{root_dir_vle}/iter-{str(iter_num)}"
+
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liquid, data, path_gps, gp_shuffle_seed)
+
+        ### Step 3: Find new parameters for MD simulations
+        # SVM to classify hypercube regions as liquid or vapor
+        LHS_file = os.path.join(root_dir, "LHS_500000.csv")
+        latin_hypercube = np.genfromtxt(
+            LHS_file,
+            delimiter=",",
+            skip_header=1,
+        )[:, 1:]
+        
+        
+        #### Find Low MSE parameter sets
+        vle_samples = rank_vle_samples(latin_hypercube, models_best, data, verbose)
+        result, pareto_points, dominated_points = find_pareto_set(
+        vle_samples.drop(columns=list(data.param_names)).values, is_pareto_efficient)
+        vle_samples = vle_samples.join(pd.DataFrame(result, columns=["is_pareto"]))
+
+        pareto_points = vle_samples[vle_samples["is_pareto"] == True]
+
+        # Get the best row for each property from pareto_points
+        mse_columns = [col for col in pareto_points.columns if "mse" in col]
+        best_vals = [pareto_points.sort_values(col).iloc[[0]] for col in mse_columns]
+        new_points = pd.concat(best_vals)
+
+        # Drop the selected points from pareto_points to ensure new samples are selected
+        pareto_points.drop(index=new_points.index, inplace=True)
+        print(f"A total of {len(pareto_points)} pareto efficient points were found.")
+
+        next_iter_params, final_sample_file = get_next_vle_params(pareto_points, data, root_dir_vle, iter_num, target_total, dist_seed, verbose)
+        next_iter_params.to_csv(final_sample_file)
+        next_iter_params_all[mol_name] = next_iter_params
+    return next_iter_params_all 
+
+
+def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_shuffle_seed = 1, gp_shuffle_seed = 42, dist_seed = 1):
+    #Loop over all molecules:
+    next_iter_params_all = {}
+    for mol_name, df_csv in all_df_data.items():
+        data = data_dict[mol_name]
+        # df_csv = all_df_data[mol_name]
+        iter_num = df_csv["iter"].max()
+        iter_type = "ld_iters"
+
+        ### Step 1: Prepare df_density
+        df_iter1, df_liquid, root_dir = prep_df_density(mol_name, data, df_csv)
+
+        #Get LD root directory
+        root_dir_ld = os.path.join(root_dir, iter_type)
+        ### Step 2: Fit classifier and GP models
+        classifier = build_classifier(df_iter1, root_dir_ld, data, cl_shuffle_seed, verbose, save_fig)
+
+        ### Fit GP Model
+        path_gps = f"{root_dir_ld}/iter-{str(iter_num)}"
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liquid, data, path_gps, gp_shuffle_seed)
+
+        ### Step 3: Find new parameters for MD simulations
+        # SVM to classify hypercube regions as liquid or vapor
+        LHS_file = os.path.join(root_dir, "LHS_500000.csv")
+        latin_hypercube = np.genfromtxt(
+            LHS_file,
+            delimiter=",",
+            skip_header=1,
+        )[:, 1:]
+        liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier)
+        top_liquid_samples, top_vapor_samples = rank_vl_samples(liquid_samples, vapor_samples, models_best, data, verbose)
+
+        #### Find and Visualize Low MSE parameter sets
+        top_liq, top_vap = vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir_ld, iter_num, save_fig)
+
+        #### Get next set of 200 samples
+        target_total = 200
+        next_iter_params, final_sample_file = get_next_iter_params(top_liq, top_vap, data, root_dir_ld, iter_num, target_total, dist_seed, verbose)
+        next_iter_params.to_csv(final_sample_file)
+        next_iter_params_all[mol_name] = next_iter_params
+    return next_iter_params_all
 
 def opt_dist(distance, top_samples, constants, target_num, rand_seed=None, eval=False):
     """
@@ -160,7 +262,6 @@ def bisection(
 
     return final_distance, final_eval - target_num
 
-
 def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
     """
     Prepare the density dataframe for a given molecule.
@@ -195,51 +296,6 @@ def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
     root_dir = f"analysis/{mol_name}"
 
     return df_iter1_all, df_liquid, root_dir
-
-def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, save_fig=False):
-    """
-    Classify samples as liquid or vapor using a SVM classifier.
-    Parameters
-    ----------
-    df_iter1 : pd.DataFrame
-        The dataframe for the first iteration
-    root_dir : str
-        The root directory for saving the results
-    data : object
-        The data object containing the molecule information
-    cl_shuffle_seed : int, default 1
-        The seed for shuffling the data
-    verbose : bool, default True
-        Whether to print the classifier accuracy
-    save_fig : bool, default False
-        Whether to save the confusion matrix figure
-    Returns
-    -------
-    classifier : sklearn.svm.SVC
-        The trained SVM classifier
-    """
-    
-
-    # Create training/test set
-    param_names = list(data.param_names) + ["temperature"]
-    property_name = "is_liquid"
-    x_train, y_train, x_test, y_test = shuffle_and_split(
-        df_iter1, param_names, property_name, cl_shuffle_seed
-    )
-
-    # Create and fit classifier
-    # class_weight "balanced" used because there are fewer liquid than vapor samples in the LHS sets
-    classifier = svm.SVC(kernel="rbf", class_weight="balanced")
-    classifier.fit(x_train, y_train)
-    test_score = classifier.score(x_test, y_test)
-    if verbose:
-        print(f"Classifer is {test_score*100.0}% accurate on the test set.")
-    ConfusionMatrixDisplay.from_estimator(
-        classifier, x_test, y_test, display_labels=["Vapor", "Liquid"]
-    )
-    if save_fig:
-        plt.savefig(root_dir + "classifier.pdf")
-    return classifier
     
 def rank_vle_samples(all_samples, models, data, verbose=True):
     top_liquid_samples, top_vapor_samples = rank_vl_samples(all_samples, None, models, data, verbose)
@@ -436,143 +492,6 @@ def get_next_vle_params(top_liq, data, root_dir, iter_num, target_total=25, dist
     inplace=True,)
 
     return new_points_l, final_sample_file
-
-def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
-    """Prepare a pandas dataframe for fitting a GP model to density data
-
-    Performs the following actions:
-       - Renames "prop" to "sim_prop". Ex "liq_density" to "sim_liq_density"
-       - Adds "expt_prop" for each property. Ex adds "expt_liq_density"
-       - Adds "is_liquid"
-       - Converts all values from physical values to scaled values if scale is True
-
-    Parameters
-    ----------
-    df_csv : pd.DataFrame
-        The dataframe as loaded from a CSV file with the signac results
-    molecule : RXXConstants
-        An instance of a molecule constants class
-    liquid_density_threshold : float
-        Density threshold (kg/m^3) for distinguishing liquid and vapor
-
-    Returns
-    -------
-    df_all : pd.DataFrame
-        The dataframe with scaled parameters, temperature, density, and is_liquid
-    df_liquid : pd.DataFrame
-        `df_all` where `is_liquid` is True
-    df_vapor : pd.DataFrame
-        `df_all` where `is_liquid` is False
-    """
-
-    #Get a list of the column names that do not include sigma, epsilon, or temperature
-    excluded_keywords = ["sigma", "epsilon", "temperature"]
-    filtered_cols = [col for col in df_csv.columns if not any(k in col.lower() for k in excluded_keywords)]
-
-    if "liq_density" not in filtered_cols:
-        raise ValueError("df_csv must contain column 'liq_density'")
-    if "temperature" not in df_csv.columns:
-        raise ValueError("df_csv must contain column 'temperature'")
-    for param in list(molecule.param_names):
-        if param not in df_csv.columns:
-            raise ValueError(f"df_csv must contain a column for parameter: '{param}'")
-        
-    if "vap_enthalpy" in df_csv.columns:
-        df_all.drop(columns="vap_enthalpy", inplace=True)
-    if "liq_enthalpy" in df_csv.columns:
-        df_all.drop(columns="liq_enthalpy", inplace=True)
-        
-    # Add expt density and is_liquid
-    df_all = df_csv.rename(columns={"liq_density": "sim_liq_density"})
-    df_all["expt_density"] = df_all["temperature"].map(molecule.expt_liq_density)
-    df_all["is_liquid"] = df_all["sim_liq_density"] > liquid_density_threshold
-       
-    # Create scalinf for all values
-    scaling_info = {
-    "temperature": molecule.temperature_bounds(),
-    "sim_liq_density": molecule.liq_density_bounds,
-    "expt_density": molecule.liq_density_bounds,}
-
-    # Optional columns and corresponding bounds + expt mappings
-    optional_props = {
-        "surf_tens": ("expt_surf_tens", molecule.surf_tens_bounds, molecule.expt_surf_tens),
-        "Pvap": ("expt_Pvap", molecule.Pvap_bounds, molecule.expt_Pvap),
-        "Hvap": ("expt_Hvap", molecule.Hvap_bounds, molecule.expt_Hvap),
-        "vap_density": ("expt_vap_density", molecule.vap_density_bounds, molecule.expt_vap_density),
-    }
-
-    # Add optional columns if they exist
-    for old_col, (expt_col, bounds_func, expt_map) in optional_props.items():
-        if old_col in df_all.columns:
-            sim_col = "sim_" + old_col
-            df_all = df_csv.rename(columns={old_col: sim_col})
-            df_all[expt_col] = df_all["temperature"].map(expt_map)
-            scaling_info[sim_col] = bounds_func
-            scaling_info[expt_col] = bounds_func
-
-    if ["sim_liq_density", "sim_vap_density"] in df_all.columns:
-        Tc, rhoc = calc_critical(df_all)
-        df_all["sim_Tc"] = Tc
-        df_all["sim_rhoc"] = rhoc
-        df_all["expt_Tc"] = molecule.expt_Tc
-        df_all["expt_rhoc"] = molecule.expt_rhoc
-
-    if scale:
-        # Scale param values
-        df_all[list(molecule.param_names)] = values_real_to_scaled(
-            df_all[list(molecule.param_names)], molecule.param_bounds
-        )
-
-        # Scale other properties
-        for col, bounds_func in scaling_info.items():
-            df_all[col] = values_real_to_scaled(df_all[col], bounds_func)
-
-    # Split out vapor and liquid samples
-    df_liquid = df_all[df_all["is_liquid"] == True]
-    df_vapor = df_all[df_all["is_liquid"] == False]
-
-    return df_all, df_liquid, df_vapor
-
-def calc_critical(df):
-    """Compute the critical temperature and density
-
-    Accepts a dataframe with "T_K", "rholiq_kgm3" and "rhovap_kgm3"
-    Returns the critical temperature (K) and density (kg/m3)
-
-    Computes the critical properties with the law of rectilinear diameters
-    """
-    Tc = []
-    rhoc = []
-    for group, values in df.groupby(['molecule']):    
-        #Need to group by molecule and do this for each molecule
-        temps = values["temperature"].values
-        liq_density = values["sim_liq_density"].values
-        vap_density = values["sim_vap_density"].values
-
-        #Check that all temps are not the same
-        if all(x == temps[0] for x in temps):
-            Tc += [np.nan]*len(temps)
-            rhoc += [np.nan]*len(temps)
-        else:
-            # Critical Point (Law of rectilinear diameters)
-            slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
-                temps,(liq_density + vap_density) / 2.0,)
-
-            try:
-                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                    temps,(liq_density - vap_density)**(1/0.32),)
-            except:
-                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                    temps,abs((liq_density - vap_density))**(1/0.32),)
-
-            Tc_mol = np.abs(intercept2 / slope2)
-            rhoc_mol = intercept1 + slope1 * Tc_mol
-
-            # if len(temps) == 5:
-            Tc += list([Tc_mol])*len(temps)
-            rhoc += list([rhoc_mol])*len(temps)
-        
-    return Tc, rhoc
 
 def classify_samples(samples, classifier):
     """Evaulate the classifer and return predicted liquid and vapor samples

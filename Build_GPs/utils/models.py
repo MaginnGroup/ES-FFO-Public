@@ -6,17 +6,19 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 import pickle
+from matplotlib.backends.backend_pdf import PdfPages
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn import svm
 
 # sys.path.append("../")
+
+from utils.prep_ms_data import prepare_df_props
 
 from fffit.fffit.models import run_gpflow_scipy
 from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real
 
 from fffit.fffit.plot import (
     plot_model_performance,
-    plot_slices_temperature,
-    plot_slices_params,
-    plot_model_vs_test,
 )
 
 def get_exp_data(molec_object, prop_key):
@@ -139,135 +141,77 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
             
     return models, x_train, y_train, x_test, y_test
 
-def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=None, save_fig=False):
-    """Plot the predictions vs. result for one or more GP models
+def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
+    #Get all data
+    models_molecs = {}
+    for mol_name, df_csv in all_df_data.items():
+        data = data_dict[mol_name]
+        ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
+        # df_csv = all_df_data[mol_name]
+        iter_num = df_csv["iter"].max()
 
+        dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
+        os.makedirs(dir_name, exist_ok=True)
+        if save_fig:
+            pdf_name = os.path.join(dir_name , "fig_gp_examples.pdf")
+            pdf = PdfPages(pdf_name)
+        else:
+            pdf = None
+
+        df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
+
+        path_gps = os.path.join(dir_name, "gp_models.pkl")
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, path_gps, gp_shuffle_seed)
+            
+        models_molecs[mol_name] = models_best
+
+    dir2 = f"analysis/all_mols/{iter_type}/iter-{str(iter_num)}"
+    with open(dir2 + "/gp_models.pkl", "wb") as f:
+        pickle.dump(models_molecs, f)
+
+    return models_molecs
+
+def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, save_fig=False):
+    """
+    Classify samples as liquid or vapor using a SVM classifier.
     Parameters
     ----------
-    models : dict { label : model }
-        Each model to be plotted (value, GPFlow model) is provided
-        with a label (key, string)
-    x_data : np.array
-        data to create model predictions for
-    y_data : np.ndarray
-        correct answer
-    property_bounds : array-like
-        bounds for scaling density between physical
-        and dimensionless values
-    xylim : array-like, shape=(2,), optional
-        lower and upper x and y limits of the plot
-
+    df_iter1 : pd.DataFrame
+        The dataframe for the first iteration
+    root_dir : str
+        The root directory for saving the results
+    data : object
+        The data object containing the molecule information
+    cl_shuffle_seed : int, default 1
+        The seed for shuffling the data
+    verbose : bool, default True
+        Whether to print the classifier accuracy
+    save_fig : bool, default False
+        Whether to save the confusion matrix figure
     Returns
     -------
-    matplotlib.Figure.figure
+    classifier : sklearn.svm.SVC
+        The trained SVM classifier
     """
-    y_data_physical = values_scaled_to_real(y_data, property_bounds)
-    min_xylim = np.min(y_data_physical)
-    max_xylim = np.max(y_data_physical)
-
-    fig, ax = plt.subplots()
-
-    mse_min = np.inf
-    mse_model = None
-    for (label, model) in models.items():
-        gp_mu, gp_var = model.predict_f(x_data)
-        gp_mu_physical = values_scaled_to_real(gp_mu, property_bounds)
-        ax.scatter(y_data_physical, gp_mu_physical, label=label, zorder=2.5, alpha=0.4)
-        meansqerr = np.mean(
-            (gp_mu_physical - y_data_physical.reshape(-1, 1)) ** 2
-        )
-        if meansqerr < mse_min:
-            mse_min = meansqerr
-            mse_model = model
-        print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
-        if np.min(gp_mu_physical) < min_xylim:
-            min_xylim = np.min(gp_mu_physical)
-        if np.max(gp_mu_physical) > max_xylim:
-            max_xylim = np.max(gp_mu_physical)
-
-    if xylim is None:
-        xylim = [min_xylim, max_xylim]
-
-    ax.plot(
-        np.arange(xylim[0], xylim[1] + 100, 100),
-        np.arange(xylim[0], xylim[1] + 100, 100),
-        color="xkcd:blue grey",
-        label="y=x",
-    )
-
-    ax.set_xlim(xylim[0], xylim[1])
-    ax.set_ylim(xylim[0], xylim[1])
-    ax.set_xlabel("Actual")
-    ax.set_ylabel("Model Prediction")
-    ax.legend()
-    ax.set_aspect("equal", "box")
-
-    if save_fig:
-        pdf.savefig(fig)
-
-    return mse_model, label
     
-def plot_gp_slices(models, data, property_name, pdf):
-    exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
-    # Plot temperature slices
-    figs = plot_slices_temperature(
-        models,
-        data.n_params,
-        data.temperature_bounds(),
-        prop_bounds,
-        property_name=prop_name,
+
+    # Create training/test set
+    param_names = list(data.param_names) + ["temperature"]
+    property_name = "is_liquid"
+    x_train, y_train, x_test, y_test = shuffle_and_split(
+        df_iter1, param_names, property_name, cl_shuffle_seed
     )
 
-    try:
-        for fig in figs:
-            pdf.savefig(fig)
-    except:
-        pdf.savefig(figs)
-    del figs
-
-    # Plot parameter slices
-    for param_name in data.param_names:
-        figs = plot_slices_params(
-            models,
-            param_name,
-            data.param_names,
-            data.temperature_bounds()[0], # min temperature
-            data.temperature_bounds(),
-            prop_bounds,
-            property_name=prop_name,
-        )
-        try:
-            for fig in figs:
-                pdf.savefig(fig)
-        except:
-            pdf.savefig(figs)
-        del figs
-
-def plot_test_sets(models, x_test, df_data, data, pdf, property_name):
-    exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
-    # Loop over test params
-    for test_params in x_test[:,:data.n_params]:
-        train_points = []
-        test_points = []
-        # Locate rows where parameter set == test parameter set
-        matches = np.unique(np.where((df_data[list(data.param_names)] == test_params).all(axis=1))[0])
-        # Loop over all matches -- these will be different temperatures
-        for match in matches:
-            # If the match (including T) is in the test set, then append to test points
-            if np.where((df_data.values[match,:data.n_params+1] == x_test[:,:data.n_params+1]).all(axis=1))[0].shape[0] == 1:
-                test_points.append([df_data["temperature"].iloc[match],df_data[property_name].iloc[match]])
-            # Else append to train points
-            else:
-                train_points.append([df_data["temperature"].iloc[match],df_data[property_name].iloc[match]])
-
-        pdf.savefig(
-            plot_model_vs_test(
-                models,
-                test_params,
-                np.asarray(train_points),
-                np.asarray(test_points),
-                data.temperature_bounds(),
-                prop_bounds,
-                property_name=prop_name
-            )
-        )
+    # Create and fit classifier
+    # class_weight "balanced" used because there are fewer liquid than vapor samples in the LHS sets
+    classifier = svm.SVC(kernel="rbf", class_weight="balanced")
+    classifier.fit(x_train, y_train)
+    test_score = classifier.score(x_test, y_test)
+    if verbose:
+        print(f"Classifer is {test_score*100.0}% accurate on the test set.")
+    ConfusionMatrixDisplay.from_estimator(
+        classifier, x_test, y_test, display_labels=["Vapor", "Liquid"]
+    )
+    if save_fig:
+        plt.savefig(root_dir + "classifier.pdf")
+    return classifier
