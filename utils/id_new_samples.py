@@ -8,6 +8,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from numpy.linalg import norm
 from sklearn import svm
 from functools import reduce
+from scipy.stats import linregress
 
 from fffit.fffit.models import run_gpflow_scipy
 
