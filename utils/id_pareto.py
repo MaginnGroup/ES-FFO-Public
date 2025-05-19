@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 
-def prepare_df_errors(df, mol_name, root_dir, iter_num):
+def prepare_df_errors(df, mol_name):
     """Create a dataframe with mean square error (mse) and mean absolute
     percent error (mape) for each unique parameter set. The critical
     temperature and density are also evaluated.
@@ -46,13 +46,17 @@ def prepare_df_errors(df, mol_name, root_dir, iter_num):
             
             # Add optional columns if they exist
             for old_col, (expt_col, expt_map) in all_props.items():
-                if "sim_" + old_col in values.columns:
+                #For columns that exist where the exp data is not already in the dataframe
+                if "sim_" + old_col in values.columns and not "expt_" + old_col in values.columns:
+                    #For Tc and rhoc, add a single value directly
                     if old_col in ["Tc", "rhoc"]:
                         values[expt_col] = np.array([expt_map])
+                    #Otherwise map the values to the temperature
                     else:
                         try:
                             values[expt_col] = values["temperature"].map(expt_map)
-                        except KeyError: #If temperature does not exist in the mapping skip it
+                        #If temperature does not exist in the mapping skip it
+                        except KeyError: 
                             pass
         
             def calculate_objs(expt_values, sim_values, property_name, molecule_name):
@@ -93,11 +97,6 @@ def prepare_df_errors(df, mol_name, root_dir, iter_num):
 
     columns = list(["molecule"]) + list(new_quantities.keys())
     new_df = pd.DataFrame(new_data, columns=columns)
-
-    dir_name = root_dir + "iter-" + str(iter_num) + "/"
-    os.makedirs(dir_name, exist_ok=True)
-    csv_name = os.path.join(dir_name, "result_errors.csv")
-    new_df.to_csv(csv_name)
         
     return new_df
 
