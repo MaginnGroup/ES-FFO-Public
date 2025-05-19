@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 
-def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
+def prepare_df_errors(df, mol_name, root_dir, iter_num):
     """Create a dataframe with mean square error (mse) and mean absolute
     percent error (mape) for each unique parameter set. The critical
     temperature and density are also evaluated.
@@ -25,8 +25,8 @@ def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
     new_data = []
 
     #sort by molecule and temperature -- added by Ning Wang
-    df=df.sort_values(by=["temperature", "dens-iter"])
-    for group, values in df.groupby(['dens-iter']):
+    df=df.sort_values(by=["temperature", "iter"])
+    for group, values in df.groupby(['iter']):
         new_quantities = {}
         #The molecule is listed as the first value in the group
         molecule = mol_name
@@ -35,10 +35,25 @@ def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
             temps = values["temperature"].values
 
             #Add experimental data
-            values["expt_liq_density"] = values["temperature"].apply(
-                lambda temp: molecule.expt_liq_density[temp])
-            values["expt_vap_density"] = values["temperature"].apply(
-                lambda temp: molecule.expt_vap_density[temp] )
+            all_props = {
+                "liq_density": ("expt_liq_density", molecule.expt_liq_density),
+                "surf_tens": ("expt_surf_tens", molecule.expt_surf_tens),
+                "Pvap": ("expt_Pvap", molecule.expt_Pvap),
+                "Hvap": ("expt_Hvap", molecule.expt_Hvap),
+                "vap_density": ("expt_vap_density", molecule.expt_vap_density),
+                "Tc": ("expt_Tc", molecule.expt_Tc),
+                "rhoc": ("expt_rhoc", molecule.expt_rhoc),}
+            
+            # Add optional columns if they exist
+            for old_col, (expt_col, expt_map) in all_props.items():
+                if "sim_" + old_col in values.columns:
+                    if old_col in ["Tc", "rhoc"]:
+                        values[expt_col] = np.array([expt_map])
+                    else:
+                        try:
+                            values[expt_col] = values["temperature"].map(expt_map)
+                        except KeyError: #If temperature does not exist in the mapping skip it
+                            pass
         
             def calculate_objs(expt_values, sim_values, property_name, molecule_name):
                 try:
@@ -53,14 +68,22 @@ def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
                     mse, mapd, mae = np.nan, np.nan, np.nan
                 return mse, mapd, mae
 
-            for prop in ["liq_density", "surf_tens"]:
-                mse, mapd, mae = calculate_objs(values["expt_" + prop], values["md_" + prop], prop, group[0])
-                new_quantities["mse_" + prop] = mse
-                new_quantities["mapd_" + prop] = mapd
-                new_quantities["mae_" + prop] = mae
+            for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap"]:
+                if "sim_" + old_col in values.columns:
+                    mse, mapd, mae = calculate_objs(values["expt_" + prop], values["md_" + prop], prop, group[0])
+                    new_quantities["mse_" + prop] = mse
+                    new_quantities["mapd_" + prop] = mapd
+                    new_quantities["mae_" + prop] = mae
+
+            for prop in ["Tc", "rhoc"]:
+                if "sim_" + old_col in values.columns:
+                    mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, group[0])
+                    new_quantities["mse_" + prop] = mse
+                    new_quantities["mapd_" + prop] = mapd
+                    new_quantities["mae_" + prop] = mae
 
         else:
-            for prop in ["liq_density", "surf_tens"]:
+            for prop in list(all_props.keys()):
                 new_quantities["mse_" + prop] = np.nan
                 new_quantities["mapd_" + prop] = np.nan
                 new_quantities["mae_" + prop] = np.nan
@@ -71,7 +94,7 @@ def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
     columns = list(["molecule"]) + list(new_quantities.keys())
     new_df = pd.DataFrame(new_data, columns=columns)
 
-    dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+    dir_name = root_dir + "iter-" + str(iter_num) + "/"
     os.makedirs(dir_name, exist_ok=True)
     csv_name = os.path.join(dir_name, "result_errors.csv")
     new_df.to_csv(csv_name)
@@ -79,11 +102,11 @@ def prepare_df_dens_errors(df, mol_name, root_dir, iter_num):
     return new_df
 
 def select_final_pareto(df_pareto, root_dir, iter_num):
-    # Filter for parameter sets with less than 3 % error in all properties
+    # Filter for parameter sets with less than 5 % error in all properties
     df_final = df_pareto.drop(
         columns=[
-            "md_liq_density",
-            "md_surf_tens",
+            "sim_liq_density",
+            "sim_surf_tens",
             "mse_surf_tens",
             "mse_liq_density",
             "mae_surf_tens",
@@ -100,7 +123,7 @@ def select_final_pareto(df_pareto, root_dir, iter_num):
     ]
 
     # Save CSV files
-    dir_name = root_dir + "dens-iter-" + str(iter_num) + "/"
+    dir_name = root_dir + "iter-" + str(iter_num) + "/"
     os.makedirs(dir_name, exist_ok=True)
     csv_name = os.path.join(dir_name, "final-params.csv")
     df_final.to_csv(csv_name)
