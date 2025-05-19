@@ -436,14 +436,14 @@ def get_next_vle_params(top_liq, data, root_dir, iter_num, target_total=25, dist
 
     return new_points_l, final_sample_file
 
-def prepare_df_props(df_csv, molecule, liquid_density_threshold):
+def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
     """Prepare a pandas dataframe for fitting a GP model to density data
 
     Performs the following actions:
-       - Renames "density" to "sim_liq_density"
-       - Adds "expt_density"
+       - Renames "prop" to "sim_prop". Ex "liq_density" to "sim_liq_density"
+       - Adds "expt_prop" for each property. Ex adds "expt_liq_density"
        - Adds "is_liquid"
-       - Converts all values from physical values to scaled values
+       - Converts all values from physical values to scaled values if scale is True
 
     Parameters
     ----------
@@ -480,7 +480,7 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold):
         df_all.drop(columns="vap_enthalpy", inplace=True)
     if "liq_enthalpy" in df_csv.columns:
         df_all.drop(columns="liq_enthalpy", inplace=True)
-
+        
     # Add expt density and is_liquid
     df_all = df_csv.rename(columns={"liq_density": "sim_liq_density"})
     df_all["expt_density"] = df_all["temperature"].map(molecule.expt_liq_density)
@@ -509,14 +509,22 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold):
             scaling_info[sim_col] = bounds_func
             scaling_info[expt_col] = bounds_func
 
-    # Scale param values
-    df_all[list(molecule.param_names)] = values_real_to_scaled(
-        df_all[list(molecule.param_names)], molecule.param_bounds
-    )
+    if ["sim_liq_density", "sim_vap_density"] in df_all.columns:
+        Tc, rhoc = calc_critical(df_all)
+        df_all["sim_Tc"] = Tc
+        df_all["sim_rhoc"] = rhoc
+        df_all["expt_Tc"] = molecule.expt_Tc
+        df_all["expt_rhoc"] = molecule.expt_rhoc
 
-    # Scale other properties
-    for col, bounds_func in scaling_info.items():
-        df_all[col] = values_real_to_scaled(df_all[col], bounds_func)
+    if scale:
+        # Scale param values
+        df_all[list(molecule.param_names)] = values_real_to_scaled(
+            df_all[list(molecule.param_names)], molecule.param_bounds
+        )
+
+        # Scale other properties
+        for col, bounds_func in scaling_info.items():
+            df_all[col] = values_real_to_scaled(df_all[col], bounds_func)
 
     # Split out vapor and liquid samples
     df_liquid = df_all[df_all["is_liquid"] == True]
@@ -524,6 +532,46 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold):
 
     return df_all, df_liquid, df_vapor
 
+def calc_critical(df):
+    """Compute the critical temperature and density
+
+    Accepts a dataframe with "T_K", "rholiq_kgm3" and "rhovap_kgm3"
+    Returns the critical temperature (K) and density (kg/m3)
+
+    Computes the critical properties with the law of rectilinear diameters
+    """
+    Tc = []
+    rhoc = []
+    for group, values in df.groupby(['molecule']):    
+        #Need to group by molecule and do this for each molecule
+        temps = values["temperature"].values
+        liq_density = values["sim_liq_density"].values
+        vap_density = values["sim_vap_density"].values
+
+        #Check that all temps are not the same
+        if all(x == temps[0] for x in temps):
+            Tc += [np.nan]*len(temps)
+            rhoc += [np.nan]*len(temps)
+        else:
+            # Critical Point (Law of rectilinear diameters)
+            slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
+                temps,(liq_density + vap_density) / 2.0,)
+
+            try:
+                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
+                    temps,(liq_density - vap_density)**(1/0.32),)
+            except:
+                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
+                    temps,abs((liq_density - vap_density))**(1/0.32),)
+
+            Tc_mol = np.abs(intercept2 / slope2)
+            rhoc_mol = intercept1 + slope1 * Tc_mol
+
+            # if len(temps) == 5:
+            Tc += list([Tc_mol])*len(temps)
+            rhoc += list([rhoc_mol])*len(temps)
+        
+    return Tc, rhoc
 
 def classify_samples(samples, classifier):
     """Evaulate the classifer and return predicted liquid and vapor samples
