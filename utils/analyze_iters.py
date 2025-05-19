@@ -18,7 +18,7 @@ from utils.id_new_samples import (
     get_next_vle_params, 
     prepare_df_props
 )
-from utils.id_pareto import prepare_df_dens_errors, select_final_pareto
+from utils.id_pareto import prepare_df_errors, select_final_pareto
 from utils.plotfig_gp_examples import plot_gp_slices, plot_test_sets, get_exp_data, plot_model_performance, get_prop_best_model
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
 
@@ -231,10 +231,10 @@ def find_pareto(all_df_data, data_dict):
         data = data_dict[mol_name]
 
         #Get all result data
-        df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
+        df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale=False)
         
         #Prepare error data to find pareto points
-        df_paramsets = prepare_df_dens_errors(df_all, mol_name, root_dir, iter_num)
+        df_paramsets = prepare_df_errors(df_all, mol_name, root_dir, iter_num)
         mse_columns = [col for col in df_paramsets.columns if "mse" in col]
         result, pareto_points, dominated_points = find_pareto_set(
             df_paramsets.filter(mse_columns).values,
