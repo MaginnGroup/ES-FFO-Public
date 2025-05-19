@@ -26,7 +26,7 @@ from .signac import save_signac_results
 #Load class properies for each training and testing molecule
 
 obj_choice = "ExpVal"
-at_numbers = [1,2]
+at_numbers = [0,1,2] #0 is GAFF
 param_set = 1
 ff_dict = {}
 err_path_dict = {}
@@ -87,17 +87,13 @@ for at_number in at_numbers:
     err_path_dict[project_path + str(at_number)]= csv_name
     err_labels.append(at_class.scheme_plot_name)
 
-#Load csvs for GAFF, NW, Trappe, and Potoff, and BBFF
-project_path = "gaff_ff_ms"
-project = signac.get_project(project_path)
-at_num_str = ""
-obj_choice_str = ""
-param_set_str = ""
-df_all, csv_name, df_paramsets = get_mse_data(at_num_str, obj_choice_str, param_set_str, molec_dict, project_path)
+#Load csvs for GAFF
+project = project_all.find_jobs({"atom_type": "GAFF"})
+df_all, csv_name, df_paramsets = get_mse_data("", "", "", molec_dict, at_num_str)
 df_all['atom_type'] = "GAFF"
 ff_dict["GAFF"] = df_all
 err_labels.append("GAFF")
-err_path_dict[project_path]= csv_name
+err_path_dict[project_path + "GAFF"]= csv_name
 
 #Load csvs for Opt_FF, GAFF, NW, Trappe, and Potoff, and BBFF
 # ff_names = ["Potoff", "TraPPE", "Wang_FFO", "BBFF"]
@@ -136,14 +132,13 @@ for molec in molecules:
     #Get the data for the molecule from each FF
     # print(ff_molec_dict)
     #Plot Vle, Hvap, and Pvap and save to different pdfs
-    if molec not in ["R134", "R152"]:
-        pdf_vle.savefig(plot_vle_envelopes(one_molec_dict, ff_molec_dict), bbox_inches='tight')
-        # plt.show()
-        plt.close()
-        pdf_hpvap.savefig(plot_pvap_hvap(one_molec_dict, ff_molec_dict), bbox_inches='tight')
-        plt.close()
-        pdf_st.savefig(plot_surf_tens(one_molec_dict, ff_molec_dict), bbox_inches='tight')
-        plt.close()
+    pdf_vle.savefig(plot_vle_envelopes(one_molec_dict, ff_molec_dict), bbox_inches='tight')
+    # plt.show()
+    plt.close()
+    pdf_hpvap.savefig(plot_pvap_hvap(one_molec_dict, ff_molec_dict), bbox_inches='tight')
+    plt.close()
+    pdf_st.savefig(plot_surf_tens(one_molec_dict, ff_molec_dict), bbox_inches='tight')
+    plt.close()
 #Close figures    
 pdf_vle.close()
 pdf_hpvap.close()
