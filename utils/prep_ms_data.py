@@ -27,6 +27,8 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
         An instance of a molecule constants class
     liquid_density_threshold : float
         Density threshold (kg/m^3) for distinguishing liquid and vapor
+    scale : bool
+        Whether to scale the values between 0 and 1 or not. Default is True (scale values)
 
     Returns
     -------
@@ -107,12 +109,19 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
     return df_all, df_liquid, df_vapor
 
 def calc_critical(df):
-    """Compute the critical temperature and density
+    """
+    Computes the critical temperature and density with the law of rectilinear diameters
 
-    Accepts a dataframe with "T_K", "rholiq_kgm3" and "rhovap_kgm3"
-    Returns the critical temperature (K) and density (kg/m3)
-
-    Computes the critical properties with the law of rectilinear diameters
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Dataframe with columns "temperature", "sim_liq_density", "sim_vap_density"
+    Returns
+    -------
+    Tc : list
+        Critical temperature for each molecule
+    rhoc : list
+        Critical density for each molecule
     """
     Tc = []
     rhoc = []
@@ -156,12 +165,12 @@ def prepare_df_errors(df, mol_name):
     ----------
     df : pandas.Dataframe
         per simulation results
-    molecule : R143a
+    mol_name : EsolvsConstants
         molecule class with bounds/experimental data
 
     Returns
     -------
-    df_new : pandas.Dataframe
+    new_df : pandas.Dataframe
         dataframe with one row per parameter set and including
         the MSE and MAPD for liq_density, vap_density, pvap, hvap,
         critical temperature, critical density

@@ -21,6 +21,11 @@ def get_signac_results(project, data_dict, prop_names):
         set of property names
     save_csv : bool, default True
         Whether to save the results to a CSV file
+
+    Returns
+    -------
+    all_data_dict : dict
+        Dictionary of all dataframes for each molecule
     """
     if type(prop_names) not in (list, tuple):
         raise TypeError("prop_names must be a list or tuple")
@@ -84,6 +89,23 @@ def get_signac_results(project, data_dict, prop_names):
     return all_data_dict
 
 def save_signac_results(all_data_dict, iter_type = "ld_iters", save_csv=True):
+    """
+    Save the signac results to a CSV file.
+
+    Parameters
+    ----------
+    all_data_dict : dict
+        Dictionary of all dataframes for each molecule
+    iter_type : str
+        Type of iteration to save
+    save_csv : bool, default True
+        Whether to save the results to a CSV file
+
+    Returns
+    -------
+    all_data_dict : dict
+        Dictionary of all dataframes for each molecule
+    """
     #Loop over all molecules
     for mol_name, all_data_df in all_data_dict.items():
         #Save all data to one file for easy access

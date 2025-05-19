@@ -15,7 +15,29 @@ sys.path.remove("../..")
 from .models import get_prop_best_model, build_classifier
 
 def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_shuffle_seed = 42, dist_seed = 1):
+    """
+    Find new samples for VLE simulations
 
+    Parameters
+    ----------
+    all_df_data : dict
+        Dictionary of all dataframes for each molecule
+    data_dict : dict
+        dictionary of data objects for each molecule
+    verbose : bool, optional
+        Whether to print progress messages. The default is True.
+    save_fig : bool, optional
+        Whether to save figures. The default is False.
+    gp_shuffle_seed : int, optional
+        Seed for the GP model. The default is 42.
+    dist_seed : int, optional
+        Seed for the distance calculation. The default is 1.
+
+    Returns
+    -------
+    next_iter_params_all : dict
+        Dictionary of new parameters for each molecule
+    """
     max_mse = 25**2 #(kg/m^3)^2
     target_total = 25
     #Loop over all molecules:
@@ -73,6 +95,31 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_s
 
 
 def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_shuffle_seed = 1, gp_shuffle_seed = 42, dist_seed = 1):
+    """
+    Find new samples for LD simulations
+
+    Parameters
+    ----------
+    all_df_data : dict
+        Dictionary of all dataframes for each molecule
+    data_dict : dict
+        dictionary of data objects for each molecule
+    verbose : bool, optional
+        Whether to print progress messages. The default is True.
+    save_fig : bool, optional
+        Whether to save figures. The default is False.
+    cl_shuffle_seed : int, optional
+        Seed for the classifier. The default is 1.
+    gp_shuffle_seed : int, optional
+        Seed for the GP model. The default is 42.
+    dist_seed : int, optional
+        Seed for the distance calculation. The default is 1.
+        
+    Returns
+    -------
+    next_iter_params_all : dict
+        Dictionary of new parameters for each molecule
+    """
     #Loop over all molecules:
     next_iter_params_all = {}
     for mol_name, df_csv in all_df_data.items():
@@ -199,10 +246,12 @@ def bisection(
         constants: utils.r41.R41Constants, contains the infromation for a certain refrigerant
         target_num: int, the number of samples to choose next
         rand_seed: int, the seed number to use: None by default
+        verbose: bool, whether to print the distance and error at each iteration
 
     Returns:
     --------
-        midpoint: The distance that satisfies the error criteria based on the target number
+        final_distance: float, the distance between points
+        final_eval: float, the squared error between the target value and number of new_points
 
     """
     assert (
@@ -270,6 +319,8 @@ def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
         The name of the molecule
     data : object
         The data object containing the molecule information
+    iter_type : str
+        The type of iteration (ld_iters or vle_iters). Default is "ld_iters".
 
     Returns
     -------
@@ -296,11 +347,29 @@ def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
     return df_iter1_all, df_liquid, root_dir
     
 def rank_vle_samples(all_samples, models, data, verbose=True):
+    """
+    Rank the samples based on the GP predicted MSE of the properties.
+    
+    Parameters
+    ----------
+    all_samples : pd.DataFrame
+        The dataframe containing all the samples
+    models : dict
+        The dictionary containing the models for each property
+    data : object
+        The data object containing the molecule information
+    verbose : bool, optional
+        Whether to print progress messages. The default is True.
+        
+    Returns
+    -------
+    vle_mses : pd.DataFrame
+        The dataframe containing the MSE for each sample
+    """
     top_liquid_samples, top_vapor_samples = rank_vl_samples(all_samples, None, models, data, verbose)
     viable_samples = top_liquid_samples.drop(columns="mse")
 
     # Calculate other properties
-    
     vle_predicted_mses = {prop: rank_samples(viable_samples, model, data, prop) for prop, model in models.items()}
     for prop, df in vle_predicted_mses.items():
         vle_predicted_mses[prop] = df.rename(columns={"mse": f"mse_{prop}"})
@@ -310,6 +379,29 @@ def rank_vle_samples(all_samples, models, data, verbose=True):
     return vle_mses
 
 def rank_vl_samples(liquid_samples, vapor_samples, models, data, verbose=True):
+    """
+    Find the top loquid and vapor samples based on molecular simulation data and the MSE
+    
+    Parameters
+    ----------
+    liquid_samples : pd.DataFrame
+        The dataframe containing the liquid samples
+    vapor_samples : pd.DataFrame
+        The dataframe containing the vapor samples
+    models : dict
+        The dictionary containing the models for each property
+    data : object
+        The data object containing the molecule information
+    verbose : bool, optional
+        Whether to print progress messages. The default is True.
+        
+    Returns
+    -------
+    top_liquid_samples : pd.DataFrame
+        The dataframe containing the top liquid samples
+    top_vapor_samples : pd.DataFrame
+        The dataframe containing the top vapor samples
+    """
     # Find the lowest MSE points from the GP in both sets
     ranked_liquid_samples = rank_samples(liquid_samples, models["sim_liq_density"], data, "sim_liq_density")
     # Make a set of the lowest MSE parameter sets
@@ -336,6 +428,31 @@ def rank_vl_samples(liquid_samples, vapor_samples, models, data, verbose=True):
     return top_liquid_samples, top_vapor_samples
 
 def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_num, save_fig=False):
+    """
+    Visualize the top samples and save them to a CSV file.
+    
+    Parameters
+    ----------
+    top_liquid_samples : pd.DataFrame
+        The dataframe containing the top liquid samples
+    top_vapor_samples : pd.DataFrame
+        The dataframe containing the top vapor samples
+    data : object
+        The data object containing the molecule information
+    root_dir : str
+        The root directory for saving the results
+    iter_num : int
+        The current iteration number
+    save_fig : bool, optional
+        Whether to save the figures. The default is False.
+        
+    Returns
+    -------
+    top_liq : pd.DataFrame
+        The dataframe containing the top liquid samples
+    top_vap : pd.DataFrame
+        The dataframe containing the top vapor samples
+    """
     column_names = list(data.param_names)
     objects = {}
 
@@ -371,7 +488,7 @@ def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_
 
 def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_total=200, dist_seed=1, verbose=True):
     """
-    Get the next set of parameters for MD simulations.
+    Get the next set of parameters for Liquid density iterations.
     Parameters
     ----------
     top_liq : pd.DataFrame
@@ -458,6 +575,33 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
 
 
 def get_next_vle_params(top_liq, data, root_dir, iter_num, target_total=25, dist_seed=1, verbose=True):
+    """
+    Get the next set of parameters for VLE iterations.
+    
+    Parameters
+    ----------
+    top_liq : pd.DataFrame
+        The dataframe for the top liquid samples
+    data : object
+        The data object containing the molecule information
+    root_dir : str
+        The root directory for saving the results
+    iter_num : int
+        The current iteration number
+    target_total : int, default 25
+        The target number of samples to return
+    dist_seed : int, default 1
+        The seed for the random number generator
+    verbose : bool, default True
+        Whether to print the sample distance
+    
+    Returns
+    -------
+    new_points_l : pd.DataFrame
+        The dataframe for the next iteration parameters
+    final_sample_file : str
+        The path to the CSV file for the next iteration parameters
+    """
     final_sample_file = root_dir + "/params-iter-" + str(iter_num + 1) + ".csv"
     # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
     target_num_l = target_total
@@ -631,6 +775,27 @@ def _calc_gp_mse(
     return np.mean(all_errs**2, axis=1)
 
 def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv=True):
+    """
+    Check the MSE of the samples and return the samples with MSE < 10 kg/m^3
+    
+    Parameters
+    ----------
+    df_all_molec : dict
+        Dictionary of all dataframes for each molecule
+    data_dict : dict
+        Dictionary of data objects for each molecule
+    target_total : int, default 25
+        The target number of samples to return
+    dist_seed : int, default 1
+        The seed for the random number generator
+    save_csv : bool, default True
+        Whether to save the results to a CSV file
+        
+    Returns
+    -------
+    num_mse_less10 : dict
+        Dictionary of samples with MSE < 10 kg/m^3 for each molecule
+    """
     num_mse_less10 = {}
     
     for mol_name, df_csv in df_all_molec.items():
@@ -709,6 +874,21 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
     return num_mse_less10
 
 def find_pareto(all_df_data, data_dict):
+    """
+    Find the pareto points for all molecules and save them to a CSV file.
+    
+    Parameters
+    ----------
+    all_df_data : dict
+        Dictionary of all dataframes for each molecule
+    data_dict : dict
+        Dictionary of data objects for each molecule
+        
+    Returns
+    -------
+    all_final_params : dict
+        Dictionary of final parameters for each molecule
+    """
     #Loop over all molecules:
     all_final_params = {}
     for mol_name, df_csv in all_df_data.items():
@@ -754,6 +934,23 @@ def find_pareto(all_df_data, data_dict):
 
 
 def select_final_pareto(df_pareto, root_dir, iter_num):
+    """
+    Filter the pareto points and select the final parameters given the lowest error parameter set.
+
+    Parameters
+    ----------
+    df_pareto : pd.DataFrame
+        The dataframe containing the pareto points
+    root_dir : str
+        The root directory for saving the results
+    iter_num : int
+        The current iteration number
+
+    Returns
+    -------
+    df_final : pd.DataFrame
+        The dataframe containing the final parameters
+    """
     # Filter for parameter sets with less than 5 % error in all properties
     df_final = df_pareto.drop(
         columns=[

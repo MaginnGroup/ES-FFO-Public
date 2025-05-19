@@ -11,8 +11,6 @@ sys.path.remove("..")
 mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF", "R125"]
 molec_dict = esolvs.make_dict()
 
-
-
 seed = 7  # Seed of data
 for n in [200, 500000]:  # Number of points to generate
     for molec_name in molec_dict.keys():

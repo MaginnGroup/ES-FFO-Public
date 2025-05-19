@@ -18,6 +18,21 @@ sys.path.remove("../..")
 from .models import get_prop_best_model, get_exp_data
 
 def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
+    """
+    Plot GP examples for each molecule and property
+    Parameters
+    ----------
+    all_df_data : dict
+        Dictionary of all dataframes for each molecule
+    data_dict : dict
+        Dictionary of all data for each molecule
+    iter_type : str
+        Type of iteration (ld_iters or vle_iters)
+    gp_shuffle_seed : int
+        Seed for GP shuffle
+    save_fig : bool
+        Whether to save the figure or not
+    """
     #Get all data
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
@@ -129,6 +144,19 @@ def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=N
     return mse_model, label
     
 def plot_gp_slices(models, data, property_name, pdf):
+    """
+    Plot the GP slices for a given property
+    Parameters
+    ----------
+    models : dict
+        Dictionary of models for each property
+    data : object
+        Data object containing the data for the property
+    property_name : str
+        Name of the property to plot
+    pdf : PdfPages
+        PdfPages object to save the plots to
+    """
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
     # Plot temperature slices
     figs = plot_slices_temperature(

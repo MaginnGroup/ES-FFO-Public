@@ -14,6 +14,11 @@ def save_signac_results(project, param_names, property_names, csv_name = None):
         set of property names
     csv_name : string
         name of csv file to save results
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        DataFrame of all data for each molecule
     """
     # if type(param_names) not in (list, tuple):
     #     raise TypeError("param_names must be a list or tuple")

@@ -20,7 +20,6 @@ mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"] # C
 cl_shuffle_seed = 1  # classifier
 gp_shuffle_seed = 42  # GP seed
 dist_seed = 1  # Distance seed
-iter_type = "ld_iters"  # Change me as needed
 mse_less_10_thresh = 25
 save_csv = False
 save_fig = False
@@ -30,8 +29,8 @@ verbose = True
 ##############################################################################
 ##############################################################################
 #Get Project
-base_name = "ld_iters/" #Name of the project folder
-project = signac.get_project(base_name)
+iter_type = "ld_iters"
+project = signac.get_project(iter_type)
 molec_dict = esolvs.make_dict(mol_names)
 
 # Save DataFrame of all molecule data for each iteration

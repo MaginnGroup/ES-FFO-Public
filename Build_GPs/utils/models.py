@@ -67,6 +67,29 @@ def get_exp_data(molec_object, prop_key):
     return exp_data, property_bounds, property_name
 
 def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
+    """
+    Get the best GP model for a given property and save the training and test data to a file.
+    
+    Parameters
+    ----------
+    df_data : pd.DataFrame
+        The dataframe containing the data for the property.
+    data : object
+        The data object containing the molecule information.
+    path_gps : str
+        The path to save the GP models and training/test data.
+    gp_shuffle_seed : int, default 42
+        The seed for shuffling the data.
+    
+    Returns
+    -------
+    models_best : dict
+        The best GP models for each property.
+    models_props : dict
+        The GP models for each property.
+    dir_train_test : str
+        The directory where the training and test data is saved.
+    """
     dir_train_test = path_gps + "/train_test_sets/"
     os.makedirs(dir_train_test, exist_ok=True)
     gp_model_path = os.path.join(path_gps, "gp_models.pkl")
@@ -112,7 +135,37 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
     return models_best, models_props, dir_train_test
 
 def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_fig = False):
-
+    """
+    Fit GP models to the given property data and plot the model performance.
+    
+    Parameters
+    ----------
+    df_data : pd.DataFrame
+        The dataframe containing the data for the property.
+    data : object
+        The data object containing the molecule information.
+    property_name : str
+        The name of the property to fit the GP models to.
+    pdf : PdfPages or None (None if save_fig is False)
+        The PdfPages object to save the plots to.
+    gp_shuffle_seed : int, default 1
+        The seed for shuffling the data.
+    save_fig : bool, default False
+        Whether to save the plots to a file.
+        
+    Returns
+    -------
+    models : dict
+        The fitted GP models for the given property.
+    x_train : np.ndarray
+        The training data for the GP models.
+    y_train : np.ndarray
+        The training labels for the GP models.
+    x_test : np.ndarray
+        The test data for the GP models.
+    y_test : np.ndarray 
+        The test labels for the GP models.
+    """
     gpConfig={'useWhiteKernel':False,
             'trainLikelihood':True,
             'anisotropic':True,
@@ -142,6 +195,26 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
     return models, x_train, y_train, x_test, y_test
 
 def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
+    """
+    Get the best GP models for all molecules and properties and save them to a file.
+    Parameters
+    ----------
+    all_df_data : dict
+        Dictionary of dataframes for each molecule.
+    data_dict : dict
+        Dictionary of data objects for each molecule.
+    iter_type : str, default "ld_iters"
+        The type of iteration (e.g., "ld_iters", "vle_iters").
+    gp_shuffle_seed : int, default 42
+        The seed for shuffling the data.
+    save_fig : bool, default False  
+        Whether to save the plots to a file.
+
+    Returns
+    -------
+    models_molecs : dict
+        Dictionary of best GP models for each molecule.
+    """
     #Get all data
     models_molecs = {}
     for mol_name, df_csv in all_df_data.items():
@@ -194,7 +267,6 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
         The trained SVM classifier
     """
     
-
     # Create training/test set
     param_names = list(data.param_names) + ["temperature"]
     property_name = "is_liquid"

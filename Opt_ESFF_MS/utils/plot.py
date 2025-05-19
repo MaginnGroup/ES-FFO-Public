@@ -237,6 +237,27 @@ molec_dict = esolvs.make_dict(mol_names)
 
 
 def get_min_max(curr_min, curr_max, new_vals, std_dev=None):
+    """
+    Update the minimum and maximum values based on new values and standard deviation.
+    
+    Parameters
+    ----------
+    curr_min : float
+        Current minimum value.
+    curr_max : float
+        Current maximum value.
+    new_vals : array-like
+        New values to consider for updating the min and max.
+    std_dev : array-like, optional
+        Standard deviation of the new values. If provided, it will be used to adjust the min and max.
+    
+    Returns
+    -------
+    curr_min : float
+        Updated minimum value.
+    curr_max : float
+        Updated maximum value.
+    """
     # Ensure new_vals is iterable
     if isinstance(new_vals, (float, int)):
         new_vals = [new_vals]
@@ -270,6 +291,21 @@ def get_min_max(curr_min, curr_max, new_vals, std_dev=None):
     return curr_min, curr_max
 
 def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
+    """
+    Plot the surface tension for a given molecule and force field
+
+    Parameters
+    ----------
+    molec_dict : dict
+        Dictionary containing the molecule data
+    df_ff_dict : dict
+        Dictionary containing the force field data
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure object containing the plot
+    """
     molec = list(molec_dict.keys())[0]
     mol_data = molec_dict[molec]
     # Plot VLE envelopes
@@ -381,6 +417,21 @@ def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
     return fig
 
 def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
+    """
+    Plot the density VLE envelopes for a given molecule and force field
+
+    Parameters
+    ----------
+    molec_dict : dict
+        Dictionary containing the molecule data
+    df_ff_dict : dict
+        Dictionary containing the force field data
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure object containing the plot
+    """
     molec = list(molec_dict.keys())[0]
     mol_data = molec_dict[molec]
     # Plot VLE envelopes
@@ -506,6 +557,21 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     #     fig.savefig(path,dpi=300)
 
 def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
+    """
+    Plot the Hvap and Pvap values for a given molecule and force field
+
+    Parameters
+    ----------
+    molec_dict : dict
+        Dictionary containing the molecule data
+    df_ff_dict : dict
+        Dictionary containing the force field data
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure object containing the plot
+    """
     molec = list(molec_dict.keys())[0]
     mol_data = molec_dict[molec]
     # Plot Pvap and Hvap
@@ -690,6 +756,25 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     #     fig.savefig(path,dpi=300)
 
 def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = None):
+    """
+    Plot the error for each property for a given molecule and force field
+
+    Parameters
+    ----------
+    molec_names : list
+        List of molecule names
+    err_path_dict : dict
+        Dictionary containing the error data for each force field
+    obj : str
+        The type of error to plot (e.g., 'mapd' or 'mae')
+    save_name : str, optional
+        The name of the file to save the plot to
+    
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure object containing the plot
+    """
     props = ["liq_density", "vap_density", "Pvap", "Hvap"]
     cols = [obj + "_" + prop for prop in props]
     if obj == "mae":
@@ -780,6 +865,25 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     return fig
 
 def plot_err_avg_props(molec_names, err_path_dict, obj = 'mapd', save_name = None):
+    """
+    Plot the average error for each property for a given molecule and force field
+
+    Parameters
+    ----------
+    molec_names : list
+        List of molecule names
+    err_path_dict : dict
+        Dictionary containing the error data for each force field
+    obj : str
+        The type of error to plot (e.g., 'mapd' or 'mae')
+    save_name : str, optional
+        The name of the file to save the plot to
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure object containing the plot
+    """
     #Load our results, Gaff results, and old result MAPD values
     # df_labels = ["This Work", "GAFF", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', 'green','purple']
