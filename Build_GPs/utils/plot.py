@@ -37,7 +37,6 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
         ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
-        # df_csv = all_df_data[mol_name]
         iter_num = df_csv["iter"].max()
 
         dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
@@ -46,29 +45,32 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
         pdf = PdfPages(pdf_name)
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
-        path_gps = os.path.join(dir_name, "gp_models.pkl")
-        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, path_gps, gp_shuffle_seed)
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
         
         for prop_name, models in all_models.items():
             # Load data
             exp_data, property_bounds, name = get_exp_data(data, prop_name)
-            df_x_train = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_train.csv"), header = 1, index_col = False)
-            df_y_train = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_y_train.csv"), header = 1, index_col = False)
-            df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
-            df_y_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_y_test.csv"), header = 1, index_col = False)
+            df_x_train = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_train.csv"), header = 0, index_col = 0)
+            df_y_train = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_y_train.csv"), header = 0, index_col = 0)
+            df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 0, index_col = 0)
+            df_y_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_y_test.csv"), header = 0, index_col = 0)
             df_x_all = pd.concat([df_x_train, df_x_test], ignore_index=True)
             df_y_all = pd.concat([df_y_train, df_y_test], ignore_index=True)
 
             #Plot model performance
-            plot_model_performance(models, df_x_all, df_y_all, property_bounds, pdf, xylim=None, save_fig=False)
-            plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, xylim=None, save_fig=False)
-            plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, xylim=None, save_fig=False)
+            plot_model_performance(models, df_x_all, df_y_all, property_bounds, pdf, xylim=None, save_fig=save_fig)
+            plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, xylim=None, save_fig=save_fig)
+            plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, xylim=None, save_fig=save_fig)
 
         for prop_name, models in all_models.items():
             #Plot test sets
+            # if "sim_" in prop_name:
+            #     prop_name = prop_name.replace("sim_", "")
+            # kern_models = models[prop_name]
             df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
             if len(df_x_test) > 0:
                 x_test = df_x_test.to_numpy()
+
                 plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
             #Plot GP slices
             plot_gp_slices(models, data, prop_name, pdf) 
@@ -97,6 +99,12 @@ def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=N
     -------
     matplotlib.Figure.figure
     """
+
+    if isinstance(x_data, pd.DataFrame):
+        x_data = x_data.to_numpy()
+    if isinstance(y_data, pd.DataFrame):
+        y_data = y_data.to_numpy()
+
     y_data_physical = values_scaled_to_real(y_data, property_bounds)
     min_xylim = np.min(y_data_physical)
     max_xylim = np.max(y_data_physical)
@@ -140,6 +148,9 @@ def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=N
 
     if save_fig:
         pdf.savefig(fig)
+    else:
+        plt.show()
+    plt.close(fig)
 
     return mse_model, label
     

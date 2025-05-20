@@ -107,18 +107,19 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
             if prop_name in df_data.columns:
                 models, x_train, y_train, x_test, y_test = fit_gp_models(df_data, data, prop_name, None, gp_shuffle_seed, False)
                 exp_data, property_bounds, name = get_exp_data(data, prop_name)
+                #The best model is the one with the lowest MSE on the test set
                 model_best, best_label = eval_model_performance(models, x_test, y_test, property_bounds)
                 models_props[prop_name] = models
                 best_labels[prop_name] = best_label
                 # Save training and test data to a file
                 df_xtrain = pd.DataFrame(x_train, columns=param_names)
                 df_xtest = pd.DataFrame(x_test, columns=param_names)
-                df_xtrain.to_csv(f"{dir_train_test}/{prop_name}_x_train.csv", index=False)
-                df_xtest.to_csv(f"{dir_train_test}/{prop_name}_x_test.csv", index=False)
+                df_xtrain.to_csv(f"{dir_train_test}/{prop_name}_x_train.csv", index=True)
+                df_xtest.to_csv(f"{dir_train_test}/{prop_name}_x_test.csv", index=True)
                 df_ytrain = pd.DataFrame(y_train, columns=[prop_name])
                 df_ytest = pd.DataFrame(y_test, columns=[prop_name])
-                df_ytrain.to_csv(f"{dir_train_test}/{prop_name}_y_train.csv", index=False)
-                df_ytest.to_csv(f"{dir_train_test}/{prop_name}_y_test.csv", index=False)
+                df_ytrain.to_csv(f"{dir_train_test}/{prop_name}_y_train.csv", index=True)
+                df_ytest.to_csv(f"{dir_train_test}/{prop_name}_y_test.csv", index=True)
         with open(gp_model_path, "wb") as f:
             pickle.dump((models_props, best_labels), f)
 
@@ -191,7 +192,7 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
             
     return models, x_train, y_train, x_test, y_test
 
-def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42, save_fig=False):
+def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_seed = 42):
     """
     Get the best GP models for all molecules and properties and save them to a file.
     Parameters
