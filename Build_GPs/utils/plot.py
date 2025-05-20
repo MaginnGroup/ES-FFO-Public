@@ -58,26 +58,25 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
             df_y_all = pd.concat([df_y_train, df_y_test], ignore_index=True)
 
             #Plot model performance
-            plot_model_performance(models, df_x_all, df_y_all, property_bounds, pdf, xylim=None, save_fig=save_fig)
-            plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, xylim=None, save_fig=save_fig)
-            plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, xylim=None, save_fig=save_fig)
+            title = f"{mol_name} {name} Iter {iter_num} - All Data"
+            plot_model_performance(models, df_x_all, df_y_all, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
+            title = f"{mol_name} {name} Iter {iter_num} - Training Data"
+            plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
+            title = f"{mol_name} {name} Iter {iter_num} - Testing Data"
+            plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
 
         for prop_name, models in all_models.items():
             #Plot test sets
-            # if "sim_" in prop_name:
-            #     prop_name = prop_name.replace("sim_", "")
-            # kern_models = models[prop_name]
             df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
             if len(df_x_test) > 0:
                 x_test = df_x_test.to_numpy()
-
                 plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
             #Plot GP slices
             plot_gp_slices(models, data, prop_name, pdf) 
 
         pdf.close()
 
-def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=None, save_fig=False):
+def plot_model_performance(models, x_data, y_data, property_bounds, pdf, title = None, xylim=None, save_fig=False):
     """Plot the predictions vs. result for one or more GP models
 
     Parameters
@@ -139,6 +138,8 @@ def plot_model_performance(models, x_data, y_data, property_bounds, pdf, xylim=N
         label="y=x",
     )
 
+    if title is not None:
+        ax.set_title(title, fontsize=12)
     ax.set_xlim(xylim[0], xylim[1])
     ax.set_ylim(xylim[0], xylim[1])
     ax.set_xlabel("Actual")
