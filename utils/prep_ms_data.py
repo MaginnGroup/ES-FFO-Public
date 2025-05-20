@@ -85,7 +85,7 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
             scaling_info[sim_col] = bounds_func
             scaling_info[expt_col] = bounds_func
 
-    if ["sim_liq_density", "sim_vap_density"] in df_all.columns:
+    if "sim_liq_density" in df_all.columns and "sim_vap_density" in df_all.columns:
         Tc, rhoc = calc_critical(df_all)
         df_all["sim_Tc"] = Tc
         df_all["sim_rhoc"] = rhoc
@@ -125,34 +125,35 @@ def calc_critical(df):
     """
     Tc = []
     rhoc = []
-    for group, values in df.groupby(['molecule']):    
-        #Need to group by molecule and do this for each molecule
-        temps = values["temperature"].values
-        liq_density = values["sim_liq_density"].values
-        vap_density = values["sim_vap_density"].values
+    values = df
+    # for group, values in df.groupby(['molecule']):    
+    #Need to group by molecule and do this for each molecule
+    temps = values["temperature"].values
+    liq_density = values["sim_liq_density"].values
+    vap_density = values["sim_vap_density"].values
 
-        #Check that all temps are not the same
-        if all(x == temps[0] for x in temps):
-            Tc += [np.nan]*len(temps)
-            rhoc += [np.nan]*len(temps)
-        else:
-            # Critical Point (Law of rectilinear diameters)
-            slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
-                temps,(liq_density + vap_density) / 2.0,)
+    #Check that all temps are not the same
+    if all(x == temps[0] for x in temps):
+        Tc += [np.nan]*len(temps)
+        rhoc += [np.nan]*len(temps)
+    else:
+        # Critical Point (Law of rectilinear diameters)
+        slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
+            temps,(liq_density + vap_density) / 2.0,)
 
-            try:
-                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                    temps,(liq_density - vap_density)**(1/0.32),)
-            except:
-                slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                    temps,abs((liq_density - vap_density))**(1/0.32),)
+        try:
+            slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
+                temps,(liq_density - vap_density)**(1/0.32),)
+        except:
+            slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
+                temps,abs((liq_density - vap_density))**(1/0.32),)
 
-            Tc_mol = np.abs(intercept2 / slope2)
-            rhoc_mol = intercept1 + slope1 * Tc_mol
+        Tc_mol = np.abs(intercept2 / slope2)
+        rhoc_mol = intercept1 + slope1 * Tc_mol
 
-            # if len(temps) == 5:
-            Tc += list([Tc_mol])*len(temps)
-            rhoc += list([rhoc_mol])*len(temps)
+        # if len(temps) == 5:
+        Tc += list([Tc_mol])*len(temps)
+        rhoc += list([rhoc_mol])*len(temps)
         
     return Tc, rhoc
 

@@ -14,12 +14,9 @@ from sklearn import svm
 sys.path.append("../..")
 from utils.prep_ms_data import prepare_df_props
 from fffit.fffit.models import run_gpflow_scipy
-from fffit.fffit.utils import shuffle_and_split
-from fffit.fffit.plot import (
-    plot_model_performance,
-)
+from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real
+from fffit.fffit.plot import plot_model_performance
 sys.path.remove("../..")
-
 
 def get_exp_data(molec_object, prop_key):
     """
@@ -110,7 +107,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
             if prop_name in df_data.columns:
                 models, x_train, y_train, x_test, y_test = fit_gp_models(df_data, data, prop_name, None, gp_shuffle_seed, False)
                 exp_data, property_bounds, name = get_exp_data(data, prop_name)
-                model_best, best_label = plot_model_performance(models, x_test, y_test, property_bounds, None, False)
+                model_best, best_label = eval_model_performance(models, x_test, y_test, property_bounds)
                 models_props[prop_name] = models
                 best_labels[prop_name] = best_label
                 # Save training and test data to a file
@@ -233,8 +230,7 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
 
-        path_gps = os.path.join(dir_name, "gp_models.pkl")
-        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, path_gps, gp_shuffle_seed)
+        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
             
         models_molecs[mol_name] = models_best
 
@@ -287,3 +283,42 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
     if save_fig:
         plt.savefig(root_dir + "classifier.pdf")
     return classifier
+
+def eval_model_performance(models, x_data, y_data, property_bounds):
+    """Plot the predictions vs. result for one or more GP models
+
+    Parameters
+    ----------
+    models : dict { label : model }
+        Each model to be plotted (value, GPFlow model) is provided
+        with a label (key, string)
+    x_data : np.array
+        data to create model predictions for
+    y_data : np.ndarray
+        correct answer
+    property_bounds : array-like
+        bounds for scaling density between physical
+        and dimensionless values
+    xylim : array-like, shape=(2,), optional
+        lower and upper x and y limits of the plot
+
+    Returns
+    -------
+    matplotlib.Figure.figure
+    """
+    y_data_physical = values_scaled_to_real(y_data, property_bounds)
+
+    mse_min = np.inf
+    mse_model = None
+    for (label, model) in models.items():
+        gp_mu, gp_var = model.predict_f(x_data)
+        gp_mu_physical = values_scaled_to_real(gp_mu, property_bounds)
+        meansqerr = np.mean(
+            (gp_mu_physical - y_data_physical.reshape(-1, 1)) ** 2
+        )
+        if meansqerr < mse_min:
+            mse_min = meansqerr
+            mse_model = model
+        print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
+
+    return mse_model, label
