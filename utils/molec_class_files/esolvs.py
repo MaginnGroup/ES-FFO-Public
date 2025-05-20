@@ -178,6 +178,15 @@ class EsolvsConstants:
         upper_bound = np.max(list(self.expt_liq_density.values()))
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
+    
+    @property
+    def vap_density_bounds(self):
+        """Bounds on vapor density in units of kg/m^3"""
+
+        lower_bound = np.min(list(self.expt_vap_density.values()))
+        upper_bound = np.max(list(self.expt_vap_density.values()))
+        bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
+        return bounds
 
     @property
     def surf_tens_bounds(self):
