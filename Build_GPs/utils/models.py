@@ -222,11 +222,6 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
 
         dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
         os.makedirs(dir_name, exist_ok=True)
-        if save_fig:
-            pdf_name = os.path.join(dir_name , "fig_gp_examples.pdf")
-            pdf = PdfPages(pdf_name)
-        else:
-            pdf = None
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
 
@@ -235,7 +230,8 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
         models_molecs[mol_name] = models_best
 
     dir2 = f"analysis/all_mols/{iter_type}/iter-{str(iter_num)}"
-    with open(dir2 + "/gp_models.pkl", "wb") as f:
+    os.makedirs(dir2, exist_ok=True)
+    with open(dir2 + "/best_gp_models.pkl", "wb") as f:
         pickle.dump(models_molecs, f)
 
     return models_molecs
