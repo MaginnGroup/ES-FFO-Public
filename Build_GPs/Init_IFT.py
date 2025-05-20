@@ -63,13 +63,13 @@ def unpack_molec_values(class_data, state_point, sample):
 
 
 def determine_iter(molec_name):
-    # Check the analysis folder for analysis/MolName/density-iter-X folders
-    # Find the highest density-iter-X folder
+    # Check the analysis folder for analysis/MolName/vle_iters folders
+    # Find the highest params-iter-X.csv file
     files = sorted(glob.glob("analysis/" + molec_name + "/vle_iters/params-iter-*.csv"))
     if len(files) == 0:
         iter = 1
     else:
-        # Get the highest density-iter-X folder from the last character of the last file minus the .csv part
+        # Get the highest params-iter-X.csv file from the last character of the file (before the .csv)
         base = os.path.splitext(os.path.basename(files[-1]))[0]
         iter = base[-1]
     return iter
@@ -103,23 +103,16 @@ def get_ld_est(gp_model, temps, samples):
 nsteps_nvt_eq = 100000  # 100ps
 nsteps_npzzat_eq = 5000000  # 5 ns
 nsteps_npzzat_prod = 10000000  # 10 ns
-nsteps_fl_eq = 100000  # 100ps
-nsteps_npt_pre_eq = 500000  # 500ps
-nsteps_npt_eq = 500000  # 500ps (minimum)
-nsteps_npt_prod = 2500000  # 2.5 ns
-nsteps_nvt_prod = 100000  # 100 ps
+# nsteps_npt_eq = 500000  # 500ps (minimum)
+# nsteps_npt_prod = 2500000  # 2.5 ns
 nsteps_intereq = 40000000  # 15 ns (minimum)
 nsteps_interprod = 40000000  # 30 ns
-n_particles = 10000  # Number of particles in the system
-nmols = 1000  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
-
 
 def init_project():
     # Loop over all molecules
     for molec_name, molec_data in molec_dict.items():
-        # Determine Density iter based off of the analysis folder
-        # For now use dens-iter = 1
+        # Determine iter based off of the analysis folder
         vle_iter = determine_iter(molec_name)
 
         # Initialize project
@@ -142,10 +135,10 @@ def init_project():
         # Convert scaled samples to physical values
         scaled_params = values_scaled_to_real(new_samples, bounds)
         #Make the GAFF param_set (test)
-        scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
-        scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
-        # nmols = int(n_particles/molec_data.n_atoms) #Number of molecules in the system
-        for i, temp in enumerate([temps[-3]]):
+        # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
+        # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
+
+        for i, temp in enumerate(temps):
             max_vd = molec_data.expt_vap_density[max(temps)]
             min_ld = molec_data.expt_liq_density[max(temps)]
             rho_thresh = (max_vd + min_ld)/2.0
@@ -161,18 +154,13 @@ def init_project():
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
                     "rho_liq": liq_density,  # kg/m^3
                     "rho_thresh": rho_thresh,  # kg/m^3
-                    # "rho_avg": rho_avg,  # kg/m^3
                     "mol_wt": molec_data.molecular_weight,  # g/mol
-                    # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    # "nsteps_npzzat_prod": nsteps_npzzat_prod,
-                    # "nsteps_fl_eq": nsteps_fl_eq,
-                    # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    "nsteps_npt_eq": nsteps_npt_eq,
-                    "nsteps_npt_prod": nsteps_npt_prod,
-                    # "nsteps_nvt_prod": nsteps_nvt_prod,
+                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
+                    # "nsteps_npt_eq": nsteps_npt_eq,
+                    # "nsteps_npt_prod": nsteps_npt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
                     "max_sigma" : np.max(molec_data.bounds_sig)
@@ -181,7 +169,8 @@ def init_project():
                 state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
                 state_point, nmols = calc_nmols(state_point)
                 state_point["nmols"] = nmols
-                # state_point["max_sigma"] = max_sigma
+                #Optionally define max_sigma in the state point as the highest value of the parameters
+                # state_point["max_sigma"] = max_sigma 
 
                 job = project.open_job(state_point)
                 job.init()
