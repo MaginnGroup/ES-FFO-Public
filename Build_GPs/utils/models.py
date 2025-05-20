@@ -113,12 +113,12 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
                 # Save training and test data to a file
                 df_xtrain = pd.DataFrame(x_train, columns=param_names)
                 df_xtest = pd.DataFrame(x_test, columns=param_names)
-                df_xtrain.to_csv(f"{dir_train_test}/{prop_name}_x_train", index=False)
-                df_xtest.to_csv(f"{dir_train_test}/{prop_name}_x_test", index=False)
+                df_xtrain.to_csv(f"{dir_train_test}/{prop_name}_x_train.csv", index=False)
+                df_xtest.to_csv(f"{dir_train_test}/{prop_name}_x_test.csv", index=False)
                 df_ytrain = pd.DataFrame(y_train, columns=[prop_name])
                 df_ytest = pd.DataFrame(y_test, columns=[prop_name])
-                df_ytrain.to_csv(f"{dir_train_test}/{prop_name}_y_train", index=False)
-                df_ytest.to_csv(f"{dir_train_test}/{prop_name}_y_test", index=False)
+                df_ytrain.to_csv(f"{dir_train_test}/{prop_name}_y_train.csv", index=False)
+                df_ytest.to_csv(f"{dir_train_test}/{prop_name}_y_test.csv", index=False)
         with open(gp_model_path, "wb") as f:
             pickle.dump((models_props, best_labels), f)
 
