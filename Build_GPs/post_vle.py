@@ -7,7 +7,8 @@ sys.path.remove("..")
 
 from utils.signac import get_signac_results, save_signac_results
 from utils.id_new_samples import new_samples_vle, find_pareto
-from utils.models import get_best_models, plot_gp_examples
+from utils.models import get_best_models
+from utils.plot import plot_gp_examples
 
 
 
