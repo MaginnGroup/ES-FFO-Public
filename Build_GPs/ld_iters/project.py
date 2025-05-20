@@ -60,7 +60,8 @@ def create_system(job):
     # Get the number of molecules from the job document
     density = job.sp.rho_liq
     #Calculate the box lengths from the system density using nmols molecules
-    V = (job.sp.nmols*job.sp.mol_wt*1e27)/(density * 1000* 6.022*1e23)
+    #Set the box volume as 1.15*V to ensure that the box is large enough to adequately place molecules
+    V = 1.15*(job.sp.nmols*job.sp.mol_wt*1e27)/(density * 1000* 6.022*1e23)
     # xy_len = (V/job.sp.aspect_ratio)**(1/3)
     # z_len = job.sp.aspect_ratio*xy_len #Rectangular box
     xy_len = (V)**(1/3) #Cubic box
