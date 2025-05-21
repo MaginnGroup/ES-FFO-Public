@@ -905,7 +905,7 @@ def find_pareto(all_df_data, data_dict):
         df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale=False)
         
         #Prepare error data to find pareto points
-        df_paramsets = prepare_df_errors(df_all, mol_name)
+        df_paramsets = prepare_df_errors(df_all, data)
         #Save data to csv
         dir_name = root_dir_vle + "iter-" + str(iter_num) + "/"
         os.makedirs(dir_name, exist_ok=True)
