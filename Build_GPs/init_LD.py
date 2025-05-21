@@ -104,7 +104,7 @@ def init_project():
             min_ld = molec_data.expt_liq_density[max(temps)]
             rho_thresh = (max_vd + min_ld)/2.0
             rho_avg = (liq_density + vap_density) / 2.0
-            for sample in scaled_params[:3]:
+            for sample in scaled_params:
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
