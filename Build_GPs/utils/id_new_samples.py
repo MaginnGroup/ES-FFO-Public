@@ -855,9 +855,9 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
             print('\nRequired Distance for liquid is : %0.8f and there are %0.1f points too many' % (distance_opt_l, number_points_l) )
             new_points_vle = opt_dist(distance_opt_l, top_param_set, molecule, target_num_l, rand_seed=dist_seed , eval = True)
             print(len(new_points_vle), "top liquid density points are left after removing similar points using a distance of", np.round(distance_opt_l,5))
-            new_dir = os.path.join(root_dir, "vle-iters")
+            new_dir = os.path.join(root_dir, "vle_iters")
             os.makedirs(new_dir, exist_ok=True)
-            out_csv = os.path.join(root_dir, "vle-iters", "params-iter-1.csv")
+            out_csv = os.path.join(root_dir, "vle_iters", "params-iter-1.csv")
         else:
             #Print total number of top liquid samples
             print("Total number of top liquid samples is", len(top_param_set))
