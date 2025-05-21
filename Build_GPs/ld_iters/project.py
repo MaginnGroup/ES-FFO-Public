@@ -124,6 +124,7 @@ def em_complete(job):
 
 @LD_group
 @IFT_group
+@Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.post(em_complete)
@@ -153,6 +154,7 @@ def nvt_eq_comp(job):
 
 @LD_group
 @IFT_group
+@Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
@@ -180,7 +182,8 @@ def npt_eq_comp(job):
         return False
 
 @LD_group
-@IFT_group    
+@IFT_group   
+@Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npt_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
@@ -214,6 +217,7 @@ def npt_prod_comp(job):
     
 @LD_group
 @IFT_group    
+@Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(npt_eq_sim)
 @Project.post(npt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
@@ -239,7 +243,8 @@ def npt_prod_sim(job):
 
 #Get density from NPT simulations
 @LD_group
-@IFT_group    
+@IFT_group   
+@Project.pre(lambda job: "ld_fail" not in job.doc) 
 @Project.pre.after(npt_prod_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
 @Project.operation(cmd=False, directives={"omp_num_threads": 1})
@@ -470,23 +475,28 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
 
 # HELPER FUNCTIONS
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
-    with job:
-        #Make a directory for the simulation    
-        os.makedirs(sim_name, exist_ok=True)
-        # w_gpu = " -ntomp 1 -ntmpi 1"
-        if sim_name != "em":
-            last_dir_name = "../" + last_sim_name + "/"
-        else:
-            last_dir_name = "../"
-        if os.path.exists(sim_name + ".cpt"):
-            command = f"mpirun -np 1 gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name}"
-        else:
-            command = (
-                f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir_name}{last_sim_name}.gro -p ../system.top -o {sim_name}  &> ../prep_{sim_name}.out && "
-                f"mpirun -np 1 gmx mdrun -v -deffnm {sim_name} &> ../run_{sim_name}.out"
-            )
-        subprocess.run(command, shell=True, check=True, cwd=sim_name)
-        job.doc[sim_name + "_fin"] = True
+    try:
+        with job:
+            #Make a directory for the simulation    
+            os.makedirs(sim_name, exist_ok=True)
+            # w_gpu = " -ntomp 1 -ntmpi 1"
+            if sim_name != "em":
+                last_dir_name = "../" + last_sim_name + "/"
+            else:
+                last_dir_name = "../"
+            if os.path.exists(sim_name + ".cpt"):
+                command = f"mpirun -np 1 gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name}"
+            else:
+                command = (
+                    f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir_name}{last_sim_name}.gro -p ../system.top -o {sim_name}  &> ../prep_{sim_name}.out && "
+                    f"mpirun -np 1 gmx mdrun -v -deffnm {sim_name} &> ../run_{sim_name}.out"
+                )
+            subprocess.run(command, shell=True, check=True, cwd=sim_name)
+            job.doc[sim_name + "_fin"] = True
+    except:
+        # If the simulation fails, set the equilibration failure flag
+        eq_fail_str = "ld_fail"
+        job.doc[eq_fail_str] = True
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
@@ -578,7 +588,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                 del job.doc[eq_ext_str]
             # If another error occurs, set the equilibration failure flag
             else:
-                eq_fail_str = "eq_fail_" + sim_name
+                eq_fail_str = "ld_fail"
                 job.doc[eq_fail_str] = True
 
 
