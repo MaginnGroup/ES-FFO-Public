@@ -804,8 +804,8 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         molecule = data_dict[mol_name]
         #Pull the results from all iterations + calculate the MSE
         df_results = df_csv
-        df_results["expt_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
-        df_results["sq_err"] = (df_results["density"] - df_results["expt_density"]) ** 2
+        df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+        df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
         df_mse = (df_results.groupby(list(molecule.param_names))["sq_err"].mean().reset_index(name="mse"))
         
         #Scale the parameter values for the results to compare to the original parameter values
