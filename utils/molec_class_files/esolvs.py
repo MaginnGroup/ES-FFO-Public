@@ -155,6 +155,8 @@ class EsolvsConstants:
         # Get the minimum and maximum temperature from the experimental data
         if prop_name == "expt_liq_density":
             prop = self.expt_liq_density
+        elif prop_name == "expt_vap_density":
+            prop = self.expt_vap_density
         elif prop_name == "expt_surf_tens":
             prop = self.expt_surf_tens
         elif prop_name == "expt_Pvap":

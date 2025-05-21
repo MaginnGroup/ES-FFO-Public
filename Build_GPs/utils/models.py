@@ -278,7 +278,7 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
         classifier, x_test, y_test, display_labels=["Vapor", "Liquid"]
     )
     if save_fig:
-        plt.savefig(root_dir + "classifier.pdf")
+        plt.savefig(root_dir + "/classifier.pdf")
     return classifier
 
 def eval_model_performance(models, x_data, y_data, property_bounds):
