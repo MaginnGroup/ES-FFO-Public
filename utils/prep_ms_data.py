@@ -180,9 +180,9 @@ def prepare_df_errors(df_all_data, data_dict):
     
     all_final_params = {}
     #sort by molecule and temperature -- added by Ning Wang
-    for mol_name, df in df_all_data.items():
+    for mol_name, df_data in df_all_data.items():
         new_data = []
-        df=df.sort_values(by=["temperature", "iter"])
+        df = df_data.sort_values(by=["temperature", "iter"])
         for group, values in df.groupby(['iter']):
             new_quantities = {}
             #The molecule is listed as the first value in the group
