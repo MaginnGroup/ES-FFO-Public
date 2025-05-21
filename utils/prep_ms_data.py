@@ -250,11 +250,7 @@ def prepare_df_errors(df_data, data):
         data_to_append = list(group) + list(new_quantities.values())
         new_data.append(data_to_append)
 
-    print(new_data[0])
-
-    columns = list(["molecule"]) + list(new_quantities.keys())
+    columns = list(["iter"]) + list(new_quantities.keys())
     new_df = pd.DataFrame(new_data, columns=columns)
-
-    print(new_df.head())
         
     return new_df
