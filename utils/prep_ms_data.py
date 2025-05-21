@@ -158,17 +158,17 @@ def calc_critical(df):
         
     return Tc, rhoc
 
-def prepare_df_errors(df, mol_name):
+def prepare_df_errors(df_all_data, data_dict):
     """Create a dataframe with mean square error (mse) and mean absolute
     percent error (mape) for each unique parameter set. The critical
     temperature and density are also evaluated.
 
     Parameters
     ----------
-    df : pandas.Dataframe
-        per simulation results
-    mol_name : EsolvsConstants
-        molecule class with bounds/experimental data
+    df_all_data : pandas.Dataframe
+        all simulation results
+    data_dict : dict
+        Dictionaty of molecule classes EsolvsConstants with bounds/experimental data
 
     Returns
     -------
@@ -177,80 +177,83 @@ def prepare_df_errors(df, mol_name):
         the MSE and MAPD for liq_density, vap_density, pvap, hvap,
         critical temperature, critical density
     """
-    new_data = []
-
+    
+    all_final_params = {}
     #sort by molecule and temperature -- added by Ning Wang
-    df=df.sort_values(by=["temperature", "iter"])
-    for group, values in df.groupby(['iter']):
-        new_quantities = {}
-        #The molecule is listed as the first value in the group
-        molecule = mol_name
-        if len(values) > 0:
-            # Temperatures
-            temps = values["temperature"].values
+    for mol_name, df in df_all_data.items():
+        new_data = []
+        df=df.sort_values(by=["temperature", "iter"])
+        for group, values in df.groupby(['iter']):
+            new_quantities = {}
+            #The molecule is listed as the first value in the group
+            molecule = data_dict[m]
+            if len(values) > 0:
+                # Temperatures
+                temps = values["temperature"].values
 
-            #Add experimental data
-            all_props = {
-                "liq_density": ("expt_liq_density", molecule.expt_liq_density),
-                "surf_tens": ("expt_surf_tens", molecule.expt_surf_tens),
-                "Pvap": ("expt_Pvap", molecule.expt_Pvap),
-                "Hvap": ("expt_Hvap", molecule.expt_Hvap),
-                "vap_density": ("expt_vap_density", molecule.expt_vap_density),
-                "Tc": ("expt_Tc", molecule.expt_Tc),
-                "rhoc": ("expt_rhoc", molecule.expt_rhoc),}
+                #Add experimental data
+                all_props = {
+                    "liq_density": ("expt_liq_density", molecule.expt_liq_density),
+                    "surf_tens": ("expt_surf_tens", molecule.expt_surf_tens),
+                    "Pvap": ("expt_Pvap", molecule.expt_Pvap),
+                    "Hvap": ("expt_Hvap", molecule.expt_Hvap),
+                    "vap_density": ("expt_vap_density", molecule.expt_vap_density),
+                    "Tc": ("expt_Tc", molecule.expt_Tc),
+                    "rhoc": ("expt_rhoc", molecule.expt_rhoc),}
+                
+                # Add optional columns if they exist
+                for old_col, (expt_col, expt_map) in all_props.items():
+                    #For columns that exist where the exp data is not already in the dataframe
+                    if "sim_" + old_col in values.columns and not "expt_" + old_col in values.columns:
+                        #For Tc and rhoc, add a single value directly
+                        if old_col in ["Tc", "rhoc"]:
+                            values[expt_col] = np.array([expt_map])
+                        #Otherwise map the values to the temperature
+                        else:
+                            try:
+                                values[expt_col] = values["temperature"].map(expt_map)
+                            #If temperature does not exist in the mapping skip it
+                            except KeyError: 
+                                pass
             
-            # Add optional columns if they exist
-            for old_col, (expt_col, expt_map) in all_props.items():
-                #For columns that exist where the exp data is not already in the dataframe
-                if "sim_" + old_col in values.columns and not "expt_" + old_col in values.columns:
-                    #For Tc and rhoc, add a single value directly
-                    if old_col in ["Tc", "rhoc"]:
-                        values[expt_col] = np.array([expt_map])
-                    #Otherwise map the values to the temperature
-                    else:
-                        try:
-                            values[expt_col] = values["temperature"].map(expt_map)
-                        #If temperature does not exist in the mapping skip it
-                        except KeyError: 
-                            pass
+                def calculate_objs(expt_values, sim_values, property_name, molecule_name):
+                    try:
+                        fin_sim = sim_values[np.isfinite(sim_values)]
+                        fin_expt = expt_values[np.isfinite(sim_values)]
+                        mse = mean_squared_error(fin_expt, fin_sim)
+                        mapd = mean_absolute_percentage_error(fin_expt, fin_sim) * 100.0
+                        mae = mean_absolute_error(fin_expt, fin_sim)
+                    except ValueError as e:
+                        print(f"Error in calculating {property_name} for {molecule_name}: {e}. Setting MSE, MAE, and MAPD to NaN")
+                        print("Exp", expt_values, "\n Sim", sim_values)
+                        mse, mapd, mae = np.nan, np.nan, np.nan
+                    return mse, mapd, mae
+
+                for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap"]:
+                    if "sim_" + old_col in values.columns:
+                        mse, mapd, mae = calculate_objs(values["expt_" + prop], values["md_" + prop], prop, group[0])
+                        new_quantities["mse_" + prop] = mse
+                        new_quantities["mapd_" + prop] = mapd
+                        new_quantities["mae_" + prop] = mae
+
+                for prop in ["Tc", "rhoc"]:
+                    if "sim_" + old_col in values.columns:
+                        mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, group[0])
+                        new_quantities["mse_" + prop] = mse
+                        new_quantities["mapd_" + prop] = mapd
+                        new_quantities["mae_" + prop] = mae
+
+            else:
+                for prop in list(all_props.keys()):
+                    new_quantities["mse_" + prop] = np.nan
+                    new_quantities["mapd_" + prop] = np.nan
+                    new_quantities["mae_" + prop] = np.nan
+            
+            data_to_append = list(group) + list(new_quantities.values())
+            new_data.append(data_to_append)
+
+        columns = list(["molecule"]) + list(new_quantities.keys())
+        new_df = pd.DataFrame(new_data, columns=columns)
+        all_final_params[mol_name] = new_df
         
-            def calculate_objs(expt_values, sim_values, property_name, molecule_name):
-                try:
-                    fin_sim = sim_values[np.isfinite(sim_values)]
-                    fin_expt = expt_values[np.isfinite(sim_values)]
-                    mse = mean_squared_error(fin_expt, fin_sim)
-                    mapd = mean_absolute_percentage_error(fin_expt, fin_sim) * 100.0
-                    mae = mean_absolute_error(fin_expt, fin_sim)
-                except ValueError as e:
-                    print(f"Error in calculating {property_name} for {molecule_name}: {e}. Setting MSE, MAE, and MAPD to NaN")
-                    print("Exp", expt_values, "\n Sim", sim_values)
-                    mse, mapd, mae = np.nan, np.nan, np.nan
-                return mse, mapd, mae
-
-            for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap"]:
-                if "sim_" + old_col in values.columns:
-                    mse, mapd, mae = calculate_objs(values["expt_" + prop], values["md_" + prop], prop, group[0])
-                    new_quantities["mse_" + prop] = mse
-                    new_quantities["mapd_" + prop] = mapd
-                    new_quantities["mae_" + prop] = mae
-
-            for prop in ["Tc", "rhoc"]:
-                if "sim_" + old_col in values.columns:
-                    mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, group[0])
-                    new_quantities["mse_" + prop] = mse
-                    new_quantities["mapd_" + prop] = mapd
-                    new_quantities["mae_" + prop] = mae
-
-        else:
-            for prop in list(all_props.keys()):
-                new_quantities["mse_" + prop] = np.nan
-                new_quantities["mapd_" + prop] = np.nan
-                new_quantities["mae_" + prop] = np.nan
-        
-        data_to_append = list(group) + list(new_quantities.values())
-        new_data.append(data_to_append)
-
-    columns = list(["molecule"]) + list(new_quantities.keys())
-    new_df = pd.DataFrame(new_data, columns=columns)
-        
-    return new_df
+    return all_final_params
