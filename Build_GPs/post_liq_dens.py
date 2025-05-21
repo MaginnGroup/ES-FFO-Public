@@ -41,7 +41,7 @@ df_all_molec = save_signac_results(df_all_molec, iter_type, save_csv)
 models_molecs = get_best_models(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
 plot_gp_examples(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
 #Check the MSE of the new samples
-mse_less10 = check_mse_10(df_all_molec, molec_dict, iter_type, mse_less_10_thresh, dist_seed, save_csv)
+mse_less10 = check_mse_10(df_all_molec, molec_dict, mse_less_10_thresh, dist_seed, save_csv)
 #Find the next samples to run if fewer than 25 samples have MSE less than 10
 for key, value in mse_less10.items():
     if value >= mse_less_10_thresh:
