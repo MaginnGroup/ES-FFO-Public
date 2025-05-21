@@ -264,7 +264,7 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
     param_names = list(data.param_names) + ["temperature"]
     property_name = "is_liquid"
     x_train, y_train, x_test, y_test = shuffle_and_split(
-        df_iter1, param_names, property_name, cl_shuffle_seed
+        df_iter1, param_names, property_name, shuffle_seed = cl_shuffle_seed
     )
 
     # Create and fit classifier
