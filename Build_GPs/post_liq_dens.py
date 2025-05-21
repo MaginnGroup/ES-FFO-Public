@@ -38,7 +38,7 @@ molec_dict = esolvs.make_dict(mol_names)
 df_all_molec = get_signac_results(project, molec_dict, property_names)
 df_all_molec = save_signac_results(df_all_molec, iter_type, save_csv)
 #Make and save best GP models for all molecules and properties and plot GP examples
-models_molecs = get_best_models(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
+models_molecs = get_best_models(df_all_molec, molec_dict, iter_type, gp_shuffle_seed)
 plot_gp_examples(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
 #Check the MSE of the new samples
 mse_less10 = check_mse_10(df_all_molec, molec_dict, mse_less_10_thresh, dist_seed, save_csv)

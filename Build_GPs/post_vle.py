@@ -40,7 +40,7 @@ molec_dict = esolvs.make_dict(mol_names)
 df_all_molec = get_signac_results(project, molec_dict, property_names)
 df_all_molec = save_signac_results(df_all_molec, iter_type, save_csv)
 #Make and save best GP models for all molecules and properties and plot GP examples
-models_molecs = get_best_models(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
+models_molecs = get_best_models(df_all_molec, molec_dict, iter_type, gp_shuffle_seed)
 plot_gp_examples(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
 #Check pareto efficient samples for each molecule to see if there is one with < 5% error in all properties
 all_final_params = find_pareto(df_all_molec, molec_dict)
