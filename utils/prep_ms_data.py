@@ -6,6 +6,7 @@ import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 import pickle
 from scipy.stats import linregress
+import copy
 
 from fffit.fffit.utils import values_real_to_scaled
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
@@ -53,20 +54,20 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
             raise ValueError(f"df_csv must contain a column for parameter: '{param}'")
         
     if "vap_enthalpy" in df_csv.columns:
-        df_all.drop(columns="vap_enthalpy", inplace=True)
+        df_csv.drop(columns="vap_enthalpy", inplace=True)
     if "liq_enthalpy" in df_csv.columns:
-        df_all.drop(columns="liq_enthalpy", inplace=True)
+        df_csv.drop(columns="liq_enthalpy", inplace=True)
         
     # Add expt density and is_liquid
-    df_all = df_csv.rename(columns={"liq_density": "sim_liq_density"})
-    df_all["expt_density"] = df_all["temperature"].map(molecule.expt_liq_density)
+    df_all = copy.deepcopy(df_csv.rename(columns={"liq_density": "sim_liq_density"}))
+    df_all["expt_liq_density"] = df_all["temperature"].map(molecule.expt_liq_density)
     df_all["is_liquid"] = df_all["sim_liq_density"] > liquid_density_threshold
-       
+
     # Create scalinf for all values
     scaling_info = {
     "temperature": molecule.temperature_bounds(),
     "sim_liq_density": molecule.liq_density_bounds,
-    "expt_density": molecule.liq_density_bounds,}
+    "expt_liq_density": molecule.liq_density_bounds,}
 
     # Optional columns and corresponding bounds + expt mappings
     optional_props = {
@@ -80,7 +81,7 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
     for old_col, (expt_col, bounds_func, expt_map) in optional_props.items():
         if old_col in df_all.columns:
             sim_col = "sim_" + old_col
-            df_all = df_csv.rename(columns={old_col: sim_col})
+            df_all.rename(columns={old_col: sim_col}, inplace=True)
             df_all[expt_col] = df_all["temperature"].map(expt_map)
             scaling_info[sim_col] = bounds_func
             scaling_info[expt_col] = bounds_func
