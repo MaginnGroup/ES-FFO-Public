@@ -710,7 +710,7 @@ def rank_samples(samples, gp_model, molecule, property_name, property_offset=0.0
             "{}".format(property_name, valid_property_names)
         )
     print("Include properties:", property_name)
-    temperature_bounds = molecule.temperature_bounds
+    
     if property_name == "sim_liq_density":
         expt_property = molecule.expt_liq_density
         property_bounds = molecule.liq_density_bounds
@@ -727,6 +727,7 @@ def rank_samples(samples, gp_model, molecule, property_name, property_offset=0.0
         expt_property = molecule.expt_Hvap
         property_bounds = molecule.Hvap_bounds
     print("Property bounds are", property_bounds)
+    temperature_bounds = molecule.temperature_bounds(property_name.replace("sim", "expt"))
     # Apply GP model and calculate mean squared errors (MSE) between
     # GP model predictions and experimental data for all parameter samples
     mse = _calc_gp_mse(
