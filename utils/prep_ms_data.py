@@ -63,7 +63,7 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
     df_all["expt_liq_density"] = df_all["temperature"].map(molecule.expt_liq_density)
     df_all["is_liquid"] = df_all["sim_liq_density"] > liquid_density_threshold
 
-    # Create scalinf for all values
+    # Create scaling for all values
     scaling_info = {
     "temperature": molecule.temperature_bounds(),
     "sim_liq_density": molecule.liq_density_bounds,

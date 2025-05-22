@@ -981,9 +981,7 @@ def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto):
     os.makedirs(dir_name, exist_ok=True)
     csv_name = os.path.join(dir_name, "final-params.csv")
     df_final.to_csv(csv_name)
-
-    print(df_final[props_mse].head())
-
+    
     #If more than one point is found, select the one with the lowest error
     if len(df_final) > 1:
         # Find the point with the lowest average error
