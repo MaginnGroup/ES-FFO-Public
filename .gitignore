@@ -9,6 +9,7 @@ __pycache__/
 R125_29*_ex*
 # C extensions
 *.so
+Build_GPs/analysis/R125/*
 
 # Distribution / packaging
 .Python
