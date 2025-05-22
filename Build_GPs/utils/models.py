@@ -181,7 +181,7 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed = 1, save_f
 
     for kernel in ["RBF", "Matern32", "Matern52", "RQ"]:
         gpConfig["kernel"] = kernel
-        models[kernel] = run_gpflow_scipy(x_train, y_train, gpConfig, restarts = 1)
+        models[kernel] = run_gpflow_scipy(x_train, y_train, gpConfig, restarts = 3)
  
     # Plot model performance on train and test points
     exp_data, prop_bounds, prop_name = get_exp_data(data, property_name)
