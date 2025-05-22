@@ -76,6 +76,10 @@ def get_signac_results(project, data_dict, prop_names):
 
         #Create data from dict
         df = pd.DataFrame(data)
+        
+        #Filter out rows with NaN values
+        df = df.dropna()
+
         df["iter"] = dens_iter
 
         #Add data to all_data_dict
