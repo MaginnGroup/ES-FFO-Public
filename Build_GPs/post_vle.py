@@ -52,5 +52,5 @@ for key, value in all_final_params.items():
     #Otherwise we need to move to the next iteration
     else:
         print(f"{key} : No final parameters found. Move to iteration {max(iters) + 1}")
-        next_samples = new_samples_vle(df_all_molec, molec_dict, verbose = True, save_fig=False, gp_shuffle_seed = 42, dist_seed = 1)
+        next_samples = new_samples_vle(df_all_molec, molec_dict, verbose, gp_shuffle_seed, dist_seed)
 

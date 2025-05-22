@@ -44,8 +44,8 @@ plot_gp_examples(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
 mse_less10 = check_mse_10(df_all_molec, molec_dict, mse_less_10_thresh, dist_seed, save_csv)
 #Find the next samples to run if fewer than 25 samples have MSE less than 10
 for key, value in mse_less10.items():
-    if value >= mse_less_10_thresh:
-        print(f"{key} : All samples have MSE less than {mse_less_10_thresh}. Proceed to VLE.")
+    if len(value) >= mse_less_10_thresh:
+        print(f"{key} : {len(value)} samples have MSE less than {mse_less_10_thresh}. Proceed to VLE.")
     else:
         print(f"{key} : Total samples with MSE less than {mse_less_10_thresh}, {value}")
         next_samples = new_samples_ld(df_all_molec, molec_dict, verbose, save_fig, cl_shuffle_seed, gp_shuffle_seed, dist_seed)
