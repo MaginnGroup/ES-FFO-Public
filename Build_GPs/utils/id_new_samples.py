@@ -5,6 +5,7 @@ import sys
 import seaborn
 from numpy.linalg import norm
 from functools import reduce
+import pickle
 #Need import from the utils folder
 sys.path.append("../..")
 from utils.prep_ms_data import prepare_df_props, prepare_df_errors
@@ -14,7 +15,7 @@ sys.path.remove("../..")
 
 from .models import get_prop_best_model, build_classifier
 
-def new_samples_vle(all_df_data, data_dict, verbose = True, save_fig=False, gp_shuffle_seed = 42, dist_seed = 1):
+def new_samples_vle(all_df_data, data_dict, verbose = True, gp_shuffle_seed = 42, dist_seed = 1):
     """
     Find new samples for VLE simulations
 
@@ -623,15 +624,12 @@ def get_next_vle_params(top_liq, data, root_dir, iter_num, target_total=25, dist
             % (distance_opt_l, number_points_l)
         )
 
-    new_points_l.drop(
-    columns=[
-        "mse_liq_density",
-        "mse_vap_density",
-        "mse_Pvap",
-        "mse_Hvap",
-        "is_pareto",
-    ],
-    inplace=True,)
+    props = ["sim_liq_density", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
+    col_del = ["is_pareto"]
+    for prop in props:
+        if "mse_" + prop in new_points_l.columns:
+            col_del.append("mse_" + prop)
+    new_points_l.drop(columns=col_del, inplace=True)
 
     return new_points_l, final_sample_file
 
@@ -874,7 +872,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
 
     return num_mse_less10
 
-def find_pareto(all_df_data, data_dict):
+def find_pareto(all_df_data, data_dict, props_pareto):
     """
     Find the pareto points for all molecules and save them to a CSV file.
     
@@ -903,15 +901,13 @@ def find_pareto(all_df_data, data_dict):
 
         #Get all result data
         df_all, df_liquid, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale=False)
-        
         #Prepare error data to find pareto points
-        df_paramsets = prepare_df_errors(df_all, data)
+        df_paramsets = prepare_df_errors(df_all, data_dict, mol_name)
         #Save data to csv
-        dir_name = root_dir_vle + "iter-" + str(iter_num) + "/"
+        dir_name = root_dir_vle + "/iter-" + str(iter_num) + "/"
         os.makedirs(dir_name, exist_ok=True)
         csv_name = os.path.join(dir_name, "result_errors.csv")
         df_paramsets.to_csv(csv_name)
-
 
         mse_columns = [col for col in df_paramsets.columns if "mse" in col]
         result, pareto_points, dominated_points = find_pareto_set(
@@ -928,13 +924,18 @@ def find_pareto(all_df_data, data_dict):
         file_name = os.path.join(dir_name , "pareto-params.csv")
         pareto_points.to_csv(file_name)
 
-        df_final = select_final_pareto(pareto_points, root_dir, iter_num)
+        df_final = select_final_pareto(pareto_points, root_dir_vle, iter_num, props_pareto)
     all_final_params[mol_name] = df_final
+
+    #Save all final parameters to a pkl file
+    dir2 = f"analysis/all_mols/"
+    os.makedirs(dir2, exist_ok=True)
+    with open(dir2 + "/final_params.pkl", "wb") as f:
+        pickle.dump(all_final_params, f)
+
     return all_final_params
 
-
-
-def select_final_pareto(df_pareto, root_dir, iter_num):
+def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto):
     """
     Filter the pareto points and select the final parameters given the lowest error parameter set.
 
@@ -953,31 +954,45 @@ def select_final_pareto(df_pareto, root_dir, iter_num):
         The dataframe containing the final parameters
     """
     # Filter for parameter sets with less than 5 % error in all properties
-    df_final = df_pareto.drop(
-        columns=[
-            "sim_liq_density",
-            "sim_surf_tens",
-            "mse_surf_tens",
-            "mse_liq_density",
-            "mae_surf_tens",
-            "mae_liq_density",
-            "is_pareto",
-        ]
-    )
-
-    ### Choosing Final Parameter Sets (R-32)
-    # Filter for parameter sets with less than 5 % error in all properties
-    df_final = df_final[
-        (df_final["mape_surf_tens"] <= 5.0)
-        & (df_final["mape_liq_density"] <= 5.0)
+    properties = [
+        "liq_density",
+        "vap_density",
+        "Pvap",
+        "Hvap",
+        "surf_tens",
+        "Tc",
+        "rhoc"
     ]
 
+    cols_to_drop = ["is_pareto"]
+    for prop in properties:
+        if "mse_" + prop in df_pareto.columns:
+            #Remove the sim, mse and mae columns
+            cols_to_drop += ["mse_" + prop, "mae_" + prop]
+
+    df_final = df_pareto.drop(columns=cols_to_drop)
+
+    props_mse = ["mapd_" + prop for prop in props_pareto]
+    df_final = df_final[
+    df_final[props_mse].le(5.0).all(axis=1)
+]
     # Save CSV files
-    dir_name = root_dir + "iter-" + str(iter_num) + "/"
+    dir_name = root_dir + "/iter-" + str(iter_num) + "/"
     os.makedirs(dir_name, exist_ok=True)
     csv_name = os.path.join(dir_name, "final-params.csv")
     df_final.to_csv(csv_name)
-    csv_name = root_dir + "final-params.csv"
-    df_final.to_csv(csv_name)
+
+    print(df_final[props_mse].head())
+
+    #If more than one point is found, select the one with the lowest error
+    if len(df_final) > 1:
+        # Find the point with the lowest average error
+        df_final["avg_MAPD"] = df_final[props_mse].mean(axis=1)
+        # Sort the dataframe by the average MAPD
+        df_final = df_final.sort_values("avg_MAPD")
+        # Select the first row
+        df_final = df_final.iloc[[0]]
+        # Drop the avg_MAPD column
+        df_final = df_final.drop(columns=["avg_MAPD"])
 
     return df_final
