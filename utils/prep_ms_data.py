@@ -158,7 +158,7 @@ def calc_critical(df):
         
     return Tc, rhoc
 
-def prepare_df_errors(df_data, data):
+def prepare_df_errors(df_data, data_dict, mol_name):
     """Create a dataframe with mean square error (mse) and mean absolute
     percent error (mape) for each unique parameter set. The critical
     temperature and density are also evaluated.
@@ -169,6 +169,8 @@ def prepare_df_errors(df_data, data):
         all simulation results
     data_dict : EsolvsConstants
         Molecule class EsolvsConstants with bounds/experimental data
+    mol_name : str
+        name of the molecule to be evaluated
 
     Returns
     -------
@@ -177,14 +179,14 @@ def prepare_df_errors(df_data, data):
         the MSE and MAPD for liq_density, vap_density, pvap, hvap,
         critical temperature, critical density
     """
-    
+    molecule = data_dict[mol_name]
     #sort by molecule and temperature -- added by Ning Wang
     new_data = []
     df = df_data.sort_values(by=["temperature", "iter"])
-    for group, values in df.groupby(['iter']):
+    #Sort by param names to be able to save these values
+    for group, values in df.groupby(list(molecule.param_names)):
         new_quantities = {}
-        #The molecule is listed as the first value in the group
-        molecule = data
+
         if len(values) > 0:
             # Temperatures
             temps = values["temperature"].values
@@ -229,14 +231,14 @@ def prepare_df_errors(df_data, data):
 
             for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap"]:
                 if "sim_" + prop in values.columns:
-                    mse, mapd, mae = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, group[0])
+                    mse, mapd, mae = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, mol_name)
                     new_quantities["mse_" + prop] = mse
                     new_quantities["mapd_" + prop] = mapd
                     new_quantities["mae_" + prop] = mae
 
             for prop in ["Tc", "rhoc"]:
                 if "sim_" + prop in values.columns:
-                    mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, group[0])
+                    mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, mol_name)
                     new_quantities["mse_" + prop] = mse
                     new_quantities["mapd_" + prop] = mapd
                     new_quantities["mae_" + prop] = mae
@@ -250,7 +252,7 @@ def prepare_df_errors(df_data, data):
         data_to_append = list(group) + list(new_quantities.values())
         new_data.append(data_to_append)
 
-    columns = list(["iter"]) + list(new_quantities.keys())
+    columns = list(molecule.param_names) + list(new_quantities.keys())
     new_df = pd.DataFrame(new_data, columns=columns)
         
     return new_df
