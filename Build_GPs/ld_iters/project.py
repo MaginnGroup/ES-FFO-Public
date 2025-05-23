@@ -128,7 +128,7 @@ def em_complete(job):
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.post(em_complete)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def em_sim(job):
     """Run the minimization simulations"""
     sim_name = "em"
@@ -157,7 +157,7 @@ def nvt_eq_comp(job):
 @Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def nvt_eq_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq"
@@ -186,7 +186,7 @@ def npt_eq_comp(job):
 @Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npt_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def npt_eq_sim(job):
     import panedr
 
@@ -220,7 +220,7 @@ def npt_prod_comp(job):
 @Project.pre(lambda job: "ld_fail" not in job.doc)
 @Project.pre.after(npt_eq_sim)
 @Project.post(npt_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def npt_prod_sim(job):
     import panedr
 
@@ -247,7 +247,7 @@ def npt_prod_sim(job):
 @Project.pre(lambda job: "ld_fail" not in job.doc) 
 @Project.pre.after(npt_prod_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
-@Project.operation(cmd=False, directives={"omp_num_threads": 2})
+@Project.operation(cmd=False, directives={"omp_num_threads": 1})
 def npt_dens_calc(job):
     import panedr
     sys.path.append("../../")
