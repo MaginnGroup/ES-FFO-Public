@@ -1350,8 +1350,8 @@ dt		                = 0.001		    ; 1 fs
 ; Output control
 nstxout-compressed      = 10000        ; save compressed coordinates every 1.0 ps
 nstvout		            = 0		        ; don't save velocities
-nstenergy	            = 10000		    ; save energies every 1.0 ps
-nstlog		            = 10000		    ; update log file every 1.0 ps
+nstenergy	            = 1000		    ; save energies every 1.0 ps
+nstlog		            = 1000		    ; update log file every 1.0 ps
 
 ; Neighborsearching
 cutoff-scheme           = Verlet
