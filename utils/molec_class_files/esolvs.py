@@ -754,10 +754,10 @@ uncertainty = {
 # REFPROP
 expt_Hvap = {
     200.0: 1289.99,
+    250.0: 1234.79,
     300.0: 1166.17,
     350.0: 1075.936,
     400.0: 944.57,
-    500.0: 391.09,
 }
 
 # Create an instance of the EsolvsConstants class
