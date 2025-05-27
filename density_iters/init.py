@@ -76,17 +76,15 @@ def determine_density_iter(molec_name):
 
 
 nsteps_nvt_eq = 100000  # 100ps
-nsteps_npzzat_eq = 500000 #5000000  # 5 ns
-nsteps_npzzat_prod = 2500000 #10000000  # 10 ns
-nsteps_fl_eq = 100000  # 100ps
-nsteps_npt_pre_eq = 500000  # 500ps
+nsteps_npzzat_eq = 500000 #5000000  # 500 ps
+nsteps_npzzat_prod = 2500000 #10000000  # 2.5 ns
+
 nsteps_npt_eq = 500000  # 500ps (minimum)
 nsteps_npt_prod = 2500000  # 2.5 ns
-nsteps_nvt_prod = 100000  # 100 ps
 nsteps_intereq = 40000000  # 15 ns (minimum)
 nsteps_interprod = 40000000  # 30 ns
-# n_particles = 10000  # Number of particles in the system
-# nmols = 1000  # Number of molecules in the system
+
+# nmols = 3000  # Number of molecules in the system
 aspect_ratio = 3.0  # Aspect ratio of the box
 
 
@@ -98,7 +96,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npzzat_scl_unconstr")
+        project = signac.init_project("npt_fin")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -126,7 +124,7 @@ def init_project():
                 # Define the state point w/ unchanging characteristics
                 state_point = {
                     "mol_name": molec_name,
-                    "dens-iter": dens_iter,
+                    "iter": dens_iter,
                     "smiles": molec_data.smiles_str,
                     "T": float((temp * u.K).in_units(u.K).value),  # K
                     "P": float(molec_data.expt_Pvap[temp]),  # bar
@@ -137,12 +135,12 @@ def init_project():
                     # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
+                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    # "nsteps_npzzat_prod": nsteps_npzzat_prod,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    # "nsteps_npt_eq": nsteps_npt_eq,
-                    # "nsteps_npt_prod": nsteps_npt_prod,
+                    "nsteps_npt_eq": nsteps_npt_eq,
+                    "nsteps_npt_prod": nsteps_npt_prod,
                     # "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
