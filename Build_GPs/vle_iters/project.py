@@ -1657,7 +1657,7 @@ pcoupltype              = semiisotropic             ; uniform scaling of box vec
 tau_p                   = 2.0                   ; time constant, in ps
 ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
 compressibility         = 0 4.5e-5
-nstpcouple              = 5
+nstpcouple              = 1
 ;refcoord_scaling       = com
 
 ; Periodic boundary conditions
@@ -1721,7 +1721,7 @@ pcoupltype              = semiisotropic             ; uniform scaling of box vec
 tau_p                   = 2.0                   ; time constant, in ps
 ref-p                   = {press} {press}               ; reference pressure, in bar (from the system defined pressure)
 compressibility         = 0 4.5e-5
-nstpcouple              = 5
+nstpcouple              = 1
 ;refcoord_scaling       = com
 
 ; Periodic boundary conditions
