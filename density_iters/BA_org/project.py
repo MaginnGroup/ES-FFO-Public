@@ -1883,11 +1883,6 @@ nstpcouple              = 5
 pbc                     = xyz        ; 3-D PBC
 
 ; Velocity generation
-gen_vel                 = yes        ; assign velocities from Maxwell distribution
-gen_temp                = {temp}     ; temperature for Maxwell distribution
-gen_seed                = -1         ; generate a random seed
-
-; Velocity generation
 gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
 """.format(
         temp=job.sp.T, press=job.sp.P, nsteps=job.sp.nsteps_npzzat_prod
