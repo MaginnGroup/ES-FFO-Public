@@ -274,6 +274,7 @@ def npzzat_dens_calc(job):
         std = np.max(np.sqrt(vars_est))
         #Save these values to the job document
         job.doc["liq_density"] = dens_eq
+        job.doc["liq_volume"] = float(np.mean(np.array(df["Volume"].values)))
         job.doc["liq_density_unc"] = std
 
 
@@ -292,8 +293,10 @@ def init_inter_eq_sim(job):
     with job:  
         #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
         if job.doc["liq_density"] > job.sp.rho_thresh:
-            #Calculate box lengths from equilibrated NVT
-            xy_len, z_len = get_box_coords(job, last_sim_name) 
+            #Calculate box lengths from production NPzzAT
+            xy_len, inst_z_len = get_box_coords(job, last_sim_name) 
+            #The average z length is the z length from the production simulation calculated from the density and unchanging xy coords
+            z_len = job.doc["liq_volume"]/xy_len**2
             xy_cen = round(xy_len / 2, 5)
             z_cen = round(z_len * job.sp.aspect_ratio / 2, 5)
             xy_len_rnd = np.round(xy_len, 5)

@@ -207,6 +207,33 @@ def npt_eq_sim(job):
 
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
+@LD_group
+@IFT_group    
+@Project.pre(lambda job: "ld_fail" not in job.doc)
+@Project.pre.after(npt_eq_sim)
+@Project.post(lambda job: "eq_liq_dens" in job.doc)
+@Project.operation(cmd=False, directives={"omp_num_threads": 1})
+def check_eq_density(job):
+    import panedr
+    last_sim_name = "npt_eq"
+    property = "Density"
+
+    with job:  
+        from_file = job.fn(f"{last_sim_name}/{last_sim_name}" + ".edr")
+        # Get the density values from the NPT equilibration run
+        df = panedr.edr_to_df(from_file)
+        all_density = np.array(df[property].values)
+        #Get the density of only the equilibrated region
+        results, adf_test_failed = get_pymser_results(all_density)
+        density = all_density[results["t0"]:]
+        dens_eq = np.mean(density)
+
+        if dens_eq < 1: #If density is less than 1 kg/m^3 the FF fails
+            job.doc["ld_fail"] = True
+            print(f"Density {dens_eq} kg/m^3 is less than 1 kg/m^3, indicating a failure in the force field.")
+
+        job.doc["eq_liq_dens"] = dens_eq
+
 # Long Production NPT
 @Project.label
 def npt_prod_comp(job):
@@ -218,7 +245,7 @@ def npt_prod_comp(job):
 @LD_group
 @IFT_group    
 @Project.pre(lambda job: "ld_fail" not in job.doc)
-@Project.pre.after(npt_eq_sim)
+@Project.pre.after(check_eq_density)
 @Project.post(npt_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 1})
 def npt_prod_sim(job):
