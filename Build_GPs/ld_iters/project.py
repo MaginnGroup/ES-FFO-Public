@@ -1241,6 +1241,165 @@ pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions
 
     return contents
 
+# def _generate_em_mdp(job):
+#     # Use 100000 (100 ps) for the first equilibration
+#     # Use 100000 (100 ps) for the first equilibration
+#     init_temp = 10  # Initial temperature for the energy minimization
+#     final_temp = job.sp.T
+#     temps = list(range(init_temp, int(final_temp), 10))
+#     if temps[-1] != final_temp:
+#         temps.append(final_temp)
+#     npoints = len(temps)  # Number of points in the annealing schedule
+
+#     total_time = 50*npoints
+#     times = list(np.linspace(0, total_time, npoints).astype(int))  # Annealing times in ps
+
+#     annealing_temps = " ".join(map(str, temps))
+#     annealing_times = " ".join(map(str, times))
+
+#     nsteps = total_time*1000  # Total steps for NVT equilibration
+#     contents = """
+# ; MDP file for NVT simulation
+
+# ; Run parameters
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
+
+# ; Output control
+# nstxout                 = 10000          ; save coordinates every 1000 ps 
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 1000		    ; save energies every 10.0 ps
+# nstlog		            = 1000		    ; update log file every 10.0 ps
+
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-4          ; kJ/mol/ps
+
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
+
+# ; Electrostatics
+# rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourierspacing          = 0.16          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
+
+# ; Temperature coupling is on
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+# ; Pressure coupling is off
+# pcoupl		            = no
+
+# ; Periodic boundary conditions
+# pbc		                = xyz		    ; 3-D PBC
+
+# ; Dispersion correction
+# DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+# ; Velocity generation
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp_i}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
+
+# ; Energy minimization
+# annealing                = single 
+# annealing_npoints        = {npoints}
+# annealing_time           = {anneal_times}   
+# annealing_temp           = {anneal_temps}
+# """.format(
+#         temp=job.sp.T, temp_i = init_temp, npoints=npoints, anneal_times = annealing_times, anneal_temps=annealing_temps, nsteps=nsteps
+#     )
+
+#     return contents
+
+# def _generate_nvt_eq_mdp(job):
+#     # Use 100000 (100 ps) for the first equilibration
+#     init_temp = 10  # Initial temperature for the energy minimization
+#     final_temp = job.sp.T
+#     temps = list(range(init_temp, int(final_temp), 10))
+#     if temps[-1] != final_temp:
+#         temps.append(final_temp)
+#     npoints = len(temps)  # Number of points in the annealing schedule
+#     temps.append(final_temp) # Append the final temperature to end NVT equilibration at the target temperature
+
+#     times = list(np.linspace(0, 1000, npoints).astype(int))  # Annealing times in ps
+#     times += [int(1000 + job.sp.nsteps_nvt_eq/1000)]  # Append the number of steps for NVT equilibration at desired T
+
+#     annealing_temps = " ".join(map(str, temps))
+#     annealing_times = " ".join(map(str, times))
+
+#     nsteps = 1000000 + job.sp.nsteps_nvt_eq  # Total steps for NVT equilibration
+#     contents = """
+# ; MDP file for NVT simulation
+
+# ; Run parameters
+# integrator	            = md		    ; leap-frog integrator
+# nsteps		            = {nsteps}	    ;
+# dt		                = 0.001		    ; 1 fs
+
+# ; Output control
+# nstxout                 = 10000          ; save coordinates every 1000 ps 
+# nstvout		            = 0		        ; don't save velocities
+# nstenergy	            = 1000		    ; save energies every 10.0 ps
+# nstlog		            = 1000		    ; update log file every 10.0 ps
+
+# ; Neighborsearching
+# cutoff-scheme           = Verlet
+# ns-type		            = grid		    ; search neighboring grid cells
+# nstlist		            = 100		    ; 10 fs, largely irrelevant with Verlet
+# verlet-buffer-tolerance = 1e-4          ; kJ/mol/ps
+
+# ; VDW
+# vdwtype                 = Cut-off
+# rvdw		            = 1.2		    ; short-range van der Waals cutoff (in nm)
+# vdw-modifier            = None
+
+# ; Electrostatics
+# rcoulomb	            = 1.2		    ; short-range electrostatic cutoff (in nm)
+# coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+# pme-order	            = 4		        ; cubic interpolation
+# fourierspacing          = 0.16          ; effects accuracy of pme
+# ewald-rtol              = 1e-5
+
+# ; Temperature coupling is on
+# tcoupl		            = v-rescale     ; modified Berendsen thermostat
+# tc-grps		            = System 	    ; Single coupling group
+# tau-t		            = 0.1	  		; time constant, in ps
+# ref-t		            = {temp}        ; reference temperature, one for each group, in K
+
+# ; Pressure coupling is off
+# pcoupl		            = no
+
+# ; Periodic boundary conditions
+# pbc		                = xyz		    ; 3-D PBC
+
+# ; Dispersion correction
+# DispCorr	            = EnerPres	    ; apply analytical tail corrections
+
+# ; Velocity generation
+# gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+# gen-temp	            = {temp_i}        ; temperature for Maxwell distribution
+# gen-seed	            = -1		    ; generate a random seed
+
+# ; Energy minimization
+# annealing                = single 
+# annealing_npoints        = {npoints}
+# annealing_time           = {anneal_times}   
+# annealing_temp           = {anneal_temps}
+# """.format(
+#         temp=job.sp.T, temp_i = init_temp, npoints=npoints+1, anneal_times = annealing_times, anneal_temps=annealing_temps, nsteps=nsteps
+#     )
+
+#     return contents
 
 def _generate_nvt_eq_mdp(job):
     # Use 100000 (100 ps) for the first equilibration
@@ -1261,7 +1420,7 @@ nstlog		            = 1000		    ; update log file every 10.0 ps
 ; Neighborsearching
 cutoff-scheme           = Verlet
 ns-type		            = grid		    ; search neighboring grid cells
-nstlist		            = 100		    ; 10 fs, largely irrelevant with Verlet
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
 verlet-buffer-tolerance = 1e-4          ; kJ/mol/ps
 
 ; VDW
