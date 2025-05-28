@@ -2,45 +2,69 @@
 Authors: Ning Wang, Montana Carlozo, Eliseo Marin-Rimoldi, Bridgette Belfort, Alexander W. Dowling, and Edward J. Maginn
 <!-- Introduction: Provide a brief introduction to the project, including its purpose, goals, and any key features or benefits. -->
 ## Introduction
-**HFC-FFO** is a repository used to rapidly calibrate the LJ parameters of HFC forcefields given experimental data. The key feature of this work is using machine learning tools in the form of Gaussian processes (GPs) which allow us to cheaply estimate the results of a molecular simulation given temperature state points and thermophysical property data.
+**ES-FFO** is a repository used to rapidly calibrate the LJ parameters of (generalized) electrolyte solvent forcefields given experimental data. The key feature of this work is using machine learning tools in the form of Gaussian processes (GPs) which allow us to cheaply estimate the results of a molecular simulation given temperature state points and thermophysical property data. This workflow combines the approaches of Wang et. al., 2023, J. Chem. Theory Comput. and GENFFPaperCitation to create one repository to build GP models and optimizae parameters for electrolyte solvent FFs.
+
+**NOTE**: We use Signac and signac flow (`<https://signac.io/>`) to manage the setup and execution of each workflow. These instructions assume a working knowledge of that software.
 
 ## Citation
-This work has been published on JCTC, whose link is `https://doi.org/10.1021/acs.jctc.3c00338`. Please cite as:
+This work has been published on TBD, whose link is TBD. Please cite as:
 
-Ning Wang, Montana N. Carlozo, Eliseo Marin-Rimoldi, Bridgette J. Befort, Alexander W. Dowling, and Edward J. Maginn*, “Machine Learning-Enabled Development of Accurate Force Fields for Refrigerants”, J. Chem. Theory Comput., 2023, 19, 14, 4546–4558
+CITATION HERE
    
 ## Available Data
 
-### HFC Parameter Sets
-The non-dominated and best parameter sets for each HFC are
-provided under ``HFC-FFO/rXX/analysis/csv/``. Where XX represents a different HFC. For example r-143a, r-14, r-170. The non-dominated
-sets are found in ``rXX-pareto.csv``, and
-the best sets are found in ``rXX-final.csv``. The parameter values in the CSV files are
-normalized between 0 and 1 based on the parameter bounds for each
-atom type (see manuscript, or ``HFC-FFO/rXX/analysis/utils/rXX.py`` for definitions of
-the upper and lower parameter bounds for each refrigerant).
+### Repository Organization
+The repository is organized as follows: <br />
+ES-FFO/ is the top level directory. It contains: <br />
+1. .gitignore prevents large files from the signac workflow and plots from being tracked by git and prevents  tracking of other unimportant files. <br />
+2. utils/ contains functions used by all pieces of this workflow including molecule experimental data and reference parameters <br />
+3. block_averages/ contains a code for block averaging via the methods in H. Flyvbjerg and H.G. Peterson. Error estimates on averages of correlated data. J. Chem. Phys. 91:461-466, 1989.<br />
+4. fffit/ contains another set of utility functions used by multiple aspects of this workflow. <br />
+5. Build_GPs/ contains the workflow runs and analyzed results from applying the methods in Wang et al. 2023 <br />
+6. Opt_ES/ contains the workflow runs and analyzed results from applying the methods in genFF Paper HERE which create the generalized FF parameter set(s).<br />
+7. Opt_ESFF_MS/ contains the molecular simulation results and analysis of the FF(s) developed in step 6 and GAFF benchmarks.  <br />
+13. hfcs-fffit.yml is the environment for running this workflow. <br />
 
-### Molecular Simulations Inputs
-All molecular simulations were performed inside ``HFC-FFO/r##/runs`` where it exists.
-Each iteration was managed with ``signac-flow``. Inside of each
-directory in ``runs``, you will find all the necessary files to
-run the simulations. Note that you may not get the exact same simulation
-results due to differences in software versions, random seeds, etc.
-Nonetheless, all of the results from our molecular simulations are saved
-under ``HFC-FFO/analysis/csv/rXX-YY-iterZZ-results.csv``, where ``XX``
-is the molecule, ``YY`` is the stage (liquid density or VLE), and
-``ZZ`` is the iteration number.
 
-### Surrogate Modeling Analysis
-All of the scripts for the surrogate modeling are provided in
-``HFC-FFO/r##/analysis``, following the same naming structure as
-the CSV files.
+### utils/
+This directory contains:
+1. molec_class_files/esolvs.py: A .py file which loads all electrolyte solvent data into a class
+2. prep_ms_data.py: Contains scripts used to prepare data for GP training and get error data
 
-### Figures
-All scripts required to generate the primary figures in the
-manuscript are reported under ``HFC-FFO/r##/analysis/final-figs`` and the
-associated PDF files are located under
-``HFC-FFO/r##/analysis/final-figs/pdfs``
+
+### fffit/fffit/
+This directory contains functions used by both workflows:
+1. models.py: Functions related to building GP models
+2. pareto.py: Functions for determining pareto efficient points
+3. plot.py: Functions for plotting data
+4. signac.py: Functions for extracting signac data
+5. utils.py: Functions for scaling and unscaling data and shuffling/splitting GP data
+
+### Build_GPs/
+This directory contains all data related to running the workflow of Wang et al. including:
+1. Analysis/mol/ld_iters: Results for liquid density (LD) iterations for each molecule "mol"
+2. Analysis/mol/vle_iters: Results for vapor-liquid-equilibrium (VLE) iterations
+3. utils/*.py: Functions for analyzing the results of LD and VLE iterations
+4. ld_iters/ : The signac project directory for running the LD iterations including project.py
+5. vle_iters/ : The signac project directory for running the VLE iterations including project.py
+6. gen_lhs_samples.py: A script for generating the LHS data necessary for LD and VLE iterations
+7. init_LD.py: A script to generate the signac project for LD iterations
+8. init_IFT.py: A script to generate the signac project for VLE iterations
+9. post_ld.py: A script to analyze LD iteration data
+10. post_vle.py: A script to analyze VLE iteration data
+
+### Opt_ES/
+This directory contains all data related to running the optimization workflow of genFFpaper HERE including:
+1. utils/atom_types.py: Class definitions for atom typing schemes
+2. utils/opt_atom_types.py: Other functions necessary for optimizing FF parameters and analyzing workflow results
+3. init_opt_at.py: Script for initializing signac project for generalized FF optimization
+4. post_analysis_opt.py: Script for analyzing optimized FF results
+5. opt_ff/: Signac project directory for running the FF optimization including project.py
+6. rcc_opt_at_analysis: Script for ranking parameters accoring to Yao 2003
+
+### Opt_ESFF_MS/
+This directory contains all data related to validating the generalized FF parameters:
+WRITE ME LATER
 
 ## Installation
 To run this software, you must have access to all packages in the hfcs-fffit environment (hfcs-fffit.yml) which can be installed using the instructions in the next section.
@@ -54,164 +78,143 @@ Running the simulations will also require an installation of GROMACS.
 This can be installed separately (see installation instructions
 `here <https://manual.gromacs.org/documentation/2021.2/install-guide/index.html>`).
 
-An example of the procedure is provided below:
-
-    # First clone hfcs-fffit and install pip/conda available dependencies
-    # with a new conda environment named hfcs-fffit
-    git clone https://github.com/emarinri/hfcs-fffit.git
-    git switch -c update-dependencies origin/update-dependencies
-    cd hfcs-fffit
-    conda env create -f ./devtools/conda-envs/hfcs-fffit.yaml
-    conda activate hfcs-fffit
-    cd ../
-
-    # Now clone and install  other dependencies
-    git clone git@github.com:dowlinglab/fffit.git
-    # Checkout the v0.1 release of fffit and install
-    cd fffit/
-    git checkout tags/v0.1
-    pip install .
-    cd ../
-    # Checkout the v0.1 release of block average and install
-    git clone git@github.com:rsdefever/block_average.git
-    cd block_average/
-    git checkout tags/v0.1
-    pip install .
-    cd ../
-
 <!-- Usage: Provide instructions on how to use the project, including any configuration or customization options. Examples of usage scenarios can also be added. -->
 ## Usage
 
 ### Liquid Density Optimization
-
-**NOTE**: We use Signac and signac flow (`<https://signac.io/>`)
-to manage the setup and execution of the molecular simulations. These
-instructions assume a working knowledge of that software.
-
-The first iteration of the liquid density simulations was
-performed under ``HFC-FFO/r##/runs/rXX-density-iter1/``.
-
 To run liquid density iterations, follow the following steps:
-1. Create the initial configuration
-   - Prepare rXX_gaff.xml
-   - Go to the data folder and use the run.sh file
+1. Initialize Signac workflow
    ```
      conda activate hfcs-fffit
-     cd HFC-FFO/rXX/run/rXX-density-iter1/data
-     source run.sh
-   ```
-2. Initialize Signac workflow              
-   - Leave ''HFC-FFO/rXX/run/rXX-density-iter1/data'' untouched
-   - Initialize files for simulation use
-    ```   
-     cd HFC-FFO/rXX/run/rXX-density-iter1/
-     python init.py
-    ```        
+     cd Build_GPs/
+     python init_LD.py
+   ```    
+2. Run LD iterations
+   - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
+  ```
+     cd Build_GPs/ld_iters/
+     python project.py submit -o LD --bundle=12 --parallel
+   ```  
 3. Check status a few times throughout the process
    ```  
      python project.py status
-   ```       
-4. Create force fields and generate inputs
+   ```   
+Note: Step 2 operation LD runs multiple operations in series. Alternatively, the following can be run one at a time:
+4. Alternative submission
    ```
      python project.py run -o create_forcefield
-     python project.py run -o generate_inputs
-   ```
-5. Create systems
-    - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
-   ```
      python project.py submit -o create_system
+     python project.py run -o fix_topology
+     python project.py submit -o em_sim --bundle=12 --parallel
+     python project.py submit -o nvt_eq_sim --bundle=12 --parallel
+     python project.py submit -o npt_eq_sim --bundle=12 --parallel
+     python project.py submit -o npt_prod_sim --bundle=12 --parallel
+     python project.py submit -o calculate_props --bundle=12 --parallel
    ```
-6. Fix topology
-   ```
-     python project.py run -o fix_topology    
-   ```
-7. Run simulation
-   ```
-     python project.py submit -o em_sim --bundle=2 --parallel
-     python project.py submit -o nvt_eq_sim --bundle=2 --parallel
-     python project.py submit -o npzzat_eq_sim --bundle=2 --parallel
-
-     python project.py submit -o fl_eq_sim --bundle=2 --parallel
-     python project.py submit -o npt_pre_eq_sim --bundle=2 --parallel
-     python project.py submit -o npt_eq_sim --bundle=2 --parallel
-     python project.py submit -o npt_prod_sim --bundle=2 --parallel
-     python project.py submit -o init_nvt_prod_sim --bundle=2 --parallel
-     python project.py submit -o nvt_prod_sim --bundle=2 --parallel
-
-     python project.py submit -o init_inter_eq_sim --bundle=2 --parallel
-     python project.py submit -o inter_eq_sim --bundle=2 --parallel
-     python project.py submit -o inter_prod_sim --bundle=2 --parallel
-
-     python project.py submit -o IFT --bundle=3 --parallel
-     python project.py submit -o LD --bundle=24 --parallel
-   ```  
-8. Calculate density
-   ```
-     python project.py submit -o calculate_props --bundle=2 --parallel
      
-9. Extract density using the following after each LD iteration in the analysis/ folder
+5. Extract densities, run GP optimization and get samples for the next iteration in the Build_GPs/ directory
+   - **Note: vle_iters/ will be populated with parameter sets automatically once the termination criteria for LD iters is satisfied**
    ```
-     python extract_rXX_density.py ZZ
-   ```
-10. Run GP optimization and get samples for the next iteration in the analysis/ folder
-   ```
-     module load gcc/11.2.0
-     python id-new-samples.py
-     python plotfig_gp_examples.py 
+     qsub -N postLD submit_job_long post_ld.py
    ```       
 
 ### VLE Optimization
 
 To run vapor-liquid-equilibrium iterations, follow the following steps:
-1. Use analysis/csv/rXX-vle-iter1-params.csv to initialize files for simulation use
+1. Initialize Signac workflow
    ```
-     cd HFC-FFO/rXX/run/rXX-vle-iter1/
-     python init.py
-   ```          
-2. Check status a few times throughout the process
-   ```
-     python project.py status 
-   ```       
-3. Create force fields
+     conda activate hfcs-fffit
+     cd Build_GPs/
+     python init_IFT.py
+   ```    
+2. Run LD iterations
+   - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
+  ```
+     cd Build_GPs/ld_iters/
+     python project.py submit -o IFT --bundle=12 --parallel
+   ```  
+3. Check status a few times throughout the process
+   ```  
+     python project.py status
+   ```   
+Note: Step 2 operation IFT runs multiple operations in series. Alternatively, the following can be run one at a time:
+4. Alternative submission
    ```
      python project.py run -o create_forcefield
-   ```         
-4. Calculate vapor/liquid box size
+     python project.py submit -o create_system
+     python project.py run -o fix_topology
+     python project.py submit -o em_sim --bundle=12 --parallel
+     python project.py submit -o nvt_eq_sim --bundle=12 --parallel
+     python project.py submit -o npzzat_eq_sim --bundle=12 --parallel
+     python project.py submit -o npzzat_prod_sim --bundle=12 --parallel
+     python project.py submit -o init_inter_eq_sim --bundle=12 --parallel
+     python project.py submit -o inter_eq_sim --bundle=12 --parallel
+     python project.py submit -o inter_prod_sim --bundle=12 --parallel
+     python project.py submit -o calculate_props --bundle=12 --parallel
    ```
-     python project.py run -o calc_vapboxl
-     python project.py run -o calc_liqboxl
-   ```         
-5. Run simulation
+     
+5. Extract properties, run GP optimization and get samples for the next iteration in the Build_GPs/ directory
    ```
-     python project.py submit -o equilibrate_liqbox --bundle=12 --parallel
-     python project.py run -o extract_final_liqbox
-     python project.py submit -o run_gemc --bundle=12 --parallel
-   ```   
-6. Calculate VLE Properties
-   ```
-     python project.py run -o calculate_props
-   ```
-7. Extract VLE properties using the following after each VLE iteration in the analysis/ folder
-   ```
-     python extract_rXX_vle.py ZZ
-   ```
-8. Analyze Data
-   ```
-     module load gcc/11.2.0
-     python id-new-samples.py
-     python get-new-samples.py 
-     python analysis.py 
-   ```
+     qsub -N postVLE submit_job_long post_vle.py
+   ```  
 
-### Final Analysis
-The nondominated parameter sets and final processing steps can be run using the following:
-1. Summarize data
+### Generalized Atom Type and FF Optimization
+To run generalized FF calibration, follow the following steps:
+1. Initialize Signac workflow
    ```
-     cd HFC-FFO/rXX/run/rXX-vle-iterKK
-     python id-pareto.py
-     cd HFC-FFO/rXX/analysis/final-analysis
-     python select_final.py
-2. Plots in the paper were generated by codes in HFC-FFO/rXX/analysis/final-figs/
+     conda activate hfcs-fffit
+     cd Opt_ES/
+     python init_opt_at.py
+   ```    
+2. Run LD iterations
+   - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
+  ```
+     cd Opt_ES/opt_ff/
+     python project.py submit -o OptGenFF --bundle=12 --parallel
+   ```  
+3. Check status a few times throughout the process
+   ```  
+     python project.py status
+   ```   
+Note: Step 2 operation OptGenFF multiple operations in series. Alternatively, the following can be run one at a time:
+4. Alternative submission
+   ```
+     python project.py run -o gen_pareto_sets --bundle=12 --parallel
+     python project.py submit -o run_obj_alg --bundle=12 --parallel
+   ```
+     
+5. Extract and analyze data:
+   ```
+     qsub -N postOptAnaly submit_job_long post_analysis_opt.py
+     qsub -N postOptRank submit_job_long rcc_opt_at_analysis.py
+   ``` 
+
+### Generalized FF Validation
+To validate the generalized FF from above, follow the following steps:
+FINISH LATER
+1. Initialize Signac workflow
+   ```
+     conda activate hfcs-fffit
+     cd Opt_ESFF_MS/
+   ```    
+2. Run GEMC simulations (Pvap, rho_v, Hvap) and MD interface simulations (rho_l and surface tension)
+   - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
+  ```
+     cd Opt_ES/opt_ff_ms/
+   ```  
+3. Check status a few times throughout the process
+   ```  
+     python project.py status
+   ```   
+Note: Step 2 operation XXXX multiple operations in series. Alternatively, the following can be run one at a time:
+4. Alternative submission
+   ```
+   ```
+     
+5. Extract and analyze data:
+   ```
+     qsub -N postOptAnaly submit_job_long post_analysis_ms.py
+   ``` 
 
 ### Known Issues
 The instructions outlined above seem to be system-dependent. In some cases, users have the following error:
@@ -226,7 +229,7 @@ which should fix the problem. This is not an optimal solution and is something w
 If you are aware of a robust solution to this issue, please let us know by raising an issue or sending an email!
 
 ## Credits
-This work is funded by the National Science Foundation, EFRI DChem: Next-generation Low Global Warming Refrigerants, Award no. 2029354, and uses the computing resources provided by the Center for Research Computing (CRC) at the University of Notre Dame. The authors would like to thank Bridgette Befort as her work is used as the basis of this method.
+The authors thank the financial support from the National Science Foundation via two grants: EFRI DChem: Next-generation Low Global Warming Refrigerants, Award no. 2029354 and Collaborative Research: Development and Application of a Molecular and Process Design Framework for the Separation of Hydrofluorocarbon Mixtures, Award no. CBET-1917474. This research is based upon work supported by the National Science Foundation under award number ERC-2330175 for the Engineering Research Center EARTH. Computing resources were provided by the Center for Research Computing (CRC) at the University of Notre Dame. We also thank the Shiflett group from The University of Kansas for their collaboration. MC acknowledges support from the Graduate Assistance in Areas of National Need fellowship from the Department of Education, grant number P200A210048. 
 
 ## Contact
-Please contact Ning Wang (nwang2@nd.edu), Eliseo Marin Rimoldi (emarinri@nd.edu), or Montana Carlozo (mcarlozo@nd.edu) with any questions, suggestions, or issues.
+Please contact Montana Carlozo (mcarlozo@nd.edu) with any questions, suggestions, or issues.
