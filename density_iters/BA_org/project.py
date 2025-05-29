@@ -598,7 +598,7 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
 
             block_data = []
             for block in range(n_blocks):
-                idx_strt = block*block_len + time_prod_strt
+                idx_strt = block*block_len
                 idx_end = (block + 1)*block_len -1
                 t0 = time[idx_strt] #Time in ps to start (ex. 0)
                 te = time[idx_end] #Time in ps to end (ex. 4990)
