@@ -207,7 +207,7 @@ def npzzat_eq_sim(job):
 # Long Equilibration NPT
 @Project.label
 def npzzat_eq_pvap_comp(job):
-    if "npzzat_eq_fin" in job.doc:
+    if "npzzat_eq_pvap_fin" in job.doc:
         return True
     else:
         return False
@@ -876,7 +876,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
         # try:
         if sim_name == "npt_eq":
             nsteps_eq = job.sp.nsteps_npt_eq
-        elif sim_name == "npzzat_eq":
+        elif sim_name == "npzzat_eq" or sim_name == "npzzat_eq_pvap":
             nsteps_eq = job.sp.nsteps_npzzat_eq
         elif sim_name == "inter_eq":
             nsteps_eq = job.sp.nsteps_intereq
