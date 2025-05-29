@@ -96,7 +96,7 @@ def init_project():
         dens_iter = determine_density_iter(molec_name)
 
         # Initialize project
-        project = signac.init_project("npt_fin")
+        project = signac.init_project("npzzat_HighP")
 
         # Use GenLHS samples to generate LHS samples in the analysis folder
         # Load the lhs_samples and bounds
@@ -135,12 +135,12 @@ def init_project():
                     # "nmols": nmols,  # Number of molecules
                     "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
                     "nsteps_nvt_eq": nsteps_nvt_eq,
-                    # "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    # "nsteps_npzzat_prod": nsteps_npzzat_prod,
+                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
                     # "nsteps_fl_eq": nsteps_fl_eq,
                     # "nsteps_npt_pre_eq": nsteps_npt_pre_eq,
-                    "nsteps_npt_eq": nsteps_npt_eq,
-                    "nsteps_npt_prod": nsteps_npt_prod,
+                    # "nsteps_npt_eq": nsteps_npt_eq,
+                    # "nsteps_npt_prod": nsteps_npt_prod,
                     # "nsteps_nvt_prod": nsteps_nvt_prod,
                     "nsteps_intereq": nsteps_intereq,
                     "nsteps_interprod": nsteps_interprod,
