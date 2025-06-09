@@ -267,6 +267,18 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
         df_iter1, param_names, property_name, shuffle_seed = cl_shuffle_seed
     )
 
+    clas_data_dir = root_dir + "/classifier_data/"
+    os.makedirs(clas_data_dir, exist_ok=True)
+    #Save classifier training and test data
+    df_xtrain = pd.DataFrame(x_train, columns=param_names)
+    df_xtest = pd.DataFrame(x_test, columns=param_names)
+    df_xtrain.to_csv(f"{clas_data_dir}/classifier_x_train.csv", index=True)
+    df_xtest.to_csv(f"{clas_data_dir}/classifier_x_test.csv", index=True)
+    df_ytrain = pd.DataFrame(y_train, columns=[property_name])
+    df_ytest = pd.DataFrame(y_test, columns=[property_name])
+    df_ytrain.to_csv(f"{clas_data_dir}/classifier_y_train.csv", index=True)
+    df_ytest.to_csv(f"{clas_data_dir}/classifier_y_test.csv", index=True)
+
     # Create and fit classifier
     # class_weight "balanced" used because there are fewer liquid than vapor samples in the LHS sets
     classifier = svm.SVC(kernel="rbf", class_weight="balanced")
