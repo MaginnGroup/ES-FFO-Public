@@ -45,50 +45,53 @@ def get_signac_results(project, data_dict, prop_names):
 
     # Loop over all jobs in project and group by mol name and density iter
     for (mol_name, dens_iter), job_group in project_df.groupby(job_groupby):
-        data = [] # Store data here before converting to dataframe
-        # Get the unique param sets for each molecule
-        param_names = list(data_dict[mol_name].param_names)
-        
-        #Loop over each parameter set in the group
-        for (param_vals), group_df in job_group.groupby(param_names):
-            for row in range(len(group_df)):
-                new_job = group_df.sort_values(by=["T"]).iloc[row]
-                job = project.open_job(id=new_job["job"])
-                # Extract the parameters into a dict
-                new_row = {
-                    name: param for (name, param) in zip(param_names, param_vals)
-                }
-                # Extract the temperature for each job.
-                # Assumes temperature increments >= 1 K
-                temperature = job.sp.T
-                new_row["temperature"] = temperature
+        if mol_name in list(data_dict.keys()):
+            data = [] # Store data here before converting to dataframe
+            # Get the unique param sets for each molecule
+            param_names = list(data_dict[mol_name].param_names)
+            
+            #Loop over each parameter set in the group
+            for (param_vals), group_df in job_group.groupby(param_names):
+                for row in range(len(group_df)):
+                    new_job = group_df.sort_values(by=["T"]).iloc[row]
+                    job = project.open_job(id=new_job["job"])
+                    # Extract the parameters into a dict
+                    new_row = {
+                        name: param for (name, param) in zip(param_names, param_vals)
+                    }
+                    # Extract the temperature for each job.
+                    # Assumes temperature increments >= 1 K
+                    temperature = job.sp.T
+                    new_row["temperature"] = temperature
 
-                # Extract property values. Insert N/A if not found
-                for property_name in property_names:
-                    try:
-                        property_ = job.doc[property_name]
-                        new_row[property_name] = property_
-                    except KeyError:
-                        print(f"Job failed: {job.id}")
-                        new_row[property_name] = np.nan
-                
-                data.append(new_row)
+                    # Extract property values. Insert N/A if not found
+                    for property_name in property_names:
+                        try:
+                            property_ = job.doc[property_name]
+                            new_row[property_name] = property_
+                        except KeyError:
+                            print(f"Job failed: {job.id}")
+                            new_row[property_name] = np.nan
+                    
+                    data.append(new_row)
 
-        #Create data from dict
-        df = pd.DataFrame(data)
-        
-        #Filter out rows with NaN values
-        df = df.dropna()
+            #Create data from dict
+            df = pd.DataFrame(data)
+            
+            #Filter out rows with NaN values
+            df = df.dropna()
 
-        df["iter"] = dens_iter
+            df["iter"] = dens_iter
 
-        #Add data to all_data_dict
-        # If the molecule name is already in the dictionary, concatenate the dataframes
-        if mol_name in all_data_dict:
-            all_data_dict[mol_name] = pd.concat([all_data_dict[mol_name], df])
-        # If the molecule name is not in the dictionary, add the dataframe
+            #Add data to all_data_dict
+            # If the molecule name is already in the dictionary, concatenate the dataframes
+            if mol_name in all_data_dict:
+                all_data_dict[mol_name] = pd.concat([all_data_dict[mol_name], df])
+            # If the molecule name is not in the dictionary, add the dataframe
+            else:
+                all_data_dict[mol_name] = df
         else:
-            all_data_dict[mol_name] = df
+            print(f"Warning: {mol_name} not found in data_dict. Skipping.")
 
     return all_data_dict
 
