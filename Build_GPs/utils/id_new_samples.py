@@ -205,7 +205,10 @@ def opt_dist(distance, top_samples, constants, target_num, rand_seed=None, eval=
             0
         ]  # Changed to <= to get zero bc to work
         points_to_remove_df = pd.DataFrame(top_samples.iloc[points_to_remove])
-        discarded_points = pd.concat([discarded_points, points_to_remove_df])
+
+        frames = [df for df in [discarded_points, points_to_remove_df] if not df.empty and not df.isna().all(axis=1).all()]
+        discarded_points = pd.concat(frames)
+        # discarded_points = pd.concat([discarded_points, points_to_remove_df])
         # discarded_points = discarded_points.append(
         #     top_samples.iloc[points_to_remove]
         # )
@@ -515,7 +518,7 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
         The dataframe for the next iteration parameters
     """
     target_total = 200
-    final_sample_file = root_dir + "/params-iter-" + str(iter_num + 1) + ".csv"
+    final_sample_file = root_dir + "/params-iter-" + str(int(iter_num) + 1) + ".csv"
     # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
     target_num_l = np.minimum(200, len(top_liq))
     target_num_v = target_total - target_num_l
@@ -811,9 +814,17 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         scaled_param_values = values_real_to_scaled(df_mse[list(molecule.param_names)], molecule.param_bounds)
         #Pull all parameter values we have tested
         df_params = []
-        for i in range(1, df_csv["iter"].max() + 1):
+        for i in range(1, int(df_csv["iter"].max()) + 1):
             param_name_file = os.path.join(root_dir, iter_type, "params-iter-" + str(i) + ".csv")
-            df_params.append(pd.read_csv(param_name_file, index_col=0))
+            df_params_sets = pd.read_csv(param_name_file, index_col=0)
+            #Unscale the parameter values to the real values
+            lhs_real = values_scaled_to_real(df_params_sets[list(molecule.param_names)], molecule.param_bounds)
+            #For all rows if the value of a column is less than 1e-14 set it to 0
+            lhs_real[np.abs(lhs_real) < 1e-14] = 0.0
+            #Rescale the values to the scaled values so that scaled values will also be zero
+            lhs_scl = values_real_to_scaled(lhs_real, molecule.param_bounds)
+            lhs_scl_pd = pd.DataFrame(lhs_scl, columns=list(molecule.param_names))
+            df_params.append(lhs_scl_pd)
 
         df_params = pd.concat(df_params).reset_index(drop=True)
         df_results = df_results.reset_index(drop=True)
@@ -866,9 +877,14 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         num_mse_less10[mol_name] = new_points_vle
         print(f"Number of {mol_name} samples with MSE < 10 kg/m^3 is", len(new_points_vle))
         if save_csv:
-            new_points_vle.drop(columns=["mse"], inplace=True)
-            new_points_vle.drop(columns=["param_idx"], inplace=True)
-            new_points_vle.to_csv(out_csv)
+            new_pts_copy = new_points_vle.copy()
+            new_pts_copy.drop(columns=["mse", "param_idx"], inplace=True)
+            new_pts_copy.to_csv(out_csv)
+
+            #Save a copy of the real param sets too
+            new_pts_real = values_scaled_to_real(new_pts_copy, molecule.param_bounds)
+            new_pts_real = pd.DataFrame(new_pts_real, columns=list(molecule.param_names))
+            new_pts_real.to_csv(os.path.join(root_dir, iter_type, "mse-less10-real.csv"))
 
     return num_mse_less10
 
