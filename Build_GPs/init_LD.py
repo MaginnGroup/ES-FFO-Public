@@ -15,7 +15,7 @@ from utils.molec_class_files import esolvs
 from fffit.fffit.utils import values_scaled_to_real
 
 # Load class properies for each training molecule
-mol_names = ["MeOH"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["MeOH", "EG", "Gly"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 def calc_nmols(sp):
@@ -64,7 +64,7 @@ def determine_iter(molec_name):
         # Get the highest density-iter-X folder from the last character of the last file minus the .csv part
         base = os.path.splitext(os.path.basename(files[-1]))[0]
         iter = base[-1]
-    return iter
+    return int(iter)
 
 
 nsteps_nvt_eq = 100000  # 100ps

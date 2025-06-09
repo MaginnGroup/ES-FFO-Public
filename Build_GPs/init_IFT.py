@@ -72,7 +72,7 @@ def determine_iter(molec_name):
         # Get the highest params-iter-X.csv file from the last character of the file (before the .csv)
         base = os.path.splitext(os.path.basename(files[-1]))[0]
         iter = base[-1]
-    return iter
+    return int(iter)
 
 def get_gp_models(molec_name, vle_iter_num):
     #For the 1st VLE iteration, load the GP models from the LD iterations
