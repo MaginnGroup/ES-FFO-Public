@@ -778,7 +778,6 @@ MeOH = EsolvsConstants(
     expt_vap_density=expt_vap_density,
 )
 
-# Skip for now, no valid FF
 # Dimethylformamide (DMF)
 mol_wt = 73.09
 n_atoms = 12
