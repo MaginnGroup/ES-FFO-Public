@@ -134,9 +134,7 @@ def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_sh
 
         #Get LD root directory
         root_dir_ld = os.path.join(root_dir, iter_type)
-        ### Step 2: Fit classifier and GP models
-        classifier = build_classifier(df_iter1, root_dir_ld, data, cl_shuffle_seed, verbose, save_fig)
-
+       
         ### Fit GP Model
         path_gps = f"{root_dir_ld}/iter-{str(iter_num)}"
         models_best, all_models, dir_train_test = get_prop_best_model(df_liquid, data, path_gps, gp_shuffle_seed)
@@ -149,7 +147,18 @@ def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_sh
             delimiter=",",
             skip_header=1,
         )[:, 1:]
-        liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier)
+
+        #Build classifier and indentify liquid samples
+        try:
+            #If there are enough samples that are liquid and vapor, build the classifier
+            classifier = build_classifier(df_iter1, root_dir_ld, data, cl_shuffle_seed, verbose, save_fig)
+            liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier)
+        except:
+            #Otherwise assume all samples are liquid
+            liquid_samples = latin_hypercube
+            vapor_samples = None
+
+        
         top_liquid_samples, top_vapor_samples = rank_vl_samples(liquid_samples, vapor_samples, models_best, data, verbose)
 
         #### Find and Visualize Low MSE parameter sets
@@ -335,7 +344,7 @@ def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
     """
     #Prepare df_density
     ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
-    
+        
     df_csv["iter"] = df_csv["iter"].astype(int)
     df_iter1_csv = df_csv[df_csv["iter"] == 1].copy()
     
@@ -347,6 +356,12 @@ def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
         df_iter1_csv, data, ld_threshold
     )
     root_dir = f"analysis/{mol_name}"
+
+    #Build classifier using the current iteration if iter 1 produced only 1 type of sample
+    if df_iter1_all["is_liquid"].nunique() > 1:
+        df_iter1_all = df_iter1_all
+    elif df_all["is_liquid"].nunique() > 1:
+        df_iter1_all = df_all
 
     return df_iter1_all, df_liquid, root_dir
     
@@ -468,23 +483,23 @@ def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_
             phase = "liq"
         else:
             phase = "vap"
+        if sample is not None:
+            g = seaborn.pairplot(sample.drop(columns=["mse"]))
+            g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
 
-        g = seaborn.pairplot(sample.drop(columns=["mse"]))
-        g.set(xlim=(-0.1, 1.1), ylim=(-0.1, 1.1))
 
+            if save_fig:
+                g.savefig(dir_name + f"{phase}_mse_below625.pdf")
 
-        if save_fig:
-            g.savefig(dir_name + f"{phase}_mse_below625.pdf")
-
-        #Drop the mse column for 
-        new_sample_params = [sample.drop(columns=["mse"])]
-        # Concatenate into a single dataframe and save to CSV
-        new_sample_params = pd.concat(new_sample_params)
-        
-        samp_path = os.path.join(dir_name, f"{phase}-params.csv")
-        new_sample_params.to_csv(samp_path)
-        top_samp = new_sample_params.reset_index(drop=True)
-        objects[phase] = top_samp
+            #Drop the mse column for 
+            new_sample_params = [sample.drop(columns=["mse"])]
+            # Concatenate into a single dataframe and save to CSV
+            new_sample_params = pd.concat(new_sample_params)
+            
+            samp_path = os.path.join(dir_name, f"{phase}-params.csv")
+            new_sample_params.to_csv(samp_path)
+            top_samp = new_sample_params.reset_index(drop=True)
+            objects[phase] = top_samp
     top_liq = objects["liq"]
     top_vap = objects["vap"]
 
