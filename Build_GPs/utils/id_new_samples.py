@@ -45,7 +45,7 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, gp_shuffle_seed = 42
     next_iter_params_all = {}
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
-        df_csv = df_csv.dropna()
+        df_csv = df_csv.dropna().copy()
         iter_num = df_csv["iter"].max()
         iter_type = "vle_iters"
         ld_threshold = 0
@@ -827,7 +827,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         iter_type = "ld_iters"
         molecule = data_dict[mol_name]
         #Pull the results from all iterations + calculate the MSE
-        df_results = df_csv.dropna()
+        df_results = df_csv.dropna().copy()
         df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
         df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
         df_mse = (df_results.groupby(list(molecule.param_names))["sq_err"].mean().reset_index(name="mse"))
@@ -932,7 +932,7 @@ def find_pareto(all_df_data, data_dict, props_pareto):
         root_dir = f"analysis/{mol_name}/"
         root_dir_vle = os.path.join(root_dir, "vle_iters")
         #Get all data from last iteration
-        df_csv = df_csv.dropna()
+        df_csv = df_csv.dropna().copy()
         iter_num = df_csv["iter"].max()
         ld_threshold = 0
         data = data_dict[mol_name]

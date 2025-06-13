@@ -217,7 +217,7 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
     models_molecs = {}
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
-        df_csv = df_csv.dropna()  # Filter out rows with NaN values
+        df_csv = df_csv.dropna().copy()  # Filter out rows with NaN values
         #Filter out rows with NaN values
         ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
         # df_csv = all_df_data[mol_name]
@@ -261,7 +261,7 @@ def build_classifier(df_iter1, root_dir, data, cl_shuffle_seed=1, verbose=True, 
     classifier : sklearn.svm.SVC
         The trained SVM classifier
     """
-    
+
     # Create training/test set
     param_names = list(data.param_names) + ["temperature"]
     property_name = "is_liquid"
