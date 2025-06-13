@@ -15,7 +15,7 @@ from utils.molec_class_files import esolvs
 from fffit.fffit.utils import values_scaled_to_real
 
 # Load class properies for each training molecule
-mol_names = ["DMSO", "DEC", "DMF"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 def calc_nmols(sp):
