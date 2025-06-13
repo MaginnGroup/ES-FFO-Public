@@ -1,16 +1,21 @@
 import signac
 import sys
+import os
+from pathlib import Path
 
-sys.path.append("..")
+root_path = Path(__file__).resolve().parents[1]  # ES-FFO directory (two levels up from this script)
+if str(root_path) not in sys.path:
+    sys.path.insert(0, str(root_path))
+
+# Now import using package structure relative to ES-FFO root
 from utils.molec_class_files import esolvs
-sys.path.remove("..")
+from Build_GPs.utils.signac import get_signac_results, save_signac_results
+from Build_GPs.utils.id_new_samples import new_samples_vle, find_pareto
+from Build_GPs.utils.models import get_best_models
+from Build_GPs.utils.plot import plot_gp_examples
 
-from utils.signac import get_signac_results, save_signac_results
-from utils.id_new_samples import new_samples_vle, find_pareto
-from utils.models import get_best_models
-from utils.plot import plot_gp_examples
-
-
+print(f"Current working dir: {os.getcwd()}")
+print(f"Script location: {Path(__file__).parent}")
 
 #Set iters to analyze and properties to analyze
 iters = [1]  # Change me as needed
