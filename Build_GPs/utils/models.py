@@ -217,6 +217,8 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
     models_molecs = {}
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
+        df_csv = df_csv.dropna()  # Filter out rows with NaN values
+        #Filter out rows with NaN values
         ld_threshold = (min(list(data.expt_liq_density.values())) + max(list(data.expt_vap_density.values())))/2
         # df_csv = all_df_data[mol_name]
         iter_num = df_csv["iter"].max()
