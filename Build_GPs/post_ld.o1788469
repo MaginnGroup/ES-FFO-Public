@@ -1,0 +1,465 @@
+2025-06-13 15:57:22.926746: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2025-06-13 15:57:22.927362: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-06-13 15:57:22.928575: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2025-06-13 15:57:22.933383: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-06-13 15:57:23.841664: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+2025-06-13 16:01:24.849127: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:02:09.576189: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:07:56.808669: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:08:05.716145: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:08:05.745782: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:12:48.604221: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:25:15.365451: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:30:30.744518: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:35:47.673369: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:36:00.857982: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:36:00.906524: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:36:57.084819: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:36:57.106516: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:36:57.127999: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:37:27.459692: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:37:27.482324: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:37:27.504883: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:37:27.527345: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:38:21.028582: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:38:26.516460: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:38:28.675597: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:38:29.368634: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 16:38:29.383327: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+/scratch365/mcarlozo/ES-FFO/fffit/fffit/plot.py:278: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  fig, ax = plt.subplots()
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:831: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:832: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:831: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:832: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:831: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:832: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:831: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:832: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:831: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:832: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:831: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
+/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py:832: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
+Current working dir: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Script location: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Extracting the following properties: ['liq_density']
+Warning: R125 not found in data_dict. Skipping.
+Model: RBF. Mean squared err: 1.63e+02
+Model: Matern32. Mean squared err: 1.46e+02
+Model: Matern52. Mean squared err: 1.43e+02
+Model: RQ. Mean squared err: 1.48e+02
+Model: RBF. Mean squared err: 1.83e+01
+Model: Matern32. Mean squared err: 9.59e+00
+Model: Matern52. Mean squared err: 1.42e+01
+Model: RQ. Mean squared err: 1.55e+01
+Model: RBF. Mean squared err: 1.52e+01
+Model: Matern32. Mean squared err: 1.10e+01
+Model: Matern52. Mean squared err: 9.58e+00
+Model: RQ. Mean squared err: 1.32e+01
+Model: RBF. Mean squared err: 1.11e+00
+Model: Matern32. Mean squared err: 1.39e+00
+Model: Matern52. Mean squared err: 1.16e+00
+Model: RQ. Mean squared err: 1.06e+00
+Model: RBF. Mean squared err: 1.30e+02
+Model: Matern32. Mean squared err: 1.19e+02
+Model: Matern52. Mean squared err: 1.24e+02
+Model: RQ. Mean squared err: 1.11e+02
+Model: RBF. Mean squared err: 3.47e+01
+Model: Matern32. Mean squared err: 2.93e+01
+Model: Matern52. Mean squared err: 2.95e+01
+Model: RQ. Mean squared err: 3.10e+01
+Model: RBF. Mean squared err: 2.45e+00
+Model: Matern32. Mean squared err: 3.35e-06
+Model: Matern52. Mean squared err: 9.53e-01
+Model: RQ. Mean squared err: 1.72e+00
+Model: RBF. Mean squared err: 1.63e+02
+Model: Matern32. Mean squared err: 1.46e+02
+Model: Matern52. Mean squared err: 1.43e+02
+Model: RQ. Mean squared err: 1.48e+02
+Model: RBF. Mean squared err: 4.30e+00
+Model: Matern32. Mean squared err: 2.34e+00
+Model: Matern52. Mean squared err: 3.39e+00
+Model: RQ. Mean squared err: 3.72e+00
+Model: RBF. Mean squared err: 7.92e-01
+Model: Matern32. Mean squared err: 5.15e-01
+Model: Matern52. Mean squared err: 6.85e-01
+Model: RQ. Mean squared err: 7.57e-01
+Model: RBF. Mean squared err: 1.83e+01
+Model: Matern32. Mean squared err: 9.59e+00
+Model: Matern52. Mean squared err: 1.42e+01
+Model: RQ. Mean squared err: 1.55e+01
+Model: RBF. Mean squared err: 3.48e+00
+Model: Matern32. Mean squared err: 2.44e+00
+Model: Matern52. Mean squared err: 2.24e+00
+Model: RQ. Mean squared err: 3.04e+00
+Model: RBF. Mean squared err: 5.40e-01
+Model: Matern32. Mean squared err: 2.76e-01
+Model: Matern52. Mean squared err: 4.00e-01
+Model: RQ. Mean squared err: 4.92e-01
+Model: RBF. Mean squared err: 1.52e+01
+Model: Matern32. Mean squared err: 1.10e+01
+Model: Matern52. Mean squared err: 9.58e+00
+Model: RQ. Mean squared err: 1.32e+01
+Model: RBF. Mean squared err: 5.65e-01
+Model: Matern32. Mean squared err: 4.61e-01
+Model: Matern52. Mean squared err: 4.89e-01
+Model: RQ. Mean squared err: 5.28e-01
+Model: RBF. Mean squared err: 4.28e-01
+Model: Matern32. Mean squared err: 2.26e-01
+Model: Matern52. Mean squared err: 3.19e-01
+Model: RQ. Mean squared err: 3.94e-01
+Model: RBF. Mean squared err: 1.11e+00
+Model: Matern32. Mean squared err: 1.39e+00
+Model: Matern52. Mean squared err: 1.16e+00
+Model: RQ. Mean squared err: 1.06e+00
+Model: RBF. Mean squared err: 6.52e+01
+Model: Matern32. Mean squared err: 5.51e+01
+Model: Matern52. Mean squared err: 6.03e+01
+Model: RQ. Mean squared err: 5.99e+01
+Model: RBF. Mean squared err: 4.90e+01
+Model: Matern32. Mean squared err: 3.90e+01
+Model: Matern52. Mean squared err: 4.44e+01
+Model: RQ. Mean squared err: 4.71e+01
+Model: RBF. Mean squared err: 1.30e+02
+Model: Matern32. Mean squared err: 1.19e+02
+Model: Matern52. Mean squared err: 1.24e+02
+Model: RQ. Mean squared err: 1.11e+02
+Model: RBF. Mean squared err: 4.85e+00
+Model: Matern32. Mean squared err: 9.30e+00
+Model: Matern52. Mean squared err: 5.36e+00
+Model: RQ. Mean squared err: 4.61e+00
+Model: RBF. Mean squared err: 2.35e-01
+Model: Matern32. Mean squared err: 5.68e-05
+Model: Matern52. Mean squared err: 9.99e-04
+Model: RQ. Mean squared err: 1.40e-01
+Model: RBF. Mean squared err: 2.32e+01
+Model: Matern32. Mean squared err: 4.64e+01
+Model: Matern52. Mean squared err: 2.67e+01
+Model: RQ. Mean squared err: 2.25e+01
+Total number of top liquid samples is 2
+     sigma_C1  sigma_C2  sigma_C3  ...  epsilon_O2        mse  param_idx
+70   0.382881  0.907925  0.896103  ...    0.071524  92.566874         76
+167  0.865319  0.953903  0.665159  ...    0.051093  88.581636        187
+
+[2 rows x 16 columns]
+Number of DEC samples with MSE < 10 kg/m^3 is 2
+Total number of top liquid samples is 10
+     sigma_C1  sigma_C2  sigma_H1  ...  epsilon_N1        mse  param_idx
+87   0.444705  0.772038  0.250082  ...    0.329714  70.801158         93
+104  0.526083  0.625541  0.460040  ...    0.301217  86.661321         67
+106  0.538554  0.143470  0.493718  ...    0.867560  24.996073         44
+114  0.575333  0.750015  0.793521  ...    0.965797   4.399070        199
+129  0.651438  0.937623  0.749341  ...    0.959835  52.881226         65
+136  0.687208  0.933020  0.736279  ...    0.156074  98.580234         38
+155  0.781770  0.521375  0.944474  ...    0.535985  70.128918        125
+162  0.817242  0.721154  0.859673  ...    0.624576  80.982375         35
+179  0.900397  0.254383  0.449541  ...    0.703914  28.846622         27
+185  0.934912  0.367506  0.148900  ...    0.055542  30.857968        112
+
+[10 rows x 14 columns]
+Number of DMF samples with MSE < 10 kg/m^3 is 10
+Total number of top liquid samples is 4
+     sigma_C1  sigma_H1  sigma_O1  ...  epsilon_S1        mse  param_idx
+68   0.345685  0.365791  0.733208  ...    0.455021  27.576252        152
+91   0.464193  0.738933  0.394568  ...    0.690945  82.435306        130
+154  0.775686  0.051014  0.789354  ...    0.296806  42.981278         27
+196  0.985964  0.332291  0.468105  ...    0.429512  67.063349        123
+
+[4 rows x 10 columns]
+Number of DMSO samples with MSE < 10 kg/m^3 is 4
+Total number of top liquid samples is 3
+     sigma_C1  sigma_H1  sigma_H2  ...  epsilon_O1        mse  param_idx
+73   0.669835  0.587483       0.0  ...    0.396651  50.228684         44
+104  0.915911  0.424930       0.0  ...    0.834715  72.839451        119
+106  0.934929  0.066858       0.0  ...    0.823184  15.265783         15
+
+[3 rows x 10 columns]
+Number of EG samples with MSE < 10 kg/m^3 is 3
+Total number of top liquid samples is 2
+    sigma_C1  sigma_C2  sigma_H1  ...  epsilon_O2        mse  param_idx
+22  0.239716  0.421336  0.220913  ...    0.115190  88.595813         32
+29  0.357942  0.735386  0.159656  ...    0.994746  93.600852          9
+
+[2 rows x 18 columns]
+Number of Gly samples with MSE < 10 kg/m^3 is 2
+Total number of top liquid samples is 20
+     sigma_C1  sigma_H1  sigma_H2  ...  epsilon_O1        mse  param_idx
+108  0.690787  0.854802       0.0  ...    0.753377  40.540794        356
+214  0.877938  0.532923       0.0  ...    0.469382  20.544262        212
+221  0.882659  0.012925       0.0  ...    0.924023  21.907189        351
+224  0.886336  0.231188       0.0  ...    0.712784   4.852047        246
+229  0.895310  0.060798       0.0  ...    0.614378  43.599696        282
+231  0.899014  0.215519       0.0  ...    0.531814  20.785352        265
+251  0.923382  0.002406       0.0  ...    0.408951  48.406371        259
+253  0.927050  0.209038       0.0  ...    0.797971  54.417031        368
+255  0.931343  0.139683       0.0  ...    0.952090  88.556422        398
+264  0.938641  0.030631       0.0  ...    0.172739  74.881413        307
+265  0.941172  0.425649       0.0  ...    0.272592  79.151047        309
+266  0.941352  0.011520       0.0  ...    0.761734  87.000207        347
+269  0.942025  0.136821       0.0  ...    0.807622   8.951597        359
+271  0.943463  0.108473       0.0  ...    0.415171  85.721692        180
+281  0.952441  0.499552       0.0  ...    0.071016  73.625701        289
+294  0.963419  0.076592       0.0  ...    0.944955  78.323977        388
+300  0.972481  0.429995       0.0  ...    0.719798  12.667708        363
+307  0.979876  0.065102       0.0  ...    0.042747  25.799866        339
+320  0.991480  0.026606       0.0  ...    0.190808  85.776539        392
+321  0.991482  0.045582       0.0  ...    0.293480  60.673726        233
+
+[20 rows x 10 columns]
+Number of MeOH samples with MSE < 10 kg/m^3 is 20
+DEC : Total samples with MSE less than 25,      sigma_C1  sigma_C2  sigma_C3  ...  epsilon_O2        mse  param_idx
+70   0.382881  0.907925  0.896103  ...    0.071524  92.566874         76
+167  0.865319  0.953903  0.665159  ...    0.051093  88.581636        187
+
+[2 rows x 16 columns]
+Classifer is 91.5% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (365648, 14)
+Shape of the predicted vapor samples: (134352, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Initialize all errors!
+Trying temp 273.18 and density 998.2
+Trying temp 293.16 and density 975.7
+Trying temp 313.19 and density 929.1
+Trying temp 333.18 and density 923.4
+Trying temp 353.19 and density 906.3
+MSE is [38592.92802119  8282.93882771  6227.08966902 ...  1331.11766461
+ 48559.7797235  28920.24369487]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Initialize all errors!
+Trying temp 273.18 and density 998.2
+Trying temp 293.16 and density 975.7
+Trying temp 313.19 and density 929.1
+Trying temp 333.18 and density 923.4
+Trying temp 353.19 and density 906.3
+MSE is [ 59471.65098233 865760.09351545   5240.29745258 ...  16629.21176995
+ 218417.11698719  20198.5502158 ]
+There are: 28234 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 8  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+200 0
+
+Required Distance for liquid is : 3.11120483 and there are 1.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1112
+Classifer is 100.0% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (481516, 12)
+Shape of the predicted vapor samples: (18484, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Initialize all errors!
+Trying temp 308.15 and density 941.56
+Trying temp 313.15 and density 936.76
+Trying temp 318.15 and density 931.94
+Trying temp 323.15 and density 927.1
+Trying temp 328.15 and density 922.24
+MSE is [131947.79130651  27300.889151    13806.4360021  ...  28204.0109257
+ 202492.18726111  19059.00529006]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Initialize all errors!
+Trying temp 308.15 and density 941.56
+Trying temp 313.15 and density 936.76
+Trying temp 318.15 and density 931.94
+Trying temp 323.15 and density 927.1
+Trying temp 328.15 and density 922.24
+MSE is [221193.32122511  73819.56151653 611937.45055069 ... 220964.3949683
+ 402923.98751219 236219.72345371]
+There are: 45129 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 19  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+200 0
+
+Required Distance for liquid is : 2.57812500 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.57812
+Classifer is 99.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (492907, 8)
+Shape of the predicted vapor samples: (7093, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Initialize all errors!
+Trying temp 313.15 and density 1080.23
+Trying temp 318.15 and density 1075.22
+Trying temp 323.15 and density 1070.21
+Trying temp 328.15 and density 1065.19
+Trying temp 333.15 and density 1060.17
+MSE is [ 10890.82497792  69068.28246257  11632.29124561 ...  42374.84267388
+ 104108.83554411 128174.74547737]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Initialize all errors!
+Trying temp 313.15 and density 1080.23
+Trying temp 318.15 and density 1075.22
+Trying temp 323.15 and density 1070.21
+Trying temp 328.15 and density 1065.19
+Trying temp 333.15 and density 1060.17
+MSE is [204827.79343218 330997.107767   196302.56644072 ... 234869.88140659
+ 143897.25224617 383210.42282756]
+There are: 39667 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+200 0
+
+Required Distance for liquid is : 1.37500000 and there are 12.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.375
+Classifer is 95.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (161974, 8)
+Shape of the predicted vapor samples: (338026, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Initialize all errors!
+Trying temp 378.15 and density 1051.7
+Trying temp 383.15 and density 1047.9
+Trying temp 393.15 and density 1040.2
+Trying temp 403.15 and density 1032.3
+Trying temp 413.15 and density 1024.3
+MSE is [258775.54311787   3856.58423873 184166.42897254 ...  34756.16761217
+  73632.98533015   3155.60605768]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Initialize all errors!
+Trying temp 378.15 and density 1051.7
+Trying temp 383.15 and density 1047.9
+Trying temp 393.15 and density 1040.2
+Trying temp 403.15 and density 1032.3
+Trying temp 413.15 and density 1024.3
+MSE is [224665.48440505  52230.42052683 229149.96498896 ... 291096.43886754
+ 703538.88647102 112255.0500581 ]
+There are: 5308 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 12406  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+200 0
+
+Required Distance for liquid is : 1.04688915 and there are 1.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.04689
+Classifer is 99.0% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (121098, 16)
+Shape of the predicted vapor samples: (378902, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Initialize all errors!
+Trying temp 293.15 and density 1261.1
+Trying temp 303.15 and density 1255.6
+Trying temp 313.15 and density 1249.5
+Trying temp 323.15 and density 1242.9
+Trying temp 333.15 and density 1236.0
+MSE is [ 4017.28090414 21442.16785816  9933.09737513 ... 38741.25166315
+  7343.57423199 80994.21653059]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Initialize all errors!
+Trying temp 293.15 and density 1261.1
+Trying temp 303.15 and density 1255.6
+Trying temp 313.15 and density 1249.5
+Trying temp 323.15 and density 1242.9
+Trying temp 333.15 and density 1236.0
+MSE is [   737.81741234 109287.90862157 308054.7473965  ...  49966.45275649
+   3640.9050142    6865.87848966]
+There are: 5995 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 28931  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+200 0
+
+Required Distance for liquid is : 3.21875000 and there are 4.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.21875
+Classifer is 88.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (21414, 8)
+Shape of the predicted vapor samples: (478586, 8)
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Initialize all errors!
+Trying temp 200.0 and density 880.28
+Trying temp 250.0 and density 831.52
+Trying temp 300.0 and density 784.51
+Trying temp 350.0 and density 735.84
+Trying temp 400.0 and density 678.59
+MSE is [197123.8205837   16031.68006485  17310.23441125 ... 181795.61073883
+ 161256.34769241 411129.40602737]
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Initialize all errors!
+Trying temp 200.0 and density 880.28
+Trying temp 250.0 and density 831.52
+Trying temp 300.0 and density 784.51
+Trying temp 350.0 and density 735.84
+Trying temp 400.0 and density 678.59
+MSE is [ 40844.81131684 314983.24030968 487321.85388925 ...  80615.45533442
+  24716.55730668 341388.07418519]
+There are: 74 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 2  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+74 126
+Traceback (most recent call last):
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/post_ld.py", line 57, in <module>
+    next_samples = new_samples_ld(df_all_molec, molec_dict, verbose, save_fig, cl_shuffle_seed, gp_shuffle_seed, dist_seed)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py", line 170, in new_samples_ld
+    next_iter_params, final_sample_file = get_next_iter_params(top_liq, top_vap, data, root_dir_ld, iter_num, target_total, dist_seed, verbose)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py", line 582, in get_next_iter_params
+    distance_opt_v, number_points_v = bisection(
+                                      ^^^^^^^^^^
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py", line 272, in bisection
+    len(top_samples) >= target_num
+AssertionError: Ensure you have at least as many samples as the target number!
