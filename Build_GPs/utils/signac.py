@@ -70,16 +70,13 @@ def get_signac_results(project, data_dict, prop_names):
                             property_ = job.doc[property_name]
                             new_row[property_name] = property_
                         except KeyError:
-                            print(f"Job failed: {job.id}")
+                            # print(f"Job failed: {job.id}")
                             new_row[property_name] = np.nan
                     
                     data.append(new_row)
 
             #Create data from dict
             df = pd.DataFrame(data)
-            
-            #Filter out rows with NaN values
-            df = df.dropna()
 
             df["iter"] = dens_iter
 

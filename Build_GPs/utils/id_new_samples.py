@@ -45,7 +45,7 @@ def new_samples_vle(all_df_data, data_dict, verbose = True, gp_shuffle_seed = 42
     next_iter_params_all = {}
     for mol_name, df_csv in all_df_data.items():
         data = data_dict[mol_name]
-        # df_csv = all_df_data[mol_name]
+        df_csv = df_csv.dropna()
         iter_num = df_csv["iter"].max()
         iter_type = "vle_iters"
         ld_threshold = 0
@@ -137,6 +137,7 @@ def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_sh
        
         ### Fit GP Model
         path_gps = f"{root_dir_ld}/iter-{str(iter_num)}"
+        df_liquid = df_liquid.dropna()
         models_best, all_models, dir_train_test = get_prop_best_model(df_liquid, data, path_gps, gp_shuffle_seed)
 
         ### Step 3: Find new parameters for MD simulations
@@ -363,6 +364,9 @@ def prep_df_density(mol_name, data, df_csv, iter_type = "ld_iters"):
     elif df_all["is_liquid"].nunique() > 1:
         df_iter1_all = df_all
 
+    #Set df_iter1_all to have is_liquid = False for all nan values
+    df_iter1_all.loc[df_iter1_all.isna().any(axis=1), "is_liquid"] = False
+
     return df_iter1_all, df_liquid, root_dir
     
 def rank_vle_samples(all_samples, models, data, verbose=True):
@@ -500,6 +504,9 @@ def vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir, iter_
             new_sample_params.to_csv(samp_path)
             top_samp = new_sample_params.reset_index(drop=True)
             objects[phase] = top_samp
+        else:
+            # If there are no samples, create an empty DataFrame with the correct columns
+            objects[phase] = None
     top_liq = objects["liq"]
     top_vap = objects["vap"]
 
@@ -820,7 +827,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         iter_type = "ld_iters"
         molecule = data_dict[mol_name]
         #Pull the results from all iterations + calculate the MSE
-        df_results = df_csv
+        df_results = df_csv.dropna()
         df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
         df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
         df_mse = (df_results.groupby(list(molecule.param_names))["sq_err"].mean().reset_index(name="mse"))
@@ -925,7 +932,7 @@ def find_pareto(all_df_data, data_dict, props_pareto):
         root_dir = f"analysis/{mol_name}/"
         root_dir_vle = os.path.join(root_dir, "vle_iters")
         #Get all data from last iteration
-        # df_csv = all_df_data[mol_name]
+        df_csv = df_csv.dropna()
         iter_num = df_csv["iter"].max()
         ld_threshold = 0
         data = data_dict[mol_name]
