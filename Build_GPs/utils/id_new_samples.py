@@ -832,7 +832,14 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         df_results = df_csv.dropna().copy()
         df_results["expt_liq_density"] = df_results["temperature"].apply(lambda x: molecule.expt_liq_density[x])
         df_results["sq_err"] = (df_results["liq_density"] - df_results["expt_liq_density"]) ** 2
-        df_mse = (df_results.groupby(list(molecule.param_names))["sq_err"].mean().reset_index(name="mse"))
+        # df_mse2 = (df_results.groupby(list(molecule.param_names))["sq_err"].mean().reset_index(name="mse"))
+        df_results["abs_pct_err"] = ((df_results["liq_density"] - df_results["expt_liq_density"]).abs() / df_results["expt_liq_density"]) * 100 
+        df_mse = (
+            df_results
+            .groupby(list(molecule.param_names))
+            .agg(mse=("sq_err", "mean"), mapd=("abs_pct_err", "mean"))
+            .reset_index()
+        )
         
         #Scale the parameter values for the results to compare to the original parameter values
         scaled_param_values = values_real_to_scaled(df_mse[list(molecule.param_names)], molecule.param_bounds)
@@ -902,7 +909,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         print(f"Number of {mol_name} samples with MSE < 10 kg/m^3 is", len(new_points_vle))
         if save_csv:
             new_pts_copy = new_points_vle.copy()
-            new_pts_copy.drop(columns=["mse", "param_idx"], inplace=True)
+            new_pts_copy.drop(columns=["mse", "mapd", "param_idx"], inplace=True)
             new_pts_copy.to_csv(out_csv)
 
             #Save a copy of the real param sets too
@@ -910,6 +917,11 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
             new_pts_real = pd.DataFrame(new_pts_real, columns=list(molecule.param_names))
             new_pts_real.to_csv(os.path.join(root_dir, iter_type, "mse-less10-real.csv"))
 
+            #Save the full set of points with MSE < 10 w/ mse column
+            new_pts_full = new_pts_real.copy()
+            new_pts_full["mse"] = new_points_vle["mse"].values
+            new_pts_full["mapd"] = new_points_vle["mapd"].values
+            new_pts_full.to_csv(os.path.join(root_dir, iter_type, "mse-less10-full.csv"))
     return num_mse_less10
 
 def find_pareto(all_df_data, data_dict, props_pareto):
