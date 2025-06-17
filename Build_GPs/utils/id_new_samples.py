@@ -153,7 +153,7 @@ def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_sh
         try:
             #If there are enough samples that are liquid and vapor, build the classifier
             classifier = build_classifier(df_iter1, root_dir_ld, data, cl_shuffle_seed, verbose, save_fig)
-            liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier)
+            liquid_samples, vapor_samples = classify_samples(latin_hypercube, classifier, verbose)
         except:
             #Otherwise assume all samples are liquid
             liquid_samples = latin_hypercube
@@ -165,8 +165,9 @@ def new_samples_ld(all_df_data, data_dict, verbose = True, save_fig=False, cl_sh
         #### Find and Visualize Low MSE parameter sets
         top_liq, top_vap = vis_top_samples(top_liquid_samples, top_vapor_samples, data, root_dir_ld, iter_num, save_fig)
 
-        #### Get next set of 200 samples
-        target_total = 200
+        #### Get next set of 200 samples or the max number of samples w/ sufficiently low RMSE
+        target_total = np.minimum(200, int(len(top_liq) + len(top_vap)))
+        # target_total = 200
         next_iter_params, final_sample_file = get_next_iter_params(top_liq, top_vap, data, root_dir_ld, iter_num, target_total, dist_seed, verbose)
         next_iter_params.to_csv(final_sample_file)
         next_iter_params_all[mol_name] = next_iter_params
@@ -190,8 +191,8 @@ def opt_dist(distance, top_samples, constants, target_num, rand_seed=None, eval=
         OR
         new_points: pandas data frame, a pandas data frame containing the number of points to be used
     """
-    if len(top_samples) <= target_num:
-        print("Trying dist =", distance)
+    # if len(top_samples) <= target_num:
+    #     print("Trying dist =", distance)
 
     top_samp0 = top_samples.copy()
     if rand_seed != None:
@@ -539,13 +540,12 @@ def get_next_iter_params(top_liq, top_vap, data, root_dir, iter_num, target_tota
     next_iter_params : pd.DataFrame
         The dataframe for the next iteration parameters
     """
-    target_total = 200
     final_sample_file = root_dir + "/params-iter-" + str(int(iter_num) + 1) + ".csv"
     # We want to have as many liquid points as possible, but no more than 200 total and the rest vapor
-    target_num_l = np.minimum(200, len(top_liq))
+    target_num_l = np.minimum(target_total, len(top_liq))
     target_num_v = target_total - target_num_l
     if verbose:
-        print(target_num_l, target_num_v)
+        print("target liq: ", target_num_l, "target vap: ", target_num_v)
 
     zero_array = np.zeros(top_liq.shape[1])
     one_array = np.ones(top_liq.shape[1])
@@ -658,7 +658,7 @@ def get_next_vle_params(top_liq, data, root_dir, iter_num, target_total=25, dist
 
     return new_points_l, final_sample_file
 
-def classify_samples(samples, classifier):
+def classify_samples(samples, classifier, verbose = True):
     """Evaulate the classifer and return predicted liquid and vapor samples
 
     Parameters
@@ -687,9 +687,11 @@ def classify_samples(samples, classifier):
     # Separate LH samples into predicted liquid and predicted vapor
     liquid_samples = samples[np.where(pred == 1)]
     vapor_samples = samples[np.where(pred == 0)]
-    print("Shape of samples to classify:", samples.shape)
-    print("Shape of the predicted liquid samples:", liquid_samples.shape)
-    print("Shape of the predicted vapor samples:", vapor_samples.shape)
+
+    if verbose:
+        print("Shape of samples to classify:", samples.shape)
+        print("Shape of the predicted liquid samples:", liquid_samples.shape)
+        print("Shape of the predicted vapor samples:", vapor_samples.shape)
 
     return liquid_samples, vapor_samples
 
@@ -761,7 +763,7 @@ def rank_samples(samples, gp_model, molecule, property_name, property_offset=0.0
         temperature_bounds,
         property_offset,
     )
-    print("MSE is", mse)
+    # print("MSE is", mse)
     # Make pandas dataframes, rank, and return
     samples_mse = np.hstack((samples, mse.reshape(-1, 1)))
     samples_mse = pd.DataFrame(
@@ -783,10 +785,10 @@ def _calc_gp_mse(
     """Calculate the MSE between the GP model and experiment for samples"""
 
     all_errs = np.empty(shape=(samples.shape[0], len(expt_property.keys())))
-    print("Initialize all errors!")
+    # print("Initialize all errors!")
     col_idx = 0
     for temp, density in expt_property.items():
-        print("Trying temp", temp, "and density", density)
+        # print("Trying temp", temp, "and density", density)
         scaled_temp = values_real_to_scaled(temp, temperature_bounds)
         xx = np.hstack((samples, np.tile(scaled_temp, (samples.shape[0], 1))))
         means_scaled, vars_scaled = gp_model.predict_f(xx)
