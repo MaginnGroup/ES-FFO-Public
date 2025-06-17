@@ -137,7 +137,7 @@ def init_project():
             ld_bnds = molec_data.liq_density_bounds
             ld_est_scl = get_ld_est(ld_model, scaled_temps, new_samples)
             ld_est_real = values_scaled_to_real(ld_est_scl, ld_bnds).flatten()
-            ld_estimates = ld_est_real.reshape(len(temps), len(new_samples))
+            ld_estimates = np.around(ld_est_real.reshape(len(temps), len(new_samples)), 2)
 
             # Convert scaled samples to physical values
             scaled_params = values_scaled_to_real(new_samples, bounds)
