@@ -8,11 +8,12 @@ import glob
 import os
 import pickle
 
-sys.path.append("../")
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+
 from utils.molec_class_files import esolvs
 from fffit.fffit.utils import values_scaled_to_real
-
-sys.path.remove("../")
 
 from utils.molec_class_files import esolvs
 
@@ -101,12 +102,12 @@ def get_ld_est(gp_model, temps, samples):
 
 
 nsteps_nvt_eq = 100000  # 100ps
-nsteps_npzzat_eq = 5000000  # 5 ns
-nsteps_npzzat_prod = 10000000  # 10 ns
+nsteps_npzzat_eq = 500000  # 500 ps
+nsteps_npzzat_prod = 2500000  # 2.5 ns
 # nsteps_npt_eq = 500000  # 500ps (minimum)
 # nsteps_npt_prod = 2500000  # 2.5 ns
-nsteps_intereq = 40000000  # 15 ns (minimum)
-nsteps_interprod = 40000000  # 30 ns
+nsteps_intereq = 40000000  # 40 ns (minimum)
+nsteps_interprod = 40000000  # 40 ns
 aspect_ratio = 3.0  # Aspect ratio of the box
 
 def init_project():
