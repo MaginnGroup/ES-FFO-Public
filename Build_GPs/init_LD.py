@@ -76,60 +76,64 @@ aspect_ratio = 3.0  # Aspect ratio of the box
 def init_project():
     # Loop over all molecules
     for molec_name, molec_data in molec_dict.items():
-        # Determine Density iter based off of the analysis folder
-        dens_iter = determine_iter(molec_name)
+        #Check if another density iter is needed
+        if not os.path.exists("analysis/" + molec_name + "/vle_iters/params-iter-1.csv"):
+            # Determine Density iter based off of the analysis folder
+            dens_iter = determine_iter(molec_name)
 
-        # Initialize project
-        project = signac.init_project("ld_iters")
+            # Initialize project
+            project = signac.init_project("ld_iters")
 
-        # Use GenLHS samples to generate LHS samples in the analysis folder
-        # Load the lhs_samples and bounds
-        bounds = molec_data.param_bounds
-        lhs_samples = pd.read_csv(
-            "analysis/" + molec_name + "/ld_iters/params-iter-" + str(dens_iter) + ".csv",
-            index_col=0,
-        )
-        # Convert scaled latin hypercube samples to physical values
-        scaled_params = values_scaled_to_real(lhs_samples, bounds)
-        #Make the GAFF param_set (test)
-        # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
-        # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
+            # Use GenLHS samples to generate LHS samples in the analysis folder
+            # Load the lhs_samples and bounds
+            bounds = molec_data.param_bounds
+            lhs_samples = pd.read_csv(
+                "analysis/" + molec_name + "/ld_iters/params-iter-" + str(dens_iter) + ".csv",
+                index_col=0,
+            )
+            # Convert scaled latin hypercube samples to physical values
+            scaled_params = values_scaled_to_real(lhs_samples, bounds)
+            #Make the GAFF param_set (test)
+            # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
+            # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
 
-        # Define temps (from constants files)
-        temps = list(molec_data.expt_Pvap.keys())
-        for temp in temps:
-            liq_density = molec_data.expt_liq_density[temp]
-            vap_density = molec_data.expt_vap_density[temp]
-            max_vd = molec_data.expt_vap_density[max(temps)]
-            min_ld = molec_data.expt_liq_density[max(temps)]
-            rho_thresh = (max_vd + min_ld)/2.0
-            rho_avg = (liq_density + vap_density) / 2.0
-            for sample in scaled_params:
-                # Define the state point w/ unchanging characteristics
-                state_point = {
-                    "mol_name": molec_name,
-                    "iter": dens_iter,
-                    "smiles": molec_data.smiles_str,
-                    "T": float((temp * u.K).in_units(u.K).value),  # K
-                    "P": float(molec_data.expt_Pvap[temp]),  # bar
-                    "rho_liq": liq_density,  # kg/m^3
-                    "rho_thresh": rho_thresh,  # kg/m^3
-                    "mol_wt": molec_data.molecular_weight,  # g/mol
-                    "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
-                    "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_npt_eq": nsteps_npt_eq,
-                    "nsteps_npt_prod": nsteps_npt_prod,
-                    "max_sigma" : np.max(molec_data.bounds_sig)
-                }
+            # Define temps (from constants files)
+            temps = list(molec_data.expt_Pvap.keys())
+            for temp in temps:
+                liq_density = molec_data.expt_liq_density[temp]
+                vap_density = molec_data.expt_vap_density[temp]
+                max_vd = molec_data.expt_vap_density[max(temps)]
+                min_ld = molec_data.expt_liq_density[max(temps)]
+                rho_thresh = (max_vd + min_ld)/2.0
+                rho_avg = (liq_density + vap_density) / 2.0
+                for sample in scaled_params:
+                    # Define the state point w/ unchanging characteristics
+                    state_point = {
+                        "mol_name": molec_name,
+                        "iter": dens_iter,
+                        "smiles": molec_data.smiles_str,
+                        "T": float((temp * u.K).in_units(u.K).value),  # K
+                        "P": float(molec_data.expt_Pvap[temp]),  # bar
+                        "rho_liq": liq_density,  # kg/m^3
+                        "rho_thresh": rho_thresh,  # kg/m^3
+                        "mol_wt": molec_data.molecular_weight,  # g/mol
+                        "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
+                        "nsteps_nvt_eq": nsteps_nvt_eq,
+                        "nsteps_npt_eq": nsteps_npt_eq,
+                        "nsteps_npt_prod": nsteps_npt_prod,
+                        "max_sigma" : np.max(molec_data.bounds_sig)
+                    }
 
-                state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
-                state_point, nmols = calc_nmols(state_point)
-                state_point["nmols"] = nmols
-                #Optionally set max_sigma to the max sigma value from the FF rather than the max from the bounds
-                # state_point["max_sigma"] = max_sigma
+                    state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
+                    state_point, nmols = calc_nmols(state_point)
+                    state_point["nmols"] = nmols
+                    #Optionally set max_sigma to the max sigma value from the FF rather than the max from the bounds
+                    # state_point["max_sigma"] = max_sigma
 
-                job = project.open_job(state_point)
-                job.init()
+                    job = project.open_job(state_point)
+                    job.init()
+        else:
+            print(f"Skipping {molec_name} as it is ready for VLE iters.")
 
 if __name__ == "__main__":
     init_project()
