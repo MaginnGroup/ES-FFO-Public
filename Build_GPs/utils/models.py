@@ -232,10 +232,13 @@ def get_best_models(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_s
             
         models_molecs[mol_name] = models_best
 
-    dir2 = f"analysis/all_mols/{iter_type}/iter-{str(iter_num)}"
-    os.makedirs(dir2, exist_ok=True)
-    with open(dir2 + "/best_gp_models.pkl", "wb") as f:
-        pickle.dump(models_molecs, f)
+    #Save all models to a file if there are multiple molecules
+    if len(list(all_df_data.keys())) > 1:
+        names = "-".join(sorted(all_df_data.keys())) 
+        dir2 = f"analysis/{names}/{iter_type}/iter-{str(iter_num)}"
+        os.makedirs(dir2, exist_ok=True)
+        with open(dir2 + "/best_gp_models.pkl", "wb") as f:
+            pickle.dump(models_molecs, f)
 
     return models_molecs
 
