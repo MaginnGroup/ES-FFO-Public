@@ -13,7 +13,7 @@ if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
 from utils.molec_class_files import esolvs
-from fffit.fffit.utils import values_scaled_to_real
+from fffit.fffit.utils import values_scaled_to_real, values_real_to_scaled
 
 from utils.molec_class_files import esolvs
 
@@ -92,12 +92,12 @@ def get_ld_est(gp_model, temps, samples):
     #Get the LD estimate for the given molecule
     samples_repeat = samples.loc[np.repeat(samples.index, len(temps))].reset_index(drop=True)
     # Add temperature column
-    samples_repeat["temperature"] = temps * len(samples_repeat)
+    samples_repeat["temperature"] = np.tile(temps, len(samples))
     #Order the samples by temperature then by the rest of the parameters
     samples_repeat = samples_repeat.sort_values(by=["temperature"])
     # Get the LD estimate
     samples_array = samples_repeat.to_numpy()
-    ld_est = gp_model.predict(samples_array).reshape(len(temps), len(samples))
+    ld_est, var_est = gp_model.predict_f(samples_array)
     return ld_est
 
 
@@ -129,10 +129,15 @@ def init_project():
 
             # Define temps (from constants files)
             temps = list(molec_data.expt_Pvap.keys())
+            temp_bnds = molec_data.temperature_bounds("expt_liq_density")
+            scaled_temps = values_real_to_scaled(temps, temp_bnds).flatten()
 
             # Load the GP models for the given molecule and get the LD estimates
             ld_model = get_gp_models(molec_name, vle_iter)
-            ld_estimates = get_ld_est(ld_model, temps, new_samples)
+            ld_bnds = molec_data.liq_density_bounds
+            ld_est_scl = get_ld_est(ld_model, scaled_temps, new_samples)
+            ld_est_real = values_scaled_to_real(ld_est_scl, ld_bnds).flatten()
+            ld_estimates = ld_est_real.reshape(len(temps), len(new_samples))
 
             # Convert scaled samples to physical values
             scaled_params = values_scaled_to_real(new_samples, bounds)
@@ -144,7 +149,7 @@ def init_project():
                 max_vd = molec_data.expt_vap_density[max(temps)]
                 min_ld = molec_data.expt_liq_density[max(temps)]
                 rho_thresh = (max_vd + min_ld)/2.0
-                for j, sample in enumerate(scaled_params[0].reshape(1, -1)):
+                for j, sample in enumerate(scaled_params):
                     #Get the LD estimate for the given sample
                     liq_density = ld_estimates[i,j]
                     # Define the state point w/ unchanging characteristics
