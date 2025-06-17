@@ -76,12 +76,12 @@ def determine_iter(molec_name):
     return int(iter)
 
 def get_gp_models(molec_name, vle_iter_num):
-    #For the 1st VLE iteration, load the GP models from the LD iterations
+    #For the 1st VLE iteration, load the best GP models from the LD iterations
     if vle_iter_num == 1:
-        files = sorted(glob.glob(f"analysis/{molec_name}/ld_iters/iter-*/gp_models.pkl"))
-    #For all other VLE iterations, load the GP models from the VLE iterations
+        files = sorted(glob.glob(f"analysis/{molec_name}/ld_iters/iter-*/best_gp_models.pkl"))
+    #For all other VLE iterations, load the best GP models from the VLE iterations
     else:
-        files = sorted(glob.glob(f"analysis/{molec_name}/vle_iters/iter-*/gp_models.pkl"))
+        files = sorted(glob.glob(f"analysis/{molec_name}/vle_iters/iter-*/best_gp_models.pkl"))
     #Load the last file (most recent)
     with open(files[-1], "rb") as f:
         gp_model = pickle.load(f)
