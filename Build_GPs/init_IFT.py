@@ -17,7 +17,7 @@ sys.path.remove("../")
 from utils.molec_class_files import esolvs
 
 # Load class properies for each training molecule
-mol_names = ["R125"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"] #["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 def calc_nmols(sp):
@@ -112,68 +112,71 @@ aspect_ratio = 3.0  # Aspect ratio of the box
 def init_project():
     # Loop over all molecules
     for molec_name, molec_data in molec_dict.items():
-        # Determine iter based off of the analysis folder
-        vle_iter = determine_iter(molec_name)
+        if os.path.exists("analysis/" + molec_name + "/vle_iters/params-iter-1.csv"):
+            # Determine iter based off of the analysis folder
+            vle_iter = determine_iter(molec_name)
 
-        # Initialize project
-        project = signac.init_project("vle_iters")
+            # Initialize project
+            project = signac.init_project("vle_iters")
 
-        # Load samples from the vle iteration folder
-        bounds = molec_data.param_bounds
-        new_samples = pd.read_csv(
-            "analysis/" + molec_name + "/vle_iters/params-iter-" + str(vle_iter) + ".csv",
-            index_col=0,
-        )
+            # Load samples from the vle iteration folder
+            bounds = molec_data.param_bounds
+            new_samples = pd.read_csv(
+                "analysis/" + molec_name + "/vle_iters/params-iter-" + str(vle_iter) + ".csv",
+                index_col=0,
+            )
 
-        # Define temps (from constants files)
-        temps = list(molec_data.expt_Pvap.keys())
+            # Define temps (from constants files)
+            temps = list(molec_data.expt_Pvap.keys())
 
-        # Load the GP models for the given molecule and get the LD estimates
-        ld_model = get_gp_models(molec_name, vle_iter)
-        ld_estimates = get_ld_est(ld_model, temps, new_samples)
+            # Load the GP models for the given molecule and get the LD estimates
+            ld_model = get_gp_models(molec_name, vle_iter)
+            ld_estimates = get_ld_est(ld_model, temps, new_samples)
 
-        # Convert scaled samples to physical values
-        scaled_params = values_scaled_to_real(new_samples, bounds)
-        #Make the GAFF param_set (test)
-        # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
-        # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
+            # Convert scaled samples to physical values
+            scaled_params = values_scaled_to_real(new_samples, bounds)
+            #Make the GAFF param_set (test)
+            # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
+            # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
 
-        for i, temp in enumerate(temps):
-            max_vd = molec_data.expt_vap_density[max(temps)]
-            min_ld = molec_data.expt_liq_density[max(temps)]
-            rho_thresh = (max_vd + min_ld)/2.0
-            for j, sample in enumerate(scaled_params[0].reshape(1, -1)):
-                #Get the LD estimate for the given sample
-                liq_density = ld_estimates[i,j]
-                # Define the state point w/ unchanging characteristics
-                state_point = {
-                    "mol_name": molec_name,
-                    "iter": iter,
-                    "smiles": molec_data.smiles_str,
-                    "T": float((temp * u.K).in_units(u.K).value),  # K
-                    "P": float(molec_data.expt_Pvap[temp]),  # bar
-                    "rho_liq": liq_density,  # kg/m^3
-                    "rho_thresh": rho_thresh,  # kg/m^3
-                    "mol_wt": molec_data.molecular_weight,  # g/mol
-                    "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
-                    "nsteps_nvt_eq": nsteps_nvt_eq,
-                    "nsteps_npzzat_eq": nsteps_npzzat_eq,
-                    "nsteps_npzzat_prod": nsteps_npzzat_prod,
-                    # "nsteps_npt_eq": nsteps_npt_eq,
-                    # "nsteps_npt_prod": nsteps_npt_prod,
-                    "nsteps_intereq": nsteps_intereq,
-                    "nsteps_interprod": nsteps_interprod,
-                    "max_sigma" : np.max(molec_data.bounds_sig)
-                }
-                #Calculate the number of molecules in the system based on the density and box length (defined by max_sigma)
-                state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
-                state_point, nmols = calc_nmols(state_point)
-                state_point["nmols"] = nmols
-                #Optionally define max_sigma in the state point as the highest value of the parameters
-                # state_point["max_sigma"] = max_sigma 
+            for i, temp in enumerate(temps):
+                max_vd = molec_data.expt_vap_density[max(temps)]
+                min_ld = molec_data.expt_liq_density[max(temps)]
+                rho_thresh = (max_vd + min_ld)/2.0
+                for j, sample in enumerate(scaled_params[0].reshape(1, -1)):
+                    #Get the LD estimate for the given sample
+                    liq_density = ld_estimates[i,j]
+                    # Define the state point w/ unchanging characteristics
+                    state_point = {
+                        "mol_name": molec_name,
+                        "iter": iter,
+                        "smiles": molec_data.smiles_str,
+                        "T": float((temp * u.K).in_units(u.K).value),  # K
+                        "P": float(molec_data.expt_Pvap[temp]),  # bar
+                        "rho_liq": liq_density,  # kg/m^3
+                        "rho_thresh": rho_thresh,  # kg/m^3
+                        "mol_wt": molec_data.molecular_weight,  # g/mol
+                        "aspect_ratio": aspect_ratio,  # Aspect ratio of the box
+                        "nsteps_nvt_eq": nsteps_nvt_eq,
+                        "nsteps_npzzat_eq": nsteps_npzzat_eq,
+                        "nsteps_npzzat_prod": nsteps_npzzat_prod,
+                        # "nsteps_npt_eq": nsteps_npt_eq,
+                        # "nsteps_npt_prod": nsteps_npt_prod,
+                        "nsteps_intereq": nsteps_intereq,
+                        "nsteps_interprod": nsteps_interprod,
+                        "max_sigma" : np.max(molec_data.bounds_sig)
+                    }
+                    #Calculate the number of molecules in the system based on the density and box length (defined by max_sigma)
+                    state_point, max_sigma = unpack_molec_values(molec_data, state_point, sample)
+                    state_point, nmols = calc_nmols(state_point)
+                    state_point["nmols"] = nmols
+                    #Optionally define max_sigma in the state point as the highest value of the parameters
+                    # state_point["max_sigma"] = max_sigma 
 
-                job = project.open_job(state_point)
-                job.init()
+                    job = project.open_job(state_point)
+                    job.init()
+        else:
+            print(f"Skipping {molec_name} as it is not ready for VLE iters. No params-iter-1.csv found.")
 
 
 if __name__ == "__main__":
