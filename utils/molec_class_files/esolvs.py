@@ -256,7 +256,7 @@ bnds_eps = [
     [10.0, 75.0],  # [20.0, 75.0],  # C
     [2.0, 10.0],  # H
     [0.0, 1e-14],  # H2 (True Value is apparently 0. Ask EM)
-    [75.0, 135.0],  # O #Check with EM what is reasonable here
+    [90.0, 165.0],  # O #Check with EM what is reasonable here
 ]
 
 # # Taylor, C. A., & Rinkenbach, Wm. H. (1926), J. Ind. Eng. Chem., 18(7), 676–678.
@@ -433,8 +433,8 @@ bnds_eps = [
     [2.0, 10.0],  # H2
     [0.0, 1e-14],  # H3
     [0.0, 1e-14],  # H4 (Check lower bound since GAFF is 0)
-    [75.0, 135.0],  # O1 #Check with EM what is reasonable here
-    [75.0, 135.0],  # O2 #Check with EM what is reasonable here
+    [90.0, 165.0],  # O1 #Check with EM what is reasonable here
+    [90.0, 165.0],  # O2 #Check with EM what is reasonable here
 ]
 
 # https://doi.org/10.1016/j.jct.2017.11.008
@@ -657,7 +657,7 @@ bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H1
     [0.0, 1e-14],  # H2
-    [75.0, 135.0],  # O #Check with EM what is reasonable here
+    [90.0, 165.0],  # O #Check with EM what is reasonable here
 ]
 
 
@@ -830,7 +830,7 @@ bnds_eps = [
     [10.0, 75.0],  # C2
     [2.0, 10.0],  # H1
     [2.0, 10.0],  # H2
-    [75.0, 135.0],  # O1 #Check with EM what is reasonable here
+    [90.0, 165.0],  # O1 #Check with EM what is reasonable here
     [40.0, 100.0],  # N1 #Check with EM what is reasonable here
 ]
 
@@ -956,8 +956,8 @@ bnds_sig = [
 bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H1
-    [75.0, 135.0],  # O #Check with EM what is reasonable here
-    [90.0, 150.0],  # S #Check with EM what is reasonable here
+    [90.0, 165.0],  # O #Check with EM what is reasonable here
+    [115.0, 185.0],  # S #Check with EM what is reasonable here
 ]
 
 # # https://doi.org/10.1016/j.molliq.2016.10.115
@@ -1368,7 +1368,7 @@ bnds_eps = [
     [2.0, 10.0],  # H1
     [2.0, 10.0],  # H2
     [40.0, 100.0],  # O1 #Check with EM what is reasonable here
-    [75.0, 135.0],  # O2 #Check with EM what is reasonable here
+    [90.0, 165.0],  # O2 #Check with EM what is reasonable here
 ]
 
 rho_c = 245.46  # kg/m^3 (DOI: 10.1021/je100494z)
@@ -1475,7 +1475,7 @@ bnds_sig = [
 bnds_eps = [
     [10.0, 75.0],  # C1
     [2.0, 10.0],  # H2
-    [90.0, 150.0],  # Cl #Check with EM what is reasonable here
+    [115.0, 185.0],  # Cl #Check with EM what is reasonable here
 ]
 
 rho_c = 444  # kg/m^3 (https://doi.org/10.1002/bbpc.19850890715)
