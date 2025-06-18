@@ -3,9 +3,11 @@ import pandas as pd
 import os
 import sys
 
-sys.path.append("..")
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+
 from utils.molec_class_files import esolvs
-sys.path.remove("..")
 
 # Load class properies for each training molecule
 mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF", "R125"]
