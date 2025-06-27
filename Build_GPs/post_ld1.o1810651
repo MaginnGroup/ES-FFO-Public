@@ -352,3 +352,386 @@ Property bounds are [1236.  1261.1]
 There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
 There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
 target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.11969526 and there are 8.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1197
+Classifer is 90.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (32808, 8)
+Shape of the predicted vapor samples: (467192, 8)
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+There are: 351 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 16  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 0.54296875 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 0.54297
+DMSO : Total samples with MSE less than 25,      sigma_C1  sigma_H1  sigma_O1  ...        mse      mapd  param_idx
+15   0.079986  0.499313  0.380744  ...  57.200136  0.669611        190
+137  0.685664  0.515535  0.344192  ...  16.617508  0.329082         29
+171  0.857686  0.193827  0.630997  ...  38.015400  0.551840        175
+185  0.926160  0.147710  0.698133  ...  67.746728  0.766650         63
+
+[4 rows x 11 columns]
+Classifer is 93.0% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (382849, 14)
+Shape of the predicted vapor samples: (117151, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 31104 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 26  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.12370300 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1237
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (488732, 12)
+Shape of the predicted vapor samples: (11268, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+There are: 46714 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 7  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 2.60476685 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.60477
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (493845, 8)
+Shape of the predicted vapor samples: (6155, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+There are: 41903 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.39843750 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.39844
+Classifer is 97.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (228713, 8)
+Shape of the predicted vapor samples: (271287, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+There are: 8774 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 17740  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.13330078 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.1333
+Classifer is 96.5% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (112536, 16)
+Shape of the predicted vapor samples: (387464, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.11969526 and there are 8.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1197
+Classifer is 90.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (32808, 8)
+Shape of the predicted vapor samples: (467192, 8)
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+There are: 351 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 16  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 0.54296875 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 0.54297
+EG : Total samples with MSE less than 25,      sigma_C1  sigma_H1  sigma_H2  ...        mse      mapd  param_idx
+69   0.612798  0.253802       0.0  ...   0.955451  0.069307          8
+78   0.669835  0.587483       0.0  ...  28.409207  0.408187         44
+86   0.719971  0.908139       0.0  ...  46.366601  0.495116        137
+107  0.868515  0.992253       0.0  ...  49.609874  0.545564        139
+112  0.915911  0.424930       0.0  ...  19.355013  0.370660        119
+114  0.934929  0.066858       0.0  ...  41.609200  0.588668         15
+
+[6 rows x 11 columns]
+Classifer is 93.0% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (382849, 14)
+Shape of the predicted vapor samples: (117151, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 31104 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 26  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.12370300 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1237
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (488732, 12)
+Shape of the predicted vapor samples: (11268, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+There are: 46714 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 7  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 2.60476685 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.60477
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (493845, 8)
+Shape of the predicted vapor samples: (6155, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+There are: 41903 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.39843750 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.39844
+Classifer is 97.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (228713, 8)
+Shape of the predicted vapor samples: (271287, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+There are: 8774 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 17740  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.13330078 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.1333
+Classifer is 96.5% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (112536, 16)
+Shape of the predicted vapor samples: (387464, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.11969526 and there are 8.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1197
+Classifer is 90.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (32808, 8)
+Shape of the predicted vapor samples: (467192, 8)
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+There are: 351 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 16  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 0.54296875 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 0.54297
+Gly : Total samples with MSE less than 25, Empty DataFrame
+Columns: [sigma_C1, sigma_C2, sigma_H1, sigma_H2, sigma_H3, sigma_H4, sigma_O1, sigma_O2, epsilon_C1, epsilon_C2, epsilon_H1, epsilon_H2, epsilon_H3, epsilon_H4, epsilon_O1, epsilon_O2, mse, mapd, param_idx]
+Index: []
+Classifer is 93.0% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (382849, 14)
+Shape of the predicted vapor samples: (117151, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 31104 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 26  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.12370300 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1237
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (488732, 12)
+Shape of the predicted vapor samples: (11268, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+There are: 46714 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 7  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 2.60476685 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.60477
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (493845, 8)
+Shape of the predicted vapor samples: (6155, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+There are: 41903 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.39843750 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.39844
+Classifer is 97.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (228713, 8)
+Shape of the predicted vapor samples: (271287, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+There are: 8774 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 17740  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.13330078 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.1333
+Classifer is 96.5% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (112536, 16)
+Shape of the predicted vapor samples: (387464, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.11969526 and there are 8.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1197
+Classifer is 90.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (32808, 8)
+Shape of the predicted vapor samples: (467192, 8)
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+There are: 351 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 16  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 0.54296875 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 0.54297
+MeOH : Total samples with MSE less than 25, Empty DataFrame
+Columns: [sigma_C1, sigma_H1, sigma_H2, sigma_O1, epsilon_C1, epsilon_H1, epsilon_H2, epsilon_O1, mse, mapd, param_idx]
+Index: []
+Classifer is 93.0% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (382849, 14)
+Shape of the predicted vapor samples: (117151, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 31104 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 26  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.12370300 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1237
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (488732, 12)
+Shape of the predicted vapor samples: (11268, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+There are: 46714 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 7  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 2.60476685 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.60477
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (493845, 8)
+Shape of the predicted vapor samples: (6155, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+There are: 41903 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.39843750 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.39844
+Classifer is 97.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (228713, 8)
+Shape of the predicted vapor samples: (271287, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+There are: 8774 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 17740  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.13330078 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.1333
+Classifer is 96.5% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (112536, 16)
+Shape of the predicted vapor samples: (387464, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.11969526 and there are 8.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1197
+Traceback (most recent call last):
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/post_ld.py", line 57, in <module>
+    next_samples = new_samples_ld(df_all_molec, molec_dict, verbose, save_fig, cl_shuffle_seed, gp_shuffle_seed, dist_seed)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/id_new_samples.py", line 172, in new_samples_ld
+    next_iter_params.to_csv(final_sample_file)
+  File "/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/pandas/util/_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/pandas/core/generic.py", line 3961, in to_csv
+    return DataFrameRenderer(formatter).to_csv(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/pandas/io/formats/format.py", line 1014, in to_csv
+    csv_formatter.save()
+  File "/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/pandas/io/formats/csvs.py", line 251, in save
+    with get_handle(
+         ^^^^^^^^^^^
+  File "/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/pandas/io/common.py", line 749, in get_handle
+    check_parent_directory(str(handle))
+  File "/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/pandas/io/common.py", line 616, in check_parent_directory
+    raise OSError(rf"Cannot save file into a non-existent directory: '{parent}'")
+OSError: Cannot save file into a non-existent directory: 'analysis/Gly/ld_iters'
