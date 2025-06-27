@@ -30,3 +30,325 @@ To enable the following instructions: AVX2 FMA, in other operations, rebuild Ten
 2025-06-27 09:08:54.934178: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
 /scratch365/mcarlozo/ES-FFO/fffit/fffit/plot.py:278: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
   fig, ax = plt.subplots()
+Current working dir: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Script location: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Extracting the following properties: ['liq_density']
+Model: RBF. Mean squared err: 3.15e+02
+Model: Matern32. Mean squared err: 2.21e+02
+Model: Matern52. Mean squared err: 2.49e+02
+Model: RQ. Mean squared err: 2.64e+02
+Model: RBF. Mean squared err: 5.62e+00
+Model: Matern32. Mean squared err: 5.38e+00
+Model: Matern52. Mean squared err: 5.34e+00
+Model: RQ. Mean squared err: 5.31e+00
+Model: RBF. Mean squared err: 2.84e+00
+Model: Matern32. Mean squared err: 3.91e+00
+Model: Matern52. Mean squared err: 3.07e+00
+Model: RQ. Mean squared err: 2.82e+00
+Model: RBF. Mean squared err: 2.19e+00
+Model: Matern32. Mean squared err: 1.90e+00
+Model: Matern52. Mean squared err: 2.57e+00
+Model: RQ. Mean squared err: 2.49e+00
+Model: RBF. Mean squared err: 2.31e+02
+Model: Matern32. Mean squared err: 2.35e+02
+Model: Matern52. Mean squared err: 3.63e+02
+Model: RQ. Mean squared err: 3.53e+02
+Model: RBF. Mean squared err: 5.43e+01
+Model: Matern32. Mean squared err: 3.72e+01
+Model: Matern52. Mean squared err: 4.45e+01
+Model: RQ. Mean squared err: 4.46e+01
+Model: RBF. Mean squared err: 6.38e+01
+Model: Matern32. Mean squared err: 4.42e+01
+Model: Matern52. Mean squared err: 5.00e+01
+Model: RQ. Mean squared err: 5.33e+01
+Model: RBF. Mean squared err: 8.15e-01
+Model: Matern32. Mean squared err: 2.18e-06
+Model: Matern52. Mean squared err: 1.09e-01
+Model: RQ. Mean squared err: 5.19e-01
+Model: RBF. Mean squared err: 3.15e+02
+Model: Matern32. Mean squared err: 2.21e+02
+Model: Matern52. Mean squared err: 2.49e+02
+Model: RQ. Mean squared err: 2.64e+02
+Model: RBF. Mean squared err: 1.73e+00
+Model: Matern32. Mean squared err: 1.37e+00
+Model: Matern52. Mean squared err: 1.55e+00
+Model: RQ. Mean squared err: 1.61e+00
+Model: RBF. Mean squared err: 7.53e-01
+Model: Matern32. Mean squared err: 3.68e-01
+Model: Matern52. Mean squared err: 6.05e-01
+Model: RQ. Mean squared err: 6.83e-01
+Model: RBF. Mean squared err: 5.62e+00
+Model: Matern32. Mean squared err: 5.38e+00
+Model: Matern52. Mean squared err: 5.34e+00
+Model: RQ. Mean squared err: 5.31e+00
+Model: RBF. Mean squared err: 9.82e-01
+Model: Matern32. Mean squared err: 1.06e+00
+Model: Matern52. Mean squared err: 9.66e-01
+Model: RQ. Mean squared err: 9.64e-01
+Model: RBF. Mean squared err: 5.15e-01
+Model: Matern32. Mean squared err: 3.44e-01
+Model: Matern52. Mean squared err: 4.38e-01
+Model: RQ. Mean squared err: 4.98e-01
+Model: RBF. Mean squared err: 2.84e+00
+Model: Matern32. Mean squared err: 3.91e+00
+Model: Matern52. Mean squared err: 3.07e+00
+Model: RQ. Mean squared err: 2.82e+00
+Model: RBF. Mean squared err: 1.05e+00
+Model: Matern32. Mean squared err: 6.71e-01
+Model: Matern52. Mean squared err: 1.02e+00
+Model: RQ. Mean squared err: 1.07e+00
+Model: RBF. Mean squared err: 7.67e-01
+Model: Matern32. Mean squared err: 3.62e-01
+Model: Matern52. Mean squared err: 6.30e-01
+Model: RQ. Mean squared err: 7.11e-01
+Model: RBF. Mean squared err: 2.19e+00
+Model: Matern32. Mean squared err: 1.90e+00
+Model: Matern52. Mean squared err: 2.57e+00
+Model: RQ. Mean squared err: 2.49e+00
+Model: RBF. Mean squared err: 9.51e+01
+Model: Matern32. Mean squared err: 8.81e+01
+Model: Matern52. Mean squared err: 7.28e+01
+Model: RQ. Mean squared err: 7.07e+01
+Model: RBF. Mean squared err: 6.10e+01
+Model: Matern32. Mean squared err: 5.13e+01
+Model: Matern52. Mean squared err: 5.35e-09
+Model: RQ. Mean squared err: 5.64e-09
+Model: RBF. Mean squared err: 2.31e+02
+Model: Matern32. Mean squared err: 2.35e+02
+Model: Matern52. Mean squared err: 3.63e+02
+Model: RQ. Mean squared err: 3.53e+02
+Model: RBF. Mean squared err: 1.55e+01
+Model: Matern32. Mean squared err: 7.48e+00
+Model: Matern52. Mean squared err: 9.05e+00
+Model: RQ. Mean squared err: 1.09e+01
+Model: RBF. Mean squared err: 5.73e+00
+Model: Matern32. Mean squared err: 1.97e-05
+Model: Matern52. Mean squared err: 1.11e-01
+Model: RQ. Mean squared err: 2.47e+00
+Model: RBF. Mean squared err: 5.43e+01
+Model: Matern32. Mean squared err: 3.72e+01
+Model: Matern52. Mean squared err: 4.45e+01
+Model: RQ. Mean squared err: 4.46e+01
+Total number of top liquid samples is 1
+     sigma_C1  sigma_C2  sigma_C3  ...        mse      mapd  param_idx
+168  0.865319  0.953903  0.665159  ...  92.914381  0.760289        187
+
+[1 rows x 17 columns]
+Number of DEC samples with MSE < 10 kg/m^3 is 1
+Total number of top liquid samples is 12
+     sigma_C1  sigma_C2  sigma_H1  ...        mse      mapd  param_idx
+36   0.182128  0.466485  0.546131  ...  51.601396  0.623606        166
+81   0.408516  0.509751  0.573725  ...  23.592752  0.432427        186
+101  0.506855  0.677205  0.278887  ...  31.423803  0.526054        133
+102  0.512829  0.562412  0.282411  ...  89.206927  0.819387        138
+107  0.538554  0.143470  0.493718  ...  77.590975  0.894079         44
+111  0.559738  0.658917  0.519349  ...  69.613221  0.750580         63
+115  0.575333  0.750015  0.793521  ...  66.724142  0.856473        199
+137  0.687208  0.933020  0.736279  ...  10.552663  0.346963         38
+151  0.758287  0.765053  0.488908  ...   7.309031  0.205773        149
+156  0.781770  0.521375  0.944474  ...  16.770936  0.430898        125
+177  0.886194  0.582335  0.329129  ...   8.834906  0.290362        194
+184  0.920735  0.966506  0.108422  ...  45.238260  0.715711        124
+
+[12 rows x 15 columns]
+Number of DMF samples with MSE < 10 kg/m^3 is 12
+Total number of top liquid samples is 4
+     sigma_C1  sigma_H1  sigma_O1  ...        mse      mapd  param_idx
+15   0.079986  0.499313  0.380744  ...  57.200136  0.669611        190
+137  0.685664  0.515535  0.344192  ...  16.617508  0.329082         29
+171  0.857686  0.193827  0.630997  ...  38.015400  0.551840        175
+185  0.926160  0.147710  0.698133  ...  67.746728  0.766650         63
+
+[4 rows x 11 columns]
+Number of DMSO samples with MSE < 10 kg/m^3 is 4
+Total number of top liquid samples is 6
+     sigma_C1  sigma_H1  sigma_H2  ...        mse      mapd  param_idx
+69   0.612798  0.253802       0.0  ...   0.955451  0.069307          8
+78   0.669835  0.587483       0.0  ...  28.409207  0.408187         44
+86   0.719971  0.908139       0.0  ...  46.366601  0.495116        137
+107  0.868515  0.992253       0.0  ...  49.609874  0.545564        139
+112  0.915911  0.424930       0.0  ...  19.355013  0.370660        119
+114  0.934929  0.066858       0.0  ...  41.609200  0.588668         15
+
+[6 rows x 11 columns]
+Number of EG samples with MSE < 10 kg/m^3 is 6
+Total number of top liquid samples is 0
+Empty DataFrame
+Columns: [sigma_C1, sigma_C2, sigma_H1, sigma_H2, sigma_H3, sigma_H4, sigma_O1, sigma_O2, epsilon_C1, epsilon_C2, epsilon_H1, epsilon_H2, epsilon_H3, epsilon_H4, epsilon_O1, epsilon_O2, mse, mapd, param_idx]
+Index: []
+Number of Gly samples with MSE < 10 kg/m^3 is 0
+Total number of top liquid samples is 0
+Empty DataFrame
+Columns: [sigma_C1, sigma_H1, sigma_H2, sigma_O1, epsilon_C1, epsilon_H1, epsilon_H2, epsilon_O1, mse, mapd, param_idx]
+Index: []
+Number of MeOH samples with MSE < 10 kg/m^3 is 0
+DEC : Total samples with MSE less than 25,      sigma_C1  sigma_C2  sigma_C3  ...        mse      mapd  param_idx
+168  0.865319  0.953903  0.665159  ...  92.914381  0.760289        187
+
+[1 rows x 17 columns]
+Classifer is 93.0% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (382849, 14)
+Shape of the predicted vapor samples: (117151, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 31104 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 26  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.12370300 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1237
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (488732, 12)
+Shape of the predicted vapor samples: (11268, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+There are: 46714 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 7  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 2.60476685 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.60477
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (493845, 8)
+Shape of the predicted vapor samples: (6155, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+There are: 41903 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.39843750 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.39844
+Classifer is 97.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (228713, 8)
+Shape of the predicted vapor samples: (271287, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+There are: 8774 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 17740  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.13330078 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.1333
+Classifer is 96.5% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (112536, 16)
+Shape of the predicted vapor samples: (387464, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.11969526 and there are 8.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1197
+Classifer is 90.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (32808, 8)
+Shape of the predicted vapor samples: (467192, 8)
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+Include properties: sim_liq_density
+Property bounds are [678.59 880.28]
+There are: 351 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 16  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 0.54296875 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 0.54297
+DMF : Total samples with MSE less than 25,      sigma_C1  sigma_C2  sigma_H1  ...        mse      mapd  param_idx
+36   0.182128  0.466485  0.546131  ...  51.601396  0.623606        166
+81   0.408516  0.509751  0.573725  ...  23.592752  0.432427        186
+101  0.506855  0.677205  0.278887  ...  31.423803  0.526054        133
+102  0.512829  0.562412  0.282411  ...  89.206927  0.819387        138
+107  0.538554  0.143470  0.493718  ...  77.590975  0.894079         44
+111  0.559738  0.658917  0.519349  ...  69.613221  0.750580         63
+115  0.575333  0.750015  0.793521  ...  66.724142  0.856473        199
+137  0.687208  0.933020  0.736279  ...  10.552663  0.346963         38
+151  0.758287  0.765053  0.488908  ...   7.309031  0.205773        149
+156  0.781770  0.521375  0.944474  ...  16.770936  0.430898        125
+177  0.886194  0.582335  0.329129  ...   8.834906  0.290362        194
+184  0.920735  0.966506  0.108422  ...  45.238260  0.715711        124
+
+[12 rows x 15 columns]
+Classifer is 93.0% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (382849, 14)
+Shape of the predicted vapor samples: (117151, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 31104 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 26  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.12370300 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.1237
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 12)
+Shape of the predicted liquid samples: (488732, 12)
+Shape of the predicted vapor samples: (11268, 12)
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+Include properties: sim_liq_density
+Property bounds are [922.24 941.56]
+There are: 46714 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 7  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 2.60476685 and there are 7.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 2.60477
+Classifer is 99.5% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (493845, 8)
+Shape of the predicted vapor samples: (6155, 8)
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+Include properties: sim_liq_density
+Property bounds are [1060.17 1080.23]
+There are: 41903 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 0  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.39843750 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.39844
+Classifer is 97.0% accurate on the test set.
+Shape of samples to classify: (500000, 8)
+Shape of the predicted liquid samples: (228713, 8)
+Shape of the predicted vapor samples: (271287, 8)
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+Include properties: sim_liq_density
+Property bounds are [1024.3 1051.7]
+There are: 8774 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 17740  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 1.13330078 and there are 3.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 1.1333
+Classifer is 96.5% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (112536, 16)
+Shape of the predicted vapor samples: (387464, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 4213 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 32394  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
