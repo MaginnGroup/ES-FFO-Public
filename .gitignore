@@ -12,7 +12,7 @@ R125_29*_ex*
 *.so
 Build_GPs/analysis/R125/*
 density_iters/old/*
-*old2
+*old2*
 
 # Distribution / packaging
 .Python
