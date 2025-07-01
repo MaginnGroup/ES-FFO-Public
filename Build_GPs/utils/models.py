@@ -324,6 +324,7 @@ def eval_model_performance(models, x_data, y_data, property_bounds):
 
     mse_min = np.inf
     mse_model = None
+    mse_label = None
     for (label, model) in models.items():
         gp_mu, gp_var = model.predict_f(x_data)
         gp_mu_physical = values_scaled_to_real(gp_mu, property_bounds)
@@ -333,6 +334,7 @@ def eval_model_performance(models, x_data, y_data, property_bounds):
         if meansqerr < mse_min:
             mse_min = meansqerr
             mse_model = model
+            mse_label = label
         print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
 
-    return mse_model, label
+    return mse_model, mse_label
