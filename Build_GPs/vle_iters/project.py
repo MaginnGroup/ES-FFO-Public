@@ -662,6 +662,18 @@ def find_bulk_liq_index(density):
     return range_for_liq_dens, interfaces, ES_numdens_z
 
 def get_pymser_results(eq_col):
+    """
+    This function determines the stationary region of a time series using pymser's equilibrate function.
+
+    Parameters:
+    -----------
+    eq_col : array-like, array of time series data
+
+    Returns:
+    --------
+    results : dict, results from pymser's equilibrate function
+    adf_test_failed : bool, whether the ADF test failed
+    """
     batch_size = max(1, int(len(eq_col) * 0.0005))
 
     # Try with ADF test enabled, fallback without it if it fails
