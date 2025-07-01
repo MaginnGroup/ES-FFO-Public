@@ -8,7 +8,7 @@ project = signac.get_project()
 
 count = 0
 #Loop over all jobs in the project
-for job in project.find_jobs({"mol_name":"Gly", "iter": 3}):
+for job in project.find_jobs({"mol_name":"Gly", "iter": 4}):
     # Check if job document exists
     # print(f"Checking job {job.id}")
     if os.path.exists(job.fn("signac_job_document.json")):
@@ -25,9 +25,9 @@ for job in project.find_jobs({"mol_name":"Gly", "iter": 3}):
                 with open(log_file, "r") as f:
                     lines = f.readlines()
                     if lines:
-                        if "Fri" not in lines[-1].strip():
-                            print(f"Job {job.id}")
-                            print(lines[-1].strip())
+                        # if "Tue" not in lines[-1].strip():
+                        print(f"Job {job.id}")
+                        print(lines[-1].strip())
             # else:
             #     print("Log file does not exist.")
 print(f"Total unfinished jobs: {count}")

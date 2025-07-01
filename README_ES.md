@@ -130,8 +130,8 @@ To run vapor-liquid-equilibrium iterations, follow the following steps:
 2. Run LD iterations
    - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
   ```
-     cd Build_GPs/ld_iters/
-     python project.py submit -o IFT --bundle=2 --parallel
+     cd Build_GPs/vle_iters/
+     python project.py submit -o IFT #--bundle=2 --parallel
    ```  
 3. Check status a few times throughout the process
    ```  
@@ -143,14 +143,14 @@ Note: Step 2 operation IFT runs multiple operations in series. Alternatively, th
      python project.py run -o create_forcefield
      python project.py submit -o create_system
      python project.py run -o fix_topology
-     python project.py submit -o em_sim --bundle=2 --parallel
-     python project.py submit -o nvt_eq_sim --bundle=2 --parallel
-     python project.py submit -o npzzat_eq_sim --bundle=2 --parallel
-     python project.py submit -o npzzat_prod_sim --bundle=2 --parallel
-     python project.py submit -o init_inter_eq_sim --bundle=2 --parallel
-     python project.py submit -o inter_eq_sim --bundle=2 --parallel
-     python project.py submit -o inter_prod_sim --bundle=2 --parallel
-     python project.py submit -o calculate_props --bundle=2 --parallel
+     python project.py submit -o em_sim #--bundle=2 --parallel
+     python project.py submit -o nvt_eq_sim #--bundle=2 --parallel
+     python project.py submit -o npzzat_eq_sim #--bundle=2 --parallel
+     python project.py submit -o npzzat_prod_sim #--bundle=2 --parallel
+     python project.py submit -o init_inter_eq_sim #--bundle=2 --parallel
+     python project.py submit -o inter_eq_sim #--bundle=2 --parallel
+     python project.py submit -o inter_prod_sim #--bundle=2 --parallel
+     python project.py submit -o calculate_props #--bundle=2 --parallel
    ```
      
 5. Extract properties, run GP optimization and get samples for the next iteration in the Build_GPs/ directory
