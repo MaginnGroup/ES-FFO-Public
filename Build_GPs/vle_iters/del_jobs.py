@@ -7,7 +7,7 @@ import shutil
 project = signac.get_project()
 
 #Loop over all jobs in the project
-for job in project.find_jobs({"mol_name":"DMSO", "iter": 1}):
+for job in project.find_jobs():
     job.remove()  # Remove the job from the project
 # for job in project:
 #     # Check if ld_fail exists in the job document
