@@ -178,10 +178,11 @@ def init_project():
                 for j, sample in enumerate(scaled_params):
                     # Get the LD estimate for the given sample
                     liq_density_est = ld_estimates[i, j]
-                    # Use the lower density between the estimate and the experimental value to calculate initial volume/box length
-                    liq_density = np.minimum(
-                        liq_density_est, molec_data.expt_liq_density[temp]
-                    )
+                    # Optionally, use the lower density between the estimate and the experimental value to calculate initial volume/box length
+                    # liq_density = np.minimum(
+                    #     liq_density_est, molec_data.expt_liq_density[temp]
+                    # )
+                    liq_density = liq_density_est
                     # Define the state point w/ unchanging characteristics
                     state_point = {
                         "mol_name": molec_name,
