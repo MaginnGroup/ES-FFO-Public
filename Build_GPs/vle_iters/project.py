@@ -885,94 +885,96 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
         last_dir = f"../{last_sim_name}/"
 
-        # try:
-        if sim_name == "npt_eq":
-            nsteps_eq = job.sp.nsteps_npt_eq
-        elif sim_name == "npzzat_eq" or sim_name == "npzzat_eq_pvap":
-            nsteps_eq = job.sp.nsteps_npzzat_eq
-        elif sim_name == "inter_eq":
-            nsteps_eq = job.sp.nsteps_intereq
+        try:
+            if sim_name == "npt_eq":
+                nsteps_eq = job.sp.nsteps_npt_eq
+            elif sim_name == "npzzat_eq" or sim_name == "npzzat_eq_pvap":
+                nsteps_eq = job.sp.nsteps_npzzat_eq
+            elif sim_name == "inter_eq":
+                nsteps_eq = job.sp.nsteps_intereq
 
-        max_steps_str = "max_eq_steps_" + sim_name
-        nsteps_str = "nsteps_" + sim_name
-        eq_ext_str = "eq_ext_" + sim_name
-        eq_data_dict = {}
-        # Set number of iterations per extension and intitialize counter and total number of steps
-        eq_extend = int(nsteps_eq / 4 / 1000)  # In ps
+            max_steps_str = "max_eq_steps_" + sim_name
+            nsteps_str = "nsteps_" + sim_name
+            eq_ext_str = "eq_ext_" + sim_name
+            eq_data_dict = {}
+            # Set number of iterations per extension and intitialize counter and total number of steps
+            eq_extend = int(nsteps_eq / 4 / 1000)  # In ps
 
-        # Get the total number of equilibration restarts and steps so far
-        steps, num_pts = count_steps(job, sim_name)
-        existing_eq_steps = steps  # In ps
-        total_eq_steps = existing_eq_steps  # In ps
-        # Set the maximum number of steps
-        if max_steps_str not in job.doc:
-            job.doc[max_steps_str] = int(nsteps_eq / 1000) + eq_extend * 2
+            # Get the total number of equilibration restarts and steps so far
+            steps, num_pts = count_steps(job, sim_name)
+            existing_eq_steps = steps  # In ps
+            total_eq_steps = existing_eq_steps  # In ps
+            # Set the maximum number of steps
+            if max_steps_str not in job.doc:
+                job.doc[max_steps_str] = int(nsteps_eq / 1000)*5
 
-        # The max number of steps is the larger of the number of steps + the org number of steps or the current max
-        max_eq_steps = np.maximum(job.doc[max_steps_str], job.doc[max_steps_str] + eq_extend * 2)
-        # Originally set the document eq_steps to the max number, it will be overwritten later
-        job.doc[nsteps_str] = int(max_eq_steps)
+            # The max number of steps is the larger of the number of steps + the org number of steps or the current max
+            max_eq_steps = np.maximum(job.doc[max_steps_str], total_eq_steps + eq_extend * 2)
+            # Originally set the document eq_steps to the max number, it will be overwritten later
+            job.doc[nsteps_str] = int(max_eq_steps)
 
-        # Continue running while you have not exceeded the max number of steps
-        while total_eq_steps < max_eq_steps:
-            # If you have enough steps, run the simulation, continue the simulation with more points
-            if total_eq_steps + eq_extend <= max_eq_steps:
-                # If we have no steps, start the simulation
-                if total_eq_steps == 0:
-                    command = (
-                        f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir}{last_sim_name}.gro -p ../system.top -o {sim_name} &> ../prep_{sim_name}.out && "
-                        f"gmx mdrun -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+            # Continue running while you have not exceeded the max number of steps
+            while total_eq_steps < max_eq_steps:
+                # If you have enough steps, run the simulation, continue the simulation with more points
+                if total_eq_steps + eq_extend <= max_eq_steps:
+                    # If we have no steps, start the simulation
+                    if total_eq_steps == 0:
+                        command = (
+                            f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir}{last_sim_name}.gro -p ../system.top -o {sim_name} &> ../prep_{sim_name}.out && "
+                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+                        )
+                    # Otherwise, check log file for whether previous simulation finished correctly
+                    elif check_norm_term(job, sim_name):
+                        # If it finished, extend the simulation
+                        command = (
+                            f"gmx convert-tpr -s {sim_name}.tpr -extend "
+                            + str(eq_extend)
+                            + f" -o {sim_name}.tpr &&"
+                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+                        )
+                    # Otherwise restart the simulation from the checkpoint file
+                    else:
+                        command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+                    subprocess.run(command, shell=True, check=True, cwd=sim_name)
+
+                    # Update equilibration data dictionary/files
+                    eq_data_dict = get_eq_data_dict(
+                        job, eq_data_dict, sim_name, property
                     )
-                # Otherwise, check log file for whether previous simulation finished correctly
-                elif check_norm_term(job, sim_name):
-                    # If it finished, extend the simulation
-                    command = (
-                        f"gmx convert-tpr -s {sim_name}.tpr -extend "
-                        + str(eq_extend)
-                        + f" -o {sim_name}.tpr &&"
-                        f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
-                    )
-                # Otherwise restart the simulation from the checkpoint file
-                else:
-                    command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
-                subprocess.run(command, shell=True, check=True, cwd=sim_name)
 
-                # Update equilibration data dictionary/files
-                eq_data_dict = get_eq_data_dict(
-                    job, eq_data_dict, sim_name, property
-                )
+                    # Track the number of added steps
+                    total_eq_steps += eq_extend
 
-                # Track the number of added steps
-                total_eq_steps += eq_extend
+                    # Set tolerance for determining equilibrium and check for convergence
+                    steps, num_pts = count_steps(job, sim_name)
+                    prod_tol_eq = num_pts / 4  # In picoseconds (same units as the data)
+                    is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
 
-                # Set tolerance for determining equilibrium and check for convergence
-                steps, num_pts = count_steps(job, sim_name)
-                prod_tol_eq = num_pts / 4  # In picoseconds (same units as the data)
-                is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
-
-                # If the simulation has converged, break
-                if is_equil:
-                    # Set the step counter to whatever the final number of equilibration steps was
-                    job.doc[nsteps_str] = total_eq_steps
-                    job.doc[eq_ext_str] = False
-                    job.doc[sim_name + "_fin"] = True
-                    break
-                # Otherwise report an error
-                elif total_eq_steps + eq_extend > max_eq_steps:
-                    job.doc[eq_ext_str] = True
-                    raise Exception(
-                        f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
-                    )
-        # except:
-        #     # If the simulation fails, extend the simulation
-        #     if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
-        #         job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
-        #         del job.doc[nsteps_str]
-        #         del job.doc[eq_ext_str]
-        #     # If another error occurs, set the equilibration failure flag
-        #     else:
-        #         eq_fail_str = "eq_fail_" + sim_name
-        #         job.doc[eq_fail_str] = True
+                    # If the simulation has converged, break
+                    if is_equil:
+                        # Set the step counter to whatever the final number of equilibration steps was
+                        job.doc[nsteps_str] = total_eq_steps
+                        job.doc[eq_ext_str] = False
+                        job.doc[sim_name + "_fin"] = True
+                        break
+                    # Otherwise report an error
+                    elif total_eq_steps + eq_extend > max_eq_steps:
+                        job.doc[eq_ext_str] = True
+                        #Simply use a maximum of max_eq_steps
+                        # warnings.warn(f"{sim_name} equilibration failed to converge after {max_eq_steps} steps", UserWarning)
+                        raise Exception(
+                            f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
+                        )
+        except:
+            # If the simulation fails, extend the simulation
+            if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
+                job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
+                del job.doc[nsteps_str]
+                del job.doc[eq_ext_str]
+            # If another error occurs, set the equilibration failure flag
+            else:
+                eq_fail_str = "ld_fail" + sim_name
+                job.doc[eq_fail_str] = True
 
 
 def check_norm_term(job, sim_name):
