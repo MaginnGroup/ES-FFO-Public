@@ -862,24 +862,29 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
 
 # HELPER FUNCTIONS
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
-    with job:
-        #Make a directory for the simulation    
-        os.makedirs(sim_name, exist_ok=True)
-        if sim_name != "em":
-            w_gpu = " -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
-            last_dir_name = "../" + last_sim_name + "/"
-        else:
-            last_dir_name = "../"
-            w_gpu = ""
-        if os.path.exists(sim_name + ".cpt"):
-            command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name}" + w_gpu
-        else:
-            command = (
-                f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir_name}{last_sim_name}.gro -p ../system.top -o {sim_name}  &> ../prep_{sim_name}.out && "
-                f"gmx mdrun -v -deffnm {sim_name}" + w_gpu + f" &> ../run_{sim_name}.out"
-            )
-        subprocess.run(command, shell=True, check=True, cwd=sim_name)
-        job.doc[sim_name + "_fin"] = True
+    try:
+        with job:
+            #Make a directory for the simulation    
+            os.makedirs(sim_name, exist_ok=True)
+            if sim_name != "em":
+                w_gpu = " -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
+                last_dir_name = "../" + last_sim_name + "/"
+            else:
+                last_dir_name = "../"
+                w_gpu = ""
+            if os.path.exists(sim_name + ".cpt"):
+                command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name}" + w_gpu
+            else:
+                command = (
+                    f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir_name}{last_sim_name}.gro -p ../system.top -o {sim_name}  &> ../prep_{sim_name}.out && "
+                    f"gmx mdrun -v -deffnm {sim_name}" + w_gpu + f" &> ../run_{sim_name}.out"
+                )
+            subprocess.run(command, shell=True, check=True, cwd=sim_name)
+            job.doc[sim_name + "_fin"] = True
+    except:
+        # If the simulation fails, set the equilibration failure flag
+        eq_fail_str = "ld_fail"
+        job.doc[eq_fail_str] = True
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
