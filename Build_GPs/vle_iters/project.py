@@ -22,9 +22,10 @@ class Project(FlowProject):
     pass
 
 
-#Build FF
-LD_group = Project.make_group(name = "LD")
-IFT_group = Project.make_group(name = "IFT")
+# Build FF
+LD_group = Project.make_group(name="LD")
+IFT_group = Project.make_group(name="IFT")
+
 
 @LD_group
 @IFT_group
@@ -39,7 +40,7 @@ def create_forcefield(job):
         ff.write(content)
 
 
-#Create FF
+# Create FF
 @LD_group
 @IFT_group
 @Project.pre.after(create_forcefield)
@@ -59,24 +60,24 @@ def create_system(job):
     ff = foyer.Forcefield(job.fn("ff.xml"))
     # Get the number of molecules from the job document
     density = job.sp.rho_liq
-    #Calculate the box lengths from the system density using nmols molecules
-    V = (job.sp.nmols*job.sp.mol_wt*1e27)/(density * 1000* 6.022*1e23)
-    #Calculate the xy box length given that z = aspect_ratio*box_xy
-    xy_len = (V/job.sp.aspect_ratio)**(1/3)
-    #Calculate Z assuming that the box volume must be 1.15*expt_liq_dens and z>3*xy
-    z_len = 1.15*job.sp.aspect_ratio*xy_len
+    # Calculate the box lengths from the system density using nmols molecules
+    V = (job.sp.nmols * job.sp.mol_wt * 1e27) / (density * 1000 * 6.022 * 1e23)
+    # Calculate the xy box length given that z = aspect_ratio*box_xy
+    xy_len = (V / job.sp.aspect_ratio) ** (1 / 3)
+    # Calculate Z assuming that the box volume must be 1.15*expt_liq_dens and z>3*xy
+    z_len = 1.15 * job.sp.aspect_ratio * xy_len
     box = [xy_len, xy_len, z_len]
 
-    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box = box)
+    system = mbuild.fill_box(compound, n_compounds=job.sp.nmols, box=box)
     # Apply the forcefield to the system even when all dihedrals are zero
-    system_ff = ff.apply(system, assert_dihedral_params = False)
+    system_ff = ff.apply(system, assert_dihedral_params=False)
     system_ff.combining_rule = "lorentz"
 
     with job:
         # If the system.gro file already exists, remove it
-        if os.path.exists("system.gro"): 
+        if os.path.exists("system.gro"):
             os.remove("system.gro")
-        #Resave gro and top files
+        # Resave gro and top files
         system_ff.save("system.gro")
         system_ff.save("unedited.top")
 
@@ -84,7 +85,7 @@ def create_system(job):
     job.doc["system"] = True
 
 
-#Create System
+# Create System
 @LD_group
 @IFT_group
 @Project.pre.after(create_system)
@@ -121,6 +122,7 @@ def em_complete(job):
     except:
         return False
 
+
 @LD_group
 @IFT_group
 @Project.pre.after(create_system)
@@ -150,6 +152,7 @@ def nvt_eq_comp(job):
     except:
         return False
 
+
 @LD_group
 @IFT_group
 @Project.pre.after(em_sim)
@@ -161,7 +164,7 @@ def nvt_eq_sim(job):
     last_sim_name = "em"
 
     os.makedirs(job.fn("nvt_eq"), exist_ok=True)
-    
+
     content = _generate_nvt_eq_mdp(job)
 
     with open(job.fn("nvt_eq/nvt_eq.mdp"), "w") as inp:
@@ -178,8 +181,9 @@ def npzzat_eq_comp(job):
     else:
         return False
 
+
 @LD_group
-@IFT_group    
+@IFT_group
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 6})
@@ -212,8 +216,9 @@ def npzzat_eq_pvap_comp(job):
     else:
         return False
 
+
 @LD_group
-@IFT_group    
+@IFT_group
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_pvap_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 6})
@@ -237,6 +242,7 @@ def npzzat_eq_pvap_sim(job):
 
     run_md_w_eqcheck(job, sim_name, last_sim_name, property)
 
+
 # Long Production NPT
 @Project.label
 def npzzat_prod_comp(job):
@@ -244,9 +250,10 @@ def npzzat_prod_comp(job):
         return True
     else:
         return False
-    
+
+
 @LD_group
-@IFT_group    
+@IFT_group
 @Project.pre.after(npzzat_eq_pvap_sim)
 @Project.post(npzzat_prod_comp)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 6})
@@ -270,33 +277,36 @@ def npzzat_prod_sim(job):
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
-#Get density from NPT simulations
+
+# Get density from NPT simulations
 @LD_group
-@IFT_group    
+@IFT_group
 @Project.pre.after(npzzat_prod_sim)
 @Project.pre.after(npzzat_eq_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
 @Project.operation(cmd=False, directives={"omp_num_threads": 6})
 def npzzat_dens_calc(job):
     import panedr
+
     sys.path.append("../../")
     from block_average.block_average import block_average
+
     sys.path.remove("../../")
 
     sim_name = "calc_props"
     os.makedirs(job.fn(sim_name), exist_ok=True)
     property = "Density"
 
-    #Calculate density from the NPT Production run
+    # Calculate density from the NPT Production run
     last_sim_name = "npzzat_prod"
-    with job:  
+    with job:
         # Get the average density value from the NPT Production run
         from_file = job.fn(f"{last_sim_name}/{last_sim_name}" + ".edr")
         df = panedr.edr_to_df(from_file)
         density = np.array(df[property].values)
         dens_eq = np.mean(density)
 
-        #Use block averaging to calculate the variance of each property
+        # Use block averaging to calculate the variance of each property
         (means_est, vars_est, vars_err) = block_average(density)
 
         with open(job.fn(f"{sim_name}/density_blk_avg.txt"), "w") as ferr:
@@ -308,22 +318,22 @@ def npzzat_dens_calc(job):
                     "{}\t{}\t{}\t{}\n".format(nblk_ops, mean_est, vars_est, vars_err)
                 )
         std = np.max(np.sqrt(vars_est))
-        #Save these values to the job document
+        # Save these values to the job document
         job.doc["liq_density"] = dens_eq
         job.doc["liq_density_unc"] = std
 
-    #Calculate the average volume from the NPT eq run at high pressure
+    # Calculate the average volume from the NPT eq run at high pressure
     last_sim_name = "npzzat_eq"
-    with job:  
+    with job:
         # Get the density values from the NPT equilibration run
         from_file = job.fn(f"{last_sim_name}/{last_sim_name}" + ".edr")
         df = panedr.edr_to_df(from_file)
         all_density = np.array(df[property].values)
         all_volume = np.array(df["Volume"].values)
-        #Get the volume of only the equilibrated density region
+        # Get the volume of only the equilibrated density region
         results, adf_test_failed = get_pymser_results(all_density)
-        volume = all_volume[results["t0"]:]
-        #Save the average volume to the job document
+        volume = all_volume[results["t0"] :]
+        # Save the average volume to the job document
         job.doc["liq_volume"] = np.mean(volume)
 
 
@@ -339,12 +349,12 @@ def init_inter_eq_sim(job):
     last_sim_name = "npzzat_eq"
     last_dir = f"../{last_sim_name}/"
 
-    with job:  
-        #If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
+    with job:
+        # If the density is above the threshold, the simulation did not vaporize and we can continue towards the interface simulation by doing a short NVT equilibration
         if job.doc["liq_density"] > job.sp.rho_thresh:
-            #Calculate box lengths from equilibrated NPzzAT volume at high Pressure
-            xy_len, non_eq_z = get_box_coords(job, last_sim_name) 
-            z_len = job.doc["liq_volume"]/xy_len**2
+            # Calculate box lengths from equilibrated NPzzAT volume at high Pressure
+            xy_len, non_eq_z = get_box_coords(job, last_sim_name)
+            z_len = job.doc["liq_volume"] / xy_len**2
             xy_cen = round(xy_len / 2, 5)
             z_cen = round(z_len * job.sp.aspect_ratio / 2, 5)
             xy_len_rnd = np.round(xy_len, 5)
@@ -352,19 +362,19 @@ def init_inter_eq_sim(job):
             job.doc["box_len_" + sim_name] = xy_len_rnd
             new_z_len = round(z_len * job.sp.aspect_ratio, 5)
             job.doc["z_box_len"] = new_z_len
-            #Run the editconf command to create the interface box
+            # Run the editconf command to create the interface box
             command = f"gmx editconf -f {last_dir}{last_sim_name}.gro -center {xy_cen} {xy_cen} {z_cen} -bt triclinic -box {xy_len_rnd} {xy_len_rnd} {new_z_len} -angles 90 90 90 -o {sim_name}.gro"
-            subprocess.run(command, shell=True, check=True, cwd = sim_name)
+            subprocess.run(command, shell=True, check=True, cwd=sim_name)
 
-        #If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
-        else:               
-            #Skip calculate_props for interface simulations 
+        # If the density is below the threshold, the simulation vaporized and we need to calculate the density to train the classifier with
+        else:
+            # Skip calculate_props for interface simulations
             job.doc["surf_tens"] = np.nan
             job.doc["surf_tens_unc"] = np.nan
-            #Skip interface simulations
+            # Skip interface simulations
             job.doc["inter_eq_fin"] = True
             job.doc["inter_prod_fin"] = True
-        
+
 
 # Run Interface NVT equilibration
 @Project.label
@@ -373,6 +383,7 @@ def inter_eq_comp(job):
         return True
     else:
         return False
+
 
 @IFT_group
 @Project.pre.after(init_inter_eq_sim)
@@ -390,10 +401,12 @@ def inter_eq_sim(job):
 
     if not job.isfile("inter_eq/inter_eq.mdp"):
         with job:
-            #Set the cutoff as 95% of half the box length or 6*max_sigma, whichever is smaller
-            xy_len, z_len = get_box_coords(job, last_sim_name) 
+            # Set the cutoff as 95% of half the box length or 6*max_sigma, whichever is smaller
+            xy_len, z_len = get_box_coords(job, last_sim_name)
             min_coord = np.minimum(xy_len, z_len)
-            cutoff = np.minimum(round(0.95*min_coord/2,5), round(6*job.sp.max_sigma,5))
+            cutoff = np.minimum(
+                round(0.95 * min_coord / 2, 5), round(6 * job.sp.max_sigma, 5)
+            )
             content = _generate_inter_eq_mdp(job, cutoff)
 
             with open(job.fn("inter_eq/inter_eq.mdp"), "w") as inp:
@@ -409,6 +422,7 @@ def inter_prod_comp(job):
         return True
     else:
         return False
+
 
 @IFT_group
 @Project.pre.after(inter_eq_sim)
@@ -427,10 +441,12 @@ def inter_prod_sim(job):
 
     if not job.isfile("inter_prod/inter_prod.mdp"):
         with job:
-            #Set the cutoff as 95% of half the box length or 6*max_sigma, whichever is smaller
-            xy_len, z_len = get_box_coords(job, last_sim_name) 
+            # Set the cutoff as 95% of half the box length or 6*max_sigma, whichever is smaller
+            xy_len, z_len = get_box_coords(job, last_sim_name)
             min_coord = np.minimum(xy_len, z_len)
-            cutoff = np.minimum(round(0.95*min_coord/2,5), round(6*job.sp.max_sigma,5))
+            cutoff = np.minimum(
+                round(0.95 * min_coord / 2, 5), round(6 * job.sp.max_sigma, 5)
+            )
             content = _generate_inter_prod_mdp(job, cutoff)
 
             with open(job.fn("inter_prod/inter_prod.mdp"), "w") as inp:
@@ -439,6 +455,7 @@ def inter_prod_sim(job):
     # run_md_prod(job, sim_name, last_sim_name)
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
     # job.doc.inter_prod_fin = True
+
 
 @IFT_group
 @Project.pre.after(inter_prod_sim)
@@ -450,25 +467,29 @@ def calculate_props(job):
 
     import panedr
     import numpy as np
+
     sys.path.append("../../")
     from block_average.block_average import block_average
+
     sys.path.remove("../../")
     last_sim_name = "inter_prod"
     sim_name = "calc_props"
 
     os.makedirs(job.fn("sim_name"), exist_ok=True)
     last_dir = f"../{last_sim_name}/"
- 
+
     get_props = ["Density", "#Surf*SurfTen"]
     names = ["ift_liq_dens", "surf_tens"]
-    #For surface tension and density
+    # For surface tension and density
     for prop, name in zip(get_props, names):
         ##Use block averaging to calculate the variance of each property
         if prop == "Density":
             with job:
-                (means_est, vars_est, vars_err) = calc_block_densities(job, sim_name, last_sim_name, name)
+                (means_est, vars_est, vars_err) = calc_block_densities(
+                    job, sim_name, last_sim_name, name
+                )
 
-            #Save results to the job document
+            # Save results to the job document
             with open(job.fn(f"{sim_name}/{name}_blk_avg.txt"), "w") as ferr:
                 ferr.write("# nblk_ops, mean, vars, vars_err\n")
                 for nblk_ops, (mean_est, var_est, var_err) in enumerate(
@@ -481,10 +502,10 @@ def calculate_props(job):
         else:
             with job:
                 if not os.path.exists(job.fn(f"{sim_name}/{name}.txt")):
-                    for i in range(3,11):
+                    for i in range(3, 11):
                         command = f"echo '{prop}' | gmx energy -f {last_dir}{last_sim_name}.edr -nbmin {i} -nbmax {i} >> {name}.txt"
                         subprocess.run(
-                            command, text=True, check=True, shell=True, cwd = sim_name
+                            command, text=True, check=True, shell=True, cwd=sim_name
                         )
             (means_est, vars_est, vars_err) = calc_blk_avg_energ(job, sim_name, name)
 
@@ -493,9 +514,9 @@ def calculate_props(job):
         std = np.max(np.sqrt(vars_est))
 
         if name == "surf_tens":
-            #Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
-            mean = float((mean * u.bar * u.nm).in_units(u.mN/u.m).value)/2
-            std = float((std * u.bar * u.nm).in_units(u.mN/u.m).value)/2
+            # Convert to mN/m from bar*nm (Divide by 2 because there are 2 interfaces)
+            mean = float((mean * u.bar * u.nm).in_units(u.mN / u.m).value) / 2
+            std = float((std * u.bar * u.nm).in_units(u.mN / u.m).value) / 2
 
         job.doc[name] = mean
         job.doc[name + "_unc"] = std
@@ -506,18 +527,18 @@ def calculate_props(job):
 #####################################################################
 # Calculation Functions
 def calc_blk_avg_energ(job, sim_name, name):
-    with open(job.fn(f'{sim_name}/{name}.txt')) as f:
+    with open(job.fn(f"{sim_name}/{name}.txt")) as f:
         text = f.read()
-    data_lines = re.findall(r'-{5,}[\r\n]+([^\r\n]+)', text)
+    data_lines = re.findall(r"-{5,}[\r\n]+([^\r\n]+)", text)
 
     # Parse each line into components
     entries = [line.split() for line in data_lines if len(line.split()) >= 5]
 
     # Extract numeric columns
-    nblocks = np.array(list(range(3,11)))
+    nblocks = np.array(list(range(3, 11)))
     means_est = np.array([float(e[1]) for e in entries])
-    vars_est   = np.array([float(e[2]) for e in entries])
-    vars_err    = np.sqrt(2.0 * vars_est ** 2.0 / (nblocks - 1) ** 3.0)
+    vars_est = np.array([float(e[2]) for e in entries])
+    vars_err = np.sqrt(2.0 * vars_est**2.0 / (nblocks - 1) ** 3.0)
 
     with open(job.fn(f"{sim_name}/{name}_blk_avg.txt"), "w") as ferr:
         ferr.write("# nblk_ops, mean, vars, vars_err\n")
@@ -528,6 +549,7 @@ def calc_blk_avg_energ(job, sim_name, name):
                 "{}\t{}\t{}\t{}\n".format(nblk_ops + 3, mean_est, var_est, var_err)
             )
     return (means_est, vars_est, vars_err)
+
 
 def calc_block_densities(job, sim_name, last_sim_name, name):
     import panedr
@@ -543,14 +565,14 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
         len_data = len(df_all)
         time = df_all["Time"].to_numpy()
 
-        #Calculate the maximum number of blocks to use
+        # Calculate the maximum number of blocks to use
         # max_blocking_ops = int(np.ceil(np.log2(len_data)/4))
         # block_length = 2 ** max_blocking_ops  # Number of datapoints in each block
-        block_length = int(len_data/10)
+        block_length = int(len_data / 10)
 
         # Calc stats for mulitple-of-two block lengths
         for block_len in [len_data, block_length]:
-            #Convert datapoints to ps
+            # Convert datapoints to ps
             n_blocks = int(
                 len_data / block_len
             )  # Number of blocks we can get with given block size
@@ -559,15 +581,15 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
 
             block_data = []
             for block in range(n_blocks):
-                idx_strt = block*block_len
-                idx_end = (block + 1)*block_len -1
-                t0 = time[idx_strt] #Time in ps to start (ex. 0)
-                te = time[idx_end] #Time in ps to end (ex. 4990)
+                idx_strt = block * block_len
+                idx_end = (block + 1) * block_len - 1
+                t0 = time[idx_strt]  # Time in ps to start (ex. 0)
+                te = time[idx_end]  # Time in ps to end (ex. 4990)
 
-                #Get the average density for each block over Z
+                # Get the average density for each block over Z
 
-                #Calculate the average density over Z for that block
-                
+                # Calculate the average density over Z for that block
+
                 if block + 1 < n_blocks:
                     output_file = f"{name}_{block+1}.xvg"
                     command = f"gmx density -f {last_dir}{last_sim_name}.xtc -s {last_dir}{last_sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} -e {te} > /dev/null 2>&1"
@@ -577,15 +599,20 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
                     else:
                         output_file = f"{name}_{block+1}.xvg"
                     command = f"gmx density -f {last_dir}{last_sim_name}.xtc -s {last_dir}{last_sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} > /dev/null 2>&1"
-               
+
                 subprocess.run(
-                        command, input=f"System", text=True, check=True, shell=True, cwd = sim_name
-                    )
+                    command,
+                    input=f"System",
+                    text=True,
+                    check=True,
+                    shell=True,
+                    cwd=sim_name,
+                )
                 prop_data = np.loadtxt(
                     job.fn(f"{sim_name}/{output_file}"), comments=["#", "@"]
                 )
                 density = pd.DataFrame(prop_data)
-                #Calculate the liquid mass density as a fxn of Z
+                # Calculate the liquid mass density as a fxn of Z
                 liq_density = calc_mass_dens(density.to_numpy())
                 mean_liq_dens = np.mean(liq_density, dtype=np.float64)
                 block_data.append(mean_liq_dens)
@@ -599,10 +626,10 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
             mean = np.mean(block_data, dtype=np.float64)
             # Calculate the variance of this new dataset
             var = np.var(block_data, dtype=np.float64)
-            
+
             # Save data for blocking operations
             if len(block_data) > 1:
-                var_err = math.sqrt(2.0 * var ** 2.0 / (n_blocks - 1) ** 3.0)
+                var_err = math.sqrt(2.0 * var**2.0 / (n_blocks - 1) ** 3.0)
                 vars_est.append(var / (n_blocks - 1))
             else:
                 var_err = 0.0
@@ -615,43 +642,46 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
 
 
 def calc_mass_dens(density):
-    #Find the region attributed to liquid density
-    mass_dens_z = density[:,1]
+    # Find the region attributed to liquid density
+    mass_dens_z = density[:, 1]
     find_liq_slab = find_bulk_liq_index(density)
     range_for_liq_dens = find_liq_slab[0]
-    #Calculate the density
-    prop_vals = mass_dens_z[range_for_liq_dens] #kg/m^3
+    # Calculate the density
+    prop_vals = mass_dens_z[range_for_liq_dens]  # kg/m^3
     return prop_vals
 
+
 def find_bulk_liq_index(density):
-    #Use np.diff to approximate the 1st derivative
-    ES_numdens_z = density[:,1]
-    dy = np.gradient(ES_numdens_z, density[:,0])
-    #Use findpeaks to find the peaks and valleys, interpolating to get as close as possible
-    fp = findpeaks(lookahead=1, interpolate=10, verbose = 0)
+    # Use np.diff to approximate the 1st derivative
+    ES_numdens_z = density[:, 1]
+    dy = np.gradient(ES_numdens_z, density[:, 0])
+    # Use findpeaks to find the peaks and valleys, interpolating to get as close as possible
+    fp = findpeaks(lookahead=1, interpolate=10, verbose=0)
     results = fp.fit(dy)["df_interp"]
-    all_peaks = results[results['peak'] | results['valley']].index.values
-    #get the highest peak and the lowest valley, these are the interfaces
-    y_vals = results['y'].iloc[all_peaks]
+    all_peaks = results[results["peak"] | results["valley"]].index.values
+    # get the highest peak and the lowest valley, these are the interfaces
+    y_vals = results["y"].iloc[all_peaks]
     peak_index = all_peaks[np.argmax(y_vals)]
     valley_index = all_peaks[np.argmin(y_vals)]
     interfaces = [peak_index, valley_index]
 
-    #Divide the indices by 10 to get the correct index for the density based on interpolation
-    interfaces = [int(i/10) for i in interfaces]
+    # Divide the indices by 10 to get the correct index for the density based on interpolation
+    interfaces = [int(i / 10) for i in interfaces]
 
-    #Get the range of indices for the bulk liquid density regardless of whether interfaces have shifted
+    # Get the range of indices for the bulk liquid density regardless of whether interfaces have shifted
     if interfaces[0] < interfaces[1]:
         range_org_liq = list(range(interfaces[0], interfaces[1] + 1))
     else:
-        range_org_liq = list(range(interfaces[0], len(results)//10)) + list(range(0, interfaces[1] + 1))
+        range_org_liq = list(range(interfaces[0], len(results) // 10)) + list(
+            range(0, interfaces[1] + 1)
+        )
 
-    #Get the median density from the bulk range
+    # Get the median density from the bulk range
     median_dens_liq = np.median(ES_numdens_z[range_org_liq])
 
     # Find the first and last index where density >= median
     valid_idx = np.where(ES_numdens_z[range_org_liq] >= median_dens_liq)[0]
-    #Cut the range to only include indeces where the density is above the median
+    # Cut the range to only include indeces where the density is above the median
     if valid_idx.size > 0:
         start = valid_idx[0]
         end = valid_idx[-1] + 1  # +1 to include the last valid index
@@ -660,6 +690,7 @@ def find_bulk_liq_index(density):
         range_for_liq_dens = np.array([], dtype=int)
 
     return range_for_liq_dens, interfaces, ES_numdens_z
+
 
 def get_pymser_results(eq_col):
     """
@@ -864,7 +895,7 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
     try:
         with job:
-            #Make a directory for the simulation    
+            # Make a directory for the simulation
             os.makedirs(sim_name, exist_ok=True)
             if sim_name != "em":
                 w_gpu = " -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on"
@@ -877,7 +908,9 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
             else:
                 command = (
                     f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir_name}{last_sim_name}.gro -p ../system.top -o {sim_name}  &> ../prep_{sim_name}.out && "
-                    f"gmx mdrun -v -deffnm {sim_name}" + w_gpu + f" &> ../run_{sim_name}.out"
+                    f"gmx mdrun -v -deffnm {sim_name}"
+                    + w_gpu
+                    + f" &> ../run_{sim_name}.out"
                 )
             subprocess.run(command, shell=True, check=True, cwd=sim_name)
             job.doc[sim_name + "_fin"] = True
@@ -885,6 +918,7 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
         # If the simulation fails, set the equilibration failure flag
         eq_fail_str = "ld_fail"
         job.doc[eq_fail_str] = True
+
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
@@ -911,10 +945,12 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
             total_eq_steps = existing_eq_steps  # In ps
             # Set the maximum number of steps
             if max_steps_str not in job.doc:
-                job.doc[max_steps_str] = int(nsteps_eq / 1000)*5
+                job.doc[max_steps_str] = int(nsteps_eq / 1000) * 5
 
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
-            max_eq_steps = np.maximum(job.doc[max_steps_str], total_eq_steps + eq_extend * 2)
+            max_eq_steps = np.maximum(
+                job.doc[max_steps_str], total_eq_steps + eq_extend * 2
+            )
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc[nsteps_str] = int(max_eq_steps)
 
@@ -926,7 +962,8 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     if total_eq_steps == 0:
                         command = (
                             f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir}{last_sim_name}.gro -p ../system.top -o {sim_name} &> ../prep_{sim_name}.out && "
-                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on"
+                            + f" &> ../run_{sim_name}.out"
                         )
                     # Otherwise, check log file for whether previous simulation finished correctly
                     elif check_norm_term(job, sim_name):
@@ -935,11 +972,15 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                             f"gmx convert-tpr -s {sim_name}.tpr -extend "
                             + str(eq_extend)
                             + f" -o {sim_name}.tpr &&"
-                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on"
+                            + f" &> ../run_{sim_name}.out"
                         )
                     # Otherwise restart the simulation from the checkpoint file
                     else:
-                        command = f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on" + f" &> ../run_{sim_name}.out"
+                        command = (
+                            f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 6 -nb gpu -pme gpu -bonded gpu -pin on"
+                            + f" &> ../run_{sim_name}.out"
+                        )
                     subprocess.run(command, shell=True, check=True, cwd=sim_name)
 
                     # Update equilibration data dictionary/files
@@ -965,7 +1006,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     # Otherwise report an error
                     elif total_eq_steps + eq_extend > max_eq_steps:
                         job.doc[eq_ext_str] = True
-                        #Simply use a maximum of max_eq_steps
+                        # Simply use a maximum of max_eq_steps
                         # warnings.warn(f"{sim_name} equilibration failed to converge after {max_eq_steps} steps", UserWarning)
                         raise Exception(
                             f"{sim_name} equilibration failed to converge after {max_eq_steps} steps"
@@ -978,7 +1019,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                 del job.doc[eq_ext_str]
             # If another error occurs, set the equilibration failure flag
             else:
-                eq_fail_str = "ld_fail" + sim_name
+                eq_fail_str = "ld_fail"  # + sim_name
                 job.doc[eq_fail_str] = True
 
 
@@ -1001,6 +1042,7 @@ def check_norm_term(job, sim_name):
     else:
         return False
 
+
 def get_box_coords(job, sim_name):
     # Get final box lengths
     # Extract the last line of the .gro file
@@ -1018,6 +1060,7 @@ def get_box_coords(job, sim_name):
     job.doc["box_len_" + sim_name] = ave_length
     return ave_length, ave_z_len
 
+
 def get_eq_data_dict(job, eq_data_dict, sim_name, property):
     import panedr
 
@@ -1025,10 +1068,10 @@ def get_eq_data_dict(job, eq_data_dict, sim_name, property):
         # Get the density and volume data
         df_all = panedr.edr_to_df(job.fn(f"{sim_name}/{sim_name}.edr"))
         df = df_all[["Time", property]].copy()
-        
-        #For constrain RMSD, normalize the data by the max value
+
+        # For constrain RMSD, normalize the data by the max value
         if property == "Constr. rmsd":
-            property_data = df.iloc[:, 1].values/max(df.iloc[:, 1].values)
+            property_data = df.iloc[:, 1].values / max(df.iloc[:, 1].values)
         else:
             property_data = df.iloc[:, 1].values
         time_data = df.iloc[:, 0].values
@@ -1132,6 +1175,7 @@ def __generate_EG_xml(job):
     )
     return content
 
+
 def __generate_R125_xml(job):
     content = """<ForceField>
  <AtomTypes>
@@ -1176,6 +1220,7 @@ def __generate_R125_xml(job):
         epsilon_F2=job.sp.epsilon_F2,
     )
     return content
+
 
 def __generate_Gly_xml(job):
     content = """<ForceField>
@@ -1680,6 +1725,8 @@ gen-seed	            = -1		    ; generate a random seed
     )
 
     return contents
+
+
 def _generate_npzzat_eq_mdp(job):
     # Use 5000000 (5 ns) for the first equilibration
     contents = """
@@ -1739,10 +1786,11 @@ DispCorr	            = EnerPres	    ; apply analytical tail corrections
 ; Velocity generation
 gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
 """.format(
-        temp=job.sp.T, press=int(job.sp.P*5), nsteps=job.sp.nsteps_npzzat_eq
+        temp=job.sp.T, press=int(job.sp.P * 5), nsteps=job.sp.nsteps_npzzat_eq
     )
 
     return contents
+
 
 def _generate_npzzat_eq_pvap_mdp(job):
     # Use 5000000 (5 ns) for the first equilibration
@@ -1806,6 +1854,7 @@ gen_vel                 = no        ; assign velocities from Maxwell distributio
 
     return contents
 
+
 def _generate_npzzat_prod_mdp(job):
     # Use 10000000 (10 ns) for the first equilibration
     contents = """
@@ -1867,6 +1916,7 @@ gen_vel                 = no        ; Do not assign velocities from Maxwell dist
     )
 
     return contents
+
 
 def _generate_inter_eq_mdp(job, cutoff):
     # Use 30000000 (15 ns) minimum for the interfacial equilibration
@@ -1982,6 +2032,7 @@ gen-vel		            = no		    ; Do not assign velocities from Maxwell distribut
     )
 
     return contents
+
 
 if __name__ == "__main__":
     Project().main()
