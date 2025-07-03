@@ -45,7 +45,7 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
         pdf = PdfPages(pdf_name)
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
-        models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
+        models_best, models_rq, all_models, dir_train_test = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
         
         for prop_name, models in all_models.items():
             # Load data
