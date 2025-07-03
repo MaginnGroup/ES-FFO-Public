@@ -4,3 +4,32 @@
 2025-07-02 15:03:42.745243: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
 To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
 2025-07-02 15:03:51.957308: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+2025-07-02 17:11:31.672215: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 18:56:56.467223: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 18:57:02.490965: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 19:01:38.561082: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 19:10:08.188894: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 19:10:08.441405: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 21:12:25.143366: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 21:21:57.525485: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-07-02 21:21:58.074903: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+Current working dir: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Script location: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Extracting the following properties: ['liq_density']
+Warning: R125 not found in data_dict. Skipping.
+Model: RBF. Mean squared err: 3.13e+01
+Model: Matern32. Mean squared err: 3.09e+01
+Model: Matern52. Mean squared err: 3.17e+01
+Model: RQ. Mean squared err: 3.26e+01
+Model: RBF. Mean squared err: 8.84e+01
+Model: Matern32. Mean squared err: 9.00e+01
+Model: Matern52. Mean squared err: 8.76e+01
+Model: RQ. Mean squared err: 8.78e+01
+Traceback (most recent call last):
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/post_ld.py", line 48, in <module>
+    ##############################################################################
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch365/mcarlozo/ES-FFO/Build_GPs/utils/plot.py", line 48, in plot_gp_examples
+    models_best, all_models, dir_train_test = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 3)
