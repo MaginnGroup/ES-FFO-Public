@@ -1641,10 +1641,10 @@ def _generate_em_mdp(job):
     contents = """
 ; MDP file for energy minimization
 
-integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
+integrator	    = cg		    ; Algorithm (steep = steepest descent minimization)
 emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
 emstep          = 0.001          ; Energy step size
-; nstcgsteep      = 1000          ; Number of steps for the cg algorithm
+nstcgsteep      = 1000          ; Number of steps for the cg algorithm
 nsteps		    = 200000	  	    ; Maximum number of (minimization) steps to perform
 
 nstenergy                = 1000
