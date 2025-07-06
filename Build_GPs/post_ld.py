@@ -23,16 +23,20 @@ print(f"Script location: {Path(__file__).parent}")
 # iters = [1]  # Change me as needed
 property_names = ["liq_density"]  # Change me as needed
 mol_names = [
-    "EG",
     "Gly",
-    "ACN",
-    "MeOH",
-    "DMSO",
-    "THF",
-    "DCM",
     "DEC",
-    "DMF",
 ]  # Change me as needed
+# mol_names = [
+#     "EG",
+#     "Gly",
+#     "ACN",
+#     "MeOH",
+#     "DMSO",
+#     "THF",
+#     "DCM",
+#     "DEC",
+#     "DMF",
+# ]  # Change me as needed
 
 
 # Set seeds and preferences
