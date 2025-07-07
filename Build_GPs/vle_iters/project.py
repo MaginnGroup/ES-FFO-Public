@@ -139,53 +139,23 @@ def em_sim(job):
 
     os.makedirs(job.fn("em"), exist_ok=True)
 
-    content = _generate_em_mdp(job)
-
+    #Make the mdp file for the energy minimization
+    content = _generate_em_mdp(job, meth = "steep")
     with open(job.fn("em/em.mdp"), "w") as inp:
         inp.write(content)
 
-    #Repeat Energy Minimization 5 times to maximize convergence chances
-    for i in range(5):
-        run_md_wo_eqcheck(job, sim_name, last_sim_name)
+    # Try em with steepest descent first
+    em_restarts(job, sim_name, last_sim_name)
 
-        #Check if em finished correctly
-        selected_file1 = job.fn(f"{sim_name}/{sim_name}.log")
-        selected_file2 = job.fn(f"run_em.out")
-        em_term_fail1 = "Energy minimization has stopped, but the forces have not converged"
-        em_term_fail2 = "This should not happen in a stable simulation"
-
-        with open(selected_file1, "r") as f:
-            file_contents = f.read()
-            em_term_fail_present1 = em_term_fail1 in file_contents
-
-        with open(selected_file2, "r") as f:
-            file_contents = f.read()
-            em_term_fail_present2 = em_term_fail2 in file_contents
-
-        #For EM simulations, if the convergence failure message is present, delete and retry EM
-        if em_term_fail_present1 or em_term_fail_present2:
-            job.doc["skip_em"] = True
-            # Remove the previous em directory and its contents (except em.mdp)
-            # em_path = job.fn("em")
-            # if os.path.isdir(em_path):
-            #     for filename in os.listdir(em_path):
-            #         file_path = os.path.join(em_path, filename)
-            #         if filename != "em.mdp" and os.path.isfile(file_path):
-            #             os.remove(file_path)
-
-            # Remove run_em.out file
-            # os.remove(job.fn("run_em.out"))
-        if i < 4:
-            if "ld_fail" in job.doc:
-                del job.doc["ld_fail"]
-
-        #If convergence is achieved, break the loop and reset the skip_em flag
-        else:
-            if "skip_em" in job.doc:
-                del job.doc["skip_em"]
-            if "ld_fail" in job.doc:
-                del job.doc["ld_fail"]
-            break
+    # If em is skipped (steepest descent fails), try with CG method
+    if "skip_em" in job.doc.keys() and job.doc["skip_em"]:
+        job.doc["cg_fin"] = True
+        #Modify the em.mdp file to use CG method
+        os.remove(job.fn("em/em.mdp"))
+        content = _generate_em_mdp(job, meth="cg")
+        with open(job.fn("em/em.mdp"), "w") as inp:
+            inp.write(content)
+        em_restarts(job, sim_name, last_sim_name)
 
     job.doc[sim_name + "_fin"] = True
 
@@ -582,6 +552,50 @@ def calculate_props(job):
 #####################################################################
 ################# HELPER FUNCTIONS BEYOND THIS POINT ################
 #####################################################################
+def em_restarts(job, sim_name, last_sim_name):
+    """Run the energy minimization restarts"""
+    #Repeat Energy Minimization 5 times to maximize convergence chances
+    for i in range(5):
+        run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+        #Check if em finished correctly
+        selected_file1 = job.fn(f"{sim_name}/{sim_name}.log")
+        selected_file2 = job.fn(f"run_em.out")
+        em_term_fail1 = "Energy minimization has stopped, but the forces have not converged"
+        em_term_fail2 = "This should not happen in a stable simulation"
+
+        with open(selected_file1, "r") as f:
+            file_contents = f.read()
+            em_term_fail_present1 = em_term_fail1 in file_contents
+
+        with open(selected_file2, "r") as f:
+            file_contents = f.read()
+            em_term_fail_present2 = em_term_fail2 in file_contents
+
+        #For EM simulations, if the convergence failure message is present, delete and retry EM
+        if em_term_fail_present1 or em_term_fail_present2:
+            job.doc["skip_em"] = True
+            # Remove the previous em directory and its contents (except em.mdp)
+            # em_path = job.fn("em")
+            # if os.path.isdir(em_path):
+            #     for filename in os.listdir(em_path):
+            #         file_path = os.path.join(em_path, filename)
+            #         if filename != "em.mdp" and os.path.isfile(file_path):
+            #             os.remove(file_path)
+
+            # Remove run_em.out file
+            # os.remove(job.fn("run_em.out"))
+            if i < 4:
+                if "ld_fail" in job.doc:
+                    del job.doc["ld_fail"]
+
+        #If convergence is achieved, break the loop and reset the skip_em flag
+        else:
+            if "skip_em" in job.doc:
+                del job.doc["skip_em"]
+            if "ld_fail" in job.doc:
+                del job.doc["ld_fail"]
+            break
 # Calculation Functions
 def calc_blk_avg_energ(job, sim_name, name):
     with open(job.fn(f"{sim_name}/{name}.txt")) as f:
@@ -959,6 +973,7 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
                 if "skip_em" in job.doc.keys() and job.doc["skip_em"] and sim_name == "nvt_eq":
                     #Set last directory to system
                     last_dir_name = "../"
+                    last_sim_name = "system"
                 else:
                     #Otherwise, set the last directory to the last simulation
                     last_dir_name = "../" + last_sim_name + "/"
@@ -1699,12 +1714,12 @@ def __generate_THF_xml(job):
 
 
 # Build mdp files
-def _generate_em_mdp(job):
+def _generate_em_mdp(job, meth = "steep"):
 
     contents = """
 ; MDP file for energy minimization
 
-integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
+integrator	    = {meth}		    ; Algorithm (steep = steepest descent minimization)
 emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
 emstep          = 0.001          ; Energy step size
 nstcgsteep      = 1000          ; Number of steps for the cg algorithm
@@ -1726,7 +1741,8 @@ coulombtype     	 = PME       ; Treatment of long range electrostatic interactio
 rcoulomb        	 = 1.2       ; Short-range electrostatic cut-off
 
 pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions
-"""
+""".format(
+        meth=meth)
 
     return contents
 
