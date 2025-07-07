@@ -576,12 +576,12 @@ def em_restarts(job, sim_name, last_sim_name):
         if em_term_fail_present1 or em_term_fail_present2:
             job.doc["skip_em"] = True
             # Remove the previous em directory and its contents (except em.mdp)
-            # em_path = job.fn("em")
-            # if os.path.isdir(em_path):
-            #     for filename in os.listdir(em_path):
-            #         file_path = os.path.join(em_path, filename)
-            #         if filename != "em.mdp" and os.path.isfile(file_path):
-            #             os.remove(file_path)
+            em_path = job.fn("em")
+            if os.path.isdir(em_path):
+                for filename in os.listdir(em_path):
+                    file_path = os.path.join(em_path, filename)
+                    if filename != "em.mdp" and os.path.isfile(file_path):
+                        os.remove(file_path)
 
             # Remove run_em.out file
             # os.remove(job.fn("run_em.out"))
