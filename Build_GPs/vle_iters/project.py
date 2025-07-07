@@ -130,6 +130,9 @@ def em_complete(job):
 @Project.post(em_complete)
 @Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
 def em_sim(job):
+    import glob
+    import shutil
+
     """Run the minimization simulations"""
     sim_name = "em"
     last_sim_name = "system"
@@ -141,7 +144,40 @@ def em_sim(job):
     with open(job.fn("em/em.mdp"), "w") as inp:
         inp.write(content)
 
-    run_md_wo_eqcheck(job, sim_name, last_sim_name)
+    #Repeat Energy Minimization 5 times to maximize convergence chances
+    for i in range(5):
+        run_md_wo_eqcheck(job, sim_name, last_sim_name)
+
+        #Check if em finished correctly
+        selected_file = job.fn(f"{sim_name}/{sim_name}.log")
+        em_term_fail = "Energy minimization has stopped, but the forces have not converged"
+
+        with open(selected_file, "r") as f:
+            file_contents = f.read()
+            em_term_fail_present = em_term_fail in file_contents
+
+        #For EM simulations, if the convergence failure message is present, delete and retry EM
+        if em_term_fail_present:
+            job.doc["skip_em"] = True
+            # Remove the previous em directory and its contents
+            em_path = job.fn("em")
+            if os.path.isdir(em_path):
+                shutil.rmtree(em_path)
+
+            # Remove all *_em.out files
+            for out_file in glob.glob(job.fn("*_em.out")):
+                try:
+                    os.remove(out_file)
+                except FileNotFoundError:
+                    pass
+
+        #If convergence is achieved, break the loop and reset the skip_em flag
+        else:
+            if "skip_em" in job.doc:
+                del job.doc["skip_em"]
+            break
+
+    job.doc[sim_name + "_fin"] = True
 
 
 # Short NVT Equilibration
@@ -169,6 +205,17 @@ def nvt_eq_sim(job):
 
     with open(job.fn("nvt_eq/nvt_eq.mdp"), "w") as inp:
         inp.write(content)
+
+    #Check if em finished correctly
+    # selected_file = job.fn(f"{last_sim_name}/{last_sim_name}.log")
+    # em_term_fail = "Energy minimization has stopped, but the forces have not converged"
+    # if last_sim_name == "em":
+    #     with open(selected_file, "r") as f:
+    #         file_contents = f.read()
+    #         em_term_fail_present = em_term_fail in file_contents
+    #     #For EM simulations, if the convergence failure message is present, set status to False
+    #     if em_term_fail_present:
+    #         job.doc["skip_em"] = True
 
     run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
@@ -890,7 +937,6 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
-
 # HELPER FUNCTIONS
 def run_md_wo_eqcheck(job, sim_name, last_sim_name):
     try:
@@ -899,7 +945,13 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
             os.makedirs(sim_name, exist_ok=True)
             if sim_name != "em":
                 w_gpu = " -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
-                last_dir_name = "../" + last_sim_name + "/"
+                # If we are skipping the EM step and want to run nvt normally
+                if "skip_em" in job.doc.keys() and job.doc["skip_em"] and sim_name == "nvt_eq":
+                    #Set last directory to system
+                    last_dir_name = "../"
+                else:
+                    #Otherwise, set the last directory to the last simulation
+                    last_dir_name = "../" + last_sim_name + "/"
             else:
                 last_dir_name = "../"
                 w_gpu = ""
@@ -913,12 +965,13 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
                     + f" &> ../run_{sim_name}.out"
                 )
             subprocess.run(command, shell=True, check=True, cwd=sim_name)
-            job.doc[sim_name + "_fin"] = True
+            if sim_name != "em":
+                # If the simulation finished successfully, set the equilibration success flag
+                job.doc[sim_name + "_fin"] = True
     except:
         # If the simulation fails, set the equilibration failure flag
         eq_fail_str = "ld_fail"
         job.doc[eq_fail_str] = True
-
 
 def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
     with job:
