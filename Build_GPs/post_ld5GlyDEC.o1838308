@@ -15,3 +15,133 @@ To enable the following instructions: AVX2 FMA, in other operations, rebuild Ten
 2025-07-07 08:36:55.006768: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
 /scratch365/mcarlozo/ES-FFO/fffit/fffit/plot.py:278: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
   fig, ax = plt.subplots()
+Current working dir: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Script location: /scratch365/mcarlozo/ES-FFO/Build_GPs
+Extracting the following properties: ['liq_density']
+Warning: DMF not found in data_dict. Skipping.
+Warning: DMF not found in data_dict. Skipping.
+Warning: DMSO not found in data_dict. Skipping.
+Warning: DMSO not found in data_dict. Skipping.
+Warning: EG not found in data_dict. Skipping.
+Warning: EG not found in data_dict. Skipping.
+Warning: MeOH not found in data_dict. Skipping.
+Warning: MeOH not found in data_dict. Skipping.
+Warning: MeOH not found in data_dict. Skipping.
+Warning: R125 not found in data_dict. Skipping.
+
+Required Distance for liquid is : 0.00000000 and there are 2.0 points too many
+25 top liquid density points are left after removing similar points using a distance of 0
+Number of DEC samples with MSE < 10 kg/m^3 is 25
+Total number of top liquid samples is 24
+     sigma_C1  sigma_C2  sigma_H1  ...        mse      mapd  param_idx
+6    0.004977  0.322740  0.512507  ...  92.798891  0.648092        347
+17   0.014103  0.831595  0.027560  ...  13.801782  0.257567        455
+25   0.018072  0.815208  0.011495  ...  31.645821  0.383562        301
+36   0.025462  0.460744  0.511008  ...  69.804512  0.539050        390
+39   0.027248  0.887150  0.261725  ...  22.955212  0.331399        731
+85   0.068406  0.026418  0.040067  ...  63.141460  0.574388        338
+110  0.091693  0.173834  0.420154  ...  99.198191  0.670219        227
+135  0.112937  0.897394  0.202359  ...  24.901868  0.363586        297
+154  0.144444  0.595569  0.143802  ...  34.210364  0.407524        394
+235  0.239716  0.421336  0.220913  ...  88.595813  0.626387         32
+279  0.287530  0.716477  0.003472  ...  93.834536  0.705915        352
+322  0.341903  0.323026  0.503266  ...  50.109971  0.498110        415
+335  0.357942  0.735386  0.159656  ...  93.600852  0.706276          9
+345  0.374062  0.155327  0.276233  ...  80.010778  0.707416        763
+360  0.398043  0.549193  0.031581  ...   9.629038  0.203475        424
+403  0.483358  0.048993  0.083581  ...  96.461045  0.772337        435
+427  0.521712  0.150678  0.197443  ...  14.328317  0.243269        249
+428  0.523528  0.879048  0.170974  ...  81.736551  0.709430        371
+447  0.549995  0.813869  0.312954  ...  83.557114  0.583170        337
+530  0.683009  0.668192  0.343968  ...  95.827480  0.761108        476
+585  0.804115  0.185158  0.086394  ...  66.654766  0.631971        244
+616  0.867523  0.318596  0.074394  ...  26.914577  0.369595        224
+648  0.934663  0.799680  0.085086  ...  78.899467  0.653115        745
+671  0.994790  0.063922  0.268464  ...  65.001365  0.511668        385
+
+[24 rows x 19 columns]
+Number of Gly samples with MSE < 10 kg/m^3 is 24
+Model: RBF. Mean squared err: 2.65e+01
+Model: Matern32. Mean squared err: 2.96e+01
+Model: Matern52. Mean squared err: 1.65e+01
+Model: RQ. Mean squared err: 2.16e+01
+Model: RBF. Mean squared err: 5.92e+00
+Model: Matern32. Mean squared err: 5.94e+00
+Model: Matern52. Mean squared err: 3.55e+00
+Model: RQ. Mean squared err: 4.80e+00
+Model: RBF. Mean squared err: 7.72e-01
+Model: Matern32. Mean squared err: 3.00e-02
+Model: Matern52. Mean squared err: 3.01e-01
+Model: RQ. Mean squared err: 5.83e-01
+Model: RBF. Mean squared err: 2.65e+01
+Model: Matern32. Mean squared err: 2.96e+01
+Model: Matern52. Mean squared err: 1.65e+01
+Model: RQ. Mean squared err: 2.16e+01
+Model: RBF. Mean squared err: 7.83e+01
+Model: Matern32. Mean squared err: 6.52e+01
+Model: Matern52. Mean squared err: 7.24e+01
+Model: RQ. Mean squared err: 7.65e+01
+Model: RBF. Mean squared err: 7.44e+01
+Model: Matern32. Mean squared err: 5.87e+01
+Model: Matern52. Mean squared err: 6.77e+01
+Model: RQ. Mean squared err: 7.24e+01
+Model: RBF. Mean squared err: 9.41e+01
+Model: Matern32. Mean squared err: 9.14e+01
+Model: Matern52. Mean squared err: 9.12e+01
+Model: RQ. Mean squared err: 9.29e+01
+DEC : 25 samples have MSE less than 25. Proceed to VLE.
+Gly : Total samples with MSE less than 25,      sigma_C1  sigma_C2  sigma_H1  ...        mse      mapd  param_idx
+6    0.004977  0.322740  0.512507  ...  92.798891  0.648092        347
+17   0.014103  0.831595  0.027560  ...  13.801782  0.257567        455
+25   0.018072  0.815208  0.011495  ...  31.645821  0.383562        301
+36   0.025462  0.460744  0.511008  ...  69.804512  0.539050        390
+39   0.027248  0.887150  0.261725  ...  22.955212  0.331399        731
+85   0.068406  0.026418  0.040067  ...  63.141460  0.574388        338
+110  0.091693  0.173834  0.420154  ...  99.198191  0.670219        227
+135  0.112937  0.897394  0.202359  ...  24.901868  0.363586        297
+154  0.144444  0.595569  0.143802  ...  34.210364  0.407524        394
+235  0.239716  0.421336  0.220913  ...  88.595813  0.626387         32
+279  0.287530  0.716477  0.003472  ...  93.834536  0.705915        352
+322  0.341903  0.323026  0.503266  ...  50.109971  0.498110        415
+335  0.357942  0.735386  0.159656  ...  93.600852  0.706276          9
+345  0.374062  0.155327  0.276233  ...  80.010778  0.707416        763
+360  0.398043  0.549193  0.031581  ...   9.629038  0.203475        424
+403  0.483358  0.048993  0.083581  ...  96.461045  0.772337        435
+427  0.521712  0.150678  0.197443  ...  14.328317  0.243269        249
+428  0.523528  0.879048  0.170974  ...  81.736551  0.709430        371
+447  0.549995  0.813869  0.312954  ...  83.557114  0.583170        337
+530  0.683009  0.668192  0.343968  ...  95.827480  0.761108        476
+585  0.804115  0.185158  0.086394  ...  66.654766  0.631971        244
+616  0.867523  0.318596  0.074394  ...  26.914577  0.369595        224
+648  0.934663  0.799680  0.085086  ...  78.899467  0.653115        745
+671  0.994790  0.063922  0.268464  ...  65.001365  0.511668        385
+
+[24 rows x 19 columns]
+Classifer is 91.5% accurate on the test set.
+Shape of samples to classify: (500000, 14)
+Shape of the predicted liquid samples: (365648, 14)
+Shape of the predicted vapor samples: (134352, 14)
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+Include properties: sim_liq_density
+Property bounds are [906.3 998.2]
+There are: 28328 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 40  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.10246576 and there are 6.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.10247
+Classifer is 99.0% accurate on the test set.
+Shape of samples to classify: (500000, 16)
+Shape of the predicted liquid samples: (121098, 16)
+Shape of the predicted vapor samples: (378902, 16)
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+Include properties: sim_liq_density
+Property bounds are [1236.  1261.1]
+There are: 3690 liquid parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+There are: 43383  vapor parameter sets which produce densities within 25 kg/m$^3$ of experimental densities
+target liq:  200 target vap:  0
+
+Required Distance for liquid is : 3.07825646 and there are 2.0 points too many
+200 top liquid density points are left after removing similar points using a distance of 3.07826
