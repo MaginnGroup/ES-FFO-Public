@@ -10,8 +10,8 @@ project = signac.get_project()
 for job in project.find_jobs():
     # Move old results to a subfolder
     with job:
-        if os.path.exists(job.fn("signac_job_document.json")) and "ld_fail" in job.doc and job.doc["ld_fail"] == True:
-            subfolder = "old2"
+        if os.path.exists(job.fn("signac_job_document.json")):
+            subfolder = "old4"
             os.makedirs(subfolder, exist_ok=True)
 
             # Files to preserve (base names or extensions)
@@ -41,10 +41,14 @@ for job in project.find_jobs():
 
             # Ensure signac_job_document.json is preserved in job root
             if os.path.exists("signac_job_document.json"):
-                shutil.copy(os.path.join(subfolder, "signac_job_document.json"), "signac_job_document.json")
+                shutil.copy("signac_job_document.json", os.path.join(subfolder, "signac_job_document.json"))
 
             # Keep only 'system' key in job.doc
             keys_to_keep = {"system"}
             for key in list(job.doc.keys()):
                 if key not in keys_to_keep:
                     del job.doc[key]
+
+            #Remove subfolder
+            # if os.path.exists(subfolder):
+            #     shutil.rmtree(subfolder)
