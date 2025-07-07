@@ -149,36 +149,42 @@ def em_sim(job):
         run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
         #Check if em finished correctly
-        selected_file = job.fn(f"{sim_name}/{sim_name}.log")
+        selected_file1 = job.fn(f"{sim_name}/{sim_name}.log")
+        selected_file2 = job.fn(f"run_em.out")
         em_term_fail1 = "Energy minimization has stopped, but the forces have not converged"
-        em_fail2 = "This should not happen in a stable simulation"
+        em_term_fail2 = "This should not happen in a stable simulation"
 
-        with open(selected_file, "r") as f:
+        with open(selected_file1, "r") as f:
             file_contents = f.read()
-            em_term_fail_present = em_term_fail1 in file_contents or em_fail2 in file_contents
+            em_term_fail_present1 = em_term_fail1 in file_contents
+
+        with open(selected_file2, "r") as f:
+            file_contents = f.read()
+            em_term_fail_present2 = em_term_fail2 in file_contents
 
         #For EM simulations, if the convergence failure message is present, delete and retry EM
-        if em_term_fail_present:
+        if em_term_fail_present1 or em_term_fail_present2:
             job.doc["skip_em"] = True
             # Remove the previous em directory and its contents (except em.mdp)
-            em_path = job.fn("em")
-            if os.path.isdir(em_path):
-                for filename in os.listdir(em_path):
-                    file_path = os.path.join(em_path, filename)
-                    if filename != "em.mdp" and os.path.isfile(file_path):
-                        os.remove(file_path)
+            # em_path = job.fn("em")
+            # if os.path.isdir(em_path):
+            #     for filename in os.listdir(em_path):
+            #         file_path = os.path.join(em_path, filename)
+            #         if filename != "em.mdp" and os.path.isfile(file_path):
+            #             os.remove(file_path)
 
-            # Remove all *_em.out files
-            for out_file in glob.glob(job.fn("*_em.out")):
-                try:
-                    os.remove(out_file)
-                except FileNotFoundError:
-                    pass
+            # Remove run_em.out file
+            # os.remove(job.fn("run_em.out"))
+        if i < 4:
+            if "ld_fail" in job.doc:
+                del job.doc["ld_fail"]
 
         #If convergence is achieved, break the loop and reset the skip_em flag
         else:
             if "skip_em" in job.doc:
                 del job.doc["skip_em"]
+            if "ld_fail" in job.doc:
+                del job.doc["ld_fail"]
             break
 
     job.doc[sim_name + "_fin"] = True
@@ -1698,7 +1704,7 @@ def _generate_em_mdp(job):
     contents = """
 ; MDP file for energy minimization
 
-integrator	    = cg		    ; Algorithm (steep = steepest descent minimization)
+integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
 emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
 emstep          = 0.001          ; Energy step size
 nstcgsteep      = 1000          ; Number of steps for the cg algorithm
