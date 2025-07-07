@@ -150,19 +150,23 @@ def em_sim(job):
 
         #Check if em finished correctly
         selected_file = job.fn(f"{sim_name}/{sim_name}.log")
-        em_term_fail = "Energy minimization has stopped, but the forces have not converged"
+        em_term_fail1 = "Energy minimization has stopped, but the forces have not converged"
+        em_fail2 = "This should not happen in a stable simulation"
 
         with open(selected_file, "r") as f:
             file_contents = f.read()
-            em_term_fail_present = em_term_fail in file_contents
+            em_term_fail_present = em_term_fail1 in file_contents or em_fail2 in file_contents
 
         #For EM simulations, if the convergence failure message is present, delete and retry EM
         if em_term_fail_present:
             job.doc["skip_em"] = True
-            # Remove the previous em directory and its contents
+            # Remove the previous em directory and its contents (except em.mdp)
             em_path = job.fn("em")
             if os.path.isdir(em_path):
-                shutil.rmtree(em_path)
+                for filename in os.listdir(em_path):
+                    file_path = os.path.join(em_path, filename)
+                    if filename != "em.mdp" and os.path.isfile(file_path):
+                        os.remove(file_path)
 
             # Remove all *_em.out files
             for out_file in glob.glob(job.fn("*_em.out")):
