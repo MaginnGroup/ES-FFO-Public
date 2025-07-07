@@ -15,11 +15,11 @@ for job in project.find_jobs({"mol_name":"Gly", "iter": 6}):
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     count +=1
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        if "npt_prod_fin" not in job.document and "ld_fail" not in job.document:
+        if "npt_eq_fin" not in job.document and "ld_fail" not in job.document:
             count += 1
             print(f"Job {job.id}")
             #Print the last line of the run_npt_prod.out log file
-            log_file = job.fn("run_npt_prod.out")
+            log_file = job.fn("run_npt_eq.out")
             if os.path.exists(log_file):
                 # print(f"Job {job.id}")
                 with open(log_file, "r") as f:
