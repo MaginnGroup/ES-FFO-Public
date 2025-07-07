@@ -148,14 +148,20 @@ def em_sim(job):
     em_restarts(job, sim_name, last_sim_name)
 
     # If em is skipped (steepest descent fails), try with CG method
-    if "skip_em" in job.doc.keys() and job.doc["skip_em"]:
-        job.doc["cg_fin"] = True
-        #Modify the em.mdp file to use CG method
-        os.remove(job.fn("em/em.mdp"))
-        content = _generate_em_mdp(job, meth="cg")
-        with open(job.fn("em/em.mdp"), "w") as inp:
-            inp.write(content)
-        em_restarts(job, sim_name, last_sim_name)
+    # if "skip_em" in job.doc.keys() and job.doc["skip_em"]:
+    #     job.doc["cg_fin"] = True
+    #     #Remove old em folder contents
+    #     em_path = job.fn("em")
+    #     if os.path.isdir(em_path):
+    #         for item in os.listdir(em_path):
+    #             item_path = os.path.join(em_path, item)
+    #             os.remove(item_path)
+    #     #Modify the em.mdp file to use CG method
+    #     content = _generate_em_mdp(job, meth="cg")
+    #     with open(job.fn("em/em.mdp"), "w") as inp:
+    #         inp.write(content)
+    #     #Restart EM with CG method
+    #     em_restarts(job, sim_name, last_sim_name)
 
     job.doc[sim_name + "_fin"] = True
 
@@ -555,7 +561,8 @@ def calculate_props(job):
 def em_restarts(job, sim_name, last_sim_name):
     """Run the energy minimization restarts"""
     #Repeat Energy Minimization 5 times to maximize convergence chances
-    for i in range(5):
+    n_restarts = 10
+    for i in range(n_restarts):
         run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
         #Check if em finished correctly
@@ -575,17 +582,18 @@ def em_restarts(job, sim_name, last_sim_name):
         #For EM simulations, if the convergence failure message is present, delete and retry EM
         if em_term_fail_present1 or em_term_fail_present2:
             job.doc["skip_em"] = True
-            # Remove the previous em directory and its contents (except em.mdp)
-            em_path = job.fn("em")
-            if os.path.isdir(em_path):
-                for filename in os.listdir(em_path):
-                    file_path = os.path.join(em_path, filename)
-                    if filename != "em.mdp" and os.path.isfile(file_path):
-                        os.remove(file_path)
 
             # Remove run_em.out file
             # os.remove(job.fn("run_em.out"))
-            if i < 4:
+            if i < n_restarts - 1:
+                # Remove the previous em directory and its contents (except em.mdp)
+                em_path = job.fn("em")
+                if os.path.isdir(em_path):
+                    for filename in os.listdir(em_path):
+                        file_path = os.path.join(em_path, filename)
+                        if filename != "em.mdp" and os.path.isfile(file_path):
+                            os.remove(file_path)
+
                 if "ld_fail" in job.doc:
                     del job.doc["ld_fail"]
 
