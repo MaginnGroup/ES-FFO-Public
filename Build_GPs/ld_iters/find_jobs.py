@@ -25,9 +25,9 @@ for job in project.find_jobs({"mol_name":"Gly", "iter": 6}):
                 with open(log_file, "r") as f:
                     lines = f.readlines()
                     if lines:
-                        if "Wed" in lines[-1].strip():
-                            print(f"Job {job.id}")
-                            print(lines[-1].strip())
+                        # if "Wed" in lines[-1].strip():
+                        print(f"Job {job.id}")
+                        print(lines[-1].strip())
             # else:
             #     print("Log file does not exist.")
 print(f"Total unfinished jobs: {count}")
