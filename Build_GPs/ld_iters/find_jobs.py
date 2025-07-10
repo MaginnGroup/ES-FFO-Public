@@ -8,7 +8,7 @@ project = signac.get_project()
 
 count = 0
 #Loop over all jobs in the project
-for job in project.find_jobs({"mol_name":"Gly", "iter": 6}):
+for job in project.find_jobs({"mol_name":"Gly", "iter": 7}):
     # Check if job document exists
     # print(f"Checking job {job.id}")
     if os.path.exists(job.fn("signac_job_document.json")):
