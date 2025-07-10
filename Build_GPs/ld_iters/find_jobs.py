@@ -25,7 +25,7 @@ for job in project.find_jobs({"mol_name":"Gly", "iter": 7}):
                 with open(log_file, "r") as f:
                     lines = f.readlines()
                     if lines:
-                        if "Wed" not in lines[-1].strip() and "Thu" not in lines[-1].strip():
+                        if "Wed" not in lines[-1].strip() and "Thu" not in lines[-1].strip() and "Jul" in lines[-1].strip():
                             print(f"Job {job.id}")
                             print(lines[-1].strip())
             else:
