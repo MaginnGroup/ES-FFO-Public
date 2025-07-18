@@ -14,7 +14,7 @@ for job in project.find_jobs({"mol_name": "MeOH", "iter": 1}):
     if os.path.exists(job.fn("signac_job_document.json")):
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        if "ld_fail" in job.doc:
+        if "inter_prod_fin" not in job.doc:
             count += 1
             print(f"Job {job.id}")
             # Print the last line of the run_npt_prod.out log file
