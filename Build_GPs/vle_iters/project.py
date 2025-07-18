@@ -508,7 +508,7 @@ def calculate_props(job):
     last_sim_name = "inter_prod"
     sim_name = "calc_props"
 
-    os.makedirs(job.fn("sim_name"), exist_ok=True)
+    os.makedirs(job.fn(sim_name), exist_ok=True)
     last_dir = f"../{last_sim_name}/"
 
     get_props = ["Density", "#Surf*SurfTen"]
