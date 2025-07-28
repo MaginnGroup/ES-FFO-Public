@@ -1035,7 +1035,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
 
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
             max_eq_steps = np.maximum(
-                job.doc[max_steps_str], total_eq_steps + eq_extend * 2
+                job.doc[max_steps_str], total_eq_steps + eq_extend * 5
             )
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc[nsteps_str] = int(max_eq_steps)
@@ -1100,7 +1100,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
         except:
             # If the simulation fails, extend the simulation
             if eq_ext_str in job.doc and job.doc[eq_ext_str] == True:
-                job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 2)
+                job.doc[max_steps_str] = int(total_eq_steps + eq_extend * 5)
                 del job.doc[nsteps_str]
                 del job.doc[eq_ext_str]
             # If another error occurs, set the equilibration failure flag
