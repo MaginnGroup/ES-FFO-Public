@@ -1031,7 +1031,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
             total_eq_steps = existing_eq_steps  # In ps
             # Set the maximum number of steps
             if max_steps_str not in job.doc:
-                job.doc[max_steps_str] = int(nsteps_eq / 1000) * 5
+                job.doc[max_steps_str] = int(nsteps_eq / 1000) * 8
 
             # The max number of steps is the larger of the number of steps + the org number of steps or the current max
             max_eq_steps = np.maximum(
