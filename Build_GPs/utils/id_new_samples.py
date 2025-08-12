@@ -96,12 +96,14 @@ def new_samples_vle(
         pareto_points.drop(index=new_points.index, inplace=True)
         print(f"A total of {len(pareto_points)} pareto efficient points were found.")
 
+        target_pts = np.minimum(len(pareto_points), target_total)
+
         next_iter_params, final_sample_file = get_next_vle_params(
             pareto_points,
             data,
             root_dir_vle,
             iter_num,
-            target_total,
+            target_pts,
             dist_seed,
             verbose,
         )
@@ -1053,7 +1055,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
     return num_mse_less10
 
 
-def find_pareto(all_df_data, data_dict, props_pareto):
+def find_pareto(all_df_data, data_dict, props_pareto, threshold = 10.0):
     """
     Find the pareto points for all molecules and save them to a CSV file.
 
@@ -1108,20 +1110,22 @@ def find_pareto(all_df_data, data_dict, props_pareto):
         pareto_points.to_csv(file_name)
 
         df_final = select_final_pareto(
-            pareto_points, root_dir_vle, iter_num, props_pareto
+            pareto_points, root_dir_vle, iter_num, props_pareto, threshold
         )
     all_final_params[mol_name] = df_final
 
     # Save all final parameters to a pkl file
-    dir2 = f"analysis/all_mols/"
-    os.makedirs(dir2, exist_ok=True)
-    with open(dir2 + "/final_params.pkl", "wb") as f:
-        pickle.dump(all_final_params, f)
+    if len(list(all_df_data.keys())) > 1:
+        names = "-".join(sorted(all_df_data.keys()))
+        dir2 = f"analysis/{names}/"
+        os.makedirs(dir2, exist_ok=True)
+        with open(dir2 + "/final_params.pkl", "wb") as f:
+            pickle.dump(all_final_params, f)
 
     return all_final_params
 
 
-def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto):
+def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto, threshold = 5.0):
     """
     Filter the pareto points and select the final parameters given the lowest error parameter set.
 
@@ -1139,7 +1143,7 @@ def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto):
     df_final : pd.DataFrame
         The dataframe containing the final parameters
     """
-    # Filter for parameter sets with less than 5 % error in all properties
+    # Filter for parameter sets with less than threshold (5) % error in all properties
     properties = [
         "liq_density",
         "vap_density",
@@ -1159,7 +1163,7 @@ def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto):
     df_final = df_pareto.drop(columns=cols_to_drop)
 
     props_mse = ["mapd_" + prop for prop in props_pareto]
-    df_final = df_final[df_final[props_mse].le(5.0).all(axis=1)]
+    df_final = df_final[df_final[props_mse].le(threshold).all(axis=1)]
     # Save CSV files
     dir_name = root_dir + "/iter-" + str(iter_num) + "/"
     os.makedirs(dir_name, exist_ok=True)

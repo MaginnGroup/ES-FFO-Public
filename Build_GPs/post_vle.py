@@ -20,16 +20,15 @@ print(f"Script location: {Path(__file__).parent}")
 #Set iters to analyze and properties to analyze
 iters = [1]  # Change me as needed
 property_names = ["liq_density", "surf_tens"]  # Change me as needed
-mol_names = ["EG", "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"] # Change me as needed
-
+mol_names = ["EG", "Gly", "MeOH", "DMSO", "DEC", "DMF"]
 
 #Set seeds and preferences
 cl_shuffle_seed = 1  # classifier
 gp_shuffle_seed = 42  # GP seed
 dist_seed = 1  # Distance seed
-mse_less_10_thresh = 25
-save_csv = False
-save_fig = False
+mapd_le = 10
+save_csv = True
+save_fig = True
 verbose = True
 
 
@@ -44,11 +43,14 @@ molec_dict = esolvs.make_dict(mol_names)
 # Save DataFrame of all molecule data for each iteration
 df_all_molec = get_signac_results(project, molec_dict, property_names)
 df_all_molec = save_signac_results(df_all_molec, iter_type, save_csv)
+
+#Check pareto efficient samples for each molecule to see if there is one with < mapd_le (10)% error in all properties
+all_final_params = find_pareto(df_all_molec, molec_dict, property_names, mapd_le)
+
 #Make and save best GP models for all molecules and properties and plot GP examples
 models_molecs = get_best_models(df_all_molec, molec_dict, iter_type, gp_shuffle_seed)
 plot_gp_examples(df_all_molec, molec_dict, iter_type, gp_shuffle_seed, save_fig)
-#Check pareto efficient samples for each molecule to see if there is one with < 5% error in all properties
-all_final_params = find_pareto(df_all_molec, molec_dict)
+
 for key, value in all_final_params.items():
     #If there are, we have the final parameters
     if len(value) > 0:
