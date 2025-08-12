@@ -731,7 +731,7 @@ def get_next_vle_params(
             % (distance_opt_l, number_points_l)
         )
 
-    props = ["sim_liq_density", "sim_vap_density", "sim_Pvap", "sim_Hvap"]
+    props = ["sim_liq_density", "sim_vap_density", "sim_Pvap", "sim_Hvap", "sim_surf_tens"]
     col_del = ["is_pareto"]
     for prop in props:
         if "mse_" + prop in new_points_l.columns:
