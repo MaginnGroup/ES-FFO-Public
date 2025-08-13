@@ -10,6 +10,7 @@ import pandas as pd
 import pickle
 import gpflow
 import json
+import sys
 import glob
 
 from fffit.fffit.utils import (
@@ -36,9 +37,16 @@ import tensorflow as tf
 from itertools import combinations
 import numdifftools as nd
 from sklearn.metrics import mean_absolute_percentage_error
-from .molec_class_files import esolvs
-from .atom_type import make_atom_type_class
 from pathlib import Path
+from .atom_type import make_atom_type_class
+
+# root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# if root_dir not in sys.path:
+#     sys.path.insert(0, root_dir)
+sys.path.append("../..")
+from utils.molec_class_files import esolvs
+sys.path.remove("../..")
+
 
 mpl_is_inline = "inline" in matplotlib.get_backend()
 # print(mpl_is_inline)
