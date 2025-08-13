@@ -1,5 +1,6 @@
 import numpy as np
-
+from scipy.stats import qmc
+import pandas as pd
 
 def values_real_to_scaled(values, bounds):
     """Convert values in physical units to values scaled by bounds
@@ -165,3 +166,23 @@ def shuffle_and_split(df, param_names, property_name, fraction_train=0.8, shuffl
         y_test = data[train_entries:, -1].astype(np.float64)
 
     return x_train, y_train, x_test, y_test
+
+def generate_lhs(samples, bounds, seed, labels = None):
+    assert bounds.shape[1] == 2, "Bounds must be a 2D array"
+    assert isinstance(samples, int), "Number of samples must be an integer"
+    #Define number of dimensions
+    dimensions = bounds.shape[0]
+    #Define sampler
+    sampler = qmc.LatinHypercube(d=dimensions, seed = seed)
+    lhs_data = sampler.random(n=samples)
+
+    #Generate LHS data given bounds
+    lhs_data = qmc.scale(lhs_data, bounds[:,0], bounds[:,1])
+
+    sample = pd.DataFrame(lhs_data)
+
+    if labels is not None:
+        assert len(labels) == bounds.shape[0], "Number of labels must match number of bounds"
+        sample.columns = labels
+
+    return lhs_data
