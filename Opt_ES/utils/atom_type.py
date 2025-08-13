@@ -181,6 +181,10 @@ class AT_Scheme_01(Atom_Types):
         # Get weight information
         self.no_opt = ["sigma_Cl", "sigma_S", "epsilon_Cl", "epsilon_S"]
 
+        for key in self.no_opt:
+            idx = at_keys.index(key)
+            at_bounds[idx, 1] = at_bounds[idx, 0]
+            
         # Create a file that maps param names (keys) to at_param names for atom type 11 (values) for each molecule
         EG_map_dict = {
             "sigma_C1": "sigma_C",
@@ -390,6 +394,10 @@ class AT_Scheme_02(Atom_Types):
                   "epsilon_S4", 
                   "epsilon_Cl"]
 
+        for key in self.no_opt:
+            idx = at_keys.index(key)
+            at_bounds[idx, 1] = at_bounds[idx, 0]
+            
         # Create a file that maps param names (keys) to at_param names for atom type 11 (values) for each molecule
         EG_map_dict = {"sigma_C1":"sigma_C3",
                        "sigma_H2": "sigma_Ho",# Attached to O
