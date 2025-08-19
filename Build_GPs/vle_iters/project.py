@@ -2018,6 +2018,7 @@ dt		                = 0.001		    ; 1 fs
 
 ; Output control
 nstenergy                = 10000
+nstvout                  = 10000
 nstlog                   = 10000
 nstxout-compressed       = 10000
 
@@ -2077,6 +2078,7 @@ dt		                = 0.001		    ; 1 fs
 
 ; Output control
 nstenergy                = 10000
+nstvout                  = 10000
 nstlog                   = 10000
 nstxout-compressed       = 10000
 
