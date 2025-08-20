@@ -128,7 +128,7 @@ def em_complete(job):
 @Project.pre.after(create_system)
 @Project.pre.after(fix_topology)
 @Project.post(em_complete)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def em_sim(job):
     import glob
     import shutil
@@ -140,7 +140,7 @@ def em_sim(job):
     os.makedirs(job.fn("em"), exist_ok=True)
 
     #Make the mdp file for the energy minimization
-    content = _generate_em_mdp(job, meth = "steep")
+    content = _generate_em_mdp(job, meth = "steep") #Change to cg for a3765 is prod fails again
     with open(job.fn("em/em.mdp"), "w") as inp:
         inp.write(content)
 
@@ -179,7 +179,7 @@ def nvt_eq_comp(job):
 @IFT_group
 @Project.pre.after(em_sim)
 @Project.post(nvt_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def nvt_eq_sim(job):
     """Run the 1st short NVT simulation"""
     sim_name = "nvt_eq"
@@ -219,7 +219,7 @@ def npzzat_eq_comp(job):
 @IFT_group
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def npzzat_eq_sim(job):
     import panedr
 
@@ -254,7 +254,7 @@ def npzzat_eq_pvap_comp(job):
 @IFT_group
 @Project.pre.after(nvt_eq_sim)
 @Project.post(npzzat_eq_pvap_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def npzzat_eq_pvap_sim(job):
     import panedr
 
@@ -289,7 +289,7 @@ def npzzat_prod_comp(job):
 @IFT_group
 @Project.pre.after(npzzat_eq_pvap_sim)
 @Project.post(npzzat_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def npzzat_prod_sim(job):
     import panedr
 
@@ -317,7 +317,7 @@ def npzzat_prod_sim(job):
 @Project.pre.after(npzzat_prod_sim)
 @Project.pre.after(npzzat_eq_sim)
 @Project.post(lambda job: "liq_density" in job.doc and "liq_density_unc" in job.doc)
-@Project.operation(cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(cmd=False, directives={"omp_num_threads": 16})
 def npzzat_dens_calc(job):
     import panedr
 
@@ -374,7 +374,7 @@ def npzzat_dens_calc(job):
 @IFT_group
 @Project.pre.after(npzzat_dens_calc)
 @Project.post.isfile("init_inter_eq/init_inter_eq.gro")
-@Project.operation(cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(cmd=False, directives={"omp_num_threads": 16})
 def init_inter_eq_sim(job):
     """Run the minimization simulations"""
     sim_name = "init_inter_eq"
@@ -421,7 +421,7 @@ def inter_eq_comp(job):
 @IFT_group
 @Project.pre.after(init_inter_eq_sim)
 @Project.post(inter_eq_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def inter_eq_sim(job):
     """Run the interface equilibration simulations"""
     # Generate the first run
@@ -460,7 +460,7 @@ def inter_prod_comp(job):
 @IFT_group
 @Project.pre.after(inter_eq_sim)
 @Project.post(inter_prod_comp)
-@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 8})
+@Project.operation(with_job=True, cmd=False, directives={"omp_num_threads": 16})
 def inter_prod_sim(job):
     """Run the production simulations"""
 
@@ -494,7 +494,7 @@ def inter_prod_sim(job):
 @Project.pre.after(inter_prod_sim)
 @Project.post(lambda job: "surf_tens" in job.doc and "ift_liq_dens" in job.doc)
 @Project.post(lambda job: "surf_tens_unc" in job.doc and "ift_liq_dens_unc" in job.doc)
-@Project.operation(directives={"omp_num_threads": 8})
+@Project.operation(directives={"omp_num_threads": 16})
 def calculate_props(job):
     """Calculate the density"""
 
@@ -976,7 +976,7 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
             # Make a directory for the simulation
             os.makedirs(sim_name, exist_ok=True)
             if sim_name != "em":
-                w_gpu = " -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
+                w_gpu = " -ntomp 16 -nb gpu -pme gpu -bonded gpu -pin on"
                 # If we are skipping the EM step and want to run nvt normally
                 if "skip_em" in job.doc.keys() and job.doc["skip_em"] and sim_name == "nvt_eq":
                     #Set last directory to system
@@ -1048,7 +1048,7 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                     if total_eq_steps == 0:
                         command = (
                             f"gmx grompp -maxwarn 5 -f {sim_name}.mdp -c {last_dir}{last_sim_name}.gro -p ../system.top -o {sim_name} &> ../prep_{sim_name}.out && "
-                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
+                            f"gmx mdrun -v -deffnm {sim_name} -ntomp 16 -nb gpu -pme gpu -bonded gpu -pin on"
                             + f" &> ../run_{sim_name}.out"
                         )
                     # Otherwise, check log file for whether previous simulation finished correctly
@@ -1058,13 +1058,13 @@ def run_md_w_eqcheck(job, sim_name, last_sim_name, property):
                             f"gmx convert-tpr -s {sim_name}.tpr -extend "
                             + str(eq_extend)
                             + f" -o {sim_name}.tpr &&"
-                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
+                            f"gmx mdrun -s {sim_name}.tpr -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 16 -nb gpu -pme gpu -bonded gpu -pin on"
                             + f" &> ../run_{sim_name}.out"
                         )
                     # Otherwise restart the simulation from the checkpoint file
                     else:
                         command = (
-                            f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 8 -nb gpu -pme gpu -bonded gpu -pin on"
+                            f"gmx mdrun -cpi {sim_name}.cpt -v -deffnm {sim_name} -ntomp 16 -nb gpu -pme gpu -bonded gpu -pin on"
                             + f" &> ../run_{sim_name}.out"
                         )
                     subprocess.run(command, shell=True, check=True, cwd=sim_name)
