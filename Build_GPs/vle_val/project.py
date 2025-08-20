@@ -2125,6 +2125,9 @@ def plot_res_pymser(job, eq_col, results, name, box_name):
     fig.set_dpi(100)
     fig.tight_layout()
     save_name = "MSER_eq_" + box_name + ".png"
+    #Ensured files w/ same eq are not overwritten
+    if os.path.exists(job.fn(save_name)):
+        save_name = "MSER_eq_" + box_name + "_1.png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
@@ -2138,6 +2141,9 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
             eq_col = eq_data_dict[key]["data"]
+            eq_file = eq_data_dict[key]["file"]
+            # Extract sim_name from the file
+            sim_name = os.path.basename(os.path.dirname(eq_file))
             # df_box1 = np.genfromtxt(job.fn("gemc.eq.out.box1.prp"))
             # df_box2 = np.genfromtxt(job.fn("gemc.eq.out.box2.prp"))
 
@@ -2188,6 +2194,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
             # box_name = "Liquid" if i < len(prop_cols) else "Vapor"
             # col_vals = box[:, prop_cols[i % len(prop_cols)] - 1]
             key_name = list(eq_data_dict.keys())[i]
+            key_name_str = key_name.replace(" ", "_")
             box_name = key_name.rsplit("_", 1)[0]
             col_vals = eq_data_dict[key_name]["data"]
             # plot all
@@ -2217,7 +2224,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
                 if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
                     statement += f"Only {prod_cycles} production cycles found."
 
-            with open("Equil_Output.txt", "a") as f:
+            with open(f"{key_name_str}_{sim_name}_out.txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:

@@ -824,6 +824,9 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
             eq_col = eq_data_dict[key]["data"]
+            eq_file = eq_data_dict[key]["file"]
+            # Extract sim_name from the file
+            sim_name = os.path.basename(os.path.dirname(eq_file))
             results, adf_test_failed = get_pymser_results(eq_col)
             equilibrium = len(eq_col) - results["t0"] >= prod_tol
             equil_matrix.append(equilibrium and not adf_test_failed)
@@ -861,7 +864,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
                 if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
                     statement += f"Only {prod_cycles} production cycles found."
 
-            with open(key_name_str + "_eqout.txt", "a") as f:
+            with open(f"{key_name_str}_{sim_name}_out.txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:
@@ -966,6 +969,9 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
     fig.tight_layout()
     name_nospace = name.replace(" ", "_")
     save_name = "MSER_eq_" + name_nospace + ".png"
+    #Ensured files w/ same eq are not overwritten
+    if os.path.exists(job.fn(save_name)):
+        save_name = "MSER_eq_" + name_nospace + "_1.png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
