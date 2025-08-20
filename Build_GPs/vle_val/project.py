@@ -491,6 +491,9 @@ def delete_data(job, run_name, mv=True, subfolder="results_old"):
     del job.doc["liqboxl"]  # calc_boxes
     del job.doc["nsteps_gemc_eq"]  # run_gemc
 
+    if "cutoff_vap" in job.doc.keys():
+        del job.doc["cutoff_vap"]  # run_gemc
+
 
 def make_usable_xyz(job, filename, box):
     "Make the xyz file usable for mbuild"
@@ -684,8 +687,8 @@ def run_gemc(job):
     custom_args_gemc["run_name"] = run_name_eq
     custom_args_gemc["properties"] = thermo_props
 
-    #Set vapor cutoff to 95% of half the box length or 6*max_sigma, whichever is smaller
-    cutoff_vap = np.minimum(round(0.95*boxl_vap/2,5), round(6 * job.sp.max_sigma, 5))
+    #Set vapor cutoff to 95% of half the box length (to avoid too many calcs)
+    cutoff_vap = round(0.95*boxl_vap/2,5)
     custom_args_gemc["charge_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
