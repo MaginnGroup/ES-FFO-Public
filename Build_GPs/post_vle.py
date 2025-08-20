@@ -2,6 +2,7 @@ import signac
 import sys
 import os
 from pathlib import Path
+import pandas as pd
 
 root_path = Path(__file__).resolve().parents[1]  # ES-FFO directory (two levels up from this script)
 if str(root_path) not in sys.path:
@@ -34,6 +35,24 @@ verbose = True
 
 ##############################################################################
 ##############################################################################
+def get_best_set_data(molec_name):
+    # Check the analysis folder for analysis/MolName/vle_iters folders
+    # Find the highest params-iter-X.csv file
+    pareto_sets = pd.read_csv(f"analysis/{molec_name}/vle_iters/iter-1/final-params.csv", header = 0, index_col = 0)
+    all_data = pd.read_csv(f"analysis/{molec_name}/vle_iters/all_results.csv", header = 0, index_col = 0)
+    #Get the row where the mapd_surf_tens column is lowest
+    best_row = pareto_sets.loc[pareto_sets['mapd_surf_tens'].idxmin()]
+    #Return the array of all parameters (ignore mapd columns)
+    param_set = best_row.drop(labels=[col for col in best_row.index if "mapd" in col])
+    #Find the final parameters with the lowest surface tension
+    mask = (all_data[param_set.columns] == param_set.iloc[0]).all(axis=1)
+
+    # Apply mask
+    all_data = all_data[mask]
+    all_data = all_data.sort_values(by='temperature', ascending=True)
+
+    return all_data
+
 #Get Project
 iter_type = "vle_iters" 
 project = signac.get_project(iter_type)
@@ -56,8 +75,12 @@ for key, value in all_final_params.items():
     if len(value) > 0:
         print(f"{key}: Final parameters:")
         print(value)
+        best_data = get_best_set_data(key)
+        #Make a fxn in utils.plot to plot predictions vs exp data for LD and ST
+        
     #Otherwise we need to move to the next iteration
     else:
         print(f"{key} : No final parameters found. Move to iteration {max(iters) + 1}")
         next_samples = new_samples_vle(df_all_molec, molec_dict, verbose, gp_shuffle_seed, dist_seed)
 
+#Find the 
