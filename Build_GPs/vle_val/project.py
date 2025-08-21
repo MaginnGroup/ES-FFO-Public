@@ -2140,7 +2140,6 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
             eq_col = eq_data_dict[key]["data"]
             eq_file = eq_data_dict[key]["file"]
             # Extract sim_name from the file
-            sim_name = os.path.basename(os.path.dirname(eq_file))
             # df_box1 = np.genfromtxt(job.fn("gemc.eq.out.box1.prp"))
             # df_box2 = np.genfromtxt(job.fn("gemc.eq.out.box2.prp"))
 
@@ -2221,7 +2220,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
                 if len(col_vals) - res_matrix[i]["t0"] < prod_tol:
                     statement += f"Only {prod_cycles} production cycles found."
 
-            with open(f"{key_name_str}_{sim_name}_out.txt", "a") as f:
+            with open(f"{key_name_str}_out.txt", "a") as f:
                 print(statement, file=f)
 
     except Exception as e:
