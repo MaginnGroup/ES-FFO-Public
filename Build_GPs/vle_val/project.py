@@ -770,7 +770,7 @@ def run_gemc(job):
                 # Check if equilibration is reached via the pymser algorithms
                 if (
                     total_eq_steps >= existing_eq_steps
-                    and total_eq_steps >= 5 * job.sp.nsteps_gemc_eq
+                    and total_eq_steps >= job.sp.nsteps_gemc_eq
                 ):
                     is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
                 else:
