@@ -3,6 +3,7 @@ import sys
 import os
 from pathlib import Path
 import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages
 
 root_path = Path(__file__).resolve().parents[1]  # ES-FFO directory (two levels up from this script)
 if str(root_path) not in sys.path:
@@ -13,7 +14,7 @@ from utils.molec_class_files import esolvs
 from Build_GPs.utils.signac import get_signac_results, save_signac_results
 from Build_GPs.utils.id_new_samples import new_samples_vle, find_pareto
 from Build_GPs.utils.models import get_best_models
-from Build_GPs.utils.plot import plot_gp_examples
+from Build_GPs.utils.plot import plot_gp_examples, plot_sim_exp
 
 print(f"Current working dir: {os.getcwd()}")
 print(f"Script location: {Path(__file__).parent}")
@@ -32,7 +33,6 @@ save_csv = True
 save_fig = True
 verbose = True
 
-
 ##############################################################################
 ##############################################################################
 def get_best_set_data(molec_name):
@@ -45,12 +45,13 @@ def get_best_set_data(molec_name):
     #Return the array of all parameters (ignore mapd columns)
     param_set = best_row.drop(labels=[col for col in best_row.index if "mapd" in col])
     #Find the final parameters with the lowest surface tension
+    param_set = pd.DataFrame(param_set).T
     mask = (all_data[param_set.columns] == param_set.iloc[0]).all(axis=1)
 
     # Apply mask
     all_data = all_data[mask]
     all_data = all_data.sort_values(by='temperature', ascending=True)
-
+    all_data = pd.DataFrame(all_data)
     return all_data
 
 #Get Project
@@ -77,10 +78,16 @@ for key, value in all_final_params.items():
         print(value)
         best_data = get_best_set_data(key)
         #Make a fxn in utils.plot to plot predictions vs exp data for LD and ST
-        
+        dir_name = f"analysis/{key}/{iter_type}"
+        os.makedirs(dir_name, exist_ok=True)
+        pdf_name = os.path.join(dir_name , "prop_preds.pdf")
+        pdf = PdfPages(pdf_name)
+        for props in ["liq_density", "surf_tens"]:
+            fig = plot_sim_exp(molec_dict[key], best_data, props)
+            pdf.savefig(fig, bbox_inches='tight')   # save one figure at a time
+        pdf.close()
+
     #Otherwise we need to move to the next iteration
     else:
         print(f"{key} : No final parameters found. Move to iteration {max(iters) + 1}")
         next_samples = new_samples_vle(df_all_molec, molec_dict, verbose, gp_shuffle_seed, dist_seed)
-
-#Find the 
