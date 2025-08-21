@@ -72,6 +72,12 @@ def get_signac_results(project, data_dict, prop_names):
                         except KeyError:
                             # print(f"Job failed: {job.id}")
                             new_row[property_name] = np.nan
+                        try:
+                            property_unc = job.doc[property_name + "_unc"]
+                            new_row[property_name + "_unc"] = property_unc
+                        except KeyError:
+                            # print(f"Job failed: {job.id}")
+                            new_row[property_name + "_unc"] = np.nan
                     
                     data.append(new_row)
 

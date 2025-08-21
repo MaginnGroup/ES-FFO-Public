@@ -8,6 +8,7 @@ class EsolvsConstants:
 
     def __init__(
         self,
+        name,
         mol_wt,
         Tc,
         rhoc,
@@ -27,6 +28,7 @@ class EsolvsConstants:
         """Initialize the class with experimental data"""
 
         # FF Properties
+        self.name = name
         self.param_names = param_names
         self.gaff_params = gaff_params
         self.bnds_sig = bnds_sig
@@ -219,6 +221,7 @@ class EsolvsConstants:
 
 
 # Ethylene glycol (EG)
+name = "EG"
 mol_wt = 62.07
 rho_c = 391.9405  # https://doi.org/10.1016/0009-2509(89)85265-0
 Tc = 719.6
@@ -354,6 +357,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 EG = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -373,6 +377,7 @@ EG = EsolvsConstants(
 
 
 # Glycerol (Gly)
+name = "Glycerol"
 mol_wt = 92.09
 rho_c = None
 Tc = 850.0
@@ -481,6 +486,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 Gly = EsolvsConstants(
+    name = name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -500,6 +506,7 @@ Gly = EsolvsConstants(
 
 
 # Acetonitrile  (ACN)
+name = "ACN"
 mol_wt = 41.05
 rho_c = 240.143  # kg/m^3 (DOI: 10.1021/j150462a016)
 Tc = 547.9
@@ -601,6 +608,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 ACN = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -620,6 +628,7 @@ ACN = EsolvsConstants(
 
 
 # Methanol (MeOH)
+name = "MeOH"
 mol_wt = 32.04
 rho_c = 273.846  # kg/m^3 (DOI: 10.1021/j150462a016)
 Tc = 512.5
@@ -762,6 +771,7 @@ expt_Hvap = {
 
 # Create an instance of the EsolvsConstants class
 MeOH = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -779,6 +789,7 @@ MeOH = EsolvsConstants(
 )
 
 # Dimethylformamide (DMF)
+name = "DMF"
 mol_wt = 73.09
 n_atoms = 12
 smiles_str = "CN(C)C=O"
@@ -899,6 +910,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 DMF = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -918,6 +930,7 @@ DMF = EsolvsConstants(
 
 
 # Dimethylsulfoxide (DMSO)
+name = "DMSO"
 mol_wt = 78.13
 n_atoms = 10
 smiles_str = "CS(=O)C"
@@ -1035,6 +1048,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 DMSO = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -1054,6 +1068,7 @@ DMSO = EsolvsConstants(
 
 
 # Tetrahydrofuran (THF)
+name = "THF"
 mol_wt = 72.11
 n_atoms = 13
 smiles_str = "C1CCOC1"
@@ -1165,6 +1180,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 THF = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -1184,6 +1200,7 @@ THF = EsolvsConstants(
 
 
 # Dichloromethane (DCM)
+name = "DCM"
 mol_wt = 84.93
 n_atoms = 5
 smiles_str = "C(Cl)Cl"
@@ -1297,6 +1314,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 DCM = EsolvsConstants(
+    name = name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -1315,6 +1333,7 @@ DCM = EsolvsConstants(
 )
 
 # Diethyl Carbonate (DEC)
+name = "DEC"
 mol_wt = 118.13
 n_atoms = 18
 smiles_str = "CCOC(=O)OCC"
@@ -1427,6 +1446,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 DEC = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -1445,6 +1465,7 @@ DEC = EsolvsConstants(
 
 
 # Dichloromethane (DCM)
+name = "DCM"
 mol_wt = 84.93
 n_atoms = 5
 smiles_str = "C(Cl)Cl"
@@ -1558,6 +1579,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 DCM = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
@@ -1576,6 +1598,7 @@ DCM = EsolvsConstants(
 )
 
 # R125 (Test) - All data from REFPROP
+name = "HFC-125"
 mol_wt = 120.02
 n_atoms = 8
 smiles_str = "C(F)(F)C(F)(F)F"
@@ -1697,6 +1720,7 @@ uncertainty = {
 
 # Create an instance of the EsolvsConstants class
 R125 = EsolvsConstants(
+    name=name,
     mol_wt=mol_wt,
     Tc=Tc,
     rhoc=rho_c,
