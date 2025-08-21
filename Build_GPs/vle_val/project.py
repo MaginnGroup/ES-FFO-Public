@@ -2124,10 +2124,7 @@ def plot_res_pymser(job, eq_col, results, name, box_name):
     fig.set_size_inches(9, 5)
     fig.set_dpi(100)
     fig.tight_layout()
-    save_name = "MSER_eq_" + box_name + ".png"
-    #Ensured files w/ same eq are not overwritten
-    if os.path.exists(job.fn(save_name)):
-        save_name = "MSER_eq_" + box_name + "_1.png"
+    save_name = f"MSER_eq_{box_name}.png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 

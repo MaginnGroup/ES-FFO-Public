@@ -841,7 +841,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
 
             # if not all(equil_matrix):
             plot_res_pymser(
-                job, t_vals, col_vals, res_matrix[i], prop_names[i % num_cols]
+                job, t_vals, col_vals, res_matrix[i], prop_names[i % num_cols], sim_name
             )
 
             # Display outcome
@@ -874,7 +874,7 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
     return all(equil_matrix)
 
 
-def plot_res_pymser(job, t_col, eq_col, results, name):
+def plot_res_pymser(job, t_col, eq_col, results, name, sim_name= ""):
     fig, [ax1, ax2] = plt.subplots(
         1, 2, gridspec_kw={"width_ratios": [2, 1]}, sharey=True
     )
@@ -968,10 +968,11 @@ def plot_res_pymser(job, t_col, eq_col, results, name):
     fig.set_dpi(100)
     fig.tight_layout()
     name_nospace = name.replace(" ", "_")
-    save_name = "MSER_eq_" + name_nospace + ".png"
+    if sim_name == "":
+        save_name = f"MSER_eq_{name_nospace}.png"
+    else:
+        save_name = f"MSER_eq_{name_nospace}_{sim_name}.png"
     #Ensured files w/ same eq are not overwritten
-    if os.path.exists(job.fn(save_name)):
-        save_name = "MSER_eq_" + name_nospace + "_1.png"
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
