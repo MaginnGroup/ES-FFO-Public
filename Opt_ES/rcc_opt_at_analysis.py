@@ -23,6 +23,7 @@ molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"] 
 
 #Create visualization and opt_ats object
 visual = opt_atom_types.Vis_Results(molec_names, at_number, seed, obj_choice)
+param_names, param_bnds = visual.get_param_bnds_names()
 repeats = 1
 opt_ats = opt_atom_types.Opt_ATs(molec_names, at_number, repeats, seed, obj_choice)
 #Set parameter set of interest (in this case get the best parameter set)
@@ -31,8 +32,8 @@ all_molec_dir = opt_ats.use_dir_name
 path_best_sets = os.path.join(all_molec_dir, "best_per_run.csv")
 assert os.path.exists(path_best_sets), "best_per_run.csv not found in directory"
 all_df = pd.read_csv(path_best_sets, header = 0)
-first_param_name = opt_ats.at_class.at_names[0] + "_min"
-last_param_name = opt_ats.at_class.at_names[-1] + "_min"
+first_param_name = param_names[0] + "_min"
+last_param_name = param_names[-1] + "_min"
 all_sets = all_df.loc[:, first_param_name:last_param_name].values
 unique_best_sets = visual.get_unique_sets(all_sets, save_data, save_label=x_label)
 
