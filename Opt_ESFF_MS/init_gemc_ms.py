@@ -10,7 +10,7 @@ from utils import atom_type, opt_atom_types
 sys.path.remove("..")
 
 # Load class properies for each training molecule
-mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 at_numbers = [1,2]
