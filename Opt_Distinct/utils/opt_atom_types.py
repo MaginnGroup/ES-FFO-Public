@@ -809,6 +809,10 @@ class Problem_Setup:
             param_names = list(self.mol_data.param_names)
         #Otherwise generate 10^5 LHS samples
         else:
+            warnings.warn(
+                    "No Pareto info found. Generating 10^5 LHS to find Pareto sets",
+                    UserWarning,
+                )
             # Generate new samples
             samples = generate_lhs(samples, bounds, self.seed, labels=None)
             param_names = self.at_class.at_names
@@ -1031,14 +1035,23 @@ class Analyze_opt_res(Problem_Setup):
             if os.path.exists(all_molec_dir / "best_per_run.csv"):
                 unsorted_df = pd.read_csv(all_molec_dir / "best_per_run.csv", header=0)
                 all_df = unsorted_df.sort_values(by="Min Obj")
-                first_param_name = self.at_class.at_names[0] + "_min"
-                last_param_name = self.at_class.at_names[-1] + "_min"
+                if self.distinct_at:
+                    first_param_name = list(self.mol_data.param_names)[0] + "_min"
+                    last_param_name = list(self.mol_data.param_names)[-1] + "_min"
+                else:
+                    first_param_name = self.at_class.at_names[0] + "_min"
+                    last_param_name = self.at_class.at_names[-1] + "_min"
                 full_opt_best = all_df.loc[0, first_param_name:last_param_name].values
                 theta_guess = self.values_pref_to_real(full_opt_best)
 
         # If we have a GP parameter set, get the values in the necessary form
         if theta_guess is not None:
-            all_best_nec = theta_guess.reshape(-1, 1).T @ param_matrix
+            #For distinct ATs, theta guess is already GP guess
+            if not self.distinct_at:
+                all_best_nec = theta_guess.reshape(-1, 1).T @ param_matrix
+            else:
+                all_best_nec = theta_guess
+
             all_best_gp = values_real_to_scaled(
                 all_best_nec.reshape(1, -1),
                 self.all_train_molec_data[molec_ind].param_bounds,
@@ -1053,8 +1066,12 @@ class Analyze_opt_res(Problem_Setup):
         if os.path.exists(molec_dir / "best_per_run.csv"):
             unsorted_molec_df = pd.read_csv(molec_dir / "best_per_run.csv", header=0)
             molec_df = unsorted_molec_df.sort_values(by="Min Obj")
-            first_param_name = self.at_class.at_names[0] + "_min"
-            last_param_name = self.at_class.at_names[-1] + "_min"
+            if not self.distinct_at:
+                first_param_name = self.at_class.at_names[0] + "_min"
+                last_param_name = self.at_class.at_names[-1] + "_min"
+            else:
+                first_param_name = list(self.mol_data.param_names)[0] + "_min"
+                last_param_name = list(self.mol_data.param_names)[-1] + "_min"
             molec_best = molec_df.loc[0, first_param_name:last_param_name].values
             ind_best_real = self.values_pref_to_real(molec_best)
             ind_best_nec = ind_best_real.reshape(-1, 1).T @ param_matrix
@@ -1108,11 +1125,16 @@ class Analyze_opt_res(Problem_Setup):
             x_label, (str, type(None))
         ), "x_label must be a string or None"
 
+        if self.distinct_at:
+            param_bnds = self.mol_data.param_bounds
+        else:
+            param_bnds = self.at_class.at_bounds_nm_kjmol
+
         # If we want to scale parameters
         if scale_theta:
             # Scale x values between 0 and 1 to get Hessian scaled w.r.t parameter differences
             x = values_real_to_scaled(
-                x.reshape(1, -1), self.at_class.at_bounds_nm_kjmol
+                x.reshape(1, -1), param_bnds
             ).flatten()
             jac = nd.Jacobian(self.__unscl_theta_calc_obj)(x)
         # Otherwise use the unscaled x values
@@ -1134,7 +1156,10 @@ class Analyze_opt_res(Problem_Setup):
         """
         assert isinstance(theta_guess, np.ndarray), "theta_guess must be an np.ndarray"
         # Unscale data from 0 to 1 to get correct objective values
-        at_bounds_pref = self.at_class.at_bounds_nm_kjmol
+        if self.distinct_at:
+            at_bounds_pref = self.mol_data.param_bounds
+        else:
+            at_bounds_pref = self.at_class.at_bounds_nm_kjmol
         theta_guess = values_scaled_to_real(theta_guess.reshape(1, -1), at_bounds_pref)
         obj = self.calc_obj(theta_guess.flatten())[0]
 
@@ -1158,11 +1183,16 @@ class Analyze_opt_res(Problem_Setup):
             x_label, (str, type(None))
         ), "x_label must be a string or None"
 
+        if self.distinct_at:
+            param_bnds = self.mol_data.param_bounds
+        else:
+            param_bnds = self.at_class.at_bounds_nm_kjmol
+
         # If we want to scale parameters
         if scale_theta:
             # Scale x values between 0 and 1 to get Hessian scaled w.r.t parameter differences
             x = values_real_to_scaled(
-                x.reshape(1, -1), self.at_class.at_bounds_nm_kjmol
+                x.reshape(1, -1), param_bnds
             ).flatten()
             H = nd.Hessian(self.__unscl_theta_calc_obj)(x)
             scl_str = "_scl"
@@ -1222,7 +1252,10 @@ class Analyze_opt_res(Problem_Setup):
 
                 # get theta guess into scaled units
                 all_best_real = self.values_pref_to_real(theta_guess)
-                all_best_nec = all_best_real.reshape(-1, 1).T @ param_matrix
+                if self.distinct_at:
+                    all_best_nec = all_best_real
+                else:
+                    all_best_nec = all_best_real.reshape(-1, 1).T @ param_matrix
                 all_best_gp = values_real_to_scaled(
                     all_best_nec.reshape(1, -1),
                     self.all_train_molec_data[molec].param_bounds,
@@ -1340,7 +1373,13 @@ class Analyze_opt_res(Problem_Setup):
         all_param_sets_real = self.values_pref_to_real(all_param_sets)
         # Scale values between 0 and 1 with minmax scaler
         scaler = MinMaxScaler()
-        scaler.fit(self.at_class.at_bounds_nm_kjmol.T)
+        if self.distinct_at:
+            param_bnds = self.mol_data.param_bounds
+            param_names = list(self.mol_data.param_names)
+        else:
+            param_bnds = self.at_class.at_bounds_nm_kjmol
+            param_names = self.at_class.at_names
+        scaler.fit(param_bnds.T)
         all_param_sets_scaled = scaler.transform(all_param_sets_real)
         # Calculate the scaled euclidean distance between each pair of scaled points
         dist = pdist(all_param_sets_scaled) / np.sqrt(all_param_sets.shape[1])
@@ -1371,7 +1410,7 @@ class Analyze_opt_res(Problem_Setup):
         # else:
         #     unique_param_sets = all_param_sets[0].reshape(1,-1)
 
-        data_df = pd.DataFrame(unique_param_sets, columns=self.at_class.at_names)
+        data_df = pd.DataFrame(unique_param_sets, columns=param_names)
 
         if save_data == True:
             save_label = save_label if save_label is not None else "test_set"
@@ -1484,6 +1523,13 @@ class Opt_ATs(Problem_Setup):
         loss_k[0] = self.one_output_calc_obj(theta_guess)
         loss_k_params[0, :] = theta_guess
 
+        if self.distinct_at:
+            param_bnds = self.mol_data.param_bounds
+            param_names = list(self.mol_data.param_names)
+        else:
+            param_bnds = self.at_class.at_bounds_nm_kjmol
+            param_names = self.at_class.at_names
+
         # Set obj_choice to ExpVal if ExpValPrior for this operation
         # Cannot do ExpVal Prior because of scaled weights based on objective
         # obj_changed = False
@@ -1507,7 +1553,7 @@ class Opt_ATs(Problem_Setup):
             solution = optimize.minimize(
                 obj_wrapper,
                 theta_estim,
-                bounds=self.at_class.at_bounds_nm_kjmol[ranked_indices[:i], :],
+                bounds=param_bnds[ranked_indices[:i], :],
                 method="L-BFGS-B",
                 options={"disp": False, "eps": 1e-10, "ftol": 1e-10},
             )
@@ -1542,7 +1588,7 @@ class Opt_ATs(Problem_Setup):
         loss_matrix = np.hstack(
             (loss_k_params_pref, loss_k[:, np.newaxis], rcc[:, np.newaxis])
         )
-        col_names = self.at_class.at_names + [self.obj_choice, "rcc"]
+        col_names = param_names + [self.obj_choice, "rcc"]
         # Make dataframe
         loss_df = pd.DataFrame(loss_matrix, columns=col_names)
         # Add number of params optimized
@@ -1567,7 +1613,7 @@ class Opt_ATs(Problem_Setup):
             # Save optimal parameter set to csv
             df_opt_k_params.to_csv(save_csv_path2, index=False, header=True)
 
-        col_locs = [df_opt_k_params.columns.get_loc(c) for c in self.at_class.at_names]
+        col_locs = [df_opt_k_params.columns.get_loc(c) for c in param_names]
         opt_k_params = df_opt_k_params.iloc[0, col_locs].to_numpy()
 
         return opt_num_params, rcc, loss_matrix, opt_k_params
@@ -1580,6 +1626,13 @@ class Opt_ATs(Problem_Setup):
         -------
         param_inits: np.ndarray, the initial atom type scheme parameter set to start optimization at (sigma in nm, epsilon in kJ/mol)
         """
+        if self.distinct_at:
+            param_names = list(self.mol_data.param_names)
+            param_bnds = self.mol_data.param_bounds
+        else:
+            param_names = self.at_class.at_names
+            param_bnds = self.at_class.at_bounds_nm_kjmol
+
         # set seed here
         if self.seed is not None:
             np.random.seed(self.seed)
@@ -1591,18 +1644,14 @@ class Opt_ATs(Problem_Setup):
                 all_pareto_info = pd.read_csv(save_csv_path1, header=0)
             # Otherwise generate 10**5 pareto sets, and save the data
             else:
-                warnings.warn(
-                    "No Pareto info found. Generating 10^5 LHS to find Pareto sets",
-                    UserWarning,
-                )
                 all_pareto_info = self.gen_pareto_sets(
                     int(10**5), self.at_class.at_bounds_nm_kjmol, save_data=True
                 )
             # Get dominated vs nondominated points
             pareto_data = all_pareto_info[all_pareto_info["is_pareto"] == True]
             dominated_data = all_pareto_info[all_pareto_info["is_pareto"] == False]
-            pareto_points = pareto_data[self.at_class.at_names].copy()
-            dom_points = dominated_data[self.at_class.at_names].copy()
+            pareto_points = pareto_data[param_names].copy()
+            dom_points = dominated_data[param_names].copy()
             # Ensure we are using less repeats than pareto optimal points
             if len(pareto_points) < self.repeats:
                 # Could opt to use more repeats than # of pareto sets
@@ -1620,13 +1669,13 @@ class Opt_ATs(Problem_Setup):
         elif method == "lhs":
             # Could also sample with LHS
             param_sets = generate_lhs(
-                self.repeats, self.at_class.at_bounds_nm_kjmol, self.seed, labels=None
+                self.repeats, param_bnds, self.seed, labels=None
             )
             param_inits = param_sets.to_numpy()
         else:
             # Could also sample randomly
-            lb = self.at_class.at_bounds_nm_kjmol[:, 0].T
-            ub = self.at_class.at_bounds_nm_kjmol[:, 1].T
+            lb = param_bnds[:, 0].T
+            ub = param_bnds[:, 1].T
             param_inits = np.random.uniform(
                 low=lb, high=ub, size=(self.repeats, len(lb))
             )
@@ -1654,10 +1703,14 @@ class Opt_ATs(Problem_Setup):
         # solution = optimize.least_squares(self.__scipy_min_fxn, param_inits[run], bounds=bounds,
         #                                  method='trf', verbose = 0)
         # print("set: ", param_inits[run])
+        if self.distinct_at:
+            param_bnds = self.mol_data.param_bounds
+        else:
+            param_bnds = self.at_class.at_bounds_nm_kjmol
         solution = optimize.minimize(
             self.__scipy_min_fxn,
             param_inits[run],
-            bounds=self.at_class.at_bounds_nm_kjmol,
+            bounds=param_bnds,
             method="L-BFGS-B",
             options={"disp": False, "eps": 1e-10, "ftol": 1e-10},
         )
@@ -1681,6 +1734,11 @@ class Opt_ATs(Problem_Setup):
         -------
         iter_df: pd.DataFrame, the iteration dataframe
         """
+        if self.distinct_at:
+            param_names = list(self.mol_data.param_names)
+        else:
+            param_names = self.at_class.at_names
+
         # Get list of iteration, sse, and parameter data
         iter_list = np.array(range(self.iter_count)) + 1
         obj_list = np.array(self.iter_obj_data)
@@ -1690,8 +1748,8 @@ class Opt_ATs(Problem_Setup):
         # Initialize results dataframe
         # Make list of column names
         org_names = ["Run", "Iter", "Min Obj", "Min Obj Cum."]
-        at_names_min = [name + "_min" for name in self.at_class.at_names]
-        at_names_cum = [name + "_cum" for name in self.at_class.at_names]
+        at_names_min = [name + "_min" for name in param_names]
+        at_names_cum = [name + "_cum" for name in param_names]
         self.col_names_iter = (
             org_names[0:3] + at_names_min + [org_names[3]] + at_names_cum
         )
@@ -2038,7 +2096,10 @@ class Vis_Results(Analyze_opt_res):
             t_guesses = {}
             for t_key, t_guess in theta_guess.items():
                 # Transform the guess, and scale to bounds
-                gp_theta = t_guess.reshape(1, -1) @ param_matrix
+                if self.distinct_at:
+                    gp_theta = t_guess.reshape(1, -1)
+                else:
+                    gp_theta = t_guess.reshape(1, -1) @ param_matrix
                 gp_theta_guess = values_real_to_scaled(
                     gp_theta, molec_object.param_bounds
                 )
@@ -2139,14 +2200,21 @@ class Vis_Results(Analyze_opt_res):
         # Meshgrid set always defined by n_points**2
         theta_set = np.tile(np.array(theta_guess), (n_points**2, 1))
 
+        if self.distinct_at:
+            param_names = list(self.mol_data.param_names)
+            param_bnds = self.mol_data.param_bounds
+        else:
+            param_names = self.at_class.at_names
+            param_bnds = self.at_class.at_bounds
+
         # Loop over all possible theta combinations of 2
         for i in range(len(mesh_combos)):
             # Set the indeces of theta_set for evaluation as each row of mesh_combos
             idcs = mesh_combos[i]
             # define name of parameter set as tuple ("param_1,param_2")
             data_set_name = (
-                self.at_class.at_names[idcs[0]],
-                self.at_class.at_names[idcs[1]],
+                param_names[idcs[0]],
+                param_names[idcs[1]],
             )
 
             # Ensure unphysical parameters are filtered out
@@ -2160,13 +2228,13 @@ class Vis_Results(Analyze_opt_res):
                 # Create a meshgrid of values of the 2 selected values of theta and reshape to the correct shape
                 # Assume that theta1 and theta2 have equal number of points on the meshgrid
                 theta1 = np.linspace(
-                    self.at_class.at_bounds[idcs[0]][0],
-                    self.at_class.at_bounds[idcs[0]][1],
+                    param_bnds[idcs[0]][0],
+                    param_bnds[idcs[0]][1],
                     n_points,
                 )
                 theta2 = np.linspace(
-                    self.at_class.at_bounds[idcs[1]][0],
-                    self.at_class.at_bounds[idcs[1]][1],
+                    param_bnds[idcs[1]][0],
+                    param_bnds[idcs[1]][1],
                     n_points,
                 )
                 theta12_mesh = np.array(np.meshgrid(theta1, theta2))
@@ -2310,6 +2378,11 @@ class Vis_Results(Analyze_opt_res):
         theta_guess: np.ndarray, the atom type scheme parameter set to start optimization at (sigma in A, epsilon in K)
         """
         assert isinstance(theta_guess, np.ndarray), "theta_guess must be an np.ndarray"
+
+        if self.distinct_at:
+            param_names = list(self.mol_data.param_names)
+        else:
+            param_names = self.at_class.at_names
         # Get HM Data
         param_dict, obj_dict = self.make_sse_sens_data(theta_guess)
         # Make pdf
@@ -2323,8 +2396,8 @@ class Vis_Results(Analyze_opt_res):
             theta_vals = param_dict[key]
             # Get index associated with params in key
             indcs = [
-                self.at_class.at_names.index(key[0]),
-                self.at_class.at_names.index(key[1]),
+                param_names.index(key[0]),
+                param_names.index(key[1]),
             ]
             n_points = int(np.sqrt(len(theta_vals)))
             obj_vals = obj_dict[key].reshape((n_points, n_points)).T
