@@ -10,9 +10,7 @@ import signac
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-sys.path.append("..")
 from utilsOpt import opt_atom_types
-sys.path.remove("..")
 
 #Set params for what you want to analyze
 save_data = True #Data to save

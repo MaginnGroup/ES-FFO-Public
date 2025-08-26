@@ -10,19 +10,21 @@ import signac
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-sys.path.append("..")
-from utils.molec_class_files import esolvs
-sys.path.remove("..")
-
 from utilsOpt import atom_type, opt_atom_types
+
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),  ".."))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+
+from utils.molec_class_files import esolvs
 
 # Set params for what you want to analyze
 save_data = True  # Data to save
 obj_choice = "ExpVal"  # Objective to consider
-at_number = 1  # atom type to consider (1 or 2)
+at_number = 0  # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
-molec_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]  # Training data to consider
+molec_names = ["EG" , "MeOH"]  # Training data to consider
 
 # Get best_run data saved in one csv from all jobs
 project = signac.get_project("opt_at_params")
