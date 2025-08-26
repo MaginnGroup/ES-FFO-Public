@@ -148,20 +148,22 @@ def em_sim(job):
     em_restarts(job, sim_name, last_sim_name)
 
     # If em is skipped (steepest descent fails), try with CG method
-    # if "skip_em" in job.doc.keys() and job.doc["skip_em"]:
-    #     job.doc["cg_fin"] = True
-    #     #Remove old em folder contents
-    #     em_path = job.fn("em")
-    #     if os.path.isdir(em_path):
-    #         for item in os.listdir(em_path):
-    #             item_path = os.path.join(em_path, item)
-    #             os.remove(item_path)
-    #     #Modify the em.mdp file to use CG method
-    #     content = _generate_em_mdp(job, meth="cg")
-    #     with open(job.fn("em/em.mdp"), "w") as inp:
-    #         inp.write(content)
-    #     #Restart EM with CG method
-    #     em_restarts(job, sim_name, last_sim_name)
+    if "skip_em" in job.doc.keys() and job.doc["skip_em"]:
+        job.doc["cg_fin"] = True
+        #Remove old em folder contents
+        em_path = job.fn("em")
+        if os.path.isdir(em_path):
+            for item in os.listdir(em_path):
+                item_path = os.path.join(em_path, item)
+                os.remove(item_path)
+        #Modify the em.mdp file to use CG method
+        content = _generate_em_mdp(job, meth="cg")
+        with open(job.fn("em/em.mdp"), "w") as inp:
+            inp.write(content)
+        #Restart EM with CG method
+        em_restarts(job, sim_name, last_sim_name)
+        if "ld_fail" in job.doc.keys():
+            del job.doc["ld_fail"]
 
     job.doc[sim_name + "_fin"] = True
 
