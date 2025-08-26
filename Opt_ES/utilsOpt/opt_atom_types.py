@@ -78,6 +78,8 @@ def get_gp_data_from_pkl(key_list):
         path_use = Path(os.getcwd()).parent
     elif Path(os.getcwd()).parent.name == "Opt-ES":
         path_use = Path(Path(os.getcwd()).parent).parent
+    else:
+        path_use = Path(Path(os.getcwd()).parent).parent
     # Get path to the GP data from the last VLE iteration
     for key in key_list:
         # Get dict of vle gps
