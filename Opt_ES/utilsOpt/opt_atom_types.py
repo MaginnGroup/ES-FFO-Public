@@ -75,8 +75,8 @@ def get_gp_data_from_pkl(key_list):
     all_gp_dict = {}
     # Ensure we are working out of ES-FFO
     if Path(os.getcwd()).parent.name == "ES-FFO":
-        path_use = Path(os.getcwd())
-    else:
+        path_use = Path(os.getcwd()).parent
+    elif Path(os.getcwd()).parent.name == "Opt-ES":
         path_use = Path(Path(os.getcwd()).parent).parent
     # Get path to the GP data from the last VLE iteration
     for key in key_list:
@@ -134,13 +134,18 @@ class Problem_Setup:
 
         # Set a dictionary of all molecule data (if we want training and testing make 2 dicts)
         self.all_train_molec_data = molec_dict
-
         self.all_test_molec_data = molec_dict
 
+        self.all_train_gp_dict = {}
         try:
-            self.all_train_gp_dict = get_gp_data_from_pkl(
-                list(self.all_train_molec_data.keys())
-            )
+            for molec in list(self.all_train_molec_data.keys()):
+                try:
+                    all_data_molec = get_gp_data_from_pkl([molec])
+                    self.all_train_gp_dict[molec] = all_data_molec[molec]
+                except:
+                    warnings.warn(
+                        f"No gp data found for {molec}. Many functions will not work without GP Data"
+                    )
         except:
             warnings.warn(
                 "No gp data found. Many functions will not work without GP Data"
@@ -170,12 +175,12 @@ class Problem_Setup:
             else:
                 self.test_data_dict[molec] = self.all_test_molec_data[molec]
 
-        # try:
-        self.all_gp_dict = get_gp_data_from_pkl(list(self.molec_data_dict.keys()))
-        # except:
-        #     warnings.warn(
-        #         "No gp data found. Many functions will not work without GP Data"
-        #     )
+        try:
+            self.all_gp_dict = get_gp_data_from_pkl(list(self.molec_data_dict.keys()))
+        except:
+            warnings.warn(
+                "No gp data found. Many functions will not work without GP Data"
+            )
 
         self.at_class = make_atom_type_class(at_number)
         self.seed = 1
@@ -186,7 +191,7 @@ class Problem_Setup:
         else:
             self.use_root = Path(os.getcwd())
 
-        parent_root = Path(Path(self.use_root).parent).parent
+        self.parent_root = Path(Path(self.use_root).parent).parent
 
         # set obj_choice
         self.obj_choice = obj_choice
@@ -203,7 +208,7 @@ class Problem_Setup:
             mol_data = self.molec_data_dict[mol_key]
             self.mol_data = mol_data
             self.molec = mol_key
-            self.ift_pareto_csv = parent_root / f"Build_GPs/analysis/{mol_key}/vle_iters/iter-1/pareto-params.csv"
+            self.ift_pareto_csv = self.parent_root / f"Build_GPs/analysis/{mol_key}/vle_iters/iter-1/pareto-params.csv"
         else:
             self.distinct_at=False
 
@@ -281,11 +286,12 @@ class Problem_Setup:
         ), "molecules must be a string or list/np.ndarray of strings"
         molecule_str = self.molec_names_to_str(molecules)
 
-        if Path(os.getcwd()).parent.name == "ES-FFO":
-            use_dir_name = Path(Path(os.getcwd()).parent)
+        if Path(os.getcwd()).parent.name == "Opt_ES":
+            use_dir_name = Path(os.getcwd())
+        elif Path(os.getcwd()).parent.name == "ES-FFO":
+            use_dir_name = Path(str(os.getcwd()) + '/opt_at_params/')
         else:
             use_dir_name = Path(os.getcwd())
-
         dir_name = (
             use_dir_name / "Results" / (scheme_name) / (molecule_str) / (obj_choice)
         )
@@ -1066,7 +1072,10 @@ class Analyze_opt_res(Problem_Setup):
             last_param_name = param_names[-1] + "_min"
             molec_best = molec_df.loc[0, first_param_name:last_param_name].values
             ind_best_real = self.values_pref_to_real(molec_best)
-            ind_best_nec = ind_best_real.reshape(-1, 1).T @ param_matrix
+            if not self.distinct_at:
+                ind_best_nec = ind_best_real.reshape(-1, 1).T @ param_matrix
+            else:
+                ind_best_nec = ind_best_real.T
             ind_best_gp = values_real_to_scaled(
                 ind_best_nec.reshape(1, -1),
                 self.all_train_molec_data[molec_ind].param_bounds,
@@ -1076,10 +1085,20 @@ class Analyze_opt_res(Problem_Setup):
             ind_best_gp = None
         param_dict["Opt_One"] = ind_best_gp
 
-        molec_paper = np.array(
-            list(self.molec_data_dict[molec_ind].lit_param_set.values())
-        )
-        paper_real = self.values_pref_to_real(molec_paper)
+        #If param sets are in molec_data load them
+        if hasattr(self.molec_data_dict[molec_ind], 'lit_param_set'): 
+            molec_paper = np.array(
+                list(self.molec_data_dict[molec_ind].lit_param_set.values())
+            )
+            paper_real = self.values_pref_to_real(molec_paper)
+        #Otherwise get from IFT iters
+        else:
+            best_set_vle_csv = self.use_root / f"Build_GPs/analysis/{molec_ind}/vle_iters/iter-1/final-params.csv"
+            df_params = pd.read_csv(best_set_vle_csv, header=0, index_col = 0)
+            best_row = df_params.loc[df_params['mapd_surf_tens'].idxmin()]
+            #Return the array of all parameters (ignore mapd columns)
+            paper_real = best_row.drop(labels=[col for col in best_row.index if "mapd" in col]).values
+
         paper_best_gp = values_real_to_scaled(
             paper_real.reshape(1, -1), self.all_train_molec_data[molec_ind].param_bounds
         )
@@ -1088,7 +1107,7 @@ class Analyze_opt_res(Problem_Setup):
         param_dict["Literature"] = paper_best_gp
 
         molec_gaff = np.array(
-            list(self.molec_data_dict[molec_ind].gaff_param_set.values())
+            list(self.molec_data_dict[molec_ind].gaff_params.values())
         )
         gaff_real = self.values_pref_to_real(molec_gaff)
         gaff_best_gp = values_real_to_scaled(
@@ -1247,7 +1266,7 @@ class Analyze_opt_res(Problem_Setup):
                 theta_guess_scl = tf.convert_to_tensor(all_best_gp, dtype=tf.float64)
 
                 T_scaled = values_real_to_scaled(
-                    x_data, molec_object.temperature_bounds
+                    x_data, molec_object.temperature_bounds()
                 )
                 parm_set_repeat = np.tile(theta_guess_scl, (len(x_data), 1))
                 gp_theta_guess = np.hstack((parm_set_repeat, T_scaled))
@@ -1307,7 +1326,7 @@ class Analyze_opt_res(Problem_Setup):
                 y_data = np.array(list(exp_data.values()))
 
                 T_scaled = values_real_to_scaled(
-                    x_data, molec_object.temperature_bounds
+                    x_data, molec_object.temperature_bounds()
                 )
                 for i, param_set_key in enumerate(list(test_params.keys())):
                     param_set = test_params[param_set_key]
@@ -2006,7 +2025,6 @@ class Vis_Results(Analyze_opt_res):
             molec_object = self.all_train_molec_data[molec]
             # Get GPs associated with each molecule
             molec_gps_dict = self.all_train_gp_dict[molec]
-
             test_params = self.get_best_results(molec, theta_guess)
 
             # Loop over gps (1 per property)
@@ -2022,20 +2040,31 @@ class Vis_Results(Analyze_opt_res):
 
                 # Plot test vs train for each parameter set
                 pdf.savefig(
-                    plot_model_vs_test(
-                        {label: gp_model},
-                        test_params,
-                        np.array([]),
-                        np.array([]),
-                        molec_object.temperature_bounds,
-                        y_bounds,
-                        plot_bounds=molec_object.temperature_bounds,
-                        property_name=y_names,
-                        exp_x_data=x_data,
-                        exp_y_data=y_data,
-                        title=molec + " Prediction Data",
+                    plot_model_vs_exp(
+                    {label: gp_model},
+                    test_params,
+                    exp_data,
+                    molec_object.temperature_bounds(),
+                    y_bounds,
+                    plot_bounds=molec_object.temperature_bounds(),
+                    property_name=y_names,
                     )
                 )
+                # pdf.savefig(
+                #     plot_model_vs_test(
+                #         {label: gp_model},
+                #         test_params,
+                #         np.array([]),
+                #         np.array([]),
+                #         molec_object.temperature_bounds,
+                #         y_bounds,
+                #         plot_bounds=molec_object.temperature_bounds,
+                #         property_name=y_names,
+                #         exp_x_data=x_data,
+                #         exp_y_data=y_data,
+                #         title=molec + " Prediction Data",
+                #     )
+                # )
                 plt.close()
         pdf.close()
         return
