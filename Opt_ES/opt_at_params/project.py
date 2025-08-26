@@ -9,7 +9,7 @@ import json
 import sys
 
 sys.path.append("..")
-from utils import opt_atom_types
+from utilsOpt import opt_atom_types
 sys.path.remove("..")
 
 # Ignore warnings caused by "nan" values
@@ -23,13 +23,12 @@ from sklearn.exceptions import ConvergenceWarning
 
 simplefilter("ignore", category=ConvergenceWarning)
 
-
-
 class ProjectOPT(FlowProject):
-    def __init__(self):
-        current_path = Path(os.getcwd()).absolute()
-        # Set Project Path to be that of the current working directory
-        super().__init__(path=current_path)
+    pass
+    # def __init__(self):
+    #     current_path = Path(os.getcwd()).absolute()
+    #     # Set Project Path to be that of the current working directory
+    #     super().__init__(path=current_path)
 
 Opt_group = ProjectOPT.make_group(name = "OptGenFF")
 

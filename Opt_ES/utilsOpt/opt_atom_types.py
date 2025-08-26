@@ -13,12 +13,17 @@ import json
 import sys
 import glob
 
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),  "..", ".."))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+
 from fffit.fffit.utils import (
     values_real_to_scaled,
     values_scaled_to_real,
     variances_scaled_to_real,
     generate_lhs,
 )
+
 from fffit.fffit.plot import (
     plot_model_performance,
     plot_model_vs_test,
@@ -28,6 +33,7 @@ from fffit.fffit.plot import (
     plot_obj_contour,
 )
 from fffit.fffit.pareto import find_pareto_set, is_pareto_efficient
+from utils.molec_class_files import esolvs
 
 import unyt as u
 import matplotlib
@@ -39,14 +45,6 @@ import numdifftools as nd
 from sklearn.metrics import mean_absolute_percentage_error
 from pathlib import Path
 from .atom_type import make_atom_type_class
-
-# root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-# if root_dir not in sys.path:
-#     sys.path.insert(0, root_dir)
-sys.path.append("../..")
-from utils.molec_class_files import esolvs
-sys.path.remove("../..")
-
 
 mpl_is_inline = "inline" in matplotlib.get_backend()
 # print(mpl_is_inline)

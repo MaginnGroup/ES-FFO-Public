@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 sys.path.append("..")
-from utils import opt_atom_types
+from utilsOpt import opt_atom_types
 sys.path.remove("..")
 
 #Set params for what you want to analyze

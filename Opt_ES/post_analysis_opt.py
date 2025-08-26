@@ -12,8 +12,9 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 sys.path.append("..")
 from utils.molec_class_files import esolvs
-from utils import atom_type, opt_atom_types
 sys.path.remove("..")
+
+from utilsOpt import atom_type, opt_atom_types
 
 # Set params for what you want to analyze
 save_data = True  # Data to save
