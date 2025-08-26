@@ -144,6 +144,20 @@ def shuffle_and_split(df, param_names, property_name, fraction_train=0.8, shuffl
         param_names = list(param_names)
 
     data = df[param_names + [property_name]].values
+    # if property_name == "sim_surf_tens":
+    #     # print(np.max(data[:, -1]), np.min(data[:, -1]))
+    #     #Plot histogram of data
+    #     import matplotlib.pyplot as plt
+
+    #     #Remove rows where the property value is > 20 or < -10
+    #     data = data[data[:, -1] <= 40]
+    #     # data = data[(data[:, -1] <= 10) & (data[:, -1] >= -10)]
+    #     plt.hist(data[:, -1], bins=30)
+    #     plt.xlabel("Surface Tension [mN/m]")
+    #     plt.ylabel("Frequency")
+    #     plt.title("Histogram of Surface Tension Data")
+    #     plt.savefig("surface_tension_histogram.png")
+
     total_entries = data.shape[0]
 
     # Ensure at least one training entry

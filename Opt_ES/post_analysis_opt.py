@@ -24,7 +24,7 @@ obj_choice = "ExpVal"  # Objective to consider
 at_number = 0  # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
-molec_names = ["EG", "MeOH"]  # Training data to consider
+molec_names = ["Gly"]  # Training data to consider
 
 # Get best_run data saved in one csv from all jobs
 project = signac.get_project("opt_at_params")
