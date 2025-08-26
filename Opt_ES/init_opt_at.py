@@ -41,7 +41,6 @@ for Atom_Type in Atom_Types:
                     "num_train_molec": len(train_mol_genFF),
                     "obj_choice": Objective,
                     "save_data": save_data,
-                    "new_weight": True,
                     "seed": seed,
                 }
                 if i == 0:
