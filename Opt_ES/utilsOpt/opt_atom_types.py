@@ -75,14 +75,14 @@ def get_gp_data_from_pkl(key_list):
     all_gp_dict = {}
     # Ensure we are working out of ES-FFO
     if Path(os.getcwd()).parent.name == "ES-FFO":
-        path_use = Path(Path(os.getcwd()).parent)
-    else:
         path_use = Path(os.getcwd())
+    else:
+        path_use = Path(Path(os.getcwd()).parent).parent
     # Get path to the GP data from the last VLE iteration
     for key in key_list:
         # Get dict of vle gps
-        files = sorted(glob.glob(f"Build_GPs/analysis/{key}/vle_iters/iter-*/best_gp_models.pkl"))
-        file_fin = files[-1]
+        files = sorted(glob.glob(f"{path_use}/Build_GPs/analysis/{key}/vle_iters/iter-*/best_gp_models.pkl"))
+        file_fin = Path(files[-1])
         #Ensure the file exists
         assert (file_fin.exists()), f"{os.path.abspath(file_fin)} does not exist. Check file path carefully."
         #Load the last file (most recent VLE iter GPs)     
@@ -150,7 +150,7 @@ class Problem_Setup:
         self.valid_prop_keys = [
             "sim_vap_density",
             "sim_liq_density",
-            "sim_surf_tens"
+            "sim_surf_tens",
             "sim_Pvap",
             "sim_Hvap",
         ]
@@ -170,21 +170,23 @@ class Problem_Setup:
             else:
                 self.test_data_dict[molec] = self.all_test_molec_data[molec]
 
-        try:
-            self.all_gp_dict = get_gp_data_from_pkl(list(self.molec_data_dict.keys()))
-        except:
-            warnings.warn(
-                "No gp data found. Many functions will not work without GP Data"
-            )
+        # try:
+        self.all_gp_dict = get_gp_data_from_pkl(list(self.molec_data_dict.keys()))
+        # except:
+        #     warnings.warn(
+        #         "No gp data found. Many functions will not work without GP Data"
+        #     )
 
         self.at_class = make_atom_type_class(at_number)
         self.seed = 1
 
-        # Ensure we are working out of generalizedFF
+        # Ensure we are working out of opt_at_params
         if Path(os.getcwd()).parent.name == "ES-FFO":
             self.use_root = Path(Path(os.getcwd()).parent)
         else:
             self.use_root = Path(os.getcwd())
+
+        parent_root = Path(Path(self.use_root).parent).parent
 
         # set obj_choice
         self.obj_choice = obj_choice
@@ -201,7 +203,7 @@ class Problem_Setup:
             mol_data = self.molec_data_dict[mol_key]
             self.mol_data = mol_data
             self.molec = mol_key
-            self.ift_pareto_csv = self.use_dir_name / f"Build_GPs/analysis/{mol_key}/vle_iters/iter-1/pareto-params.csv"
+            self.ift_pareto_csv = parent_root / f"Build_GPs/analysis/{mol_key}/vle_iters/iter-1/pareto-params.csv"
         else:
             self.distinct_at=False
 
@@ -303,7 +305,7 @@ class Problem_Setup:
         )
         for key in list(self.molec_data_dict.keys()):
             molec_object = self.molec_data_dict[key]
-            for prop_key in list(molec_object.uncertainties.keys()):
+            for prop_key in list(molec_object.uncertainty.keys()):
                 if "vap_density" in prop_key:
                     exp_data = molec_object.expt_vap_density
                     property_bounds = molec_object.vap_density_bounds
@@ -326,7 +328,7 @@ class Problem_Setup:
                     property_name = "Surface Tension [mN/m]"
 
                 values = np.array(list(exp_data.values()))
-                y_unc = molec_object.uncertainties[prop_key]
+                y_unc = molec_object.uncertainty[prop_key]
                 unc_val = np.maximum(y_unc, 0.02)
                 weight = 1 / (unc_val * values) ** 2
                 df_vals = [key, prop_key, values, y_unc, unc_val, weight]
@@ -543,9 +545,9 @@ class Problem_Setup:
         assert isinstance(
             molec_object,esolvs.EsolvsConstants
         ), "molec_object must be a class object of EsolvsConstants from esolvs.py"
-
+        T_bounds = molec_object.temperature_bounds()
         # Scale X data
-        gp_Xexp = values_real_to_scaled(Xexp, molec_object.temperature_bounds)
+        gp_Xexp = values_real_to_scaled(Xexp, T_bounds)
         # Repeat theta guess x number of times
         gp_theta = np.repeat(gp_theta_guess, len(Xexp), axis=0)
         # Concatenate theta and tem values to get a gp input
@@ -621,7 +623,7 @@ class Problem_Setup:
                 # Scale gp output to real value
                 # gp_mean = values_scaled_to_real(gp_mean_scl, y_bounds)
                 # Get y data uncertainties
-                # unc = molec_object.uncertainties[key.replace("sim", "expt")]
+                # unc = molec_object.uncertainty[key.replace("sim", "expt")]
                 # y_var_unc = (y_exp*unc)**2
                 # y_var_2pct = (y_exp*0.02)**2
                 # y_var = np.maximum(y_var_unc, y_var_2pct)
@@ -707,7 +709,7 @@ class Problem_Setup:
 
                 # Calculate weight from uncertainty
                 # Get y data uncertainties
-                unc = molec_object.uncertainties[key.replace("sim", "expt")]
+                unc = molec_object.uncertainty[key.replace("sim", "expt")]
                 y_var_unc = (y_exp * unc) ** 2
                 y_var_2pct = (y_exp * 0.02) ** 2
                 y_var = np.maximum(y_var_unc, y_var_2pct)
@@ -809,9 +811,9 @@ class Problem_Setup:
         at_bounds_pref, param_names = self.get_param_bnds_names()
         #Try getting pareto sets from VLE iters, otherwise, generate 10^5 new sets
         if self.distinct_at and self.ift_pareto_csv.exists():
-            pareto_info = pd.read_csv(self.ift_pareto_csv, header = 0, index_col = 0)
+            pareto_info = pd.read_csv(self.ift_pareto_csv, header = 0, index_col=0)
             # Use the existing Pareto sets
-            samples = pareto_info[list(self.mol_data.param_names)].copy(deep=True)
+            samples = pareto_info[list(self.mol_data.param_names)].copy(deep=True).to_numpy()
         #Otherwise generate 10^5 LHS samples
         else:
             warnings.warn(
