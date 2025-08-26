@@ -179,7 +179,7 @@ To run generalized FF calibration, follow the following steps:
 Note: Step 2 operation OptGenFF multiple operations in series. Alternatively, the following can be run one at a time:
 4. Alternative submission
    ```
-     python project.py run -o gen_pareto_sets --bundle=12 --parallel
+     python project.py submit -o gen_pareto_sets --bundle=12 --parallel
      python project.py submit -o run_obj_alg --bundle=12 --parallel
    ```
      
