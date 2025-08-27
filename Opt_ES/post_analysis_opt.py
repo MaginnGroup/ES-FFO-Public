@@ -21,7 +21,7 @@ from utils.molec_class_files import esolvs
 # Set params for what you want to analyze
 save_data = True  # Data to save
 obj_choice = "ExpVal"  # Objective to consider
-at_number = 2  # atom type to consider (1 or 2)
+at_number = 1  # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
 molec_names = ["EG", "Gly", "MeOH"]  # Training data to consider
@@ -52,7 +52,7 @@ for statepoint_value, group in grouped_jobs:
 
     if unsorted_df is not None:
         # Sort the data by the minimum objective value
-        all_df = unsorted_df.sort_values(by="Min Obj", ascending=True).reset_index(
+        all_df = unsorted_df.sort_values(by="Min Obj Cum.", ascending=True).reset_index(
             drop=True
         )
         # Save all the best sets in appropriate folder for each set of training molecules
@@ -69,8 +69,8 @@ def get_vis(at_number, molec_list,  seed, obj_choice):
     path_best_sets = os.path.join(all_molec_dir, "best_per_run.csv")
     assert os.path.exists(path_best_sets), "best_per_run.csv not found in directory"
     all_df = pd.read_csv(path_best_sets, header=0)
-    first_param_name = param_names[0] + "_min"
-    last_param_name = param_names[-1] + "_min"
+    first_param_name = param_names[0] + "_cum"
+    last_param_name = param_names[-1] + "_cum"
     all_sets = all_df.loc[:, first_param_name:last_param_name].values
     unique_best_sets = visual.get_unique_sets(
         all_sets, save_data=save_data, save_label=x_label
