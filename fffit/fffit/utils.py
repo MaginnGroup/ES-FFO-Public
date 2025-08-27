@@ -186,14 +186,24 @@ def generate_lhs(samples, bounds, seed, labels = None):
     assert isinstance(samples, int), "Number of samples must be an integer"
     #Define number of dimensions
     dimensions = bounds.shape[0]
-    #Define sampler
+    # #Define sampler
     sampler = qmc.LatinHypercube(d=dimensions, seed = seed)
     lhs_data = sampler.random(n=samples)
 
-    #Generate LHS data given bounds
-    lhs_data = qmc.scale(lhs_data, bounds[:,0], bounds[:,1])
+    # #Generate LHS data given bounds
+    # lhs_data = qmc.scale(lhs_data, bounds[:,0], bounds[:,1])
+    # sample = pd.DataFrame(lhs_data)
 
-    sample = pd.DataFrame(lhs_data)
+    # Scale each dimension manually
+    scaled = np.zeros_like(lhs_data)
+    for i in range(dimensions):
+        low, high = bounds[i]
+        if np.isclose(low, high):  # fixed dimension
+            scaled[:, i] = low     # constant value
+        else:
+            scaled[:, i] = qmc.scale(np.array([lhs_data[:, i]]), low, high)
+
+    sample = pd.DataFrame(scaled)
 
     if labels is not None:
         assert len(labels) == bounds.shape[0], "Number of labels must match number of bounds"
