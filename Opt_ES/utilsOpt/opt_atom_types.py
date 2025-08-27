@@ -1781,7 +1781,10 @@ class Opt_ATs(Problem_Setup):
         iter_df.loc[idx, "Run Time"] = time_per_run
         iter_df.loc[idx, "jac evals"] = solution.njev
         iter_df.loc[idx, "func evals"] = solution.nfev
-        iter_df.loc[idx, "Optimality"] = scipy.linalg.norm(solution.jac, ord=np.inf)
+        try:
+            iter_df.loc[idx, "Optimality"] = scipy.linalg.norm(solution.jac, ord=np.inf)
+        except:
+            iter_df.loc[idx, "Optimality"] = "N/A"
         iter_df.loc[idx, "Term Status"] = solution.status
         iter_df.loc[idx, "Message"] = solution.message
         # iter_df.loc[idx, "Optimality"] = solution.optimality

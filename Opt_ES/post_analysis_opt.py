@@ -21,10 +21,10 @@ from utils.molec_class_files import esolvs
 # Set params for what you want to analyze
 save_data = True  # Data to save
 obj_choice = "ExpVal"  # Objective to consider
-at_number = 0  # atom type to consider (1 or 2)
+at_number = 2  # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
-molec_names = ["Gly"]  # Training data to consider
+molec_names = ["EG", "Gly", "MeOH"]  # Training data to consider
 
 # Get best_run data saved in one csv from all jobs
 project = signac.get_project("opt_at_params")
@@ -60,10 +60,8 @@ for statepoint_value, group in grouped_jobs:
             os.path.join(save_path, "best_per_run.csv"), index=False, header=True
         )
 
-
-# Create visualization object
-for molec in molec_names:
-    visual = opt_atom_types.Vis_Results([molec], at_number, seed, obj_choice)
+def get_vis(at_number, molec_list,  seed, obj_choice):
+    visual = opt_atom_types.Vis_Results(molec_list, at_number, seed, obj_choice)
     param_bnds, param_names = visual.get_param_bnds_names()
     # Set parameter set of interest (in this case get the best parameter set)
     x_label = "best_set"
@@ -85,7 +83,7 @@ for molec in molec_names:
         best_real = visual.values_pref_to_real(copy.copy(best_set))
 
         # Get Property Predictions for all training molecules
-        molec_names_all = [molec]
+        molec_names_all = molec_list
         visual.comp_paper_full_ind(molec_names_all, save_label=x_label_set)
 
         # Calculate MAPD for predictions and save results
@@ -103,19 +101,28 @@ for molec in molec_names:
         best_real = visual.values_pref_to_real(copy.copy(best_set))
         # Gat Jac and Hess Approximations
         scale_theta = True
-        jac = visual.approx_jac(best_real, scale_theta, save_data, x_label=x_label_set)
-        hess = visual.approx_hess(best_real, scale_theta, save_data, x_label=x_label_set)
-        eigval, eigvec = scipy.linalg.eig(hess)
-        if save_data == True:
-            eig_val_path = os.path.join(
-                all_molec_dir / "hess_approx", "EigVals_" + x_label_set
-            )
-            eig_vec_path = os.path.join(
-                all_molec_dir / "hess_approx", "EigVecs_" + x_label_set
-            )
-            eigval = [np.real(num) for num in eigval]
-            np.savetxt(eig_val_path, eigval, delimiter=",")
-            np.savetxt(eig_vec_path, eigvec, delimiter=",")
+        try:
+            jac = visual.approx_jac(best_real, scale_theta, save_data, x_label=x_label_set)
+            hess = visual.approx_hess(best_real, scale_theta, save_data, x_label=x_label_set)
+            eigval, eigvec = scipy.linalg.eig(hess)
+            if save_data == True:
+                eig_val_path = os.path.join(
+                    all_molec_dir / "hess_approx", "EigVals_" + x_label_set
+                )
+                eig_vec_path = os.path.join(
+                    all_molec_dir / "hess_approx", "EigVecs_" + x_label_set
+                )
+                eigval = [np.real(num) for num in eigval]
+                np.savetxt(eig_val_path, eigval, delimiter=",")
+                np.savetxt(eig_vec_path, eigvec, delimiter=",")
+        except:
+            print("Jac and Hess approximation failed for " + x_label_set)
+
+if at_number == 0:
+    for molec in molec_names:
+        get_vis(at_number, [molec], seed, obj_choice)
+else:
+    get_vis(at_number, molec_names, seed, obj_choice)
 """
     # Plot optimization result heat maps
     visual.plot_obj_hms(best_set, x_label_set)
