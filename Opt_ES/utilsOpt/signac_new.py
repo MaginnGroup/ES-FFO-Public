@@ -49,12 +49,13 @@ def get_signac_results(project_dict, data_dict):
 
         # Loop over all jobs in project and group by mol name, at number, restart, and obj choice
         for (mol_name, at_num, restart, obj_choice), job_group in project_df.groupby(job_groupby):
+            train_mol_str = job_group["train_mol_str"].values[0]
+            train_mols = train_mol_str.split("-") if "-" in train_mol_str else [train_mol_str]
             if mol_name in list(data_dict.keys()):
-                #Make atom type setup
-                setup = Problem_Setup(mol_name, at_num, obj_choice)
-                param_bounds, param_names = setup.get_param_bnds_names()
                 data = [] # Store data here before converting to dataframe
-
+                #Make atom type setup
+                setup = Problem_Setup(train_mols, at_num, obj_choice)
+                param_bounds, param_names = setup.get_param_bnds_names()
                 #Loop over each parameter set in the group
                 for (param_vals), group_df in job_group.groupby(param_names):
                     for row in range(len(group_df)):
@@ -90,6 +91,7 @@ def get_signac_results(project_dict, data_dict):
                 df = pd.DataFrame(data)
 
                 df["restart"] = restart
+                df["molecule"] = mol_name
 
                 #Add data to all_data_dict
                 # If the data directory is already in the dictionary, concatenate the dataframes
