@@ -15,22 +15,25 @@ import matplotlib.pyplot as plt
 # For instance, if the "units" field is "sweeps" and simulation_length = 1000,
 # This will run a total of 1000 sweeps
 # (1 sweep = N steps, where N is the total number of molecules (job.sp.N_vap + job.sp.N_liq)
-sys.path.append("..")
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),  "..", ".."))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+
 from utils.molec_class_files import esolvs
-sys.path.remove("..")
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Note - Must define Project class with a different name that other project.py files
-class ProjectVleVal(FlowProject):
-    def __init__(self):
-        current_path = Path(os.getcwd()).absolute()
-        # Set Project Path to be that of the current working directory
-        super().__init__(path=current_path)
+class ProjectGEMC(FlowProject):
+    pass
+    # def __init__(self):
+    #     current_path = Path(os.getcwd()).absolute()
+    #     # Set Project Path to be that of the current working directory
+    #     super().__init__(path=current_path)
 
 
-@ProjectVleVal.post.isfile("ff.xml")
-@ProjectVleVal.operation
+@ProjectGEMC.post.isfile("ff.xml")
+@ProjectGEMC.operation
 def create_forcefield(job):
     """Create the forcefield .xml file for the job"""
     # Generate content based on job sp molecule name
@@ -77,7 +80,7 @@ def npt_finished(job):
     return completed
 
 
-@ProjectVleVal.label
+@ProjectGEMC.label
 def gemc_prod_complete(job):
     "Confirm gemc production has completed"
     import numpy as np
@@ -113,7 +116,7 @@ def calc_box_helper(job):
     # Load class properies for each training and testing molecule
     class_dict = _get_class_from_molecule(job.sp.mol_name)
     class_data = class_dict[job.sp.mol_name]
-    # Reference data to compare to (i.e. experiments or other simulation studies) (load from constants file in ProjectVleVal_gaff.py as needed)
+    # Reference data to compare to (i.e. experiments or other simulation studies) (load from constants file in ProjectGEMC_gaff.py as needed)
     # Loop over the keys of the dictionaries
     ref = {}
     # What is the best way to automate this if exp data crashes simulation?
@@ -154,18 +157,18 @@ def calc_box_helper(job):
     return job.doc.liqboxl, job.doc.vapboxl
 
 
-@ProjectVleVal.post(lambda job: "vapboxl" in job.doc)
-@ProjectVleVal.post(lambda job: "liqboxl" in job.doc)
-@ProjectVleVal.operation
+@ProjectGEMC.post(lambda job: "vapboxl" in job.doc)
+@ProjectGEMC.post(lambda job: "liqboxl" in job.doc)
+@ProjectGEMC.operation
 def calc_boxes(job):
     "Calculate the initial box length of the boxes"
     liqbox, vapbox = calc_box_helper(job)
 
 
-@ProjectVleVal.pre.after(calc_boxes)
-@ProjectVleVal.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectVleVal.post(nvt_finished)
-@ProjectVleVal.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.pre.after(calc_boxes)
+@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
+@ProjectGEMC.post(nvt_finished)
+@ProjectGEMC.operation(directives={"omp_num_threads": 2})
 def NVT_liqbox(job):
     "Equilibrate the liquid box using NVT simulation"
 
@@ -245,10 +248,10 @@ def NVT_liqbox(job):
             )
 
 
-@ProjectVleVal.pre.after(NVT_liqbox)
-@ProjectVleVal.post.isfile("nvt.final.xyz")
-@ProjectVleVal.post(lambda job: "nvt_liqbox_final_dim" in job.doc)
-@ProjectVleVal.operation
+@ProjectGEMC.pre.after(NVT_liqbox)
+@ProjectGEMC.post.isfile("nvt.final.xyz")
+@ProjectGEMC.post(lambda job: "nvt_liqbox_final_dim" in job.doc)
+@ProjectGEMC.operation
 def extract_final_NVT_config(job):
     "Extract final coords and box dims from the liquid box simulation"
 
@@ -275,10 +278,10 @@ def extract_final_NVT_config(job):
     job.doc.nvt_liqbox_final_dim = float(box_data[-6][0]) / 10.0  # nm
 
 
-@ProjectVleVal.pre.after(extract_final_NVT_config)
-@ProjectVleVal.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectVleVal.post(npt_finished)
-@ProjectVleVal.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.pre.after(extract_final_NVT_config)
+@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
+@ProjectGEMC.post(npt_finished)
+@ProjectGEMC.operation(directives={"omp_num_threads": 2})
 def NPT_liqbox(job):
     "Equilibrate the liquid box"
 
@@ -382,10 +385,10 @@ def NPT_liqbox(job):
                         os.remove(file_path)
 
 
-@ProjectVleVal.pre.after(NPT_liqbox)
-@ProjectVleVal.post.isfile("npt.final.xyz")
-@ProjectVleVal.post(lambda job: "npt_liqbox_final_dim" in job.doc)
-@ProjectVleVal.operation
+@ProjectGEMC.pre.after(NPT_liqbox)
+@ProjectGEMC.post.isfile("npt.final.xyz")
+@ProjectGEMC.post(lambda job: "npt_liqbox_final_dim" in job.doc)
+@ProjectGEMC.operation
 def extract_final_NPT_config(job):
     "Extract final coords and box dims from the liquid box simulation"
 
@@ -412,7 +415,7 @@ def extract_final_NPT_config(job):
     job.doc.npt_liqbox_final_dim = float(box_data[-6][0]) / 10.0  # nm
 
 
-@ProjectVleVal.label
+@ProjectGEMC.label
 def gemc_equil_complete(job):
     "Confirm gemc equilibration has completed"
     import numpy as np
@@ -602,10 +605,10 @@ def get_gemc_boxes(job, eq_data_name):
     return liq_box, vap_box, boxl_liq, boxl_vap, mols_in_boxes, mols_to_add
 
 
-@ProjectVleVal.pre.after(extract_final_NPT_config)
-@ProjectVleVal.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectVleVal.post(gemc_prod_complete)
-@ProjectVleVal.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.pre.after(extract_final_NPT_config)
+@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
+@ProjectGEMC.post(gemc_prod_complete)
+@ProjectGEMC.operation(directives={"omp_num_threads": 2})
 def run_gemc(job):
     "Equilibrate GEMC"
 
@@ -932,13 +935,13 @@ def run_gemc(job):
                 del job.doc["equil_fail"]
 
 
-@ProjectVleVal.pre.after(run_gemc)
-@ProjectVleVal.pre(gemc_prod_complete)
-@ProjectVleVal.post(
+@ProjectGEMC.pre.after(run_gemc)
+@ProjectGEMC.pre(gemc_prod_complete)
+@ProjectGEMC.post(
     lambda job: "no_overlap" in job.doc
     or ("gemc_failed" in job.doc and job.doc.gemc_failed == True)
 )
-@ProjectVleVal.operation
+@ProjectGEMC.operation
 def check_prod_overlap(job):
     "Check if the production files overlap"
     import numpy as np
@@ -1007,30 +1010,30 @@ def check_prod_overlap(job):
 # @Project.post(lambda job: "liq_enthalpy_unc" in job.doc)
 # @Project.post(lambda job: "vap_enthalpy_unc" in job.doc)
 # Create operation to delete failed jobs
-@ProjectVleVal.label
+@ProjectGEMC.label
 def gemc_failed(job):
     "Confirm gemc failed"
     return "gemc_failed" in job.doc
 
 
-@ProjectVleVal.pre(gemc_failed)
-@ProjectVleVal.operation
+@ProjectGEMC.pre(gemc_failed)
+@ProjectGEMC.operation
 def del_job(job):
     "Delete job if gemc failed"
     job.remove()
 
 
-@ProjectVleVal.pre.after(run_gemc)
-@ProjectVleVal.post.isfile("energy.png")
-@ProjectVleVal.post(lambda job: "liq_density" in job.doc)
-@ProjectVleVal.post(lambda job: "vap_density" in job.doc)
-@ProjectVleVal.post(lambda job: "Pvap" in job.doc)
-@ProjectVleVal.post(lambda job: "Hvap" in job.doc)
-@ProjectVleVal.post(lambda job: "liq_enthalpy" in job.doc)
-@ProjectVleVal.post(lambda job: "vap_enthalpy" in job.doc)
-@ProjectVleVal.post(lambda job: "nmols_liq" in job.doc)
-@ProjectVleVal.post(lambda job: "nmols_vap" in job.doc)
-@ProjectVleVal.operation
+@ProjectGEMC.pre.after(run_gemc)
+@ProjectGEMC.post.isfile("energy.png")
+@ProjectGEMC.post(lambda job: "liq_density" in job.doc)
+@ProjectGEMC.post(lambda job: "vap_density" in job.doc)
+@ProjectGEMC.post(lambda job: "Pvap" in job.doc)
+@ProjectGEMC.post(lambda job: "Hvap" in job.doc)
+@ProjectGEMC.post(lambda job: "liq_enthalpy" in job.doc)
+@ProjectGEMC.post(lambda job: "vap_enthalpy" in job.doc)
+@ProjectGEMC.post(lambda job: "nmols_liq" in job.doc)
+@ProjectGEMC.post(lambda job: "nmols_vap" in job.doc)
+@ProjectGEMC.operation
 def calculate_props(job):
     """Calculate the density"""
 
@@ -1158,7 +1161,7 @@ def calculate_props(job):
         job.doc[name + "_unc"] = np.max(np.sqrt(vars_est))
 
 
-@ProjectVleVal.label
+@ProjectGEMC.label
 def plot_finished(job):
     "Confirm plots have been made"
     import numpy as np
@@ -1173,9 +1176,9 @@ def plot_finished(job):
     return completed
 
 
-# @ProjectVleVal.pre.after(run_gemc)
-# @ProjectVleVal.post(plot_finished)
-# @ProjectVleVal.operation
+# @ProjectGEMC.pre.after(run_gemc)
+# @ProjectGEMC.post(plot_finished)
+# @ProjectGEMC.operation
 # def plot(job):
 #     import pandas as pd
 #     import pylab as plt
@@ -2234,4 +2237,4 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
 
 
 if __name__ == "__main__":
-    ProjectVleVal().main()
+    ProjectGEMC().main()

@@ -288,14 +288,15 @@ class Problem_Setup:
         ), "molecules must be a string or list/np.ndarray of strings"
         molecule_str = self.molec_names_to_str(molecules)
 
+        #Ensure results stored in Opt_ES top level dir
         if Path(os.getcwd()).parent.name == "Opt_ES":
-            use_dir_name = Path(os.getcwd())
+            use_dir_name = Path(os.getcwd()).parent
         elif Path(os.getcwd()).parent.name == "ES-FFO":
-            use_dir_name = Path(str(os.getcwd()) + '/opt_at_params/')
-        else:
             use_dir_name = Path(os.getcwd())
+        else:
+            use_dir_name = Path(os.getcwd()).parent
         dir_name = (
-            use_dir_name / "Results" / (scheme_name) / (molecule_str) / (obj_choice)
+            use_dir_name / "analysis" / (scheme_name) / (molecule_str) / (obj_choice)
         )
 
         return dir_name
@@ -347,7 +348,7 @@ class Problem_Setup:
                     .copy(deep=True)
                 )
                 df = pd.concat([df, iter_df], ignore_index=True)
-        save_dir = self.use_root / "Results" / "gp_val_figs"
+        save_dir = self.use_root / "analysis" / "gp_val_figs"
         os.makedirs(save_dir, exist_ok=True)
         file_name = save_dir / ("molecule_exp_unc_data.csv")
         df.to_csv(file_name, index=False, header=True)

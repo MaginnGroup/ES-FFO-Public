@@ -11,16 +11,17 @@ sys.path.remove("..")
 
 # Load class properies for each training molecule
 mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
+gen_FF_mols = ["EG", "Gly", "MeOH"]
 molec_dict = esolvs.make_dict(mol_names)
 
-at_numbers = [1,2]
+at_numbers = [0, 1]
 num_restarts = 3  # Number of restarts for replications
 n_vap = 160  # number of molecules in vapor phase
 n_liq = 640
 obj_choice = "ExpVal"  # Objective to consider
 
 # Initialize project
-project = signac.init_project("opt_ff_ms")
+project = signac.init_project("gemc_val")
 
 def unpack_molec_values(molec_name, at_class, sample, state_point):
     """
@@ -54,7 +55,6 @@ for molec_name, molec_data in molec_dict.items():
 
     # Run at vapor pressure (from constants file)
     press = molec_data.expt_Pvap
-    molec_names = mol_names  # Training data to consider
 
     # For each restart
     for restart in range(num_restarts):
@@ -63,8 +63,9 @@ for molec_name, molec_data in molec_dict.items():
             # Theoretically, we could examine more than just the best
             # Define the initial state point
             state_point = {
-                "obj_choice": obj_choice,
                 "mol_name": molec_name,
+                "atom_type": at_number,
+                "obj_choice": obj_choice,
                 "mol_weight": molec_data.molecular_weight,  # amu
                 "smiles": molec_data.smiles_str,
                 "N_atoms": molec_data.n_atoms,
@@ -82,32 +83,33 @@ for molec_name, molec_data in molec_dict.items():
             }
 
             #Save GAFF params to state point
-            state_point_gaff = state_point.copy()
-            state_point_gaff["atom_type"] = "GAFF"
-            state_point_gaff["obj_choice"] = "None"
-            state_point_gaff = get_gaff_sp(molec_data, state_point_gaff)
-            # Initialize the GAFF jobs
-            job = project.open_job(state_point_gaff)
-            job.init()
+            # state_point_gaff = state_point.copy()
+            # state_point_gaff["atom_type"] = "GAFF"
+            # state_point_gaff["obj_choice"] = "None"
+            # state_point_gaff = get_gaff_sp(molec_data, state_point_gaff)
+            # # Initialize the GAFF jobs
+            # job = project.open_job(state_point_gaff)
+            # job.init()
 
             #Loop over all other atom typing schemes
             for at_number in at_numbers:
-                state_point["atom_type"] = at_number
-                setup = opt_atom_types.Problem_Setup(molec_names, at_number, obj_choice)
-                all_molec_dir = setup.use_dir_name
-                all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
-
-                # Loop over best molecules
-                for i in range(1):
-                    state_point["param_set"] = i + 1
-                    full_opt_best = all_df.iloc[i].values
-                    # Convert to units of nm and kJ/mol
-                    param_matrix = setup.at_class.get_transformation_matrix(
-                        {molec_name: molec_data}
-                    )
-                    all_best_real = setup.values_pref_to_real(full_opt_best)
+                molec_names = [molec_name] if at_number == 0 else gen_FF_mols
+                #Only make jobs for molecule if using distinct ATs or if the molecules is part of the generalized FF
+                if at_number == 0 or molec_name in gen_FF_mols:
+                    state_point["atom_type"] = at_number
+                    setup = opt_atom_types.Problem_Setup(molec_names, at_number, obj_choice)
+                    all_molec_dir = setup.use_dir_name
+                    all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
+                    # Get best set
+                    best_idx = 0 if at_number == 0 else 2  # Use only the best set
+                    state_point["param_set"] = best_idx + 1
+                    all_best_real = all_df.iloc[best_idx].values
                     # Parameters in units nm and kJ/mol
-                    scaled_params = all_best_real.reshape(-1, 1).T @ param_matrix
+                    if at_number > 0:
+                        param_matrix = setup.at_class.get_transformation_matrix({molec_name: molec_data})
+                        scaled_params = all_best_real.reshape(-1, 1).T @ param_matrix
+                    else:
+                        scaled_params = all_best_real.reshape(1, -1)
 
                     for sample in scaled_params:
                         state_point = unpack_molec_values(
