@@ -182,9 +182,21 @@ def prepare_df_errors(df_data, data_dict, mol_name):
     molecule = data_dict[mol_name]
     #sort by molecule and temperature -- added by Ning Wang
     new_data = []
-    df = df_data.sort_values(by=["temperature", "iter"])
+    if "iter" in df_data.columns:
+        df = df_data.sort_values(by=["temperature", "iter"])
+    else:
+        df = df_data.sort_values(by=["temperature"])
+
+    if list(molecule.param_names)[0] in df.columns:
+        #For data with known parameters
+        groupby_data = df.groupby(list(molecule.param_names))
+        group_keys = list(molecule.param_names)
+    else:
+        #For literature csv data files
+        groupby_data = df.groupby(["molecule"])
+        group_keys = ["molecule"]
     #Sort by param names to be able to save these values
-    for group, values in df.groupby(list(molecule.param_names)):
+    for group, values in groupby_data:
         new_quantities = {}
 
         if len(values) > 0:
@@ -251,8 +263,8 @@ def prepare_df_errors(df_data, data_dict, mol_name):
         
         data_to_append = list(group) + list(new_quantities.values())
         new_data.append(data_to_append)
-
-    columns = list(molecule.param_names) + list(new_quantities.keys())
+ 
+    columns = group_keys + list(new_quantities.keys())
     new_df = pd.DataFrame(new_data, columns=columns)
         
     return new_df
