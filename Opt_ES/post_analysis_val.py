@@ -19,7 +19,6 @@ from utilsOpt.plot import plot_vle_envelopes, plot_surf_tens, plot_pvap_hvap, pl
 #save signac results for each atom for a given atom typing scheme and number of training parameters
 from utilsOpt import atom_type
 from utilsOpt.signac import save_signac_results, get_signac_results
-from utilsOpt.opt_atom_types import Problem_Setup
 
 #Change me as needed
 obj_choice = "ExpVal"
