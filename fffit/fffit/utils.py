@@ -25,7 +25,19 @@ def values_real_to_scaled(values, bounds):
     `scaled_values` will have values < 0 or > 1.
     """
     values, bounds = _clean_bounds_values(values, bounds)
-    return (values - bounds[:, 0]) / (bounds[:, 1] - bounds[:, 0])
+
+    # Check where bounds are equal
+    denom = bounds[:, 1] - bounds[:, 0]
+    equal_mask = denom == 0
+
+    #Normalize data in between bounds based on this info
+    normalized = np.empty_like(values, dtype=float)
+    normalized[equal_mask] = 0 #Fix all values where bounds are equal as zero (the lower bound)
+    normalized[~equal_mask] = (values[~equal_mask] - bounds[~equal_mask, 0]) / denom[~equal_mask]
+
+    # (values - bounds[:, 0]) / (bounds[:, 1] - bounds[:, 0])
+
+    return normalized
 
 
 def values_scaled_to_real(scaled_values, bounds):
@@ -83,9 +95,9 @@ def _clean_bounds_values(values, bounds):
     bounds = np.asarray(bounds)
     bounds = bounds.reshape(-1, 2)
 
-    if not (bounds[:, 0] < bounds[:, 1]).all():
+    if not (bounds[:, 0] <= bounds[:, 1]).all():
         raise ValueError(
-            "Lower bound must always be less than the upper bound."
+            "Lower bound must always be less than or equal to the upper bound."
         )
 
     if bounds.shape[0] == 1:
