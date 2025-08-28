@@ -166,8 +166,10 @@ def init_project():
                     if at_number > 0:
                         param_matrix = analyzer.at_class.get_transformation_matrix({molec_name: molec_data})
                         best_nm_k = unique_best.reshape(-1, 1).T @ param_matrix
+                        train_mol_str = "-".join(gen_FF_mols)
                     else:
                         best_nm_k = unique_best.reshape(1, -1)
+                        train_mol_str = molec_name
 
                     #Scale distinct sample between 0 and 1
                     new_samples_scl = values_real_to_scaled(best_nm_k, bounds)
@@ -205,6 +207,7 @@ def init_project():
                                 "mol_name": molec_name,
                                 "atom_type": at_number,
                                 "obj_choice": obj_choice,
+                                "train_mol_str": train_mol_str,
                                 "param_set": best_idx + 1,
                                 "smiles": molec_data.smiles_str,
                                 "T": float((temp * u.K).in_units(u.K).value),  # K

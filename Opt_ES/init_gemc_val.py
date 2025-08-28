@@ -64,7 +64,6 @@ for molec_name, molec_data in molec_dict.items():
             # Define the initial state point
             state_point = {
                 "mol_name": molec_name,
-                "atom_type": at_number,
                 "obj_choice": obj_choice,
                 "mol_weight": molec_data.molecular_weight,  # amu
                 "smiles": molec_data.smiles_str,
@@ -108,8 +107,12 @@ for molec_name, molec_data in molec_dict.items():
                     if at_number > 0:
                         param_matrix = setup.at_class.get_transformation_matrix({molec_name: molec_data})
                         scaled_params = all_best_real.reshape(-1, 1).T @ param_matrix
+                        train_mol_str = "-".join(gen_FF_mols)
                     else:
                         scaled_params = all_best_real.reshape(1, -1)
+                        train_mol_str = molec_name
+                    
+                    state_point["train_mol_str"] = train_mol_str
 
                     for sample in scaled_params:
                         state_point = unpack_molec_values(
