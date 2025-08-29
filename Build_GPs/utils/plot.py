@@ -47,7 +47,7 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
         pdf = PdfPages(pdf_name)
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
-        models_best, models_rq, all_models, dir_train_test = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
+        models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(df_liq, data, dir_name, gp_shuffle_seed)
         
         for prop_name, models in all_models.items():
             # Load data
@@ -66,6 +66,11 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
             plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
             title = f"{mol_name} {name} Iter {iter_num} - Testing Data"
             plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
+
+            #Plot model performance for best model
+            best_model = {best_labels[prop_name]: models_best[prop_name]}
+            title = f"{mol_name} {name} Iter {iter_num} - Best Model"
+            plot_model_performance(best_model, df_x_all, df_y_all, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
 
         for prop_name, models in all_models.items():
             #Plot test sets
