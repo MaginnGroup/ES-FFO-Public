@@ -3,19 +3,13 @@ import sys
 import os
 from pathlib import Path
 from file_read_backwards import FileReadBackwards
-import matplotlib
-import matplotlib.pyplot as plt
+import glob
 
 root_path = Path(__file__).resolve().parents[1]  # ES-FFO directory (two levels up from this script)
 if str(root_path) not in sys.path:
     sys.path.insert(0, str(root_path))
 
 # Now import using package structure relative to ES-FFO root
-from utils.molec_class_files import esolvs
-from Build_GPs.utils.signac import get_signac_results, save_signac_results
-from Build_GPs.utils.id_new_samples import new_samples_vle, find_pareto
-from Build_GPs.utils.models import get_best_models
-from Build_GPs.utils.plot import plot_gp_examples
 
 print(f"Current working dir: {os.getcwd()}")
 print(f"Script location: {Path(__file__).parent}")
@@ -41,56 +35,40 @@ def count_steps(fpath):
 project = signac.get_project("vle_val")
 
 for job in project:
-    have_sims = True
-    count = 0
-    sweeps = []
-    Exchanges = []
-
-    while have_sims is True:
-        insert_val = None
-        delete_val = None
-        
-        #Find the log file for each restart
-        if count == 0:
-            filename = job.fn("gemc.eq.out.log")
-        else:
-            filename = job.fn(f"gemc.eq.rst.{count:03d}.out.log")
-
-        
-        #If we're out of restarts break the loop
-        if not os.path.exists(filename):
-            have_sims = False
-            break
-   
-        #Otherwise, find the last instance of the words insert and deleter starting from the bottom of the file
-        # Read file lines
-        with FileReadBackwards(filename, encoding="utf-8") as frb:
-            for l in frb:
-                line = frb.readline()
-                if "Delete" in l:
-                    # Split the last line and extract the first number
-                    delete_val = int(line.split()[2])
-                elif "Insert" in l:
-                    # Split the last line and extract the first number
-                    insert_val = int(line.split()[2])
-                if insert_val == None:
-                    break
-        N_exc = delete_val + insert_val
-
-        #Input file is file_name before .out.log
-        fn_input = filename.replace(".out.log", "")
-        run_value, steps_per_sweep = count_steps(fn_input)
-        sweeps.appen(run_value)
-        Exchanges.append(N_exc)
+    insert_val = None
+    delete_val = None
     
-    #Plot
-    plt.plot(sweeps, Exchanges, label=job.id)
-    plt.xlabel("Sweeps")
-    plt.ylabel("Exchanges")
-    plt.title("Exchanges vs Sweeps")
-    plt.legend()
-    #Save figure to job directory
-    plt.savefig(job.fn("Exc_vs_Sweeps.png"))
-    plt.close()
+    #Initialize log file as production file
+    filename = job.fn("prod.out.log")
 
-#Other analysis here
+    #Use the last eq restart instead if it exists
+    last_gemc_eq_file = sorted(glob.glob(job.fn(f"gemc.eq.rst.*.out.log")))
+    if len(last_gemc_eq_file) > 0:
+        filename = last_gemc_eq_file[-1]
+
+    #Find the last instance of the words insert and delete starting from the bottom of the file
+    # Read file lines
+    with FileReadBackwards(filename, encoding="utf-8") as frb:
+        for l in frb:
+            line = frb.readline()
+            if "Delete" in l:
+                # Split the last line and extract the first number
+                delete_val = int(line.split()[2])
+            elif "Insert" in l:
+                # Split the last line and extract the first number
+                insert_val = int(line.split()[2])
+            if insert_val == None:
+                break
+    N_mols = job.sp.N_vap + job.sp.N_liq
+    pct_diff = abs(insert_val - delete_val) / insert_val * 100
+    job.doc["insert_val"] = insert_val
+    job.doc["delete_val"] = delete_val
+    job.doc["pct_diff"] = pct_diff
+    #Check that the insert and delete values are within 5% of each other
+    if pct_diff > 5:
+        print(f"Warning: Large difference between insert and delete counts for job {job.id}")
+        print(f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%")
+    #Check that he number of insertions and deletions are at least equal to the number of molecules
+    if insert_val < N_mols or delete_val < N_mols:
+        print(f"Warning: Low number of insertions or deletions for job {job.id}")
+        print(f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}")
