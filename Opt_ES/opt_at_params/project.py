@@ -75,7 +75,7 @@ def gen_pareto_sets(job):
 
     #Find all jobs with the same atom type, obj_choice, and training molecules
     #dict(atom_type= job.sp.atom_type, obj_choice= job.sp.obj_choice, training_molecules=job.sp.training_molecules)
-    for other_job in project.find_jobs({"atom_type" : job.sp.atom_type, "obj_choice" : job.sp.obj_choice, "training_molecules":training_molecules}):
+    for other_job in project.find_jobs({"atom_type" : job.sp.atom_type, "obj_choice" : job.sp.obj_choice, "training_molecules":training_molecules_str}):
         # and set their pareto_info to True
         other_job.doc["pareto_info"] = True
 
