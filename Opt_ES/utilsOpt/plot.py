@@ -775,12 +775,12 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     fig : matplotlib.figure.Figure
         The figure object containing the plot
     """
-    props = ["liq_density", "vap_density", "Pvap", "Hvap"]
+    props = ["liq_density", "vap_density", "Pvap", "Hvap", "surf_tens"]
     cols = [obj + "_" + prop for prop in props]
     if obj == "mae":
-        names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$"]
+        names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
     else:
-        names = ["Liquid Density", "Vapor Density", "Vapor Pressure", "Heat of Vaporization"]
+        names = ["Liquid Density", "Vapor Density", "Vapor Pressure", "Heat of Vaporization", "Surface Tension"]
     cols = [item for item in cols for _ in range(2)]
     names = [item for item in names for _ in range(2)]
     
@@ -789,15 +789,29 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     df_mse_list = list(df_ffs)
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-3)] + ['gray', 'olive', 'olive']
+    #Choose color basede on FF label (ATs diff colors Dis=blue, 1=red, 2=orange, literature =gray
+    def get_color(label):
+        if "AT-Dis" in label:
+            return "blue"
+        elif "AT-3" in label:
+            return 'red'
+        elif "AT-4" in label:
+            return 'orange'
+        else:
+            return 'gray'
 
-    train_molecs = ["R14", "R32", "R50", "R170", "R125", "R134a", "R143a", "R41"]
+    train_molecs = ["EG","Gly", "MeOH", "DMSO","DEC","DMF"]
     #Get indeces where train molecules are in all molecules
     len_train = len(set(molec_names).intersection(train_molecs))
     left_indices = np.arange(len_train)
     right_indices =  np.arange(len_train, len(molec_names))
 
-    fig, axs = plt.subplots(4, 2, figsize=(24, 16), sharex = False)
+    if len(right_indices) > 0:
+        axs_col = 2
+    else:
+        axs_col = 1
+
+    fig, axs = plt.subplots(len(props), axs_col, figsize=(6*len(props), 8*axs_col), sharex = False)
     # Plot each column in a subplot
     for i, (ax, column, name) in enumerate(zip(axs.flatten(), cols, names)):
         bar_width = 0.1
@@ -814,7 +828,7 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
             if j < len(df_mse_list):
                 max_val = np.nanmax(df[column].values)
                 max_val_f = max(max_val, max_val_f)
-            ax.bar(indices + j*bar_width, df[column].iloc[indices], bar_width, label=df_labels[j], color = df_colors[j])
+            ax.bar(indices + j*bar_width, df[column].iloc[indices], bar_width, label=df_labels[j].split("_")[0], color = get_color(df_labels[j]))
         
         ax.set_ylim(0, max_val_f*1.05)
         ax.set_title(name, fontsize = 24) 
@@ -844,18 +858,19 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
 
     # Add Training and Testing labels
     fig.text(0.075, 0.99, "Training Set", ha="left", va="top", fontsize=20)
-    fig.text(0.99, 0.99, "Testing Set", ha="right", va="top", fontsize=20)
+    if axs_col == 2:
+        fig.text(0.99, 0.99, "Testing Set", ha="right", va="top", fontsize=20)
 
     #Explain missing HFC-143 data
-    fig.text(
-    0.85, 0.1,  # Adjust these coordinates based on the image placement
-    "Experimental\n Data\n Unavailable",
-    fontsize=20,
-    color="black",
-    ha="center",  # Center horizontally
-    va="center",  # Center vertically
-    bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
-)
+#     fig.text(
+#     0.85, 0.1,  # Adjust these coordinates based on the image placement
+#     "Experimental\n Data\n Unavailable",
+#     fontsize=20,
+#     color="black",
+#     ha="center",  # Center horizontally
+#     va="center",  # Center vertically
+#     bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
+# )
 
     plt.tight_layout(rect=[0.01, 0.0, 1, 1])
     #Save figure to jpg
