@@ -17,7 +17,7 @@ training_molecules = list(
 train_mol_genFF = list(["EG", "Gly", "MeOH"])
 
 if isinstance(train_mol_genFF, list):
-    gen_ff_train_mol = json.dumps(train_mol_genFF)
+    gen_ff_train_mol = "-".join(train_mol_genFF)
 
 Objective = "ExpVal"
 
@@ -56,7 +56,7 @@ for Atom_Type in Atom_Types:
                 vle_iters_path = f"../Build_GPs/analysis/{molec}/vle_iters/iter-1/final-params.csv"
                 if os.path.exists(vle_iters_path):
                     # Make a dumped list of the molecule to pass to the job
-                    molec_dump = json.dumps(list([molec]))
+                    molec_dump = molec
                     for j in range(0, repeats_ind):
                         sp = {
                             "atom_type": Atom_Type,

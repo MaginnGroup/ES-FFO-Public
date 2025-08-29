@@ -32,8 +32,8 @@ def values_real_to_scaled(values, bounds):
 
     #Normalize data in between bounds based on this info
     normalized = np.empty_like(values, dtype=float)
-    normalized[equal_mask] = 0 #Fix all values where bounds are equal as zero (the lower bound)
-    normalized[~equal_mask] = (values[~equal_mask] - bounds[~equal_mask, 0]) / denom[~equal_mask]
+    normalized[:, equal_mask] = 0 #Fix all values where bounds are equal as zero (the lower bound)
+    normalized[:, ~equal_mask] = (values[:,~equal_mask] - bounds[~equal_mask, 0]) / denom[~equal_mask]
 
     # (values - bounds[:, 0]) / (bounds[:, 1] - bounds[:, 0])
 
