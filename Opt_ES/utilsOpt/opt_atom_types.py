@@ -83,13 +83,20 @@ def get_gp_data_from_pkl(key_list):
     # Get path to the GP data from the last VLE iteration
     for key in key_list:
         # Get dict of vle gps
-        files = sorted(glob.glob(f"{path_use}/Build_GPs/analysis/{key}/vle_iters/iter-*/best_gp_models.pkl"))
+        files = sorted(glob.glob(f"{path_use}/Build_GPs/analysis/{key}/vle_iters/iter-*/gp_models.pkl"))
         file_fin = Path(files[-1])
         #Ensure the file exists
         assert (file_fin.exists()), f"{os.path.abspath(file_fin)} does not exist. Check file path carefully."
-        #Load the last file (most recent VLE iter GPs)     
+        #Load the last file (most recent VLE iter GPs) 
+        gp_dict = {}    
         with open(file_fin, "rb") as pickle_file:
-            all_gp_dict[key] = pickle.load(pickle_file)
+            gp_models, best_labels = pickle.load(pickle_file)
+            for prop in best_labels.keys():
+                #Use GP for liq density and Matern 52 for ST
+                kern = "RQ" if "liq" in prop else "Matern52"
+                gp_dict[prop] = gp_models[prop][kern]
+
+            all_gp_dict[key] = gp_dict
 
     return all_gp_dict
 
