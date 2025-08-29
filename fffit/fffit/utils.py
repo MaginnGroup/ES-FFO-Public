@@ -162,8 +162,8 @@ def shuffle_and_split(df, param_names, property_name, fraction_train=0.8, shuffl
     #     import matplotlib.pyplot as plt
 
     #     #Remove rows where the property value is > 20 or < -10
-    #     data = data[data[:, -1] <= 40]
-    #     # data = data[(data[:, -1] <= 10) & (data[:, -1] >= -10)]
+    #     # data = data[data[:, -1] <= 40]
+    #     data = data[(data[:, -1] <= 10) & (data[:, -1] >= -10)]
     #     plt.hist(data[:, -1], bins=30)
     #     plt.xlabel("Surface Tension [mN/m]")
     #     plt.ylabel("Frequency")

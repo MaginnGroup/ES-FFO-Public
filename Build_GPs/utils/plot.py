@@ -60,26 +60,28 @@ def plot_gp_examples(all_df_data, data_dict, iter_type = "ld_iters", gp_shuffle_
             df_y_all = pd.concat([df_y_train, df_y_test], ignore_index=True)
 
             #Plot model performance
+            best_model = {best_labels[prop_name]: models_best[prop_name]}
             title = f"{mol_name} {name} Iter {iter_num} - All Data"
             plot_model_performance(models, df_x_all, df_y_all, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
+            title = f"{mol_name} {name} Iter {iter_num} - Best All Data"
+            plot_model_performance(best_model, df_x_all, df_y_all, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
             title = f"{mol_name} {name} Iter {iter_num} - Training Data"
             plot_model_performance(models, df_x_train, df_y_train, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
+            title = f"{mol_name} {name} Iter {iter_num} - Best Training Data"
+            plot_model_performance(best_model, df_x_train, df_y_train, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
             title = f"{mol_name} {name} Iter {iter_num} - Testing Data"
             plot_model_performance(models, df_x_test, df_y_test, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
-
-            #Plot model performance for best model
-            best_model = {best_labels[prop_name]: models_best[prop_name]}
-            title = f"{mol_name} {name} Iter {iter_num} - Best Model"
-            plot_model_performance(best_model, df_x_all, df_y_all, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
-
-        for prop_name, models in all_models.items():
-            #Plot test sets
-            df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
-            if len(df_x_test) > 0:
-                x_test = df_x_test.to_numpy()
-                plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
-            #Plot GP slices
-            plot_gp_slices(models, data, prop_name, pdf) 
+            title = f"{mol_name} {name} Iter {iter_num} - Best Testing Data"
+            plot_model_performance(best_model, df_x_test, df_y_test, property_bounds, pdf, title, xylim=None, save_fig=save_fig)
+            
+        # for prop_name, models in all_models.items():
+        #     #Plot test sets
+        #     df_x_test = pd.read_csv(os.path.join(dir_train_test, f"{prop_name}_x_test.csv"), header = 1, index_col = False)
+        #     if len(df_x_test) > 0:
+        #         x_test = df_x_test.to_numpy()
+        #         plot_test_sets(models, x_test, df_liq, data, pdf, prop_name)
+        #     #Plot GP slices
+        #     plot_gp_slices(models, data, prop_name, pdf) 
 
         pdf.close()
 

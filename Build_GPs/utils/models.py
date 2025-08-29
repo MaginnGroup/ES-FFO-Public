@@ -119,9 +119,9 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
                     df_data, data, prop_name, None, gp_shuffle_seed, False
                 )
                 exp_data, property_bounds, name = get_exp_data(data, prop_name)
-                # The best model is the one with the lowest MSE on the test set
+                # The best model is the one with the lowest MSE on the test set and not overfitting
                 model_best, best_label = eval_model_performance(
-                    models, x_test, y_test, property_bounds
+                    models, x_test, y_test, property_bounds, xtrain=x_train, ytrain=y_train
                 )
                 models_props[prop_name] = models
                 best_labels[prop_name] = best_label
@@ -158,7 +158,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
             # Save the best models to a filewith open(gp_model_path, "wb") as f:
             pickle.dump(models_rq, f)
 
-    return models_best, models_rq, models_props, dir_train_test
+    return models_best, models_rq, models_props, dir_train_test, best_labels
 
 
 def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig=False):
@@ -194,8 +194,8 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
         The test labels for the GP models.
     """
     gpConfig = {
-        "useWhiteKernel": False,
-        "trainLikelihood": True,
+        "useWhiteKernel": False, #Swap for Gly 
+        "trainLikelihood": True, #Swap for Gly
         "anisotropic": True,
         "mean_function": "Linear",
     }
@@ -267,7 +267,7 @@ def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_see
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
 
-        models_best, models_rq, all_models, dir_train_test = get_prop_best_model(
+        models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(
             df_liq, data, dir_name, gp_shuffle_seed
         )
 
@@ -343,7 +343,7 @@ def build_classifier(
     return classifier
 
 
-def eval_model_performance(models, x_data, y_data, property_bounds):
+def eval_model_performance(models, x_data, y_data, property_bounds, xtrain=None, ytrain=None):
     """Plot the predictions vs. result for one or more GP models
 
     Parameters
@@ -366,6 +366,11 @@ def eval_model_performance(models, x_data, y_data, property_bounds):
     matplotlib.Figure.figure
     """
     y_data_physical = values_scaled_to_real(y_data, property_bounds)
+    if ytrain is not None and xtrain is not None:
+        y_train_physical = values_scaled_to_real(ytrain, property_bounds)
+        check_train = True
+    else:
+        check_train = False
 
     mse_min = np.inf
     mse_model = None
@@ -375,9 +380,26 @@ def eval_model_performance(models, x_data, y_data, property_bounds):
         gp_mu_physical = values_scaled_to_real(gp_mu, property_bounds)
         meansqerr = np.mean((gp_mu_physical - y_data_physical.reshape(-1, 1)) ** 2)
         if meansqerr < mse_min:
-            mse_min = meansqerr
-            mse_model = model
-            mse_label = label
+            if check_train:
+                # Also check that the model is not overfitting
+                gp_mu_train, gp_var_train = model.predict_f(xtrain)
+                gp_mu_train_physical = values_scaled_to_real(gp_mu_train, property_bounds)
+                train_meansqerr = np.mean(
+                    (gp_mu_train_physical - y_train_physical.reshape(-1, 1)) ** 2
+                )
+                # If the training MSE is less than 10x the test MSE, we consider it not overfitting
+                print(
+                    f"Model: {label}. Train MSE: {train_meansqerr:.2e}, Test MSE: {meansqerr:.2e}"
+                )
+                if train_meansqerr > 1e-7:
+                    mse_min = meansqerr
+                    mse_model = model
+                    mse_label = label
+            else:
+                mse_min = meansqerr
+                mse_model = model
+                mse_label = label
+
         print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
 
     return mse_model, mse_label
