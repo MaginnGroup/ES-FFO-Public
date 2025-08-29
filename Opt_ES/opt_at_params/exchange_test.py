@@ -41,23 +41,16 @@ for job in project:
     #Initialize log file as production file
     filename = job.fn("prod.out.log")
 
-    #Use the last eq restart instead if it exists
-    last_gemc_eq_file = sorted(glob.glob(job.fn(f"gemc.eq.rst.*.out.log")))
-    if len(last_gemc_eq_file) > 0:
-        filename = last_gemc_eq_file[-1]
-
     #Find the last instance of the words insert and delete starting from the bottom of the file
     # Read file lines
     with FileReadBackwards(filename, encoding="utf-8") as frb:
-        for l in frb:
-            line = frb.readline()
-            if "Delete" in l:
+        for line in frb:
+            if "Delete" in line:
                 # Split the last line and extract the first number
                 delete_val = int(line.split()[2])
-            elif "Insert" in l:
+            elif "Insert" in line:
                 # Split the last line and extract the first number
                 insert_val = int(line.split()[2])
-            if insert_val == None:
                 break
     N_mols = job.sp.N_vap + job.sp.N_liq
     pct_diff = abs(insert_val - delete_val) / insert_val * 100
@@ -66,9 +59,11 @@ for job in project:
     job.doc["pct_diff"] = pct_diff
     #Check that the insert and delete values are within 5% of each other
     if pct_diff > 5:
-        print(f"Warning: Large difference between insert and delete counts for job {job.id}")
+        print(f"Job {job.id}")
+        print(f"Warning: Large difference between insert and delete counts")
         print(f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%")
     #Check that he number of insertions and deletions are at least equal to the number of molecules
     if insert_val < N_mols or delete_val < N_mols:
+        print(f"Job {job.id}")
         print(f"Warning: Low number of insertions or deletions for job {job.id}")
         print(f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}")
