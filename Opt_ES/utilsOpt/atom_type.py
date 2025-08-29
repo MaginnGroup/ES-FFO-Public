@@ -355,10 +355,10 @@ class AT_Scheme_02(Atom_Types):
 
     def __init__(self):
         # Get Bounds
-        at_param_bounds_l = [2.0, 0.0, 1.5, 2.0,
-                             10.0, 0.0, 2.0, 75.0,]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
-        at_param_bounds_u = [4.0, 0.0, 3.0, 4.0,
-                             75.0, 0.0, 10.0, 135.0,]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
+        at_param_bounds_l = [2.0, 0.0, 0.0, 2.0,
+                             10.0, 0.0, 0.0, 40.0,]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
+        at_param_bounds_u = [4.0, 3.0, 3.0, 4.0,
+                             135.0, 10.0, 10.0, 135.0,]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
         # at_param_bounds_l = [2.0, 2.0, 2.0, 1.5, 0.0, 1.5, 1.5, 1.5, 2.0, 2.0, 2.0, 2.0, 2.0, 2.5, 2.5,
         #                      10.0, 75.0, 10.0, 2.0, 0.0, 2.0, 2.0, 2.0, 75.0, 75.0, 40.0, 40.0, 40.0, 90.0, 90.0]  # Units of Angstroms and Kelvin for Sigmas and Epsilons
         # at_param_bounds_u = [4.0, 4.0, 4.0, 3.0, 0.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.5, 4.5,

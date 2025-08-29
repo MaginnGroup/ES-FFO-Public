@@ -58,8 +58,8 @@ def pareto_set_exists(job):
 @ProjectOPT.operation()
 def gen_pareto_sets(job):
     # Define method, ep_enum classes, indecies to consider, and kernel
-    training_molecules = job.sp.training_molecules
-    training_molecules = list(json.loads(training_molecules))
+    training_molecules_str = job.sp.training_molecules
+    training_molecules = training_molecules_str.split("-")
     # Get all gp data and make driver class
     driver = opt_atom_types.Problem_Setup(
         training_molecules, job.sp.atom_type, job.sp.obj_choice
@@ -75,7 +75,7 @@ def gen_pareto_sets(job):
 
     #Find all jobs with the same atom type, obj_choice, and training molecules
     #dict(atom_type= job.sp.atom_type, obj_choice= job.sp.obj_choice, training_molecules=job.sp.training_molecules)
-    for other_job in project.find_jobs({"atom_type" : job.sp.atom_type, "obj_choice" : job.sp.obj_choice, "training_molecules":job.sp.training_molecules}):
+    for other_job in project.find_jobs({"atom_type" : job.sp.atom_type, "obj_choice" : job.sp.obj_choice, "training_molecules":training_molecules}):
         # and set their pareto_info to True
         other_job.doc["pareto_info"] = True
 
@@ -90,8 +90,8 @@ def results_computed(job):
 @ProjectOPT.operation()
 def run_obj_alg(job):
     # Define method, ep_enum classes, indecies to consider, and kernel
-    training_molecules = job.sp.training_molecules
-    training_molecules = list(json.loads(training_molecules))
+    training_molecules_str = job.sp.training_molecules
+    training_molecules = training_molecules_str.split("-")
 
     # Set params for saving results, # of repeats, and the seed
     obj_choice = job.sp.obj_choice

@@ -296,7 +296,7 @@ class Problem_Setup:
         else:
             use_dir_name = Path(os.getcwd()).parent
         dir_name = (
-            use_dir_name / "analysis" / (scheme_name) / (molecule_str) / (obj_choice)
+            use_dir_name / "analysis" / (scheme_name) / (molecule_str) / (obj_choice) / ("opt_res")
         )
 
         return dir_name
