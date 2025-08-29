@@ -681,8 +681,19 @@ def calc_block_densities(job, sim_name, last_sim_name, name):
                         output_file = f"{name}_{block+1}.xvg"
                     command = f"gmx density -f {last_dir}{last_sim_name}.xtc -s {last_dir}{last_sim_name}.tpr -o {output_file} -d Z -dens mass -sl 500 -b {t0} > /dev/null 2>&1"
 
-                subprocess.run(
-                    command,
+                #Try running subprocess w/ xtc file if not, try tr
+                try:
+                    subprocess.run(
+                        command,
+                        input=f"System",
+                        text=True,
+                        check=True,
+                        shell=True,
+                        cwd=sim_name,
+                    )
+                except:
+                    subprocess.run(
+                    command.replace("xtc", "trr"),
                     input=f"System",
                     text=True,
                     check=True,
