@@ -21,7 +21,7 @@ from utils.molec_class_files import esolvs
 # Set params for what you want to analyze
 save_data = True  # Data to save
 obj_choice = "ExpVal"  # Objective to consider
-at_number = 2 # atom type to consider (1 or 2)
+at_number = 1 # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
 molec_names = ["EG", "Gly", "MeOH"]  # Training data to consider

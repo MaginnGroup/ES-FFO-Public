@@ -1,0 +1,41 @@
+2025-09-02 17:06:01.122324: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2025-09-02 17:06:01.122848: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-09-02 17:06:01.124226: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2025-09-02 17:06:01.132134: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-09-02 17:06:02.345739: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:155: UserWarning: No gp data found for ACN. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:155: UserWarning: No gp data found for DMSO. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:155: UserWarning: No gp data found for THF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:155: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:155: UserWarning: No gp data found for DEC. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:155: UserWarning: No gp data found for DMF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:1365: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  combined_df = pd.concat(list(dfs.values()), ignore_index=True)
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:1365: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  combined_df = pd.concat(list(dfs.values()), ignore_index=True)
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:1365: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  combined_df = pd.concat(list(dfs.values()), ignore_index=True)
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:1365: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  combined_df = pd.concat(list(dfs.values()), ignore_index=True)
+/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/numpy/lib/nanfunctions.py:1563: RuntimeWarning: All-NaN slice encountered
+  return function_base._ureduce(a,
+/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/numdifftools/limits.py:150: UserWarning: All-NaN slice encountered
+  warnings.warn(str(msg))
+/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/numpy/lib/nanfunctions.py:1563: RuntimeWarning: All-NaN slice encountered
+  return function_base._ureduce(a,
+/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/numdifftools/limits.py:150: UserWarning: All-NaN slice encountered
+  warnings.warn(str(msg))
+/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/numpy/lib/nanfunctions.py:1563: RuntimeWarning: All-NaN slice encountered
+  return function_base._ureduce(a,
+/afs/crc.nd.edu/user/m/mcarlozo/.conda/envs/hfcs-fffit/lib/python3.11/site-packages/numdifftools/limits.py:150: UserWarning: All-NaN slice encountered
+  warnings.warn(str(msg))
+Jac and Hess approximation failed for best_set_2
+Jac and Hess approximation failed for best_set_3
+Jac and Hess approximation failed for best_set_4
