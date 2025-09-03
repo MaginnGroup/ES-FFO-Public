@@ -10,8 +10,6 @@ import copy
 from pymser import pymser
 import numpy as np
 import matplotlib.pyplot as plt
-import signac
-from file_read_backwards import FileReadBackwards
 
 # simulation_length must be consistent with the "units" field in custom args below
 # For instance, if the "units" field is "sweeps" and simulation_length = 1000,
@@ -57,7 +55,7 @@ def nvt_finished(job):
             completed = (
                 int(thermo_data[-1][0]) == job.sp.nsteps_nvt
             )  # job.sp.nsteps_liqeq
-            job["nvt_fin"] = completed
+            job["nvt_finished"] = completed
         except:
             completed = False
             pass
@@ -76,12 +74,13 @@ def npt_finished(job):
             completed = (
                 int(thermo_data[-1][0]) == job.sp.nsteps_npt
             )  # job.sp.nsteps_liqeq
-            job["npt_fin"] = completed
+            job["npt_finished"] = completed
         except:
             completed = False
             pass
 
     return completed
+
 
 @ProjectGEMC.label
 def gemc_prod_complete(job):
@@ -380,8 +379,8 @@ def NPT_liqbox(job):
                 del job.doc["liqboxl"]  # calc_boxes
                 if "nvt_liqbox_final_dim" in job.doc:
                     del job.doc["nvt_liqbox_final_dim"]
-                if "nvt_fin" in job.doc:
-                    del job.doc["nvt_fin"]
+                if "nvt_finished" in job.doc:
+                    del job.doc["nvt_finished"]
                 #Delete previous data files
                 with job:
                     for file_path in glob.glob("nvt.*"):
@@ -442,57 +441,14 @@ def gemc_equil_complete(job):
         # This line will fail until job.doc.nsteps_gemc_eq is defined
         if hasattr(job.doc, "nsteps_gemc_eq"):
             completed = first_value == job.doc.nsteps_gemc_eq
+            job.doc[gemc_equil_complete] = completed
         else:
             completed = False
     except:
         completed = False
 
-    #Regardless of whether equilibration is complete, if the job doc has gemc_eq_fin = True, we will return True
-    #This allows us to check simulations before adding more steps
-    if job.doc.get("gemc_eq_fin", False) == True:
-        completed = True
-
     return completed
 
-def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
-    "Delete data from previous operations"
-    import os
-    import glob
-    import shutil
-
-    # List of files which must be moved or deleted when the job fails
-    glob_args = [
-        "MSER*",
-        "*_eq_col_*",
-        "box*.in.xyz",
-        run_name + ".*",
-        "mosdef_cassandra_*.log",
-        "prod.*",
-        "Equil_Output.txt",
-    ]
-    # If move is true, move the files to a subfolder instead of deleting them
-    with job:
-        if mv == True:
-            if not os.path.exists(subfolder):
-                os.makedirs(subfolder)
-            for glob_arg in glob_args:
-                for file_path in glob.glob(glob_arg):
-                    shutil.move(
-                        file_path, os.path.join(subfolder, os.path.basename(file_path))
-                    )
-            shutil.copy(
-                "signac_job_document.json",
-                os.path.join(subfolder, "signac_job_document.json"),
-            )
-        else:
-            for glob_arg in glob_args:
-                for file_path in glob.glob(glob_arg):
-                    os.remove(file_path)
-
-    # Regardless of whether we remove or move the files, we want to delete the job document keys
-    del job.doc["nsteps_gemc_eq"]  # run_gemc
-    if "gemc_eq_fin" in job.doc.keys():
-        del job.doc["gemc_eq_fin"]
 
 def delete_data(job, run_name, mv=True, subfolder="results_old"):
     "Delete data from previous operations"
@@ -535,12 +491,12 @@ def delete_data(job, run_name, mv=True, subfolder="results_old"):
     del job.doc["vapboxl"]  # calc_boxes
     del job.doc["liqboxl"]  # calc_boxes
     del job.doc["nsteps_gemc_eq"]  # run_gemc
-    if "nvt_fin" in job.doc.keys():
-        del job.doc["nvt_fin"]  # nvt_liqbox
-    if "npt_fin" in job.doc.keys():
-        del job.doc["npt_fin"]  # NPT_liqbox
-    if "gemc_eq_fin" in job.doc.keys():
-        del job.doc["gemc_eq_fin"]
+    if "nvt_finished" in job.doc.keys():
+        del job.doc["nvt_finished"]  # nvt_liqbox
+    if "npt_finished" in job.doc.keys():
+        del job.doc["npt_finished"]  # NPT_liqbox
+    if "gemc_equil_complete" in job.doc.keys():
+        del job.doc["gemc_equil_complete"]
 
 
 def make_usable_xyz(job, filename, box):
@@ -649,11 +605,12 @@ def get_gemc_boxes(job, eq_data_name):
 
     return liq_box, vap_box, boxl_liq, boxl_vap, mols_in_boxes, mols_to_add
 
+
 @ProjectGEMC.pre.after(extract_final_NPT_config)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectGEMC.post(gemc_equil_complete)
+@ProjectGEMC.post(gemc_prod_complete)
 @ProjectGEMC.operation(directives={"omp_num_threads": 2})
-def run_gemc_eq(job):
+def run_gemc(job):
     "Equilibrate GEMC"
 
     import os
@@ -788,7 +745,13 @@ def run_gemc_eq(job):
                 prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
 
                 # Check if equilibration is reached via the pymser algorithms
+                # if (
+                #     total_eq_steps >= existing_eq_steps
+                #     and total_eq_steps >= 5 * job.sp.nsteps_gemc_eq
+                # ):
                 is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+                # else:
+                #     is_equil = False
 
                 # Check if this simulation restarts from an equilibrated one at the same temperature
                 if "restart_from" in job.doc.keys():
@@ -796,7 +759,7 @@ def run_gemc_eq(job):
                         # If at least 100k steps have been run
                         if (
                             total_eq_steps >= existing_eq_steps
-                            and total_eq_steps >= job.sp.nsteps_gemc_prod
+                            and total_eq_steps >= job.sp.nsteps_gemc_eq * 10
                         ):
                             # Start production run from the last piece of the equilibration run
                             is_equil = True
@@ -872,8 +835,27 @@ def run_gemc_eq(job):
             job.doc.nsteps_gemc_eq = total_eq_steps
             job.doc.equil_fail = False
             total_sim_steps = int(job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq)
-            job.doc["total_gemc_steps"] = total_sim_steps
-            job.doc["gemc_eq_fin"] = True
+
+            # Only run production if nmols liquid average > 30
+            if np.mean(eq_col_restart) > 30:  # 30
+                # Run production
+                if not has_checkpoint("prod"):
+                    mc.restart(
+                        restart_from=prior_run,
+                        run_type="production",
+                        total_run_length=total_sim_steps,
+                        run_name="prod",
+                    )
+                elif not check_complete("prod"):
+                    mc.restart(
+                        restart_from=get_last_checkpoint("prod"),
+                    )
+            else:
+                # Otherwise add to the job document that the production failed
+                job.doc["nmol_under_30"] = True
+                raise Exception(
+                    "GEMC production failed because the number of molecules in the liquid box is less than 30"
+                )
 
     except:
         vap_box_mult_str = (
@@ -882,17 +864,27 @@ def run_gemc_eq(job):
             else ""
         )
         rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
-        crit_str = "_crit" if "use_crit" in job.doc.keys() and job.doc.use_crit == True else "_no_crit"
-        results_folder = "results_" + crit_str + vap_box_mult_str + rst_str
         # If equilibration wasn't long enough
         if "equil_fail" in job.doc and job.doc.equil_fail == True:
-            # Extend the simulation
+            # Extend the simulation, make a flag to check this job
+            job.doc.max_eq_steps = max_eq_steps + job.sp.nsteps_gemc_eq
+            job.doc.nsteps_gemc_eq = job.doc.max_eq_steps
+            # # If using not the critical point, try again with the critical point
+            # if "use_crit" not in job.doc or job.doc.use_crit == False:
+            #     # Move data and try again with critical conditions
+            #     delete_data(
+            #         job,
+            #         custom_args_gemc["run_name"],
+            #         mv=True,
+            #         subfolder="results_no_crit" + vap_box_mult_str + rst_str,
+            #     )
+            #     job.doc.use_crit = True
+            #     del job.doc["equil_fail"]
+            # # Otherwise, if using critical conditions, extend the simulation
+            # else:
             job.doc.max_eq_steps = max_eq_steps + job.sp.nsteps_gemc_eq
             job.doc.nsteps_gemc_eq = job.doc.max_eq_steps
             del job.doc["equil_fail"]
-            #Make a flag to check this job before starting production or restarting gemc equilibration
-            job.doc["check_me"] = True
-            job.doc["gemc_eq_fin"] = True
         # if GEMC failed with critical conditions as intial conditions, terminate with error
         elif "use_crit" in job.doc and job.doc.use_crit == True:
             job.doc.gemc_failed = True
@@ -900,7 +892,7 @@ def run_gemc_eq(job):
                 job,
                 custom_args_gemc["run_name"],
                 mv=True,
-                subfolder=results_folder,
+                subfolder="results_crit" + vap_box_mult_str + rst_str,
             )
             raise Exception(
                 "GEMC failed with critical and experimental starting conditions and the molecule is "
@@ -908,133 +900,25 @@ def run_gemc_eq(job):
                 + " at temperature "
                 + str(job.sp.T)
             )
-        # If GEMC fails, remove files in post conditions of previous operations
         else:
+            # If GEMC fails, remove files in post conditions of previous operations
             delete_data(
                 job,
                 custom_args_gemc["run_name"],
                 mv=True,
-                subfolder=results_folder,
+                subfolder="results_no_crit" + vap_box_mult_str + rst_str,
             )
             # If the simulation failed for another reason, try with critical conditions
             job.doc.use_crit = True
             if "equil_fail" in job.doc:
                 del job.doc["equil_fail"]
-                
-@ProjectGEMC.pre.after(run_gemc_eq)
+
+@ProjectGEMC.pre.after(extract_final_NPT_config)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(gemc_prod_complete)
 @ProjectGEMC.operation(directives={"omp_num_threads": 2})
-def check_eq(job):
-    from scipy.signal import savgol_filter
-    import numpy as np
-    vap_box_mult_str = (
-            "_vbx_" + str(job.doc.vap_box_mult)
-            if "vap_box_mult" in job.doc.keys()
-            else ""
-        )
-    rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
-    crit_str = "_crit" if "use_crit" in job.doc.keys() and job.doc.use_crit == True else "_no_crit"
-    # If the job failed, move files to a separate folder
-    folder_name = "results_" + crit_str + vap_box_mult_str + rst_str
-
-    first_shrink = False
-    prod_ready = {"rst_data": True, "nmol_under_30": True, "box_size": True}
-    #Get box data
-    # Process and add the restart data to eq_col for each property in each box
-    eq_data_dict = {}
-    prop_cols = [5]  # Use number of moles to decide equilibrium
-    for b in range(2):
-        box_name = "Liquid" if b == 0 else "Vapor"
-        for i, prop_index in enumerate(prop_cols):
-            # Get the key from the property and box name
-            key = f"{box_name}_{prop_index}"
-            # Extract the column data for this restart and append to accumulated data
-            eq_data_dict[key]["file"] = job.fn(f"{box_name}_eq_col_{prop_index}.csv")
-            eq_data_dict[key]["data"] = np.genfromtxt(eq_data_dict[key]["file"], delimiter=",")
-            if i ==0 and b==0:
-                eq_col_liq = eq_data_dict[key]["data"]
-    # Get the eq data for liquid box n_mols
-    results, adf_test = get_pymser_results(eq_col_liq)
-
-    # Only count this run as ready for production if at least 30 molecules are in the liquid box
-    if np.mean(eq_col_liq[results["t0"]:]) < 30:  # 30
-        # Otherwise add to the job document that the production failed
-        job.doc["nmol_under_30"] = True
-        job.doc["check_me"] = True
-        prod_ready["nmol_under_30"] = False
-    
-    #If check_me is true 
-    if "check_me" in job.doc.keys() and job.doc.check_me == True:
-        del job.doc["gemc_eq_fin"]
-        #First check if a simulation with the same or more steps at this temperature has completed
-        project = signac.get_project()
-        for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
-            #Check if a simulation has completed and passed the check
-            condition1 = "gemc_eq_fin" in job.doc.keys() and job.doc.gemc_eq_fin == True
-            condition2 = "prod_ready" in job.doc.keys() and job.doc.prod_ready == True
-            if condition1 and condition2:
-                #Restart from this job
-                job.doc["restart_from"] = job.id
-                prod_ready["rst_data"] = False
-                break
-
-    #If no such simulation exists, expand the vapor box and restart
-    if "restart_from" not in job.doc.keys() and "check_me" in job.doc.keys() and job.doc.check_me == True:
-        #Check if the simulation seems likely to vaporize/liquidate. 
-        # When this step happens, at least 200K steps should have been run
-        #Check if the number of molecules in the liquid box is decreasing on average
-        steps = np.arange(0, len(eq_col_liq))
-        # Estimate the slope of the number of molecules in the liquid box vs step number
-        dydx = savgol_filter(eq_col_liq, window_length=int(len(eq_col_liq)*0.1), polyorder=2, deriv=1)
-        #Count percentage of points with positive slope
-        pos_slope = np.count_nonzero(dydx > 0)
-        pct_pos = pos_slope/len(dydx)*100
-        #if more than 80% of the points have a positive slope, the liquid box is likely to condense (increase vapor box size)
-        if pct_pos > 80 and job.doc.nsteps_gemc_eq >= 200000:
-             #If we've already increased the vapor box once, double the volume
-            if "vap_box_mult" in job.doc.keys():
-                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2))**(1/3)
-            #Shrink vapor box volume by factor of 3
-            else:
-                job.doc.vap_box_mult = round(2.5**(1/3),3)
-            prod_ready["box_size"] = False
-        elif pct_pos < 20 and job.doc.nsteps_gemc_eq >= 200000:
-            #If more than 80% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
-            if "vap_box_mult" in job.doc.keys():
-                #Shrink the vapor box, by half the volume
-                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5))**(1/3)
-            #Try with critical conditions if not already done (vapo will be smaller and liquid larger)
-            elif "use_crit" not in job.doc.keys():
-                job.doc["use_crit"] = True
-                first_shrink = True
-            #Shrink vapor box volume by factor of 2
-            else:
-                job.doc.vap_box_mult = round(0.5**(1/3),3)
-            prod_ready["box_size"] = False
-
-    if np.all(list(prod_ready.values())):
-        job.doc["prod_ready"] = True
-    else:
-        #Delete check_me flag
-        del job.doc["check_me"]
-        #Delete previous data files
-        with job:
-            if first_shrink == False:
-                #Delete all gemc data if changing the vapor box size
-                delete_data_gemc(job, "gemc.eq", mv=True, subfolder=folder_name)
-            #Delete all data if switching to critical conditions
-            else:
-                #Delete only the gemc equilibration data if trying with critical conditions
-                delete_data(job, "gemc.eq", mv=True, subfolder=folder_name)
-            
-
-@ProjectGEMC.pre.after(check_eq)
-@ProjectGEMC.pre(lambda job: "prod_ready" in job.doc)
-@ProjectGEMC.post(gemc_prod_complete)
-@ProjectGEMC.operation(directives={"omp_num_threads": 2})
-def run_gemc_prod(job):
-    "Production Phase GEMC"
+def run_gemc(job):
+    "Equilibrate GEMC"
 
     import os
     import errno
@@ -1044,6 +928,35 @@ def run_gemc_prod(job):
     import unyt as u
     import glob
 
+    ff = foyer.Forcefield(job.fn("ff.xml"))
+
+    # Load the compound and apply the ff
+    compound = mbuild.load(job.sp.smiles, smiles=True)
+    compound_ff = ff.apply(compound)
+    run_name_eq = "gemc.eq"
+    
+    #Create box and system
+    liq_box, vap_box, boxl_liq, boxl_vap, mols_in_boxes, mols_to_add = get_gemc_boxes(
+        job, run_name_eq
+    )
+    box_list = [liq_box, vap_box]
+    species_list = [compound_ff]
+    system = mc.System(
+        box_list, species_list, mols_in_boxes=mols_in_boxes, mols_to_add=mols_to_add
+    )
+
+    # Create a new moves object
+    moves = mc.MoveSet("gemc", species_list)
+
+    # Edit the volume and swap move probability to be more reasonable
+    orig_prob_volume = moves.prob_volume
+    orig_prob_swap = moves.prob_swap
+    new_prob_volume = 1.0 / (job.sp.N_vap + job.sp.N_liq)
+    new_prob_swap = 4.0 / 0.05 / (job.sp.N_vap + job.sp.N_liq)
+    moves.prob_volume = new_prob_volume
+    moves.prob_swap = new_prob_swap
+    moves.prob_translate = moves.prob_translate + orig_prob_volume - new_prob_volume
+    moves.prob_translate = moves.prob_translate + orig_prob_swap - new_prob_swap
 
     # Define thermo output props
     thermo_props = [
@@ -1057,49 +970,265 @@ def run_gemc_prod(job):
 
     # Define custom args
     custom_args, custom_args_gemc = _get_custom_args(job)
-    run_name_eq = "gemc.eq"
     custom_args_gemc["run_name"] = run_name_eq
     custom_args_gemc["properties"] = thermo_props
 
-    #Get last checkpoint from equilibration
-    prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
+    #Set vapor cutoff to 95% of half the box length or 6*max_sigma, whichever is smaller
+    cutoff_vap = np.minimum(round(0.95*boxl_vap/2,5), round(6 * job.sp.max_sigma, 5))
+    custom_args_gemc["charge_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
+    custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
+    job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
 
     # Try to run GEMC
     try:
         with job:
-            # Get final number of equilibration steps
-            total_sim_steps = job.doc.total_gemc_steps
-            # Run production
-            if not has_checkpoint("prod"):
-                mc.restart(
-                    restart_from=prior_run,
-                    run_type="production",
-                    total_run_length=total_sim_steps,
-                    run_name="prod",
+            first_run = custom_args_gemc["run_name"]  # gemc.eq
+            # Run initial equilibration if it does not exxist
+            if not has_checkpoint(first_run):
+                mc.run(
+                    system=system,
+                    moveset=moves,
+                    run_type="equilibration",
+                    run_length=job.sp.nsteps_gemc_eq,
+                    temperature=job.sp.T * u.K,
+                    **custom_args_gemc,
                 )
-            elif not check_complete("prod"):
+            elif not check_complete(first_run):
                 mc.restart(
-                    restart_from=get_last_checkpoint("prod"),
+                    restart_from=get_last_checkpoint(first_run),
+                )
+
+            init_gemc_liq = job.fn(first_run + ".out.box1.prp")
+            init_gemc_vap = job.fn(first_run + ".out.box2.prp")
+            prop_cols = [5]  # Use number of moles to decide equilibrium
+            # Load initial eq data from both boxes
+            df_box1 = np.genfromtxt(init_gemc_liq)
+            df_box2 = np.genfromtxt(init_gemc_vap)
+
+            # Process both boxes in one loop
+            eq_data_dict = {}
+            for b, box in enumerate([df_box1, df_box2]):
+                box_name = "Liquid" if b == 0 else "Vapor"
+                for prop_index in prop_cols:
+                    eq_col = box[:, prop_index - 1]
+                    # Save eq_col as a csv for later analysis
+                    key = f"{box_name}_{prop_index}"
+                    eq_col_file = job.fn(f"{box_name}_eq_col_{prop_index}.csv")
+                    np.savetxt(eq_col_file, eq_col, delimiter=",")
+                    # Save the eq_col and file to a dictionary for later use
+                    eq_data_dict[key] = {"data": eq_col, "file": eq_col_file}
+
+            if os.path.exists("Equil_Output.txt"):  # Remove the file if it exists
+                os.remove("Equil_Output.txt")
+
+            # Set number of iterations per extension and intitialize counter and total number of steps
+            eq_extend = int(job.sp.nsteps_gemc_eq/4)  # int(job.sp.nsteps_gemc_eq/4)
+            total_eq_steps = job.sp.nsteps_gemc_eq
+            count = 1
+
+            # Get the total number of equilibration restarts and steps so far
+            existing_eq_steps = count_steps(
+                get_last_checkpoint(custom_args_gemc["run_name"])
+            )
+
+            # Inititalize max number of eq_steps
+            if "max_eq_steps" not in job.doc:
+                # If no value exists, set it as 5 times the original number of eq steps
+                job.doc.max_eq_steps = job.sp.nsteps_gemc_eq * 4
+            # The max number of steps is the larger of the number of steps + the org number of steps or the current max
+            max_eq_steps = np.maximum(
+                job.doc.max_eq_steps, existing_eq_steps + 2 * job.sp.nsteps_gemc_eq
+            )
+            # Originally set the document eq_steps to the max number, it will be overwritten later
+            job.doc.nsteps_gemc_eq = int(max_eq_steps)
+
+            # While the max number of eq steps has not been reached
+            while total_eq_steps <= max_eq_steps:
+                # Set production start tolerance as at least 25% of the total number of data points
+                prod_tol_eq = int(total_eq_steps / 4) / custom_args_gemc["prop_freq"]
+
+                # Set this run and last last run
+                this_run = custom_args_gemc["run_name"] + f".rst.{count:03d}"
+                prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
+
+                # Check if equilibration is reached via the pymser algorithms
+                # if (
+                #     total_eq_steps >= existing_eq_steps
+                #     and total_eq_steps >= 5 * job.sp.nsteps_gemc_eq
+                # ):
+                is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+                # else:
+                #     is_equil = False
+
+                # Check if this simulation restarts from an equilibrated one at the same temperature
+                if "restart_from" in job.doc.keys():
+                    if "T_rst_match" in job.doc.keys() and job.doc.T_rst_match == True:
+                        # If at least 100k steps have been run
+                        if (
+                            total_eq_steps >= existing_eq_steps
+                            and total_eq_steps >= job.sp.nsteps_gemc_eq * 10
+                        ):
+                            # Start production run from the last piece of the equilibration run
+                            is_equil = True
+
+                # If equilibrium is reached, break the loop
+                if is_equil:
+                    break
+                # Otherwise, extend the simulation
+                else:
+                    # Check if this simulation exists
+                    sim_exists = has_checkpoint(this_run)
+
+                    # If the simulation exists
+                    if sim_exists:
+                        # Get the number of total steps in the simulation
+                        this_run_input = this_run
+                        total_eq_steps = int(count_steps(this_run_input))
+                    else:
+                        # Set the number of total steps given eq_extend
+                        total_eq_steps += int(eq_extend)
+
+                    # If you have enough steps, run the simulation
+                    if total_eq_steps <= max_eq_steps:
+                        # If the simulation doesn't exist, run it
+                        if not sim_exists:
+                            mc.restart(
+                                restart_from=prior_run,
+                                run_type="equilibration",
+                                total_run_length=total_eq_steps,
+                                run_name=this_run,
+                            )
+                        # If the simulation exists but is not complete, restart it
+                        elif sim_exists and not check_complete(this_run):
+                            # Finish the simulation
+                            mc.restart(
+                                restart_from=get_last_checkpoint(this_run),
+                            )
+                    # Otherwise report an error
+                    else:
+                        job.doc.equil_fail = True
+                        raise Exception(
+                            f"GEMC equilibration failed to converge after {max_eq_steps} steps"
+                        )
+
+                    # Add restart data to eq_col
+                    # After each restart, load the updated properties data for both boxes
+                    sim_box1 = this_run + ".out.box1.prp"
+                    sim_box2 = this_run + ".out.box2.prp"
+                    df_box1r = np.genfromtxt(job.fn(sim_box1))
+                    df_box2r = np.genfromtxt(job.fn(sim_box2))
+
+                    # Process and add the restart data to eq_col for each property in each box
+                    for b, box in enumerate([df_box1r, df_box2r]):
+                        box_name = "Liquid" if b == 0 else "Vapor"
+                        for i, prop_index in enumerate(prop_cols):
+                            # Get the key from the property and box name
+                            key = f"{box_name}_{prop_index}"
+                            # Extract the column data for this restart and append to accumulated data
+                            eq_col_restart = box[:, prop_index - 1]
+                            all_eq_data = np.concatenate(
+                                (eq_data_dict[key]["data"], eq_col_restart)
+                            )
+                            # Save the new data to the eq_col file
+                            np.savetxt(
+                                eq_data_dict[key]["file"], all_eq_data, delimiter=","
+                            )
+                            # Overwite the current data in the eq_data_dict with restart data
+                            eq_data_dict[key]["data"] = all_eq_data
+                # Increase the counter
+                count += 1
+
+            # Set the step counter to whatever the final number of equilibration steps was
+            job.doc.nsteps_gemc_eq = total_eq_steps
+            job.doc.equil_fail = False
+            total_sim_steps = int(job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq)
+
+            # Only run production if nmols liquid average > 30
+            if np.mean(eq_col_restart) > 30:  # 30
+                # Run production
+                if not has_checkpoint("prod"):
+                    mc.restart(
+                        restart_from=prior_run,
+                        run_type="production",
+                        total_run_length=total_sim_steps,
+                        run_name="prod",
+                    )
+                elif not check_complete("prod"):
+                    mc.restart(
+                        restart_from=get_last_checkpoint("prod"),
+                    )
+            else:
+                # Otherwise add to the job document that the production failed
+                job.doc["nmol_under_30"] = True
+                raise Exception(
+                    "GEMC production failed because the number of molecules in the liquid box is less than 30"
                 )
 
     except:
-        # if GEMC fails in production, terminate with error
-        job.doc.gemc_failed = True
-        raise Exception(
-            "GEMC failed in production phase and the molecule is "
-            + job.sp.mol_name
-            + " at temperature "
-            + str(job.sp.T)
+        vap_box_mult_str = (
+            "_vbx_" + str(job.doc.vap_box_mult)
+            if "vap_box_mult" in job.doc.keys()
+            else ""
         )
+        rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
+        # If equilibration wasn't long enough
+        if "equil_fail" in job.doc and job.doc.equil_fail == True:
+            # Extend the simulation, make a flag to check this job
+            job.doc.max_eq_steps = max_eq_steps + job.sp.nsteps_gemc_eq
+            job.doc.nsteps_gemc_eq = job.doc.max_eq_steps
+            # # If using not the critical point, try again with the critical point
+            # if "use_crit" not in job.doc or job.doc.use_crit == False:
+            #     # Move data and try again with critical conditions
+            #     delete_data(
+            #         job,
+            #         custom_args_gemc["run_name"],
+            #         mv=True,
+            #         subfolder="results_no_crit" + vap_box_mult_str + rst_str,
+            #     )
+            #     job.doc.use_crit = True
+            #     del job.doc["equil_fail"]
+            # # Otherwise, if using critical conditions, extend the simulation
+            # else:
+            job.doc.max_eq_steps = max_eq_steps + job.sp.nsteps_gemc_eq
+            job.doc.nsteps_gemc_eq = job.doc.max_eq_steps
+            del job.doc["equil_fail"]
+        # if GEMC failed with critical conditions as intial conditions, terminate with error
+        elif "use_crit" in job.doc and job.doc.use_crit == True:
+            job.doc.gemc_failed = True
+            delete_data(
+                job,
+                custom_args_gemc["run_name"],
+                mv=True,
+                subfolder="results_crit" + vap_box_mult_str + rst_str,
+            )
+            raise Exception(
+                "GEMC failed with critical and experimental starting conditions and the molecule is "
+                + job.sp.mol_name
+                + " at temperature "
+                + str(job.sp.T)
+            )
+        else:
+            # If GEMC fails, remove files in post conditions of previous operations
+            delete_data(
+                job,
+                custom_args_gemc["run_name"],
+                mv=True,
+                subfolder="results_no_crit" + vap_box_mult_str + rst_str,
+            )
+            # If the simulation failed for another reason, try with critical conditions
+            job.doc.use_crit = True
+            if "equil_fail" in job.doc:
+                del job.doc["equil_fail"]
 
-@ProjectGEMC.pre.after(run_gemc_prod)
+
+@ProjectGEMC.pre.after(run_gemc)
 @ProjectGEMC.pre(gemc_prod_complete)
 @ProjectGEMC.post(
     lambda job: "no_overlap" in job.doc
     or ("gemc_failed" in job.doc and job.doc.gemc_failed == True)
 )
 @ProjectGEMC.operation
-def check_prod_data(job):
+def check_prod_overlap(job):
     "Check if the production files overlap"
     import numpy as np
     import os
@@ -1108,12 +1237,9 @@ def check_prod_data(job):
 
     density_col = 6
 
-    check_dict = {"no_overlap": True,
-                  "Nexc_good": True}
     if "gemc_failed" in job.doc and job.doc.gemc_failed == True:
         pass
     else:
-        ###First, Check to make sure there is no overlap between boxes
         with job:
             # Get all production files
             prod_files1 = sorted(glob.glob("prod.*.box1.prp"))
@@ -1136,53 +1262,15 @@ def check_prod_data(job):
             print(
                 f"Molecule: {job.sp.mol_name}, T: {job.sp.T}, Restart from: {job.sp.restart}"
             )
-            check_dict["no_overlap"] = False
-
-        ###Next, check that the number of insertions and deletions are reasonable
-        insert_val = None
-        delete_val = None
-        
-        #Initialize log file as production file
-        filename = job.fn("prod.out.log")
-
-        #Find the last instance of the words insert and delete starting from the bottom of the file
-        # Read file lines
-        with FileReadBackwards(filename, encoding="utf-8") as frb:
-            for line in frb:
-                if "Delete" in line:
-                    # Split the last line and extract the first number
-                    delete_val = int(line.split()[2])
-                elif "Insert" in line:
-                    # Split the last line and extract the first number
-                    insert_val = int(line.split()[2])
-                    break
-        N_mols = job.sp.N_vap + job.sp.N_liq
-        pct_diff = abs(insert_val - delete_val) / insert_val * 100
-        job.doc["insert_val"] = insert_val
-        job.doc["delete_val"] = delete_val
-        job.doc["pct_diff"] = pct_diff
-        #Check that the insert and delete values are within 5% of each other
-        if pct_diff > 5:
-            print(f"Job {job.id}")
-            print(f"Warning: Large difference between insert and delete counts")
-            print(f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%")
-            check_dict["Nexc_good"] = False
-        #Check that the number of insertions and deletions are at least equal to the number of molecules
-        if insert_val < N_mols or delete_val < N_mols:
-            print(f"Job {job.id}")
-            print(f"Warning: Low number of insertions or deletions for job {job.id}")
-            print(f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}")
-            check_dict["Nexc_good"] = False
-
-        # Add gemc_failed to job doc and add no_overlap to job doc
-        prod_good = np.all(list(check_dict.values()))
-
-        job.doc.no_overlap = check_dict["no_overlap"]
-        job.doc.Nexc_good = check_dict["Nexc_good"]
-        
-        if not prod_good:
+            # command = (
+            # f"xmgrace -block workspace/{job.id}/prod.out.box1.prp -bxy 1:6 "
+            # f"-block workspace/{job.id}/prod.out.box2.prp -bxy 1:6"
+            # )
+            # subprocess.run(command, shell=True, check=True)
+            # Add gemc_failed to job doc and add no_overlap to job doc
             if "use_crit" in job.doc and job.doc.use_crit == True:
                 job.doc.gemc_failed = True
+                job.doc.no_overlap = False
             else:
                 vap_box_mult_str = (
                     "_vbx_" + str(job.doc.vap_box_mult)
@@ -1190,15 +1278,15 @@ def check_prod_data(job):
                     else ""
                 )
                 rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
-                crit_str = "_crit" if "use_crit" in job.doc.keys() and job.doc.use_crit == True else "_no_crit"
-                results_folder = "results_" + crit_str + vap_box_mult_str + rst_str
                 delete_data(
                     job,
                     "gemc.eq",
                     mv=True,
-                    subfolder=results_folder,
+                    subfolder="results_no_crit" + vap_box_mult_str + rst_str,
                 )
                 job.doc.use_crit = True
+        else:
+            job.doc.no_overlap = True
 
 
 # @Project.post(lambda job: "liq_density_unc" in job.doc)
@@ -1221,8 +1309,7 @@ def del_job(job):
     job.remove()
 
 
-@ProjectGEMC.pre.after(run_gemc_prod)
-@ProjectGEMC.pre.after(check_prod_data)
+@ProjectGEMC.pre.after(run_gemc)
 @ProjectGEMC.post.isfile("energy.png")
 @ProjectGEMC.post(lambda job: "liq_density" in job.doc)
 @ProjectGEMC.post(lambda job: "vap_density" in job.doc)
@@ -2336,47 +2423,6 @@ def plot_res_pymser(job, eq_col, results, name, box_name):
     fig.savefig(job.fn(save_name), dpi=300, facecolor="white")
     plt.close(fig)
 
-def get_pymser_results(eq_col):
-    """
-    This function determines the stationary region of a time series using pymser's equilibrate function.
-
-    Parameters:
-    -----------
-    eq_col : array-like, array of time series data
-
-    Returns:
-    --------
-    results : dict, results from pymser's equilibrate function
-    adf_test_failed : bool, whether the ADF test failed
-    """
-    batch_size = max(1, int(len(eq_col) * 0.0005))
-
-    # Try with ADF test enabled, fallback without it if it fails
-    try:
-        results = pymser.equilibrate(
-            eq_col,
-            LLM=False,
-            batch_size=batch_size,
-            ADF_test=True,
-            uncertainty="uSD",
-            print_results=False,
-        )
-        adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
-    except:
-        results = pymser.equilibrate(
-            eq_col,
-            LLM=False,
-            batch_size=batch_size,
-            ADF_test=False,
-            uncertainty="uSD",
-            print_results=False,
-        )
-        results["adf"], results["critical_values"], adf_test_failed = (
-            None,
-            None,
-            False,
-        )
-    return results, adf_test_failed
 
 def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
@@ -2387,8 +2433,42 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         # Load data for both boxes
         for key in list(eq_data_dict.keys()):
             eq_col = eq_data_dict[key]["data"]
-            results, adf_test_failed = get_pymser_results(eq_col)
-            # Check if equilibrated and meets production tolerance
+            # df_box1 = np.genfromtxt(job.fn("gemc.eq.out.box1.prp"))
+            # df_box2 = np.genfromtxt(job.fn("gemc.eq.out.box2.prp"))
+
+            # Process both boxes in one loop
+            # for box in [df_box1, df_box2]:
+            # for prop_index in prop_cols:
+            #     eq_col = box[:, prop_index - 1]
+            # print(len(eq_col))
+            batch_size = max(1, int(len(eq_col) * 0.0005))
+
+            # Try with ADF test enabled, fallback without it if it fails
+            try:
+                results = pymser.equilibrate(
+                    eq_col,
+                    LLM=False,
+                    batch_size=batch_size,
+                    ADF_test=True,
+                    uncertainty="uSD",
+                    print_results=False,
+                )
+                adf_test_failed = results["critical_values"]["1%"] <= results["adf"]
+            except:
+                results = pymser.equilibrate(
+                    eq_col,
+                    LLM=False,
+                    batch_size=batch_size,
+                    ADF_test=False,
+                    uncertainty="uSD",
+                    print_results=False,
+                )
+                results["adf"], results["critical_values"], adf_test_failed = (
+                    None,
+                    None,
+                    False,
+                )
+
             equilibrium = len(eq_col) - results["t0"] >= prod_tol
             equil_matrix.append(equilibrium and not adf_test_failed)
             res_matrix.append(results)
