@@ -21,7 +21,7 @@ from utils.molec_class_files import esolvs
 # Set params for what you want to analyze
 save_data = True  # Data to save
 obj_choice = "ExpVal"  # Objective to consider
-at_number = 1 # atom type to consider (1 or 2)
+at_number = 0 # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
 molec_names = ["EG", "Gly", "MeOH"]  # Training data to consider
@@ -84,7 +84,7 @@ def get_vis(at_number, molec_list,  seed, obj_choice):
 
         # Get Property Predictions for all training molecules
         molec_names_all = molec_list
-        visual.comp_paper_full_ind(molec_names_all, save_label=x_label_set)
+        visual.comp_paper_full_ind(molec_names_all, theta_guess = best_real, save_label=x_label_set)
 
         # Calculate MAPD for predictions and save results
         df = visual.calc_MAPD_best(
