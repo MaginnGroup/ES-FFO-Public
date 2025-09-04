@@ -26,4 +26,4 @@ for job in project.find_jobs({"mol_name": "DMSO", "iter": 1}):
             #             print(lines[-1].strip())
             # else:
             #     print("Log file does not exist.")
-print(f"Total unfinished jobs: {count}")
+print(f"Total finished jobs: {count}")
