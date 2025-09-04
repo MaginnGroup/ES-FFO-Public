@@ -237,6 +237,7 @@ def NVT_liqbox(job):
 
         try:
             with job:
+                job.doc.use_crit = True
                 # Run equilibration
                 mc.run(
                     system=system,
@@ -246,8 +247,7 @@ def NVT_liqbox(job):
                     temperature=job.sp.T * u.K,
                     **custom_args,
                 )
-                job.doc.use_crit = True
-
+                
                 job["nvt_fin"] = True
         #Otherwise this job has failed
         except:

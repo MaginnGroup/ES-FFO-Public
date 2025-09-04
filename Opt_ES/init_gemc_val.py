@@ -27,6 +27,7 @@ def unpack_molec_values(molec_name, at_class, sample, state_point):
     """
     Unpacks sckaled sample values given the molecule under study
     """
+    max_sigma = 0
     # Unpack the sample according to atom typing scheme mapping dictionary
     molec_map_dict = at_class.molec_map_dicts[molec_name]
     param_names = molec_map_dict.keys()
@@ -36,7 +37,10 @@ def unpack_molec_values(molec_name, at_class, sample, state_point):
     # Add params based on the order they show up in given the mapping
     for param in param_names:
         state_point[param] = sample[index_mapping[param]].item()
-    return state_point
+        if "sigma" in param:
+            if state_point[param] > max_sigma:
+                max_sigma = state_point[param]
+    return state_point, max_sigma
 
 def get_gaff_sp(molec_data, state_point):
     """
@@ -88,7 +92,11 @@ for molec_name, molec_data in molec_dict.items():
         if at_number == 0 or molec_name in gen_FF_mols:
             state_point["atom_type"] = at_number
             setup = opt_atom_types.Problem_Setup(molec_names, at_number, obj_choice)
-            param_bnds =setup.values_real_to_pref(setup.get_param_bnds_names()[0])
+            param_bounds, param_names = setup.get_param_bnds_names()
+            #Get the max sigma from the bounds and names
+            sigma_vals = [v for n, v in zip(param_names, param_bounds) if "sigma" in n]
+            max_sigma = np.max(sigma_vals)
+            param_bnds =setup.values_real_to_pref(param_bounds)
             all_molec_dir = setup.use_dir_name
             if os.path.exists(all_molec_dir / "unique_best_set.csv"):
                 all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
@@ -136,8 +144,9 @@ for molec_name, molec_data in molec_dict.items():
                     state_point["restart"] = restart + 1 
                     # Loop over all scaled samples
                     for sample in scaled_params:
-                        state_point = unpack_molec_values(
+                        state_point, max_sigma_ff = unpack_molec_values(
                                 molec_name, setup.at_class, sample, state_point
                             ) 
+                        state_point["max_sigma"] = max_sigma
                         job = project.open_job(state_point)
                         job.init()
