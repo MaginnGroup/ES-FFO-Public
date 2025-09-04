@@ -656,6 +656,8 @@ def get_gemc_boxes(job, eq_data_name):
     )
     liq_box.periodicity = [True, True, True]
 
+    job.doc["gemc_vapboxl"] = boxl_vap
+
     return liq_box, vap_box, boxl_liq, boxl_vap, mols_in_boxes, mols_to_add
 
 @eq_group
@@ -1072,6 +1074,13 @@ def run_gemc_prod(job):
     run_name_eq = "gemc.eq"
     custom_args_gemc["run_name"] = run_name_eq
     custom_args_gemc["properties"] = thermo_props
+
+    #Set vapor cutoff to 95% of half the box length to avoid k vectors issue
+    boxl_vap = job.doc["gemc_vapboxl"]
+    cutoff_vap = round(0.95*boxl_vap/2,5)
+    custom_args_gemc["charge_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
+    custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
+    job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
 
     #Get last checkpoint from equilibration
     prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
