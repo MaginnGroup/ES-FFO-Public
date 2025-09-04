@@ -224,7 +224,7 @@ def NVT_liqbox(job):
             if "use_crit" not in job.doc:
                 job.doc.use_crit = False
 
-            job["nvt_fin"] = True
+            job.doc["nvt_fin"] = True
     #If it doesn't work, try with critical point starting conditions
     except:
         # Note this overwrites liquid and vapor box lengths in job.doc
@@ -248,7 +248,7 @@ def NVT_liqbox(job):
                     **custom_args,
                 )
                 
-                job["nvt_fin"] = True
+                job.doc["nvt_fin"] = True
         #Otherwise this job has failed
         except:
             job.doc.nvt_failed == True
@@ -366,7 +366,7 @@ def NPT_liqbox(job):
                 pressure=pressure,
                 **custom_args,
             )
-            job["npt_fin"] = True
+            job.doc["npt_fin"] = True
         #If it fails, try restarting from ciritcal point conditions
         except:
             # if job failed with critical conditions as intial conditions, terminate with error
