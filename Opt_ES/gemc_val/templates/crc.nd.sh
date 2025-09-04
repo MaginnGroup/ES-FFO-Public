@@ -7,7 +7,6 @@
 #$ -m ae
 #$ -q long
 #$ -M mcarlozo@nd.edu
-#$ -l h_rt=264:00:00
 
 # module load gcc/9.1.0
 # source /afs/crc.nd.edu/group/maginn/group_members/Ryan_DeFever/software/gromacs-2020/gromacs-dp/bin/GMXRC

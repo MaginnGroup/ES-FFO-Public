@@ -200,7 +200,11 @@ FINISH LATER
 2. Run GEMC simulations (Pvap, rho_v, Hvap) and MD interface simulations (rho_l and surface tension)
    - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
   ```
-     cd Opt_ES/opt_ff_ms/
+     cd Opt_ES/gemc_val/
+     python project.py submit -o NPT_NVT --bundle=6 --parallel
+     python project.py submit -o EQ --bundle=6 --parallel
+     python project.py submit -o PROD --bundle=6 --parallel
+     
    ```  
 3. Check status a few times throughout the process
    ```  

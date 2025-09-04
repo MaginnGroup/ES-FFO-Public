@@ -175,7 +175,7 @@ def calc_boxes(job):
 @ProjectGEMC.pre.after(calc_boxes)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(nvt_finished)
-@ProjectGEMC.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def NVT_liqbox(job):
     "Equilibrate the liquid box using NVT simulation"
 
@@ -289,7 +289,7 @@ def extract_final_NVT_config(job):
 @ProjectGEMC.pre.after(extract_final_NVT_config)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(npt_finished)
-@ProjectGEMC.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def NPT_liqbox(job):
     "Equilibrate the liquid box"
 
@@ -657,7 +657,7 @@ def get_gemc_boxes(job, eq_data_name):
 @ProjectGEMC.pre.after(extract_final_NPT_config)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(gemc_equil_complete)
-@ProjectGEMC.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def run_gemc_eq(job):
     "Equilibrate GEMC"
 
@@ -930,7 +930,7 @@ def run_gemc_eq(job):
 @ProjectGEMC.pre.after(run_gemc_eq)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(gemc_prod_complete)
-@ProjectGEMC.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def check_eq(job):
     from scipy.signal import savgol_filter
     import numpy as np
@@ -1038,7 +1038,7 @@ def check_eq(job):
 @ProjectGEMC.pre.after(check_eq)
 @ProjectGEMC.pre(lambda job: "prod_ready" in job.doc)
 @ProjectGEMC.post(gemc_prod_complete)
-@ProjectGEMC.operation(directives={"omp_num_threads": 2})
+@ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def run_gemc_prod(job):
     "Production Phase GEMC"
 
