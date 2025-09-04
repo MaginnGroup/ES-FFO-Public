@@ -891,7 +891,7 @@ def run_gemc_eq(job):
         )
         rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
         crit_str = "_crit" if "use_crit" in job.doc.keys() and job.doc.use_crit == True else "_no_crit"
-        results_folder = "results_" + crit_str + vap_box_mult_str + rst_str
+        results_folder = "results" + crit_str + vap_box_mult_str + rst_str
         # If equilibration wasn't long enough
         if "equil_fail" in job.doc and job.doc.equil_fail == True:
             # Extend the simulation
@@ -945,7 +945,7 @@ def check_eq(job):
     rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
     crit_str = "_crit" if "use_crit" in job.doc.keys() and job.doc.use_crit == True else "_no_crit"
     # If the job failed, move files to a separate folder
-    folder_name = "results_" + crit_str + vap_box_mult_str + rst_str
+    folder_name = "results" + crit_str + vap_box_mult_str + rst_str
 
     first_shrink = False
     prod_ready = {"rst_data": True, "nmol_under_30": True, "box_size": True}
@@ -1201,7 +1201,7 @@ def check_prod_data(job):
                 )
                 rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
                 crit_str = "_crit" if "use_crit" in job.doc.keys() and job.doc.use_crit == True else "_no_crit"
-                results_folder = "results_" + crit_str + vap_box_mult_str + rst_str
+                results_folder = "results" + crit_str + vap_box_mult_str + rst_str
                 delete_data(
                     job,
                     "gemc.eq",
