@@ -971,11 +971,11 @@ def check_eq(job):
         project = signac.get_project()
         for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
             #Check if a simulation has completed and passed the check
-            condition1 = "gemc_eq_fin" in job.doc.keys() and job.doc.gemc_eq_fin == True
-            condition2 = "prod_ready" in job.doc.keys() and job.doc.prod_ready == True
+            condition1 = "gemc_eq_fin" in job_new.doc.keys() and job_new.doc.gemc_eq_fin == True
+            condition2 = "prod_ready" in job_new.doc.keys() and job_new.doc.prod_ready == True
             if condition1 and condition2:
                 #Restart from this job
-                job.doc["restart_from"] = job.id
+                job.doc["restart_from"] = job_new.id
                 prod_ready["rst_data"] = False
                 break
 
