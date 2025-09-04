@@ -33,7 +33,11 @@ class ProjectGEMC(FlowProject):
     #     # Set Project Path to be that of the current working directory
     #     super().__init__(path=current_path)
 
+nptnvt_group = ProjectGEMC.make_group(name="NPT_NVT")
+eq_group = ProjectGEMC.make_group(name="EQ")
+prod_group = ProjectGEMC.make_group(name="PROD")
 
+@nptnvt_group
 @ProjectGEMC.post.isfile("ff.xml")
 @ProjectGEMC.operation
 def create_forcefield(job):
@@ -159,7 +163,7 @@ def calc_box_helper(job):
 
     return job.doc.liqboxl, job.doc.vapboxl
 
-
+@nptnvt_group
 @ProjectGEMC.post(lambda job: "vapboxl" in job.doc)
 @ProjectGEMC.post(lambda job: "liqboxl" in job.doc)
 @ProjectGEMC.operation
@@ -167,7 +171,7 @@ def calc_boxes(job):
     "Calculate the initial box length of the boxes"
     liqbox, vapbox = calc_box_helper(job)
 
-
+@nptnvt_group
 @ProjectGEMC.pre.after(calc_boxes)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(nvt_finished)
@@ -251,7 +255,7 @@ def NVT_liqbox(job):
                 + job.sp.mol_name
             )
 
-
+@nptnvt_group
 @ProjectGEMC.pre.after(NVT_liqbox)
 @ProjectGEMC.post.isfile("nvt.final.xyz")
 @ProjectGEMC.post(lambda job: "nvt_liqbox_final_dim" in job.doc)
@@ -281,7 +285,7 @@ def extract_final_NVT_config(job):
             box_data.append(line.strip().split())
     job.doc.nvt_liqbox_final_dim = float(box_data[-6][0]) / 10.0  # nm
 
-
+@nptnvt_group
 @ProjectGEMC.pre.after(extract_final_NVT_config)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(npt_finished)
@@ -389,7 +393,7 @@ def NPT_liqbox(job):
                     for file_path in glob.glob("npt.*"):
                         os.remove(file_path)
 
-
+@nptnvt_group
 @ProjectGEMC.pre.after(NPT_liqbox)
 @ProjectGEMC.post.isfile("npt.final.xyz")
 @ProjectGEMC.post(lambda job: "npt_liqbox_final_dim" in job.doc)
@@ -649,6 +653,7 @@ def get_gemc_boxes(job, eq_data_name):
 
     return liq_box, vap_box, boxl_liq, boxl_vap, mols_in_boxes, mols_to_add
 
+@eq_group
 @ProjectGEMC.pre.after(extract_final_NPT_config)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(gemc_equil_complete)
@@ -920,7 +925,8 @@ def run_gemc_eq(job):
             job.doc.use_crit = True
             if "equil_fail" in job.doc:
                 del job.doc["equil_fail"]
-                
+
+@eq_group            
 @ProjectGEMC.pre.after(run_gemc_eq)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(gemc_prod_complete)
@@ -1028,7 +1034,7 @@ def check_eq(job):
                 #Delete only the gemc equilibration data if trying with critical conditions
                 delete_data(job, "gemc.eq", mv=True, subfolder=folder_name)
             
-
+@prod_group
 @ProjectGEMC.pre.after(check_eq)
 @ProjectGEMC.pre(lambda job: "prod_ready" in job.doc)
 @ProjectGEMC.post(gemc_prod_complete)
@@ -1092,10 +1098,11 @@ def run_gemc_prod(job):
             + str(job.sp.T)
         )
 
+@prod_group
 @ProjectGEMC.pre.after(run_gemc_prod)
 @ProjectGEMC.pre(gemc_prod_complete)
 @ProjectGEMC.post(
-    lambda job: "no_overlap" in job.doc
+    lambda job: ("no_overlap" in job.doc and "Nexc_good" in job.doc)
     or ("gemc_failed" in job.doc and job.doc.gemc_failed == True)
 )
 @ProjectGEMC.operation
@@ -1220,7 +1227,7 @@ def del_job(job):
     "Delete job if gemc failed"
     job.remove()
 
-
+@prod_group
 @ProjectGEMC.pre.after(run_gemc_prod)
 @ProjectGEMC.pre.after(check_prod_data)
 @ProjectGEMC.post.isfile("energy.png")
