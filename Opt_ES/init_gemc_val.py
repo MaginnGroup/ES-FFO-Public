@@ -114,7 +114,7 @@ for molec_name, molec_data in molec_dict.items():
                 best_idx = np.argmax(valid_rows) if valid_rows.any() else 0
 
             state_point["param_set"] = best_idx + 1
-            all_best_real = all_df.iloc[best_idx].values
+            all_best_real = setup.values_pref_to_real(all_df.iloc[best_idx].values)
             # Parameters in units nm and kJ/mol
             if at_number > 0:
                 param_matrix = setup.at_class.get_transformation_matrix({molec_name: molec_data})
