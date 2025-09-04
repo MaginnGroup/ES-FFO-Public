@@ -130,7 +130,7 @@ for molec_name, molec_data in molec_dict.items():
             for temp in temps:
                 state_point["T"] = float(temp)  # K
                 state_point["P"] =float(press[temp])  # bar
-                state_point["expt_liq_density"] = molec_data.expt_liq_density[temp],  # kg/m^3
+                state_point["expt_liq_density"] = molec_data.expt_liq_density[temp]  # kg/m^3
                 # For each restart
                 for restart in range(num_restarts):
                     state_point["restart"] = restart + 1 
