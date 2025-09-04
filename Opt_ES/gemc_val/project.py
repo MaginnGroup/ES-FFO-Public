@@ -497,7 +497,8 @@ def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
                     os.remove(file_path)
 
     # Regardless of whether we remove or move the files, we want to delete the job document keys
-    del job.doc["nsteps_gemc_eq"]  # run_gemc
+    if "nsteps_gemc_eq" in job.doc.keys():
+        del job.doc["nsteps_gemc_eq"]
     if "gemc_eq_fin" in job.doc.keys():
         del job.doc["gemc_eq_fin"]
 
@@ -541,7 +542,8 @@ def delete_data(job, run_name, mv=True, subfolder="results_old"):
     # Regardless of whether we remove or move the files, we want to delete the job document keys
     del job.doc["vapboxl"]  # calc_boxes
     del job.doc["liqboxl"]  # calc_boxes
-    del job.doc["nsteps_gemc_eq"]  # run_gemc
+    if "nsteps_gemc_eq" in job.doc.keys():
+        del job.doc["nsteps_gemc_eq"]  # run_gemc
     if "nvt_fin" in job.doc.keys():
         del job.doc["nvt_fin"]  # nvt_liqbox
     if "npt_fin" in job.doc.keys():
