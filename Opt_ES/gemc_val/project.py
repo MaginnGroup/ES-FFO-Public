@@ -964,8 +964,10 @@ def check_eq(job):
             # Get the key from the property and box name
             key = f"{box_name}_{prop_index}"
             # Extract the column data for this restart and append to accumulated data
-            eq_data_dict[key]["file"] = job.fn(f"{box_name}_eq_col_{prop_index}.csv")
-            eq_data_dict[key]["data"] = np.genfromtxt(eq_data_dict[key]["file"], delimiter=",")
+            eq_col_file = job.fn(f"{box_name}_eq_col_{prop_index}.csv")
+            eq_col = np.genfromtxt(eq_col_file, delimiter=",")
+            # Save the eq_col and file to a dictionary for later use
+            eq_data_dict[key] = {"data": eq_col, "file": eq_col_file}
             if i ==0 and b==0:
                 eq_col_liq = eq_data_dict[key]["data"]
     # Get the eq data for liquid box n_mols
