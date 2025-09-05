@@ -1085,12 +1085,11 @@ def run_gemc_prod(job):
     custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
 
-    #Get last checkpoint from equilibration
-    prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
-
     # Try to run GEMC
     try:
         with job:
+            #Get last checkpoint from equilibration
+            prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
             # Get final number of equilibration steps
             total_sim_steps = job.doc.total_gemc_steps
             # Run production
