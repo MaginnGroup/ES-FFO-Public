@@ -937,7 +937,7 @@ def run_gemc_eq(job):
 @eq_group            
 @ProjectGEMC.pre.after(run_gemc_eq)
 @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectGEMC.post(gemc_prod_complete)
+@ProjectGEMC.post(lambda job: "prod_ready" in job.doc)
 @ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def check_eq(job):
     from scipy.signal import savgol_filter
@@ -1032,6 +1032,7 @@ def check_eq(job):
     if np.all(list(prod_ready.values())):
         job.doc["prod_ready"] = True
     else:
+        job.doc["prod_ready"] = False
         #Delete check_me flag
         del job.doc["check_me"]
         #Delete previous data files
@@ -1046,7 +1047,7 @@ def check_eq(job):
             
 @prod_group
 @ProjectGEMC.pre.after(check_eq)
-@ProjectGEMC.pre(lambda job: "prod_ready" in job.doc)
+@ProjectGEMC.pre(lambda job: "prod_ready" in job.doc and job.doc.prod_ready == True)
 @ProjectGEMC.post(gemc_prod_complete)
 @ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def run_gemc_prod(job):
