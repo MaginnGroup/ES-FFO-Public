@@ -1263,10 +1263,9 @@ def calculate_props(job):
     import numpy as np
     import pylab as plt
 
-    sys.path.append("..")
-    from utils.analyze_ms import block_average
-
-    sys.path.remove("..")
+    sys.path.append("../../")
+    from block_average.block_average import block_average
+    sys.path.remove("../../")
 
     thermo_props = [
         "energy_total",
