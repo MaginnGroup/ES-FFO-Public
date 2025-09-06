@@ -1031,10 +1031,11 @@ def check_eq(job):
 
     if np.all(list(prod_ready.values())):
         job.doc["prod_ready"] = True
+        #If this job was being checked, it means it's not actually ready for production
+        if "check_me" in job.doc.keys():
+            del job.doc["prod_ready"]
     else:
         job.doc["prod_ready"] = False
-        #Delete check_me flag
-        del job.doc["check_me"]
         #Delete previous data files
         with job:
             if first_shrink == False:
@@ -1044,6 +1045,9 @@ def check_eq(job):
             else:
                 #Delete only the gemc equilibration data if trying with critical conditions
                 delete_data(job, "gemc.eq", mv=True, subfolder=folder_name)
+    #Delete the check_me flag
+    if "check_me" in job.doc.keys():
+        del job.doc["check_me"]
             
 @prod_group
 @ProjectGEMC.pre.after(check_eq)
