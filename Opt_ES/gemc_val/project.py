@@ -1006,8 +1006,8 @@ def check_eq(job):
         #Count percentage of points with positive slope
         pos_slope = np.count_nonzero(dydx > 0)
         pct_pos = pos_slope/len(dydx)*100
-        #if more than 80% of the points have a positive slope, the liquid box is likely to condense (increase vapor box size)
-        if pct_pos > 80 and job.doc.nsteps_gemc_eq >= 200000:
+        #if more than 85% of the points have a positive slope, the liquid box is likely to condense (increase vapor box size)
+        if pct_pos > 85 and job.doc.nsteps_gemc_eq >= 200000:
              #If we've already increased the vapor box once, double the volume
             if "vap_box_mult" in job.doc.keys():
                 job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2))**(1/3)
@@ -1015,13 +1015,13 @@ def check_eq(job):
             else:
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
             prod_ready["box_size"] = False
-        elif pct_pos < 20 and job.doc.nsteps_gemc_eq >= 200000:
-            #If more than 80% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
+        elif pct_pos < 15 and job.doc.nsteps_gemc_eq >= 200000:
+            #If more than 85% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
             if "vap_box_mult" in job.doc.keys():
                 #Shrink the vapor box, by half the volume
                 job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5))**(1/3)
             #Try with critical conditions if not already done (vapo will be smaller and liquid larger)
-            elif "use_crit" not in job.doc.keys():
+            elif ("use_crit" not in job.doc.keys()) or ("use_crit" in job.doc.keys() and job.doc.use_crit == False):
                 job.doc["use_crit"] = True
                 first_shrink = True
             #Shrink vapor box volume by factor of 2
