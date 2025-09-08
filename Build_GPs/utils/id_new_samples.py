@@ -1157,8 +1157,8 @@ def select_final_pareto(df_pareto, root_dir, iter_num, props_pareto, threshold =
     cols_to_drop = ["is_pareto"]
     for prop in properties:
         if "mse_" + prop in df_pareto.columns:
-            # Remove the sim, mse and mae columns
-            cols_to_drop += ["mse_" + prop, "mae_" + prop]
+            # Remove the mpd, mse and mae columns
+            cols_to_drop += ["mse_" + prop, "mae_" + prop, "mpd_" + prop]
 
     df_final = df_pareto.drop(columns=cols_to_drop)
 
