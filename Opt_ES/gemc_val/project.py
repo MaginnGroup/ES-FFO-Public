@@ -499,8 +499,19 @@ def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
     # Regardless of whether we remove or move the files, we want to delete the job document keys
     if "nsteps_gemc_eq" in job.doc.keys():
         del job.doc["nsteps_gemc_eq"]
+        del job.doc["gemc_vapboxl"]
     if "gemc_eq_fin" in job.doc.keys():
         del job.doc["gemc_eq_fin"]
+    if "prod_ready" in job.doc.keys():
+        del job.doc["prod_ready"]
+    if "no_overlap" in job.doc.keys():
+        del job.doc["no_overlap"]
+    if "Nexc_good" in job.doc.keys():
+        del job.doc["Nexc_good"]
+    if "pct_diff" in job.doc.keys():
+        del job.doc["pct_diff"]
+        del job.doc["insert_val"]
+        del job.doc["delete_val"]
 
 def delete_data(job, run_name, mv=True, subfolder="results_old"):
     "Delete data from previous operations"
@@ -544,12 +555,23 @@ def delete_data(job, run_name, mv=True, subfolder="results_old"):
     del job.doc["liqboxl"]  # calc_boxes
     if "nsteps_gemc_eq" in job.doc.keys():
         del job.doc["nsteps_gemc_eq"]  # run_gemc
+        del job.doc["gemc_vapboxl"]
     if "nvt_fin" in job.doc.keys():
         del job.doc["nvt_fin"]  # nvt_liqbox
     if "npt_fin" in job.doc.keys():
         del job.doc["npt_fin"]  # NPT_liqbox
     if "gemc_eq_fin" in job.doc.keys():
         del job.doc["gemc_eq_fin"]
+    if "prod_ready" in job.doc.keys():
+        del job.doc["prod_ready"]
+    if "no_overlap" in job.doc.keys():
+        del job.doc["no_overlap"]
+    if "Nexc_good" in job.doc.keys():
+        del job.doc["Nexc_good"]
+    if "pct_diff" in job.doc.keys():
+        del job.doc["pct_diff"]
+        del job.doc["insert_val"]
+        del job.doc["delete_val"]
 
 
 def make_usable_xyz(job, filename, box):
