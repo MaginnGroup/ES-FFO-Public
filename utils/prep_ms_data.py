@@ -235,31 +235,36 @@ def prepare_df_errors(df_data, data_dict, mol_name):
                     mse = mean_squared_error(fin_expt, fin_sim)
                     mapd = mean_absolute_percentage_error(fin_expt, fin_sim) * 100.0
                     mae = mean_absolute_error(fin_expt, fin_sim)
+                    pct_errors = (fin_sim - fin_expt)/fin_expt * 100.0
+                    mpd = np.average(pct_errors)
                 except ValueError as e:
                     print(f"Error in calculating {property_name} for {molecule_name}: {e}. Setting MSE, MAE, and MAPD to NaN")
                     print("Exp", expt_values, "\n Sim", sim_values)
-                    mse, mapd, mae = np.nan, np.nan, np.nan
-                return mse, mapd, mae
+                    mse, mapd, mae, mpd = np.nan, np.nan, np.nan, np.nan
+                return mse, mapd, mae, mpd
 
             for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap"]:
                 if "sim_" + prop in values.columns:
-                    mse, mapd, mae = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, mol_name)
+                    mse, mapd, mae, mpd = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, mol_name)
                     new_quantities["mse_" + prop] = mse
                     new_quantities["mapd_" + prop] = mapd
                     new_quantities["mae_" + prop] = mae
+                    new_quantities["mpd_" + prop] = mpd
 
             for prop in ["Tc", "rhoc"]:
                 if "sim_" + prop in values.columns:
-                    mse, mapd, mae = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, mol_name)
+                    mse, mapd, mae, mpd = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, mol_name)
                     new_quantities["mse_" + prop] = mse
                     new_quantities["mapd_" + prop] = mapd
                     new_quantities["mae_" + prop] = mae
+                    new_quantities["mpd_" + prop] = mpd
 
         else:
             for prop in list(all_props.keys()):
                 new_quantities["mse_" + prop] = np.nan
                 new_quantities["mapd_" + prop] = np.nan
                 new_quantities["mae_" + prop] = np.nan
+                new_quantities["mpd_" + prop] = np.nan
         
         data_to_append = list(group) + list(new_quantities.values())
         new_data.append(data_to_append)
