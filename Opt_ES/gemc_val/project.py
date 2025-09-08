@@ -660,11 +660,11 @@ def get_gemc_boxes(job, eq_data_name):
 
     return liq_box, vap_box, boxl_liq, boxl_vap, mols_in_boxes, mols_to_add
 
-@eq_group
-@ProjectGEMC.pre.after(extract_final_NPT_config)
-@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectGEMC.post(gemc_equil_complete)
-@ProjectGEMC.operation(directives={"omp_num_threads": 4})
+# @eq_group
+# @ProjectGEMC.pre.after(extract_final_NPT_config)
+# @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
+# @ProjectGEMC.post(gemc_equil_complete)
+# @ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def run_gemc_eq(job):
     "Equilibrate GEMC"
 
@@ -934,11 +934,6 @@ def run_gemc_eq(job):
             if "equil_fail" in job.doc:
                 del job.doc["equil_fail"]
 
-@eq_group            
-@ProjectGEMC.pre.after(run_gemc_eq)
-@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
-@ProjectGEMC.post(lambda job: "prod_ready" in job.doc)
-@ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def check_eq(job):
     from scipy.signal import savgol_filter
     import numpy as np
@@ -1048,9 +1043,32 @@ def check_eq(job):
     #Delete the check_me flag
     if "check_me" in job.doc.keys():
         del job.doc["check_me"]
+    return job.doc["prod_ready"]
+
+@eq_group
+@ProjectGEMC.pre.after(extract_final_NPT_config)
+@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc) #Job has not failed
+@ProjectGEMC.post(gemc_equil_complete) #Equilibration is complete
+@ProjectGEMC.post(lambda job: "prod_ready" in job.doc) #Production is ready to start
+@ProjectGEMC.operation(directives={"omp_num_threads": 4})
+def gemc_eq_restart(job):
+    "Restart GEMC equilibration if needed"
+    prod_completed = False
+    while not prod_completed:
+        #If the job is ready for production, skip this step
+        if "prod_ready" in job.doc.keys() and job.doc.prod_ready == True:
+            prod_completed = True
+        else:
+            run_gemc_eq(job)
+            prod_completed = check_eq(job)
+# @eq_group            
+# @ProjectGEMC.pre.after(run_gemc_eq)
+# @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
+# @ProjectGEMC.post(lambda job: "prod_ready" in job.doc)
+# @ProjectGEMC.operation(directives={"omp_num_threads": 4})
             
 @prod_group
-@ProjectGEMC.pre.after(check_eq)
+@ProjectGEMC.pre.after(gemc_eq_restart)
 @ProjectGEMC.pre(lambda job: "prod_ready" in job.doc and job.doc.prod_ready == True)
 @ProjectGEMC.post(gemc_prod_complete)
 @ProjectGEMC.operation(directives={"omp_num_threads": 4})
