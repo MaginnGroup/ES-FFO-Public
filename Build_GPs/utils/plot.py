@@ -329,9 +329,19 @@ def plot_sim_exp(mol_data, df_data, property_name):
     #Set new max and mins
     min_st, max_st = get_min_max(min_st, max_st, prop_vals, prop_unc)
     # #Plot opt_scheme_ms vle curve
-    ax2.errorbar(df_data["temperature"].values, prop_vals, yerr=1.96*prop_unc,
-                color="blue",markersize=10, linestyle='None', marker = "o", alpha=0.5, 
-                zorder = 1, label = "Simulation")
+    if len(df_data) == 1:
+        ax2.errorbar(df_data["temperature"].values, prop_vals, yerr=1.96*prop_unc,
+                    color="blue",markersize=10, linestyle='None', marker = "o", alpha=0.5, 
+                    zorder = 1, label = "Simulation")
+    else:
+        param_names = list(mol_data.param_names)
+        for i, ((param_vals), group_df) in enumerate(df_data.groupby(param_names)):
+            label = "Simulation" if i == 0 else None
+            prop_vals = group_df[property_name].values
+            prop_unc = group_df[property_name + "_unc"].values
+            ax2.errorbar(group_df["temperature"].values, prop_vals, yerr=1.96*prop_unc,
+                         markersize=10, linestyle='None', marker = "o", alpha=0.5, 
+                         zorder = 1, label = label)
 
     #Plot experimental data
     ax2.scatter(exp_data.keys(), exp_data.values(),
