@@ -563,7 +563,7 @@ def calculate_props(job):
 def em_restarts(job, sim_name, last_sim_name):
     """Run the energy minimization restarts"""
     #Repeat Energy Minimization 5 times to maximize convergence chances
-    n_restarts = 10
+    n_restarts = 20
     for i in range(n_restarts):
         run_md_wo_eqcheck(job, sim_name, last_sim_name)
 
