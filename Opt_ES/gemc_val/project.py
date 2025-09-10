@@ -804,11 +804,11 @@ def run_gemc_eq(job):
 
             # Inititalize max number of eq_steps
             if "max_eq_steps" not in job.doc:
-                # If no value exists, set it as 5 times the original number of eq steps
+                # If no value exists, set it as 4 times the original number of eq steps
                 job.doc.max_eq_steps = job.sp.nsteps_gemc_eq * 4
-            # The max number of steps is the larger of the number of steps + the org number of steps or the current max
+            # The max number of steps is the larger of the number of steps + 1-2*org number of steps or the current max
             max_eq_steps = np.maximum(
-                job.doc.max_eq_steps, existing_eq_steps + 2 * job.sp.nsteps_gemc_eq
+                job.doc.max_eq_steps, existing_eq_steps + job.sp.nsteps_gemc_eq
             )
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc.nsteps_gemc_eq = int(max_eq_steps)
@@ -1387,12 +1387,12 @@ def calculate_props(job):
     ax.spines["right"].set_linewidth(3)
     ax.spines["top"].set_linewidth(3)
 
-    ax.set_xlabel(r"MC steps or sweeps")
+    ax.set_xlabel(r"MC Sweeps")
     ax.set_ylabel("Energy")
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.title.set_text(f"Energy vs MC Steps or Sweeps @ {job.sp.T} K")
+    ax.title.set_text(f"Energy vs MC Sweeps @ {job.sp.T} K")
     ax.plot(steps, liq_energy, label="Liquid Energy")
     ax.plot(steps, vap_energy, label="Vapor Energy")
     ax.legend(loc="best")
@@ -2317,7 +2317,7 @@ def plot_res_pymser(job, eq_col, results, name, box_name):
     )
 
     ax1.set_ylabel(name, color="black", fontsize=14, fontweight="bold")
-    ax1.set_xlabel("GEMC Steps", fontsize=14, fontweight="bold")
+    ax1.set_xlabel("GEMC Sweeps", fontsize=14, fontweight="bold")
 
     ax1.plot(range(0, len(eq_col) * 10, 10), eq_col, label="Raw data", color="blue")
 
