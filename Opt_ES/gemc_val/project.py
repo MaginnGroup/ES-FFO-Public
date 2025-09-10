@@ -1019,7 +1019,8 @@ def check_eq(job):
         #Check if the number of molecules in the liquid box is decreasing on average
         steps = np.arange(0, len(eq_col_liq))
         # Estimate the slope of the number of molecules in the liquid box vs step number
-        dydx = savgol_filter(eq_col_liq, window_length=int(len(eq_col_liq)*0.1), polyorder=2, deriv=1)
+        win_len = max(3, int(len(eq_col_liq) * 0.1) | 1)
+        dydx = savgol_filter(eq_col_liq, window_length=win_len, polyorder=2, deriv=1)
         #Count percentage of points with positive slope
         pos_slope = np.count_nonzero(dydx > 0)
         pct_pos = pos_slope/len(dydx)*100
