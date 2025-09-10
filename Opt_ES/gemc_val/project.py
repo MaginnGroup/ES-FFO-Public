@@ -1130,6 +1130,9 @@ def run_gemc_prod(job):
     custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
 
+    #Add extra sweeps to production data if necessary
+    ##DO LATER
+
     # Try to run GEMC
     try:
         with job:
@@ -1248,6 +1251,9 @@ def check_prod_data(job):
 
         job.doc.no_overlap = check_dict["no_overlap"]
         job.doc.Nexc_good = check_dict["Nexc_good"]
+
+        ##Add more production sweeps if Nexc is too low
+        #TO DO
         
         if not prod_good:
             if "use_crit" in job.doc and job.doc.use_crit == True:
