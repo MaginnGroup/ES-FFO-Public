@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import signac
 from file_read_backwards import FileReadBackwards
+import matplotlib.pyplot as plt
 
 # simulation_length must be consistent with the "units" field in custom args below
 # For instance, if the "units" field is "sweeps" and simulation_length = 1000,
@@ -104,7 +105,7 @@ def gemc_prod_complete(job):
             last_line = f.readline().decode()
         # Split the last line and extract the first number
         first_value = int(last_line.split()[0])
-        completed = first_value == job.doc.nsteps_gemc_eq + job.sp.nsteps_gemc_prod
+        completed = first_value == job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq
     except:
         completed = False
         pass
