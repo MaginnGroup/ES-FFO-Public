@@ -754,8 +754,9 @@ def run_gemc_eq(job):
     custom_args, custom_args_gemc = _get_custom_args(job)
     custom_args_gemc["run_name"] = run_name_eq
     custom_args_gemc["properties"] = thermo_props
-    custom_args_gemc["cbmc_n_insert"] = 20
-    custom_args_gemc["cbmc_n_dihed"] = 20
+    if job.id == "5cffb08f9d07bdb3fe0601ba4896d72c":
+        custom_args_gemc["cbmc_n_insert"] = 20
+        custom_args_gemc["cbmc_n_dihed"] = 20
 
     #Set vapor cutoff to 95% of half the box length to avoid k vectors issue
     # cutoff_vap = np.minimum(round(0.95*boxl_vap/2,5), round(6 * job.sp.max_sigma, 5))
