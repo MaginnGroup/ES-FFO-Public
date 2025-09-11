@@ -104,7 +104,7 @@ def gemc_prod_complete(job):
             last_line = f.readline().decode()
         # Split the last line and extract the first number
         first_value = int(last_line.split()[0])
-        completed = first_value == job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq
+        completed = first_value == job.doc.total_gemc_steps
     except:
         completed = False
         pass
@@ -1054,6 +1054,7 @@ def check_eq(job):
             else:
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
             prod_ready["box_size"] = False
+            statement += f"increased vapor box size to {job.doc.vap_box_mult}"
         elif pct_pos < 15:
             #If more than 85% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
             if "vap_box_mult" in job.doc.keys():
@@ -1063,11 +1064,12 @@ def check_eq(job):
             elif not job.doc.get("use_crit", False):
                 job.doc["use_crit"] = True
                 first_shrink = True
+                statement += f"decreased vapor box size to critical conditions"
             #Shrink vapor box volume by factor of 2
             else:
                 job.doc.vap_box_mult = round(0.5**(1/3),3)
+                statement += f"decreased vapor box size to {job.doc.vap_box_mult}"
             prod_ready["box_size"] = False
-
 
     if np.all(list(prod_ready.values())):
         job.doc["prod_ready"] = True
@@ -1088,6 +1090,11 @@ def check_eq(job):
     #Delete the check_me flag
     if "check_me" in job.doc.keys():
         del job.doc["check_me"]
+
+    if statement != "":
+        with open("Equil_Output.txt", "a") as f:
+            print(statement, file=f)
+            
     return job.doc["prod_ready"]
 
 @eq_group
