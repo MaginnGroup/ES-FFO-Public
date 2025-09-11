@@ -724,6 +724,7 @@ def run_gemc_eq(job):
     new_prob_volume = 1.0 / (job.sp.N_vap + job.sp.N_liq)
     
     if job.id == "5cffb08f9d07bdb3fe0601ba4896d72c":
+        # Higher swap probability to test if Glycerol can be simulated with GEMC
         new_prob_swap = 8.0 / 0.05 / (job.sp.N_vap + job.sp.N_liq)
     else:
         new_prob_swap = 4.0 / 0.05 / (job.sp.N_vap + job.sp.N_liq)
@@ -733,6 +734,7 @@ def run_gemc_eq(job):
     moves.prob_translate = moves.prob_translate + orig_prob_volume - new_prob_volume
     
     if job.id == "5cffb08f9d07bdb3fe0601ba4896d72c":
+        # Higher swap probability to test if Glycerol can be simulated with GEMC
         moves.prob_rotate = moves.prob_rotate + (orig_prob_swap - new_prob_swap)/2
         moves.prob_translate = moves.prob_translate + (orig_prob_swap - new_prob_swap)/2
     else:
