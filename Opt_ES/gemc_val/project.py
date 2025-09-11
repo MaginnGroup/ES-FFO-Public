@@ -105,7 +105,7 @@ def gemc_prod_complete(job):
             last_line = f.readline().decode()
         # Split the last line and extract the first number
         first_value = int(last_line.split()[0])
-        completed = first_value == job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq
+        completed = first_value == job.doc.get("total_gemc_steps", job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq)
     except:
         completed = False
         pass
@@ -756,8 +756,8 @@ def run_gemc_eq(job):
     custom_args_gemc["run_name"] = run_name_eq
     custom_args_gemc["properties"] = thermo_props
     if job.id == "5cffb08f9d07bdb3fe0601ba4896d72c":
-        custom_args_gemc["cbmc_n_insert"] = 20
-        custom_args_gemc["cbmc_n_dihed"] = 20
+        moves.cbmc_n_insert = 20
+        moves.cbmc_n_dihed = 20
 
     #Set vapor cutoff to 95% of half the box length to avoid k vectors issue
     # cutoff_vap = np.minimum(round(0.95*boxl_vap/2,5), round(6 * job.sp.max_sigma, 5))
