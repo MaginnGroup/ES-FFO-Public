@@ -104,7 +104,7 @@ def gemc_prod_complete(job):
             last_line = f.readline().decode()
         # Split the last line and extract the first number
         first_value = int(last_line.split()[0])
-        completed = first_value == job.doc.get("total_gemc_steps", job.doc.nsteps_gemc_eq + job.sp.nsteps_gemc_prod)
+        completed = first_value == job.doc.nsteps_gemc_eq + job.sp.nsteps_gemc_prod
     except:
         completed = False
         pass
