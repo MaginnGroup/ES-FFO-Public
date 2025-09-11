@@ -722,11 +722,21 @@ def run_gemc_eq(job):
     orig_prob_volume = moves.prob_volume
     orig_prob_swap = moves.prob_swap
     new_prob_volume = 1.0 / (job.sp.N_vap + job.sp.N_liq)
-    new_prob_swap = 4.0 / 0.05 / (job.sp.N_vap + job.sp.N_liq)
+    
+    if job.id == "5cffb08f9d07bdb3fe0601ba4896d72c":
+        new_prob_swap = 8.0 / 0.05 / (job.sp.N_vap + job.sp.N_liq)
+    else:
+        new_prob_swap = 4.0 / 0.05 / (job.sp.N_vap + job.sp.N_liq)
+
     moves.prob_volume = new_prob_volume
     moves.prob_swap = new_prob_swap
     moves.prob_translate = moves.prob_translate + orig_prob_volume - new_prob_volume
-    moves.prob_translate = moves.prob_translate + orig_prob_swap - new_prob_swap
+    
+    if job.id == "5cffb08f9d07bdb3fe0601ba4896d72c":
+        moves.prob_rotate = moves.prob_rotate + (orig_prob_swap - new_prob_swap)/2
+        moves.prob_translate = moves.prob_translate + (orig_prob_swap - new_prob_swap)/2
+    else:
+        moves.prob_translate = moves.prob_translate + orig_prob_swap - new_prob_swap
 
     # Define thermo output props
     thermo_props = [
@@ -742,6 +752,8 @@ def run_gemc_eq(job):
     custom_args, custom_args_gemc = _get_custom_args(job)
     custom_args_gemc["run_name"] = run_name_eq
     custom_args_gemc["properties"] = thermo_props
+    custom_args_gemc["cbmc_n_insert"] = 20
+    custom_args_gemc["cbmc_n_dihed"] = 20
 
     #Set vapor cutoff to 95% of half the box length to avoid k vectors issue
     # cutoff_vap = np.minimum(round(0.95*boxl_vap/2,5), round(6 * job.sp.max_sigma, 5))
