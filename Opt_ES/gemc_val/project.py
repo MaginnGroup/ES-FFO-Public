@@ -1016,20 +1016,6 @@ def check_eq(job):
         job.doc["nmol_under_30"] = True
         job.doc["check_me"] = True
         prod_ready["nmol_under_30"] = False
-    
-    #If check_me is true 
-    if job.doc.get("check_me", False):
-        if job.doc.get("gemc_eq_fin", False):
-            del job.doc["gemc_eq_fin"]
-        #First check if another simulation with the same or more steps at this temperature has completed
-        project = signac.get_project()
-        for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
-            #Check if another simulation has completed and passed the check
-            if job_new.doc.get("gemc_eq_fin", False) and job_new.doc.get("prod_ready", False):
-                #Restart from this job
-                job.doc["restart_from"] = job_new.id
-                prod_ready["rst_data"] = False
-                break
 
     # Estimate the slope of the number of molecules in the liquid box vs step number
     steps = np.arange(0, len(eq_col_liq))
@@ -1054,9 +1040,14 @@ def check_eq(job):
     plt.tight_layout()
     plt.savefig(job.fn("liq_box_slope.png"))
 
-    #If no such simulation exists, check if the simulation seems likely to vaporize/liquidate. 
-    if ("restart_from" not in job.doc and job.doc.get("check_me", False) and job.doc.get("nsteps_gemc_eq", 0) >= 150000):
-        # When this step happens, at least 200K steps should have been run
+    #Delete gemc_eq_fin if check_me is True. 
+    if job.doc.get("check_me", False):
+        if job.doc.get("gemc_eq_fin", False):
+            del job.doc["gemc_eq_fin"]
+
+    #Check if the simulation seems likely to vaporize/liquidate. 
+    if (job.doc.get("check_me", False) and job.doc.get("nsteps_gemc_eq", 0) >= 150000):
+        # When this step happens, at least 150K steps should have been run
 
         #Check if the number of molecules in the liquid box is decreasing on average
         #Count percentage of points with positive slope
@@ -1067,43 +1058,55 @@ def check_eq(job):
         if pct_pos > 85:
              #If we've already increased the vapor box once, double the volume
             if "vap_box_mult" in job.doc.keys():
-                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2))**(1/3)
+                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2),3)**(1/3)
             #Shrink vapor box volume by factor of 3
             else:
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
             prod_ready["box_size"] = False
-            statement += f"increased vapor box size to {job.doc.vap_box_mult}"
+            statement += f"increase vapor box size to {job.doc.vap_box_mult}"
         elif pct_pos < 15:
             #If more than 85% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
             if "vap_box_mult" in job.doc.keys():
                 #Shrink the vapor box, by half the volume
-                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5))**(1/3)
+                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5),3)**(1/3)
             #Try with critical conditions if not already done (vapo will be smaller and liquid larger)
             elif not job.doc.get("use_crit", False):
-                job.doc["use_crit"] = True
                 first_shrink = True
-                statement += f"decreased vapor box size to critical conditions"
+                statement += f"decrease vapor box size to critical conditions"
             #Shrink vapor box volume by factor of 2
             else:
                 job.doc.vap_box_mult = round(0.5**(1/3),3)
-                statement += f"decreased vapor box size to {job.doc.vap_box_mult}"
+                statement += f"decrease vapor box size to {job.doc.vap_box_mult}"
             prod_ready["box_size"] = False
 
     if np.all(list(prod_ready.values())):
         job.doc["prod_ready"] = True
         #If this job was being checked, it means it's not actually ready for production
+        #Instead this job just needs to run longer
         if "check_me" in job.doc.keys():
             del job.doc["prod_ready"]
     else:
         job.doc["prod_ready"] = False
+        #If the job is not ready for production, check if it can be restarted from another job
+        if job.doc.get("check_me", False):
+            #First check if another simulation with the same or more steps at this temperature has completed
+            project = signac.get_project()
+            for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
+                #Check if another simulation has completed and passed the check
+                if job_new.doc.get("gemc_eq_fin", False) and job_new.doc.get("prod_ready", False):
+                    #Restart from this job (ONLY if it looks like the simulation will never equilibrate)
+                    job.doc["restart_from"] = job_new.id
+                    prod_ready["rst_data"] = False
+                    break
+
         #Delete previous data files
         with job:
-            if first_shrink == False:
-                #Delete all gemc data if changing the vapor box size
+            if first_shrink == False or "restart_from" in job.doc.keys():
+                #Delete only gemc data if changing the vapor box size or restarting from another job
                 delete_data_gemc(job, "gemc.eq", mv=True, subfolder=folder_name)
             #Delete all data if switching to critical conditions
             else:
-                #Delete only the gemc equilibration data if trying with critical conditions
+                job.doc["use_crit"] = True
                 delete_data(job, "gemc.eq", mv=True, subfolder=folder_name)
     #Delete the check_me flag
     if "check_me" in job.doc.keys():
