@@ -1108,10 +1108,11 @@ def check_eq(job):
         del job.doc["check_me"]
 
     if statement != "":
-        with open("Equil_Output.txt", "a") as f:
+        with open(job.fn("Equil_Output.txt"), "a") as f:
             print(statement, file=f)
 
-    return job.doc["prod_ready"]
+    #Job is only ready for production if all conditions are met and prod_ready is True
+    return job.doc.get("prod_ready", False)
 
 @eq_group
 @ProjectGEMC.pre.after(extract_final_NPT_config)
