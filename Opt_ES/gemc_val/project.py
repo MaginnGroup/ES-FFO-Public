@@ -477,6 +477,7 @@ def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
         "mosdef_cassandra_*.log",
         "prod.*",
         "Equil_Output.txt",
+        "liq_box_slope.png",
     ]
     # If move is true, move the files to a subfolder instead of deleting them
     with job:
@@ -531,6 +532,7 @@ def delete_data(job, run_name, mv=True, subfolder="results_old"):
         "nvt.*",
         "npt.*",
         "Equil_Output.txt",
+        "liq_box_slope.png",
     ]
     # If move is true, move the files to a subfolder instead of deleting them
     with job:
