@@ -823,7 +823,7 @@ def run_gemc_eq(job):
             # Inititalize max number of eq_steps
             if "max_eq_steps" not in job.doc:
                 # If no value exists, set it as 4 times the original number of eq steps
-                job.doc.max_eq_steps = job.sp.nsteps_gemc_eq * 3
+                job.doc.max_eq_steps = job.sp.nsteps_gemc_eq * 4
             # The max number of steps is the larger of the number of steps + 1-2*org number of steps or the current max
             max_eq_steps = np.maximum(
                 job.doc.max_eq_steps, existing_eq_steps + job.sp.nsteps_gemc_eq
@@ -1047,7 +1047,7 @@ def check_eq(job):
 
     #Check if the simulation seems likely to vaporize/liquidate. 
     if (job.doc.get("check_me", False) and job.doc.get("nsteps_gemc_eq", 0) >= 150000):
-        # When this step happens, at least 150K steps should have been run
+        # When this step happens, at least 200K steps should have been run
 
         #Check if the number of molecules in the liquid box is decreasing on average
         #Count percentage of points with positive slope
