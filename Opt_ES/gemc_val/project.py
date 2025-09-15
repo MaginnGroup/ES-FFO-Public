@@ -1240,7 +1240,8 @@ def check_prod_data(job):
     statement = ""
 
     check_dict = {"no_overlap": True,
-                  "Nexc_good": True}
+                  "Nexc_good": True,
+                  "Nexc_suff": True}
     if job.doc.get("gemc_failed", False):
         pass
     else:
@@ -1298,17 +1299,18 @@ def check_prod_data(job):
             statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
             check_dict["Nexc_good"] = False
         #Check that the number of insertions and deletions are at least equal to the number of molecules
-        if insert_val < N_mols or delete_val < N_mols:
+        if int((insert_val + delete_val)/2) < N_mols:
             print(f"Job {job.id}")
             statement += f"Job {job.id} production has a low number of insertions or deletions"  + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
-            check_dict["Nexc_good"] = False
+            check_dict["Nexc_suff"] = False
 
         # Add gemc_failed to job doc and add no_overlap to job doc
         prod_good = np.all(list(check_dict.values()))
 
         job.doc.no_overlap = check_dict["no_overlap"]
         job.doc.Nexc_good = check_dict["Nexc_good"]
+        job.doc.Nexc_suff = check_dict["Nexc_suff"]
 
         ##If Nexc is too low, we just need more eq steps
         if not check_dict["Nexc_good"] and check_dict["no_overlap"]:
@@ -1323,6 +1325,16 @@ def check_prod_data(job):
             del job.doc["delete_val"]
             del job.doc["pct_diff"]
             del job.doc["no_overlap"]
+            del job.doc["Nexc_suff"]
+        #If the eq and prod data don't have enough insertions, add more steps
+        # elif not check_dict["Nexc_suff"] and check_dict["no_overlap"]:
+        #     #Add the production phase steps to the eq data and restart from there
+        #     job.doc.total_gemc_steps += job.sp.nsteps_gemc_prod
+        #     del job.doc["insert_val"]
+        #     del job.doc["delete_val"]
+        #     del job.doc["pct_diff"]
+        #     del job.doc["no_overlap"]
+        #     del job.doc["Nexc_suff"]
         #If both overlap and Nexc are bad, the job failed
         elif not prod_good:
             if statement != "":
