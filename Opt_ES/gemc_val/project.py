@@ -701,6 +701,10 @@ def run_gemc_eq(job):
     import unyt as u
     import glob
 
+    # Track number of times we have tried to rerun GEMC
+    if "num_attempts" not in job.doc.keys():
+        job.doc["num_attempts"] = 0  # We have not yet tried
+
     ff = foyer.Forcefield(job.fn("ff.xml"))
 
     # Load the compound and apply the ff
@@ -772,8 +776,11 @@ def run_gemc_eq(job):
     try:
         with job:
             first_run = custom_args_gemc["run_name"]  # gemc.eq
-            # Run initial equilibration if it does not exxist
+            # Run initial equilibration if it does not exist
             if not has_checkpoint(first_run):
+                #Add one to the number of attempts
+                #We add one when, retrying with critical conditions, changing box size, or restarting from a different job
+                job.doc["num_attempts"] += 1
                 mc.run(
                     system=system,
                     moveset=moves,
@@ -825,9 +832,7 @@ def run_gemc_eq(job):
                 # If no value exists, set it as 4 times the original number of eq steps
                 job.doc.max_eq_steps = job.sp.nsteps_gemc_eq * 4
             # The max number of steps is the larger of the number of steps + 1-2*org number of steps or the current max
-            max_eq_steps = np.maximum(
-                job.doc.max_eq_steps, existing_eq_steps + job.sp.nsteps_gemc_eq
-            )
+            max_eq_steps =  job.doc.max_eq_steps #np.maximum(job.doc.max_eq_steps, existing_eq_steps + job.sp.nsteps_gemc_eq)
             # Originally set the document eq_steps to the max number, it will be overwritten later
             job.doc.nsteps_gemc_eq = int(max_eq_steps)
 
@@ -842,6 +847,8 @@ def run_gemc_eq(job):
 
                 # Check if equilibration is reached via the pymser algorithms
                 is_equil = check_equil_converge(job, eq_data_dict, prod_tol_eq)
+                if not job.doc.get("Nexc_good", True) and total_eq_steps < max_eq_steps:
+                    is_equil = False
 
                 # Check if this simulation restarts from an equilibrated one at the same temperature
                 if "restart_from" in job.doc.keys():
@@ -1058,7 +1065,7 @@ def check_eq(job):
         if pct_pos > 85:
              #If we've already increased the vapor box once, double the volume
             if "vap_box_mult" in job.doc.keys():
-                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2),3)**(1/3)
+                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2)**(1/3),3)
             #Shrink vapor box volume by factor of 3
             else:
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
@@ -1068,9 +1075,9 @@ def check_eq(job):
             #If more than 85% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
             if "vap_box_mult" in job.doc.keys():
                 #Shrink the vapor box, by half the volume
-                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5),3)**(1/3)
-            #Try with critical conditions if not already done (vapo will be smaller and liquid larger)
-            elif not job.doc.get("use_crit", False):
+                job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5)**(1/3),3)
+            #Try with critical conditions if not already done and the box size was not previously increased (vapor will be smaller and liquid larger)
+            elif not job.doc.get("use_crit", False): # and "vap_box_mult" not in job.doc.keys():
                 first_shrink = True
                 statement += f"decrease vapor box size to critical conditions"
             #Shrink vapor box volume by factor of 2
@@ -1087,8 +1094,8 @@ def check_eq(job):
             del job.doc["prod_ready"]
     else:
         job.doc["prod_ready"] = False
-        #If the job is not ready for production, check if it can be restarted from another job
-        if job.doc.get("check_me", False):
+        #If the job is not ready for production, and has been tried with at least 5 conditions, check if it can be restarted from another job
+        if job.doc.get("check_me", False) and job.doc.get("num_attempts", 0) >= 5:
             #First check if another simulation with the same or more steps at this temperature has completed
             project = signac.get_project()
             for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
@@ -1303,12 +1310,23 @@ def check_prod_data(job):
         job.doc.no_overlap = check_dict["no_overlap"]
         job.doc.Nexc_good = check_dict["Nexc_good"]
 
-        ##Add more production sweeps if Nexc is too low
-        #TO DO
-        
-        if not prod_good:
+        ##If Nexc is too low, we just need more eq steps
+        if not check_dict["Nexc_good"] and check_dict["no_overlap"]:
+            #Add the production phase steps to the eq data and restart from there
+            num_prod_steps = job.doc.total_gemc_steps - job.doc.nsteps_gemc_eq
+            job.doc.nsteps_gemc_eq += num_prod_steps
+            job.doc.max_eq_steps = job.doc.nsteps_gemc_eq
+            job.doc.gemc_eq_fin = False
+            job.doc.prod_ready = False
+            del job.doc["total_gemc_steps"]
+            del job.doc["insert_val"]
+            del job.doc["delete_val"]
+            del job.doc["pct_diff"]
+            del job.doc["no_overlap"]
+        #If both overlap and Nexc are bad, the job failed
+        elif not prod_good:
             if statement != "":
-                with open("Equil_Output.txt", "a") as f:
+                with open(job.fn("Equil_Output.txt"), "a") as f:
                     print(statement, file=f)
             if job.doc.get("use_crit", False):
                 job.doc.gemc_failed = True
