@@ -1063,7 +1063,8 @@ def check_eq(job):
         prod_ready["nmol_under_30"] = False
 
     # Estimate the slope of the number of molecules in the liquid box vs step number
-    steps = np.arange(0, len(eq_col_liq))
+    custom_args, custom_args_gemc = _get_custom_args(job)
+    steps = np.arange(0, len(eq_col_liq)) * custom_args["prop_freq"]
     win_len = max(3, int(len(eq_col_liq) * 0.1) | 1)
     dydx = savgol_filter(eq_col_liq, window_length=win_len, polyorder=2, deriv=1)
     eq_col_est = savgol_filter(eq_col_liq, window_length=win_len, polyorder=2)
@@ -1078,7 +1079,7 @@ def check_eq(job):
     ax1.set_title("Liquid Box Molecules vs Sweeps")
     ax2.plot(steps, dydx, color='green', label="Slope (dN/dx)")
     ax2.axhline(0, color='black', linestyle='--')
-    ax2.set_xlabel("Steps")
+    ax2.set_xlabel("Sweeps")
     ax2.set_ylabel("Slope")
     ax2.legend()
     ax2.set_title("Slope of Liquid Box Molecules vs Sweeps")
