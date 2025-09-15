@@ -462,6 +462,44 @@ def gemc_equil_complete(job):
 
     return completed
 
+def delete_data_prod(job, mv=True, subfolder="results_old"):
+    "Delete data from previous operations"
+    import os
+    import glob
+    import shutil
+
+    # List of files which must be moved or deleted when the job fails
+    glob_args = [
+        "prod.*",
+    ]
+    # If move is true, move the files to a subfolder instead of deleting them
+    with job:
+        if mv == True:
+            if not os.path.exists(subfolder):
+                os.makedirs(subfolder)
+            for glob_arg in glob_args:
+                for file_path in glob.glob(glob_arg):
+                    shutil.move(
+                        file_path, os.path.join(subfolder, os.path.basename(file_path))
+                    )
+            shutil.copy(
+                "signac_job_document.json",
+                os.path.join(subfolder, "signac_job_document.json"),
+            )
+        else:
+            for glob_arg in glob_args:
+                for file_path in glob.glob(glob_arg):
+                    os.remove(file_path)
+
+    # Regardless of whether we remove or move the files, we want to delete the job document keys
+    if "no_overlap" in job.doc.keys():
+        del job.doc["no_overlap"]
+    if "pct_diff" in job.doc.keys():
+        del job.doc["pct_diff"]
+        del job.doc["insert_val"]
+        del job.doc["delete_val"]
+        del job.doc["Nexc_suff"]
+
 def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
     "Delete data from previous operations"
     import os
@@ -1196,7 +1234,7 @@ def run_gemc_prod(job):
         with job:
             #Get last checkpoint from equilibration
             prior_run = get_last_checkpoint(custom_args_gemc["run_name"])
-            # Get final number of equilibration steps
+            # Get final number of production steps
             total_sim_steps = job.doc.total_gemc_steps
             # Run production
             if not has_checkpoint("prod"):
@@ -1236,6 +1274,15 @@ def check_prod_data(job):
     import sys
     import subprocess
 
+    vap_box_mult_str = (
+                    "_vbx_" + str(job.doc.vap_box_mult)
+                    if "vap_box_mult" in job.doc.keys()
+                    else ""
+                )
+    rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
+    crit_str = "_crit" if job.doc.get("use_crit", False) else "_no_crit"
+    results_folder = "results" + crit_str + vap_box_mult_str + rst_str
+    
     density_col = 6
     statement = ""
 
@@ -1312,7 +1359,7 @@ def check_prod_data(job):
         job.doc.Nexc_good = check_dict["Nexc_good"]
         job.doc.Nexc_suff = check_dict["Nexc_suff"]
 
-        ##If Nexc is too low, we just need more eq steps
+        ##If Nexc is not equilibrated, we just need more eq steps
         if not check_dict["Nexc_good"] and check_dict["no_overlap"]:
             #Add the production phase steps to the eq data and restart from there
             num_prod_steps = job.doc.total_gemc_steps - job.doc.nsteps_gemc_eq
@@ -1321,36 +1368,47 @@ def check_prod_data(job):
             job.doc.gemc_eq_fin = False
             job.doc.prod_ready = False
             del job.doc["total_gemc_steps"]
-            del job.doc["insert_val"]
-            del job.doc["delete_val"]
-            del job.doc["pct_diff"]
-            del job.doc["no_overlap"]
-            del job.doc["Nexc_suff"]
+            #Delete production data
+            delete_data_prod(
+                    job,
+                    mv=True,
+                    subfolder=results_folder,
+                )
         #If the eq and prod data don't have enough insertions, add more steps
         # elif not check_dict["Nexc_suff"] and check_dict["no_overlap"]:
         #     #Add the production phase steps to the eq data and restart from there
         #     job.doc.total_gemc_steps += job.sp.nsteps_gemc_prod
-        #     del job.doc["insert_val"]
-        #     del job.doc["delete_val"]
-        #     del job.doc["pct_diff"]
-        #     del job.doc["no_overlap"]
-        #     del job.doc["Nexc_suff"]
-        #If both overlap and Nexc are bad, the job failed
+        #     #Delete production data
+        #     delete_data_prod(
+        #             job,
+        #             mv=True,
+        #             subfolder=results_folder,
+        #         )
+        #If there is overlap, or if there aren't enough exchanges, try with critical conditions or terminate if already done so
         elif not prod_good:
             if statement != "":
                 with open(job.fn("Equil_Output.txt"), "a") as f:
                     print(statement, file=f)
+            #If we have already tried with critical conditions,
             if job.doc.get("use_crit", False):
-                job.doc.gemc_failed = True
+                #See if we can restart from another job
+                found_rst = False
+                #First check if another simulation with the same or more steps at this temperature has completed
+                project = signac.get_project()
+                for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
+                    #Check if another simulation has completed and passed the check
+                    if job_new.doc.get("gemc_eq_fin", False) and job_new.doc.get("prod_ready", False):
+                        #Restart from this job (ONLY if it looks like the simulation will never work)
+                        job.doc["restart_from"] = job_new.id
+                        found_rst = True
+                        delete_data_gemc(job, "gemc.eq", mv=True, subfolder=results_folder)
+                        break
+                    
+                #If no restart was found, this job failed
+                if not found_rst:
+                    job.doc.gemc_failed = True
+            #Try with critical conditions first if the job fails in production phase b/c of overlap or insufficient exchanges
             else:
-                vap_box_mult_str = (
-                    "_vbx_" + str(job.doc.vap_box_mult)
-                    if "vap_box_mult" in job.doc.keys()
-                    else ""
-                )
-                rst_str = "_rest_{:.4s}".format(job.doc.restart_from) if "restart_from" in job.doc.keys() else ""
-                crit_str = "_crit" if job.doc.get("use_crit", False) else "_no_crit"
-                results_folder = "results" + crit_str + vap_box_mult_str + rst_str
                 delete_data(
                     job,
                     "gemc.eq",
