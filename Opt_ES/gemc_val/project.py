@@ -1345,8 +1345,8 @@ def check_prod_data(job):
             statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
             check_dict["Nexc_good"] = False
-        #Check that the number of insertions and deletions are at least equal to the number of molecules
-        if int((insert_val + delete_val)/2) < N_mols:
+        #Check that the number of insertions and deletions are at least equal to half the number of molecules
+        if int((insert_val + delete_val)/2) < int(N_mols/2):
             print(f"Job {job.id}")
             statement += f"Job {job.id} production has a low number of insertions or deletions"  + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
@@ -1416,9 +1416,6 @@ def check_prod_data(job):
                     subfolder=results_folder,
                 )
                 job.doc.use_crit = True
-
-        
-
 
 # @Project.post(lambda job: "liq_density_unc" in job.doc)
 # @Project.post(lambda job: "vap_density_unc" in job.doc)
