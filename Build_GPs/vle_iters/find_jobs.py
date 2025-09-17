@@ -7,14 +7,17 @@ import shutil
 project = signac.get_project()
 
 count = 0
+count_running = 0
 # Loop over all jobs in the project
-for job in project.find_jobs({"mol_name": "DMSO", "iter": 1}):
+group = project.find_jobs({"mol_name": "DMF", "iter": 1})
+for job in group:
     # Check if job document exists
     # print(f"Checking job {job.id}")
     if os.path.exists(job.fn("signac_job_document.json")):
+        count_running += 1
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        if "inter_prod_fin" in job.doc:
+        if "npzzat_eq_fin" not in job.doc:
             count += 1
             print(f"Job {job.id}")
             # Print the last line of the run_npt_prod.out log file
@@ -26,4 +29,4 @@ for job in project.find_jobs({"mol_name": "DMSO", "iter": 1}):
             #             print(lines[-1].strip())
             # else:
             #     print("Log file does not exist.")
-print(f"Total finished jobs: {count}")
+print(f"Total unfinished jobs: {count}/{count_running}")
