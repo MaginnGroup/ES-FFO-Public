@@ -5,9 +5,13 @@ from pathlib import Path
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
-root_path = Path(__file__).resolve().parents[1]  # ES-FFO directory (two levels up from this script)
-if str(root_path) not in sys.path:
-    sys.path.insert(0, str(root_path))
+# root_path = Path(__file__).resolve().parents[1]  # ES-FFO directory (two levels up from this script)
+# if str(root_path) not in sys.path:
+#     sys.path.insert(0, str(root_path))
+
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),  ".."))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
 
 # Now import using package structure relative to ES-FFO root
 from utils.molec_class_files import esolvs
