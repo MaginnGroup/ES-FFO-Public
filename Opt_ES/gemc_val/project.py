@@ -1117,9 +1117,9 @@ def check_eq(job):
                 #Shrink the vapor box, by half the volume
                 job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*0.5)**(1/3),3)
             #Try with critical conditions if not already done and the box size was not previously increased (vapor will be smaller and liquid larger)
-            elif not job.doc.get("use_crit", False): # and "vap_box_mult" not in job.doc.keys():
-                first_shrink = True
-                statement += f"decrease vapor box size to critical conditions"
+            # elif not job.doc.get("use_crit", False): # and "vap_box_mult" not in job.doc.keys():
+            #     first_shrink = True
+            #     statement += f"decrease vapor box size to critical conditions"
             #Shrink vapor box volume by factor of 2
             else:
                 job.doc.vap_box_mult = round(0.5**(1/3),3)
