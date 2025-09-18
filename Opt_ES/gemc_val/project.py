@@ -1055,8 +1055,9 @@ def check_eq(job):
     # Get the eq data for liquid box n_mols
     results, adf_test = get_pymser_results(eq_col_liq)
 
-    # Only count this run as ready for production if at least 30 molecules are in the liquid box
-    if np.mean(eq_col_liq[results["t0"]:]) < 30:  # 30
+    # Only count this run as ready for production if between 30 and 770 molecules are in the liquid box
+    n_liq = np.mean(eq_col_liq[results["t0"]:])
+    if  n_liq < 30 or n_liq > 770:  # 30
         # Otherwise add to the job document that the production failed
         job.doc["nmol_under_30"] = True
         job.doc["check_me"] = True
