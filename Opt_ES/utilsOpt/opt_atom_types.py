@@ -1072,7 +1072,7 @@ class Analyze_opt_res(Problem_Setup):
         else:
             all_best_gp = None
 
-        param_dict["Opt_All"] = all_best_gp
+        param_dict["Optimized"] = all_best_gp
 
         molec_dir = self.make_results_dir([molec_ind])
         if os.path.exists(molec_dir / "best_per_run.csv"):
@@ -1093,7 +1093,9 @@ class Analyze_opt_res(Problem_Setup):
             ind_best_gp = tf.convert_to_tensor(ind_best_gp, dtype=tf.float64)
         else:
             ind_best_gp = None
-        param_dict["Opt_One"] = ind_best_gp
+
+        if not self.distinct_at:
+            param_dict["Single Optimized"] = ind_best_gp
 
         #If param sets are in molec_data load them
         if hasattr(self.molec_data_dict[molec_ind], 'lit_param_set'): 
@@ -1114,7 +1116,7 @@ class Analyze_opt_res(Problem_Setup):
         )
         paper_best_gp = tf.convert_to_tensor(paper_best_gp, dtype=tf.float64)
 
-        param_dict["Literature"] = paper_best_gp
+        param_dict["Wang et. al."] = paper_best_gp
 
         molec_gaff = np.array(
             list(self.molec_data_dict[molec_ind].gaff_params.values())
@@ -2043,7 +2045,7 @@ class Vis_Results(Analyze_opt_res):
             # Loop over gps (1 per property)
             for key in list(molec_gps_dict.keys()):
                 # Set label
-                label = molec + "_" + key
+                label = molec
                 # Get GP associated with property
                 gp_model = molec_gps_dict[key]
                 # Get X and Y data and bounds associated with the GP
