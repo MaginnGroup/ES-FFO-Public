@@ -141,8 +141,9 @@ def em_sim(job):
 
     #Make the mdp file for the energy minimization
     content = _generate_em_mdp(job, meth = "steep") #Change to cg for a3765 is prod fails again
-    with open(job.fn("em/em.mdp"), "w") as inp:
-        inp.write(content)
+    if not os.path.exists(job.fn("em/em.mdp")):
+        with open(job.fn("em/em.mdp"), "w") as inp:
+            inp.write(content)
 
     # Try em with steepest descent first
     em_restarts(job, sim_name, last_sim_name)
