@@ -1100,9 +1100,10 @@ def check_eq(job):
         #Count percentage of points with positive slope
         pos_slope = np.count_nonzero(dydx > 0)
         pct_pos = pos_slope/len(dydx)*100
-        
+        cond2 = pct_pos > 80 and job.doc.get("nsteps_gemc_eq", 0) >= 1e6 #Lower condition threshold if at least 1 million steps have been run
+        cond3 = pct_pos < 20 and job.doc.get("nsteps_gemc_eq", 0) >= 1e6 #Lower condition threshold if at least 1 million steps have been run
         #if more than 85% of the points have a positive slope, the liquid box is likely to condense (increase vapor box size)
-        if pct_pos > 85:
+        if pct_pos > 85 or cond2:
              #If we've already increased the vapor box once, double the volume
             if "vap_box_mult" in job.doc.keys():
                 job.doc.vap_box_mult = round(((job.doc["vap_box_mult"]**3)*2)**(1/3),3)
@@ -1111,7 +1112,7 @@ def check_eq(job):
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
             prod_ready["box_size"] = False
             statement += f"increase vapor box size to {job.doc.vap_box_mult}"
-        elif pct_pos < 15:
+        elif pct_pos < 15 or cond3:
             #If more than 85% of the points have a negative slope, the liquid box is likely to evaporate (decrease vapor box size)
             if "vap_box_mult" in job.doc.keys():
                 #Shrink the vapor box, by half the volume
