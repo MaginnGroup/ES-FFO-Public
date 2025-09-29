@@ -919,6 +919,10 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         df_results["expt_liq_density"] = df_results["temperature"].apply(
             lambda x: molecule.expt_liq_density[x]
         )
+        df_results["pct_err"] = (
+            (df_results["liq_density"] - df_results["expt_liq_density"])
+            / df_results["expt_liq_density"]
+        ) * 100
         df_results["sq_err"] = (
             df_results["liq_density"] - df_results["expt_liq_density"]
         ) ** 2
@@ -929,7 +933,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         ) * 100
         df_mse = (
             df_results.groupby(list(molecule.param_names))
-            .agg(mse=("sq_err", "mean"), mapd=("abs_pct_err", "mean"))
+            .agg(mse=("sq_err", "mean"), mapd=("abs_pct_err", "mean"), mpd=("pct_err", "mean"))
             .reset_index()
         )
 
@@ -1033,7 +1037,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         )
         if save_csv:
             new_pts_copy = new_points_vle.copy()
-            new_pts_copy.drop(columns=["mse", "mapd", "param_idx"], inplace=True)
+            new_pts_copy.drop(columns=["mse", "mapd", "mpd", "param_idx"], inplace=True)
             new_pts_copy.to_csv(out_csv)
 
             # Save a copy of the real param sets too
@@ -1049,6 +1053,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
             new_pts_full = new_pts_real.copy()
             new_pts_full["mse"] = new_points_vle["mse"].values
             new_pts_full["mapd"] = new_points_vle["mapd"].values
+            new_pts_full["mpd"] = new_points_vle["mpd"].values
             new_pts_full.to_csv(
                 os.path.join(root_dir, iter_type, "mse-less10-full.csv")
             )
