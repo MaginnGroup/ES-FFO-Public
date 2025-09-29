@@ -365,7 +365,7 @@ def bisection(
     final_distance = lower_bound
     final_eval = opt_dist(final_distance, top_samples, constants, target_num, rand_seed)
     if final_eval < target_num:
-        final_distance = upper_bound  # Just in case lower_bound fails, use upper_bound
+        final_distance = upper_bound # Just in case lower_bound fails, use upper_bound
         final_eval = opt_dist(
             final_distance, top_samples, constants, target_num, rand_seed
         )
@@ -623,8 +623,8 @@ def get_next_iter_params(
     if verbose:
         print("target liq: ", target_num_l, "target vap: ", target_num_v)
 
-    zero_array = np.zeros(top_liq.shape[1])
-    one_array = np.ones(top_liq.shape[1])
+    zero_array = np.zeros(top_liq.shape[1]-1)
+    one_array = np.ones(top_liq.shape[1]-1)
     ub_array = one_array - zero_array
 
     # lower_bound = 1e-8
@@ -919,10 +919,6 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         df_results["expt_liq_density"] = df_results["temperature"].apply(
             lambda x: molecule.expt_liq_density[x]
         )
-        df_results["pct_err"] = (
-            (df_results["liq_density"] - df_results["expt_liq_density"])
-            / df_results["expt_liq_density"]
-        ) * 100
         df_results["sq_err"] = (
             df_results["liq_density"] - df_results["expt_liq_density"]
         ) ** 2
@@ -931,6 +927,11 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
             (df_results["liq_density"] - df_results["expt_liq_density"]).abs()
             / df_results["expt_liq_density"]
         ) * 100
+        df_results["pct_err"] = (
+            (df_results["liq_density"] - df_results["expt_liq_density"])
+            / df_results["expt_liq_density"]
+        ) * 100
+
         df_mse = (
             df_results.groupby(list(molecule.param_names))
             .agg(mse=("sq_err", "mean"), mapd=("abs_pct_err", "mean"), mpd=("pct_err", "mean"))
@@ -968,7 +969,7 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         # Get the parameter values for the scaled values
         for params1 in scaled_param_values:
             for idx, params2 in enumerate(df_params[list(molecule.param_names)].values):
-                if np.allclose(params1, params2):
+                if np.allclose(params1, params2, rtol=1e-8):
                     param_idxs.append(idx)
                     param_vals.append(params2)
                     break
@@ -976,12 +977,11 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         df_mse[list(molecule.param_names)] = param_vals
 
         top_param_set = df_mse[df_mse["mse"] < 100]
-
         from numpy.linalg import norm
 
         target_num_l = target_total
-        zero_array = np.zeros(top_param_set.shape[1])
-        one_array = np.ones(top_param_set.shape[1])
+        zero_array = np.zeros(top_param_set.shape[1]-1)
+        one_array = np.ones(top_param_set.shape[1]-1)
         ub_array = one_array - zero_array
 
         lower_bound = 0
