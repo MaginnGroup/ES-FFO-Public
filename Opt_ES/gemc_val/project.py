@@ -1344,18 +1344,22 @@ def check_prod_data(job):
         job.doc["insert_val"] = insert_val
         job.doc["delete_val"] = delete_val
         job.doc["pct_diff"] = pct_diff
-        #Check that the insert and delete values are within 5% of each other
-        if pct_diff > 5:
-            statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
-            statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
-            check_dict["Nexc_good"] = False
-        #Check that the number of insertions and deletions are at least equal to half the number of molecules
-        if int((insert_val + delete_val)/2) < int(N_mols/2):
+        #Check number of insert and delete values, if we have less than 30 insertions or deletions, we likely need more steps
+        if int((insert_val + delete_val)/2) < 30: #int(N_mols/2):
             print(f"Job {job.id}")
             statement += f"Job {job.id} production has a low number of insertions or deletions"  + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
             check_dict["Nexc_suff"] = False
-
+            pct_diff_thresh = 15
+        #Otherwise, if we have at least 30 insertions and deletions, check that they are within 5% of each other to make sure more steps aren't needed
+        else:
+            pct_diff_thresh = 5
+        #Check that the insert and delete values are within 5% of each other
+        if pct_diff > pct_diff_thresh :
+            statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
+            statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
+            check_dict["Nexc_good"] = False
+            
         # Add gemc_failed to job doc and add no_overlap to job doc
         prod_good = np.all(list(check_dict.values()))
 
