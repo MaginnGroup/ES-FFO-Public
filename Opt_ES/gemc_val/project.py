@@ -1351,6 +1351,8 @@ def check_prod_data(job):
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
             check_dict["Nexc_suff"] = False
             pct_diff_thresh = 15
+        elif 30 <= int((insert_val + delete_val)/2) <= 200: #int(N_mols):
+            pct_diff_thresh = 10
         #Otherwise, if we have at least 30 insertions and deletions, check that they are within 5% of each other to make sure more steps aren't needed
         else:
             pct_diff_thresh = 5
