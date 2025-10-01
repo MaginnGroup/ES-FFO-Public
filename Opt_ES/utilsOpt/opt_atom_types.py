@@ -1316,17 +1316,20 @@ class Analyze_opt_res(Problem_Setup):
         df = pd.DataFrame(columns=["Molecule", "Property", "Model", "MAPD"])
         # Make pdf
         dir_name = self.make_results_dir(list(self.molec_data_dict.keys()))
-        all_data_lists = {"Opt_All": [], "Opt_One": [], "Literature": [], "GAFF": []}
+        # all_data_lists = {"Opt_All": [], "Opt_One": [], "Literature": [], "GAFF": []}
         # Loop over all molecules of interest
-        for molec in all_molec_list:
+        for molec_num, molec in enumerate(all_molec_list):
             # Get constants for molecule
             molec_object = self.all_train_molec_data[molec]
             # Get GPs associated with each molecule
             molec_gps_dict = self.all_gp_dict[molec]
             test_params = self.get_best_results(molec, theta_guess)
-
+            # Initialize dict to hold all mapd values
+            if molec_num == 0:
+                all_data_lists = {key: [] for key in list(test_params.keys())}
             # Loop over gps (1 per property)
-            mapd_vals = {"Opt_All": [], "Opt_One": [], "Literature": [], "GAFF": []}
+            mapd_vals = {key: [] for key in list(test_params.keys())}
+            # mapd_vals = {"Opt_All": [], "Opt_One": [], "Literature": [], "GAFF": []}
             for key in list(molec_gps_dict.keys()):
                 # Set label
                 label = molec + "_" + key
