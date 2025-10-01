@@ -185,8 +185,8 @@ Note: Step 2 operation OptGenFF multiple operations in series. Alternatively, th
      
 5. Extract and analyze data:
    ```
-     qsub -N postOptAnaly submit_job_long post_analysis_opt.py
-     qsub -N postOptRank submit_job_long rcc_opt_at_analysis.py
+     qsub -N postOptAnaly ../submit_job post_analysis_opt.py
+     qsub -N postOptRank ../submit_job rcc_opt_at_analysis.py (optional)
    ``` 
 
 ### Generalized FF Validation
