@@ -1340,7 +1340,7 @@ def check_prod_data(job):
                     insert_val = int(line.split()[2])
                     break
         N_mols = job.sp.N_vap + job.sp.N_liq
-        pct_diff = abs(insert_val - delete_val) / insert_val * 100
+        pct_diff = abs(insert_val - delete_val) / insert_val * 100 if insert_val != 0 else 0
         job.doc["insert_val"] = insert_val
         job.doc["delete_val"] = delete_val
         job.doc["pct_diff"] = pct_diff
