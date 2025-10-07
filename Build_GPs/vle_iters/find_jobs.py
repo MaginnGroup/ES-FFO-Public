@@ -17,7 +17,7 @@ for job in group:
         count_running += 1
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        if "nvt_eq_fin" not in job.doc:
+        if "inter_eq_fin" not in job.doc:
             count += 1
             print(f"Job {job.id}")
             # Print the last line of the run_npt_prod.out log file
