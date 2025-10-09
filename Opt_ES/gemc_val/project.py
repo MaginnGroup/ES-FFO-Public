@@ -2503,10 +2503,16 @@ def plot_res_pymser(job, eq_col, results, name, box_name):
         alpha=0.3,
         zorder=4,
     )
-
-    n_ticks = max(5, int(eq_col.max() / 10))  # enforce minimum of 5 ticks
-    step_size = int(eq_col.max() / n_ticks)
-    ax1.set_yticks(np.arange(0, int(eq_col.max() * 1.1 + step_size), step_size))
+    # Use increments of 10 units for y-axis ticks if possible
+    n_ticks = int((eq_col.max() - eq_col.min()) / 10)  
+    #Ensure between 5 and 10 ticks total
+    if n_ticks < 4:
+        n_ticks = 4
+    elif n_ticks > 8:
+        n_ticks = 8
+    step_size = int((eq_col.max()-eq_col.min()) / n_ticks)
+    ax1.set_ylim(eq_col.min()-1, eq_col.max()+1)
+    ax1.set_yticks(np.arange(int(eq_col.min()), int(eq_col.max() + step_size), step_size))
     # ax1.set_yticks(np.arange(0, eq_col.max() * 1.1, eq_col.max() / 10))
     ax1.set_xlim(-len(eq_col) * 10 * 0.02, len(eq_col) * 10 * 1.02)
     ax1.tick_params(axis="y", labelcolor="black")
