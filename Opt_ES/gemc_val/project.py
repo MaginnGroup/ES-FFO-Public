@@ -1351,12 +1351,16 @@ def check_prod_data(job):
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
             check_dict["Nexc_suff"] = False
             pct_diff_thresh = 15
-        elif 30 <= int((insert_val + delete_val)/2) <= 200: #int(N_mols):
+        #If we have between 30 and 50 insertions and deletions, check that they are within 15% of each other to make sure more steps aren't needed
+        elif 30 <= int((insert_val + delete_val)/2) < 50: #int(N_mols):
+            pct_diff_thresh = 15
+        #If we have between 50-200 insertions and deletions, check that they are within 10% of each other to make sure more steps aren't needed
+        elif 50 <= int((insert_val + delete_val)/2) < 200: #int(N_mols):
             pct_diff_thresh = 10
-        #Otherwise, if we have at least 30 insertions and deletions, check that they are within 5% of each other to make sure more steps aren't needed
+        #Otherwise, if we have at least 200 insertions and deletions, check that they are within 5% of each other to make sure more steps aren't needed
         else:
             pct_diff_thresh = 5
-        #Check that the insert and delete values are within 5% of each other
+        #Check that the insert and delete values are within the acceptable % of each other
         if pct_diff > pct_diff_thresh :
             statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
