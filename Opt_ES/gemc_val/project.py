@@ -2514,9 +2514,15 @@ def plot_res_pymser(job, eq_col, results, name, box_name):
         n_ticks = 4
     elif n_ticks > 8:
         n_ticks = 8
-    step_size = (eq_col.max()-eq_col.min()) / n_ticks
-    ax1.set_ylim(eq_col.min()-1, eq_col.max()+1)
-    ax1.set_yticks(np.arange(int(eq_col.min()), int(eq_col.max() + step_size), step_size))
+    max_diff = eq_col.max() - eq_col.min()
+    if max_diff == 0:
+        step_size = 1
+    else:
+        step_size = (max_diff) / n_ticks
+    ax1.set_ylim(eq_col.min()-step_size, eq_col.max()+step_size)
+    ax1.set_yticks(np.arange(eq_col.min(), eq_col.max() + step_size, step_size))
+    # ax1.set_ylim(eq_col.min()-1, eq_col.max()+1)
+    # ax1.set_yticks(np.arange(int(eq_col.min()), int(eq_col.max() + step_size), step_size))
     # ax1.set_yticks(np.arange(0, eq_col.max() * 1.1, eq_col.max() / 10))
     ax1.set_xlim(-len(eq_col) * 10 * 0.02, len(eq_col) * 10 * 1.02)
     ax1.tick_params(axis="y", labelcolor="black")
