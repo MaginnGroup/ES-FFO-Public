@@ -1344,15 +1344,15 @@ def check_prod_data(job):
         job.doc["insert_val"] = insert_val
         job.doc["delete_val"] = delete_val
         job.doc["pct_diff"] = pct_diff
-        #Check number of insert and delete values, if we have less than 30 insertions or deletions, we likely need more steps
-        if int((insert_val + delete_val)/2) < 30: #int(N_mols/2):
+        #Check number of insert and delete values, if we have less than 25 insertions or deletions, we likely need more steps
+        if int((insert_val + delete_val)/2) < 25: #int(N_mols/2):
             print(f"Job {job.id}")
             statement += f"Job {job.id} production has a low number of insertions or deletions"  + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
             check_dict["Nexc_suff"] = False
             pct_diff_thresh = 15
-        #If we have between 30 and 50 insertions and deletions, check that they are within 15% of each other to make sure more steps aren't needed
-        elif 30 <= int((insert_val + delete_val)/2) < 50: #int(N_mols):
+        #If we have between 25 and 50 insertions and deletions, check that they are within 15% of each other to make sure more steps aren't needed
+        elif 25 <= int((insert_val + delete_val)/2) < 50: #int(N_mols):
             pct_diff_thresh = 15
         #If we have between 50-200 insertions and deletions, check that they are within 10% of each other to make sure more steps aren't needed
         elif 50 <= int((insert_val + delete_val)/2) < 200: #int(N_mols):

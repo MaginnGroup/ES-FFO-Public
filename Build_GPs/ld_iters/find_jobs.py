@@ -19,15 +19,16 @@ for job in project.find_jobs({"mol_name":"DEC", "iter": 1, "T": {"$in": [313.19,
             count += 1
             # print(fs"Job {job.id}")
             #Print the last line of the run_npt_prod.out log file
-            # log_file = job.fn("run_npt_prod.out")
-            # if os.path.exists(log_file):
-            #     # print(f"Job {job.id}")
-            #     with open(log_file, "r") as f:
-            #         lines = f.readlines()
-            #         if lines:
-            #             if "Sat" in lines[-1].strip():
-            #                 print(f"Job {job.id}")
-            #                 print(lines[-1].strip())
-            # else:
-            #     print("Log file does not exist.")
+            log_file = job.fn("run_npt_prod.out")
+            if os.path.exists(log_file):
+                # print(f"Job {job.id}")
+                with open(log_file, "r") as f:
+                    lines = f.readlines()
+                    if lines:
+                        # if "Thu" in lines[-1].strip():
+                        print(f"Job {job.id}")
+                        print(lines[-1].strip())
+                            # count += 1
+            else:
+                print("Log file does not exist.")
 print(f"Total unfinished jobs: {count}")
