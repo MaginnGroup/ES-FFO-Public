@@ -23,7 +23,7 @@ print(f"Script location: {Path(__file__).parent}")
 # iters = [1]  # Change me as needed
 property_names = ["liq_density"]  # Change me as needed
 mol_names = [
-    "Gly"
+    "DEC"
 ]  # Change me as needed
 # mol_names = [
 #     "EG",

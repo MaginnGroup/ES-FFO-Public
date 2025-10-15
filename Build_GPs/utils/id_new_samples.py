@@ -65,7 +65,7 @@ def new_samples_vle(
         ### Fit GP Model
         path_gps = f"{root_dir_vle}/iter-{str(iter_num)}"
 
-        models_best, models_rq, all_models, dir_train_test = get_prop_best_model(
+        models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(
             df_liquid, data, path_gps, gp_shuffle_seed
         )
 
@@ -163,7 +163,7 @@ def new_samples_ld(
         ### Fit GP Model
         path_gps = f"{root_dir_ld}/iter-{str(iter_num)}"
         df_liquid = df_liquid.dropna()
-        models_best, models_rq, all_models, dir_train_test = get_prop_best_model(
+        models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(
             df_liquid, data, path_gps, gp_shuffle_seed
         )
 
