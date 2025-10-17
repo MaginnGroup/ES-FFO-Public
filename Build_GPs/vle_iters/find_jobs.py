@@ -17,7 +17,7 @@ for job in group:
         count_running += 1
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        if "em_fin" not in job.doc:
+        if "ld_fail" in job.doc:
             count += 1
             print(job.id)
             
