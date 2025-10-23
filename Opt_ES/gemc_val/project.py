@@ -1037,7 +1037,7 @@ def check_eq(job):
     # If the job failed, move files to a separate folder
     folder_name = "results" + crit_str + vap_box_mult_str + rst_str
 
-    first_shrink = False
+    vbx_change = False
     prod_ready = {"rst_data": True, "nmol_under_30": True, "box_size": True}
     #Get box data
     # Process and add the restart data to eq_col for each property in each box
@@ -1113,6 +1113,7 @@ def check_eq(job):
             #Shrink vapor box volume by factor of 3
             else:
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
+            vbx_change = True
             prod_ready["box_size"] = False
             statement += f"increase vapor box size to {job.doc.vap_box_mult}"
         elif pct_pos < 15 or cond3:
@@ -1129,6 +1130,7 @@ def check_eq(job):
                 job.doc.vap_box_mult = round(0.5**(1/3),3)
                 statement += f"decrease vapor box size to {job.doc.vap_box_mult}"
             prod_ready["box_size"] = False
+            vbx_change = True
 
     if np.all(list(prod_ready.values())):
         job.doc["prod_ready"] = True
@@ -1153,7 +1155,7 @@ def check_eq(job):
 
         #Delete previous data files
         with job:
-            if first_shrink == False or "restart_from" in job.doc.keys():
+            if vbx_change == True or "restart_from" in job.doc.keys():
                 #Delete only gemc data if changing the vapor box size or restarting from another job
                 delete_data_gemc(job, "gemc.eq", mv=True, subfolder=folder_name)
             #Delete all data if switching to critical conditions
