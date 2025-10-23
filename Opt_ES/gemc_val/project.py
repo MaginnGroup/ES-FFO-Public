@@ -1103,8 +1103,8 @@ def check_eq(job):
         #Count percentage of points with positive slope
         pos_slope = np.count_nonzero(dydx > 0)
         pct_pos = pos_slope/len(dydx)*100
-        cond2 = pct_pos > 80 and job.doc.get("nsteps_gemc_eq", 0) >= 1e6 #Lower condition threshold if at least 1 million steps have been run
-        cond3 = pct_pos < 20 and job.doc.get("nsteps_gemc_eq", 0) >= 1e6 #Lower condition threshold if at least 1 million steps have been run
+        cond2 = (pct_pos > 80) and (job.doc.get("nsteps_gemc_eq", 0) >= 1e6) #Lower condition threshold if at least 1 million steps have been run
+        cond3 = (pct_pos < 20) and (job.doc.get("nsteps_gemc_eq", 0) >= 1e6) #Lower condition threshold if at least 1 million steps have been run
         #if more than 85% of the points have a positive slope, the liquid box is likely to condense (increase vapor box size)
         if pct_pos > 85 or cond2:
              #If we've already increased the vapor box once, double the volume
@@ -1113,7 +1113,6 @@ def check_eq(job):
             #Shrink vapor box volume by factor of 3
             else:
                 job.doc.vap_box_mult = round(2.5**(1/3),3)
-            vbx_change = True
             prod_ready["box_size"] = False
             statement += f"increase vapor box size to {job.doc.vap_box_mult}"
         elif pct_pos < 15 or cond3:
@@ -1130,14 +1129,15 @@ def check_eq(job):
                 job.doc.vap_box_mult = round(0.5**(1/3),3)
                 statement += f"decrease vapor box size to {job.doc.vap_box_mult}"
             prod_ready["box_size"] = False
-            vbx_change = True
 
+    #If all conditions are met (enough moles, no rst, vap box size unchanged), set prod_ready to True
     if np.all(list(prod_ready.values())):
         job.doc["prod_ready"] = True
         #If this job was being checked, it means it's not actually ready for production
         #Instead this job just needs to run longer
         if "check_me" in job.doc.keys():
             del job.doc["prod_ready"]
+    #If either vap box is changed or not enough moles are present
     else:
         job.doc["prod_ready"] = False
         #If the job is not ready for production, and has been tried with at least 5 conditions, check if it can be restarted from another job
@@ -1153,15 +1153,16 @@ def check_eq(job):
                     prod_ready["rst_data"] = False
                     break
 
-        #Delete previous data files
+        #If vap box size is changed or restarting from another job, delete only gemc data
         with job:
-            if vbx_change == True or "restart_from" in job.doc.keys():
+            if prod_ready["box_size"] == False or "restart_from" in job.doc.keys():
                 #Delete only gemc data if changing the vapor box size or restarting from another job
                 delete_data_gemc(job, "gemc.eq", mv=True, subfolder=folder_name)
             #Delete all data if switching to critical conditions
             else:
                 job.doc["use_crit"] = True
                 delete_data(job, "gemc.eq", mv=True, subfolder=folder_name)
+            
     #Delete the check_me flag
     if "check_me" in job.doc.keys():
         del job.doc["check_me"]
