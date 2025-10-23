@@ -866,13 +866,14 @@ def run_gemc_eq(job):
             )
 
             # Inititalize max number of eq_steps
-            if "max_eq_steps" not in job.doc:
+            if "max_eq_steps" not in job.doc.keys():
                 # If no value exists, set it as 4 times the original number of eq steps
                 job.doc.max_eq_steps = job.sp.nsteps_gemc_eq * 4
             # The max number of steps is the larger of the number of steps + 1-2*org number of steps or the current max
-            max_eq_steps =  job.doc.max_eq_steps #np.maximum(job.doc.max_eq_steps, existing_eq_steps + job.sp.nsteps_gemc_eq)
+            max_eq_steps = job.doc.max_eq_steps #np.maximum(job.doc.max_eq_steps, existing_eq_steps + job.sp.nsteps_gemc_eq)
             # Originally set the document eq_steps to the max number, it will be overwritten later
-            job.doc.nsteps_gemc_eq = int(max_eq_steps)
+            if "nsteps_gemc_eq" not in job.doc.keys():
+                job.doc.nsteps_gemc_eq = int(max_eq_steps)
 
             # While the max number of eq steps has not been reached
             while total_eq_steps <= max_eq_steps:
@@ -973,7 +974,7 @@ def run_gemc_eq(job):
             job.doc["total_gemc_steps"] = total_sim_steps
             job.doc["gemc_eq_fin"] = True
 
-    except:
+    except Exception as e:
         vap_box_mult_str = (
             "_vbx_" + str(job.doc.vap_box_mult)
             if "vap_box_mult" in job.doc.keys()
@@ -1008,6 +1009,8 @@ def run_gemc_eq(job):
             )
         # If GEMC fails, remove files in post conditions of previous operations
         else:
+            #Say what the first error was
+            print(f"GEMC equilibration error: {e}")
             delete_data(
                 job,
                 custom_args_gemc["run_name"],
@@ -1176,14 +1179,14 @@ def check_eq(job):
 @ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def gemc_eq_restart(job):
     "Restart GEMC equilibration if needed"
-    prod_completed = False
-    while not prod_completed:
+    prod_ready = False
+    while not prod_ready:
         #If the job is ready for production, skip this step
         if job.doc.get("prod_ready", False):
-            prod_completed = True
+            prod_ready = True
         else:
             run_gemc_eq(job)
-            prod_completed = check_eq(job)
+            prod_ready = check_eq(job)
 # @eq_group            
 # @ProjectGEMC.pre.after(run_gemc_eq)
 # @ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
@@ -1340,19 +1343,19 @@ def check_prod_data(job):
                     insert_val = int(line.split()[2])
                     break
         N_mols = job.sp.N_vap + job.sp.N_liq
-        pct_diff = abs(insert_val - delete_val) / insert_val * 100 if insert_val != 0 else 0
+        pct_diff = abs(insert_val - delete_val) / insert_val * 100 if insert_val > 0 else 0
         job.doc["insert_val"] = insert_val
         job.doc["delete_val"] = delete_val
         job.doc["pct_diff"] = pct_diff
-        #Check number of insert and delete values, if we have less than 25 insertions or deletions, we likely need more steps
-        if int((insert_val + delete_val)/2) < 25: #int(N_mols/2):
+        #Check number of insert and delete values, if we have less than 10 insertions or deletions, something is probably wrong
+        if int((insert_val + delete_val)/2) < 10: #int(N_mols/2):
             print(f"Job {job.id}")
             statement += f"Job {job.id} production has a low number of insertions or deletions"  + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
             check_dict["Nexc_suff"] = False
             pct_diff_thresh = 15
-        #If we have between 25 and 50 insertions and deletions, check that they are within 15% of each other to make sure more steps aren't needed
-        elif 25 <= int((insert_val + delete_val)/2) < 50: #int(N_mols):
+        #If we have between 10 and 50 insertions and deletions, check that they are within 15% of each other to make sure more steps aren't needed
+        elif 10 <= int((insert_val + delete_val)/2) < 50: #int(N_mols):
             pct_diff_thresh = 15
         #If we have between 50-200 insertions and deletions, check that they are within 10% of each other to make sure more steps aren't needed
         elif 50 <= int((insert_val + delete_val)/2) < 200: #int(N_mols):
@@ -1431,6 +1434,8 @@ def check_prod_data(job):
                     subfolder=results_folder,
                 )
                 job.doc.use_crit = True
+                if "vap_box_mult" in job.doc.keys():
+                    del job.doc.vap_box_mult
 
 # @Project.post(lambda job: "liq_density_unc" in job.doc)
 # @Project.post(lambda job: "vap_density_unc" in job.doc)
