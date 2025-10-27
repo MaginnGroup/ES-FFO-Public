@@ -1331,8 +1331,10 @@ def check_prod_data(job):
         insert_val = None
         delete_val = None
         
-        #Initialize log file as production file
-        filename = job.fn("prod.out.log")
+        #Initialize log file as last production file
+        filename = sorted(glob.glob(job.fn("prod.*.out.log")))[-1]
+        #Find last restart of production
+        # filename = job.fn("prod.out.log")
 
         #Find the last instance of the words insert and delete starting from the bottom of the file
         # Read file lines
