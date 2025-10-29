@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, 
 from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, variances_scaled_to_real
 from fffit.fffit.plot import plot_model_performance, plot_model_vs_test, plot_slices_temperature, plot_slices_params, plot_model_vs_exp, plot_obj_contour
-from .molec_class_files import esolvs
+from utils.molec_class_files import esolvs
 
 mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)

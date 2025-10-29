@@ -28,6 +28,8 @@ def get_signac_results(project_dict, data_dict):
     all_data_dict : dict
         Dictionary of all dataframes for each molecule
     """
+    # project_names = list(project_dict.keys())
+    project_dict = {key: value for key, value in project_dict.items() if value[0] is not None}
     project_names = list(project_dict.keys())
     # property_names = list(project_dict.values())
 
@@ -108,13 +110,31 @@ def get_signac_results(project_dict, data_dict):
 
     #Merge dfs in data_dicts for which the files are the same
     all_data_dict = {}
-    gemc_dict = data_dict(project_names[0])
-    ift_dict = data_dict(project_names[1])
+    #Get data dicts for each project
+    list_data_dicts = list(data_dicts.values())
+    
+    # Find common files between projects
+    if len(list_data_dicts) == 1:
+        common_files = set(list_data_dicts[0].keys())
+    elif len(list_data_dicts) > 1:
+        common_files = set.intersection(*(set(d.keys()) for d in list_data_dicts))
 
-    common_files = set(ift_dict.keys()) & set(gemc_dict.keys())
+    #For each file, merge the dataframes from each project
     for file in common_files:
-        df1, df2 = ift_dict[file], gemc_dict[file]
-        all_data_dict[file] = pd.merge(df1, df2, how="outer")
+        dfs_to_merge = [d[file] for d in list_data_dicts]
+        merged_df = dfs_to_merge[0]
+        if len(dfs_to_merge) > 1:
+            for df in dfs_to_merge[1:]:
+                merged_df = pd.merge(merged_df, df, how="outer")
+        all_data_dict[file] = merged_df
+
+    # gemc_dict = data_dict(project_names[0])
+    # ift_dict = data_dict(project_names[1])
+
+    # common_files = set(ift_dict.keys()) & set(gemc_dict.keys())
+    # for file in common_files:
+    #     df1, df2 = ift_dict[file], gemc_dict[file]
+    #     all_data_dict[file] = pd.merge(df1, df2, how="outer")
 
     return all_data_dict
 
