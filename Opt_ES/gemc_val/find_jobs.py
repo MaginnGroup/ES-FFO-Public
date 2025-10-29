@@ -9,7 +9,7 @@ project = signac.get_project()
 count = 0
 count_running = 0
 # Loop over all jobs in the project
-group = project.find_jobs({"mol_name": "DMSO"})
+group = project.find_jobs({"mol_name": "EG"})
 for job in group:
     # Check if job document exists
     # print(f"Checking job {job.id}")
@@ -17,7 +17,7 @@ for job in group:
         count_running += 1
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        if job.doc.get("gemc_eq_fin", False) != True:
+        if "liq_density" not in job.doc.keys():
             count += 1
             print(f"Job {job.id}")
             # Print the last line of the run_npt_prod.out log file
