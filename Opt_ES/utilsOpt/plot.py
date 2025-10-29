@@ -720,7 +720,10 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     # axs[0].xaxis.set_major_locator(MultipleLocator(40))
     # axs[0].xaxis.set_minor_locator(AutoMinorLocator(4))
 
-    axs[0].set_ylim(min_pvap*0.8,max_pvap*1.05)
+    if abs(min_pvap) > 1:
+        axs[0].set_ylim(min_pvap*1.05,max_pvap*1.05)
+    else:
+        axs[0].set_ylim(min_pvap*0.8,max_pvap*1.05)
     # axs[0].yaxis.set_major_locator(MultipleLocator(10))
     # axs[0].yaxis.set_minor_locator(AutoMinorLocator(5))
 
