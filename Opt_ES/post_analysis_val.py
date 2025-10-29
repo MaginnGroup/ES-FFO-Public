@@ -85,14 +85,6 @@ for file, df_molec in all_df_data.items():
             molec_data = copy.copy(df_molec[df_molec['molecule'] == molec])
             df_all, df_liq, df_vap = prepare_df_props(molec_data, molec_dict[molec], 0, scale = False)
             file_save = file.replace(train_mol_str, molec)
-            # data_loc = os.path.join(file_save, "ms_data.csv")
-            # df_all.to_csv(data_loc)
-            # prop_dict[file_save] = df_all
-            # #Save error data as well
-            # df_paramsets = prepare_df_errors(df_all, molec_dict, molec)
-            # df_paramsets["molecule"] = molec
-            # df_paramsets.to_csv(os.path.join(file_save, "error_data.csv"))
-            # error_dict[file_save] = df_paramsets
         else:
             #Save single molecule propery data
             df_all, df_liq, df_vap = prepare_df_props(df_molec, molec_dict[molec], 0, scale = False)
@@ -129,7 +121,6 @@ pdf_vle = PdfPages(os.path.join(full_at_dir ,"vle.pdf"))
 pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
 pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
 
-print(prop_dict.keys())
 #For each molecule
 molecules = df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
@@ -159,19 +150,20 @@ pdf_hpvap.close()
 if ift_proj is not None:
     pdf_st.close()
 
-# #Get error dict labels ready
-# df_err_dict = {}
-# molec_names = mol_names
-# for file, data_df_err in error_dict.items():
-#     #Load the error data for the file
-#     #Remove all columns not related to error metrics
-#     label_base = get_label_from_fn(file, ff_names, ff_labels)
-#     label_molec = data_df_err["molecule"].values[0]
-#     label = label_base + "_" + label_molec
-#     err_data = data_df_err.filter(regex="mapd|mse|mae")
-#     df_err_dict[label] = err_data
+#Get error dict labels ready
+df_err_dict = {}
+molec_names = mol_names
+for file, data_df_err in error_dict.items():
+    #Load the error data for the file
+    #Remove all columns not related to error metrics
+    label_base = get_label_from_fn(file, ff_names, ff_labels)
+    label_molec = data_df_err["molecule"].values[0]
+    label = label_base + "_" + label_molec
+    err_data = data_df_err.filter(regex="mapd|mse|mae")
+    df_err_dict[label] = err_data
 
 # #For genFF plot MAPD breakdown for all molecules by property
+# #TO DO: Need to modify plotting functions since there is no training/testing split here
 # error_objs = ["mae", "mapd"]
 # for error_obj in error_objs:
 #     #Make error Plots
