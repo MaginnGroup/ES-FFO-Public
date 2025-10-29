@@ -316,7 +316,8 @@ def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
+    # df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs))]
     # df_labels, df_ffs = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
     # df_markers = ['o', 's', '^', '*', 'p', 'd']
@@ -361,7 +362,8 @@ def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
         
         if df_ff is not None:
             all_props = ["sim_surf_tens"]
-            grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
+            # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
+            grouped = df_ff.groupby(["temperature"])[all_props]
             
             x_props = ["sim_surf_tens"]
             # Calculate mean and standard deviation for each group
@@ -442,7 +444,8 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs))]
+    # df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
     # df_labels, df_ffs = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
     # df_markers = ['o', 's', '^', '*', 'p', 'd']
@@ -487,7 +490,8 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         
         if df_ff is not None:
             all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
-            grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
+            # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
+            grouped = df_ff.groupby(["temperature"])[all_props]
             
             x_props = ["sim_liq_density", "sim_vap_density"]
             # Calculate mean and standard deviation for each group
@@ -581,7 +585,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
+    # df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs))]
 
     # df_labels = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
@@ -648,7 +653,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
             x_props = ["sim_Pvap", "sim_Hvap"]
             df_ff.replace("", np.nan, inplace=True)
             df_ff.dropna(subset=["sim_Pvap", "sim_Hvap"], inplace=True)
-            grouped = df_ff.groupby(["temperature", "atom_type"])[x_props]
+            # grouped = df_ff.groupby(["temperature", "atom_type"])[x_props]
+            grouped = df_ff.groupby(["temperature"])[x_props]
             
             # Calculate mean and standard deviation for each group
             # grouped = grouped.replace("", np.nan)
