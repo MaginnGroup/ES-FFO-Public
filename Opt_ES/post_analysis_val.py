@@ -162,25 +162,25 @@ for file, data_df_err in error_dict.items():
     err_data = data_df_err.filter(regex="mapd|mse|mae")
     df_err_dict[label] = err_data
 
-# #For genFF plot MAPD breakdown for all molecules by property
-# #TO DO: Need to modify plotting functions since there is no training/testing split here
-# error_objs = ["mae", "mapd"]
-# for error_obj in error_objs:
-#     #Make error Plots
-#     if len(at_numbers) == 1:
-#         at_class = atom_type.make_atom_type_class(at_numbers[0])
-#         full_at_dir = os.path.join("analysis", at_class.scheme_name, obj_choice, "ms_val")
-#     else:
-#         full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), obj_choice, "ms_val")
-#     os.makedirs(full_at_dir, exist_ok=True)
-#     pdf_MAPD = PdfPages(os.path.join(full_at_dir , error_obj.upper() + ".pdf"))
-#     #For each molecule
-#     save_name = os.path.join(full_at_dir, error_obj + "_props.png")
+#For genFF plot MAPD breakdown for all molecules by property
+#TO DO: Need to modify plotting functions since there is no training/testing split here
+error_objs = ["mae", "mapd"]
+for error_obj in error_objs:
+    #Make error Plots
+    if len(at_numbers) == 1:
+        at_class = atom_type.make_atom_type_class(at_numbers[0])
+        full_at_dir = os.path.join("analysis", at_class.scheme_name, obj_choice, "ms_val")
+    else:
+        full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), obj_choice, "ms_val")
+    os.makedirs(full_at_dir, exist_ok=True)
+    pdf_MAPD = PdfPages(os.path.join(full_at_dir , error_obj.upper() + ".pdf"))
+    #For each molecule
+    save_name = os.path.join(full_at_dir, error_obj + "_props")
 
-#     #These functions will need to change since there is no training/testing set. But keep the same format to them
-#     pdf_MAPD.savefig(plot_err_each_prop(molec_names, df_err_dict, obj = error_obj, save_name=save_name), bbox_inches='tight')
-#     plt.close()
-#     # pdf_MAPD.savefig(plot_err_avg_props(molec_names, df_err_dict, obj = error_obj), bbox_inches='tight')
-#     # plt.close()
-#     # #Close figures 
-#     pdf_MAPD.close() 
+    #These functions will need to change since there is no training/testing set. But keep the same format to them
+    pdf_MAPD.savefig(plot_err_each_prop(molec_names, df_err_dict, obj = error_obj, save_name=save_name), bbox_inches='tight')
+    plt.close()
+    # pdf_MAPD.savefig(plot_err_avg_props(molec_names, df_err_dict, obj = error_obj), bbox_inches='tight')
+    # plt.close()
+    # #Close figures 
+    pdf_MAPD.close() 

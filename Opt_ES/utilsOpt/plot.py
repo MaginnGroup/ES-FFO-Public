@@ -720,10 +720,10 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     # axs[0].xaxis.set_major_locator(MultipleLocator(40))
     # axs[0].xaxis.set_minor_locator(AutoMinorLocator(4))
 
-    if abs(min_pvap) > 1:
-        axs[0].set_ylim(min_pvap*1.05,max_pvap*1.05)
+    if min_pvap <= -1:
+        axs[0].set_ylim(min_pvap * 1.05, max_pvap * 1.05)
     else:
-        axs[0].set_ylim(min_pvap*0.8,max_pvap*1.05)
+        axs[0].set_ylim(min_pvap * 0.95, max_pvap * 1.05)
     # axs[0].yaxis.set_major_locator(MultipleLocator(10))
     # axs[0].yaxis.set_minor_locator(AutoMinorLocator(5))
 
@@ -790,12 +790,39 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
         names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
     else:
         names = ["Liquid Density", "Vapor Density", "Vapor Pressure", "Heat of Vaporization", "Surface Tension"]
-    cols = [item for item in cols for _ in range(2)]
-    names = [item for item in names for _ in range(2)]
+    # cols = [item for item in cols for _ in range(2)]
+    # names = [item for item in names for _ in range(2)]
     
     df_keys, df_ffs =  zip(*err_path_dict.items())
     df_labels = list(df_keys)
     df_mse_list = list(df_ffs)
+
+    train_molecs = ["EG","Gly", "MeOH", "DMSO","DEC","DMF"]
+    results = []
+    for label, df in zip(df_labels, df_mse_list):
+        # Get columns that exist in the dataframe
+        existing_cols = list(set(cols).intersection(df.columns))
+        if len(existing_cols) > 0:
+            # Compute mean error for available columns
+            avg_errors = df[existing_cols].mean()
+            # Store results in list as dictionary
+            result_row = {"method": label}
+            result_row.update(avg_errors.to_dict())
+            results.append(result_row)
+
+    # Convert to pandas DataFrame
+    results_df = pd.DataFrame(results)
+    if save_name is not None:
+        results_df.to_csv(save_name + ".csv", index=False)
+    # for label, df in zip(df_labels, df_mse_list):
+    #     # Get the columns which exitst in the dataframe
+    #     existing_cols = list(set(cols).intersection(df.columns))
+    #     print(existing_cols)
+    #     if len(existing_cols) > 0:
+    #         #Get the average errors for training and testing molecules for each property
+    #         avg_errors = df[existing_cols].mean()
+    #         print(f"Average {obj} for all molecules using {label}:")
+    #         print(avg_errors)
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
     #Choose color basede on FF label (ATs diff colors Dis=blue, 1=red, 2=orange, literature =gray
@@ -809,7 +836,6 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
         else:
             return 'gray'
 
-    train_molecs = ["EG","Gly", "MeOH", "DMSO","DEC","DMF"]
     #Get indeces where train molecules are in all molecules
     len_train = len(set(molec_names).intersection(train_molecs))
     left_indices = np.arange(len_train)
@@ -817,8 +843,12 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
 
     if len(right_indices) > 0:
         axs_col = 2
+        cols = [item for item in cols for _ in range(2)]
+        names = [item for item in names for _ in range(2)]
     else:
         axs_col = 1
+        cols = [item for item in cols]
+        names = [item for item in names]
 
     fig, axs = plt.subplots(len(props), axs_col, figsize=(6*len(props), 8*axs_col), sharex = False)
     # Plot each column in a subplot
@@ -832,13 +862,14 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
         else:
             indices = right_indices
             mol_names = molec_names[len_train:]
-
-        for j, df in enumerate(df_mse_list):
-            if j < len(df_mse_list):
-                max_val = np.nanmax(df[column].values)
-                max_val_f = max(max_val, max_val_f)
-            ax.bar(indices + j*bar_width, df[column].iloc[indices], bar_width, label=df_labels[j].split("_")[0], color = get_color(df_labels[j]))
         
+        for j, df in enumerate(df_mse_list):
+            if column in df.columns:
+                if j < len(df_mse_list):
+                    max_val = np.nanmax(df[column].values)
+                    max_val_f = max(max_val, max_val_f)
+                ax.bar(indices + j*bar_width, df[column].iloc[indices], bar_width, label=df_labels[j].split("_")[0], color = get_color(df_labels[j]))
+            
         ax.set_ylim(0, max_val_f*1.05)
         ax.set_title(name, fontsize = 24) 
         ax.set_xticks(indices + bar_width)
@@ -854,7 +885,10 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
 
         ax.set_xticklabels(molec_names_use, fontsize=20)
     
-    handles, labels = axs[0, 0].get_legend_handles_labels()
+    if axs_col == 2:
+        handles, labels = axs[0, 0].get_legend_handles_labels()
+    else:
+        handles, labels = axs[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.10), ncol=3, fontsize = 20)
 
     # Adjust layout
@@ -883,8 +917,8 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
 
     plt.tight_layout(rect=[0.01, 0.0, 1, 1])
     #Save figure to jpg
-    if save_name is not None:
-        plt.savefig(save_name, bbox_inches='tight')
+    # if save_name is not None:
+    #     plt.savefig(save_name + ".png", bbox_inches='tight')
     # Show the plot
     return fig
 
