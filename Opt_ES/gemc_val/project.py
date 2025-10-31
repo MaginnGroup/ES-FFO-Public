@@ -1332,7 +1332,7 @@ def check_prod_data(job):
         delete_val = None
         
         #Initialize log file as last production file
-        filename = sorted(glob.glob(job.fn("prod.*.out.log")))[-1]
+        filename = sorted(glob.glob(job.fn("prod*out.log")))[-1]
         #Find last restart of production
         # filename = job.fn("prod.out.log")
 
