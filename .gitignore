@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+files_for_tests/*
 *$py.class
 *example_output_files
 *Project*-*.o*
