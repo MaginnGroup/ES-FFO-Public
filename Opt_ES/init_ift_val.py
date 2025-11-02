@@ -19,7 +19,7 @@ from fffit.fffit.utils import values_scaled_to_real, values_real_to_scaled
 
 from utils.molec_class_files import esolvs
 
-at_numbers = [0, 1]
+at_numbers = [0]
 obj_choice = "ExpVal"
 gen_FF_mols = ["EG", "Gly", "MeOH"]
 num_restarts = 3
@@ -57,7 +57,33 @@ def calc_nmols(sp):
 
     return sp, nmols
 
-
+def sp_within_bounds(analyzer):
+    """
+    Check if the state point parameters are within the molecule's bounds
+    """
+    param_bounds, param_names = analyzer.get_param_bnds_names()
+    #Get the max sigma from the bounds and names
+    sigma_vals = [v for n, v in zip(param_names, param_bounds) if "sigma" in n]
+    max_sigma = np.max(sigma_vals)
+    param_bnds = analyzer.values_real_to_pref(param_bounds.T).T
+    all_molec_dir = analyzer.use_dir_name
+    if os.path.exists(all_molec_dir / "unique_best_set.csv"):
+        all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
+    #Get the best set where no bound is approached
+    param_vals = all_df.to_numpy()
+    # Find which bounds are different
+    lower_bnd = param_bnds[:, 0]
+    upper_bnd = param_bnds[:, 1]
+    dif_bnds = lower_bnd != upper_bnd
+    # Check closeness to bounds for params that have variable bounds
+    close_to_lower = np.isclose(param_vals[:,dif_bnds], lower_bnd[dif_bnds])
+    close_to_upper = np.isclose(param_vals[:,dif_bnds], upper_bnd[dif_bnds])
+    close_any = np.logical_or(close_to_lower, close_to_upper)
+    # A "valid" row has no True in close_any
+    valid_rows = ~close_any.any(axis=1)
+    # Pick first valid row or the first row if none are valid
+    best_idx = np.argmax(valid_rows) if valid_rows.any() else 0
+    return best_idx
 def unpack_molec_values(class_data, state_point, sample):
     """
     Unpacks scaled sample values given the molecule under study
@@ -159,8 +185,10 @@ def init_project():
                 if at_number == 0 or molec_name in gen_FF_mols:
                     # Load samples from the opt_at_params Results folder
                     analyzer = opt_atom_types.Analyze_opt_res(molec_names, at_number, 1, obj_choice)
-                    unique_real = pd.read_csv(analyzer.use_dir_name + "/unique_best_set.csv", header=0, index_col=0).values
-                    best_idx = 0 if at_number == 0 else 2  # Use only the best set
+                    unique_real = pd.read_csv(os.path.join(analyzer.use_dir_name , "unique_best_set.csv"), header=0).values
+                    best_idx = sp_within_bounds(analyzer)
+                    # best_idx = 0 if at_number == 0 else 2  # Use only the best set
+                    #Write script to only use 2nd best set for generalized FFs to avoid bound issues
                     unique_best = unique_real[best_idx]  # Use only the best set
                     # If using generalized atom types, transform the parameters to the distinct parameters for the molecule
                     if at_number > 0:
@@ -186,6 +214,7 @@ def init_project():
 
                     # Convert scaled samples to physical values
                     scaled_params = values_scaled_to_real(new_samples, bounds)
+                    scaled_params = np.atleast_2d(analyzer.values_pref_to_real(scaled_params))
                     # Make the GAFF param_set (test)
                     # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
                     # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
@@ -224,6 +253,7 @@ def init_project():
                                 "max_sigma": np.max(molec_data.bounds_sig),
                             }
                             # Calculate the number of molecules in the system based on the density and box length (defined by max_sigma)
+                            print(sample)
                             state_point, max_sigma = unpack_molec_values(
                                 molec_data, state_point, sample
                             )
