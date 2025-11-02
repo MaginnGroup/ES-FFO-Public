@@ -24,14 +24,7 @@ obj_choice = "ExpVal"
 gen_FF_mols = ["EG", "Gly", "MeOH"]
 num_restarts = 3
 # Load class properies for each training molecule
-mol_names = [
-    "EG",
-    "Gly",
-    "MeOH",
-    "DMSO",
-    "DEC",
-    "DMF",
-]  # ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = [ "EG", "Gly", "MeOH", "DMSO", "DEC", "DMF",]  # ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 
@@ -200,9 +193,9 @@ def init_project():
                         train_mol_str = molec_name
 
                     #Scale distinct sample between 0 and 1
-                    new_samples_scl = values_real_to_scaled(best_nm_k, bounds)
+                    best_ang = np.atleast_2d(analyzer.values_pref_to_real(best_nm_k))
+                    new_samples_scl = values_real_to_scaled(best_ang, bounds)
                     new_samples = pd.DataFrame(new_samples_scl, columns=molec_data.param_names)
-
                     # Load the GP models for the given molecule and get the LD estimates
                     ld_model = get_gp_models(molec_name, vle_iter)
                     ld_bnds = molec_data.liq_density_bounds
@@ -214,7 +207,6 @@ def init_project():
 
                     # Convert scaled samples to physical values
                     scaled_params = values_scaled_to_real(new_samples, bounds)
-                    scaled_params = np.atleast_2d(analyzer.values_pref_to_real(scaled_params))
                     # Make the GAFF param_set (test)
                     # scaled_params = molec_data.A_kJmol_to_nm_Kkb(molec_data.gaff_params)
                     # scaled_params = np.array(list(scaled_params.values())).reshape(1,-1)
@@ -253,7 +245,6 @@ def init_project():
                                 "max_sigma": np.max(molec_data.bounds_sig),
                             }
                             # Calculate the number of molecules in the system based on the density and box length (defined by max_sigma)
-                            print(sample)
                             state_point, max_sigma = unpack_molec_values(
                                 molec_data, state_point, sample
                             )
