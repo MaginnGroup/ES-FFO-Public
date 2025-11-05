@@ -9,7 +9,7 @@ project = signac.get_project()
 count = 0
 count_running = 0
 # Loop over all jobs in the project
-group = project.find_jobs({"mol_name": "EG"})
+group = project.find_jobs({"mol_name": "DMSO"})
 for job in group:
     # Check if job document exists
     # print(f"Checking job {job.id}")
