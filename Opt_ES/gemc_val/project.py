@@ -805,7 +805,7 @@ def run_gemc_eq(job):
 
     #Set vapor cutoff to 90% of half the box length to avoid k vectors issue
     # cutoff_vap = np.minimum(round(0.95*boxl_vap/2,5), round(6 * job.sp.max_sigma, 5))
-    cutoff_vap = round(0.90*boxl_vap/2,5)
+    cutoff_vap = round(0.95*boxl_vap/2,5)
     custom_args_gemc["charge_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
@@ -1231,7 +1231,7 @@ def run_gemc_prod(job):
 
     #Set vapor cutoff to 90% of half the box length to avoid k vectors issue
     boxl_vap = job.doc["gemc_vapboxl"]
-    cutoff_vap = round(0.90*boxl_vap/2,5)
+    cutoff_vap = round(0.95*boxl_vap/2,5)
     custom_args_gemc["charge_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     custom_args_gemc["vdw_cutoff_box2"] = (cutoff_vap * u.nanometer).to("angstrom")
     job.doc["cutoff_vap"] = cutoff_vap  # Save the cutoff value to the job document
