@@ -105,7 +105,8 @@ def gemc_prod_complete(job):
             last_line = f.readline().decode()
         # Split the last line and extract the first number
         first_value = int(last_line.split()[0])
-        completed = first_value == job.doc.get("total_gemc_steps", job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq)
+        prod_steps = job.doc.get("nsteps_gemc_prod", job.sp.nsteps_gemc_prod)
+        completed = first_value == job.doc.get("total_gemc_steps", prod_steps + job.doc.nsteps_gemc_eq)
     except:
         completed = False
         pass
@@ -895,7 +896,7 @@ def run_gemc_eq(job):
                         # If at least 100k steps have been run
                         if (
                             total_eq_steps >= existing_eq_steps
-                            and total_eq_steps >= job.sp.nsteps_gemc_prod
+                            and total_eq_steps >= job.doc.get("nsteps_gemc_prod", job.sp.nsteps_gemc_prod)
                         ):
                             # Start production run from the last piece of the equilibration run
                             is_equil = True
@@ -970,7 +971,14 @@ def run_gemc_eq(job):
             # Set the step counter to whatever the final number of equilibration steps was
             job.doc.nsteps_gemc_eq = total_eq_steps
             job.doc.equil_fail = False
-            total_sim_steps = int(job.sp.nsteps_gemc_prod + job.doc.nsteps_gemc_eq)
+            # If we have at least 10* the number of production steps in equilibrium
+            if job.doc.nsteps_gemc_eq > 10 * job.sp.nsteps_gemc_prod:
+                # Set number of production steps to at least 10% of equilibration steps
+                job.doc.nsteps_gemc_prod = int(job.doc.nsteps_gemc_eq / 10)
+            else:
+                # Otherwise use the default number of production steps
+                job.doc.nsteps_gemc_prod = job.sp.nsteps_gemc_prod
+            total_sim_steps = int(job.doc.nsteps_gemc_prod + job.doc.nsteps_gemc_eq)
             job.doc["total_gemc_steps"] = total_sim_steps
             job.doc["gemc_eq_fin"] = True
 
