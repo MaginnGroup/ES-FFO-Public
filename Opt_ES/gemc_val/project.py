@@ -835,7 +835,7 @@ def run_gemc_eq(job):
 
             init_gemc_liq = job.fn(first_run + ".out.box1.prp")
             init_gemc_vap = job.fn(first_run + ".out.box2.prp")
-            prop_cols = [5]  # Use number of moles to decide equilibrium
+            prop_cols = [5, 6]  # Use number of moles and mass density to decide equilibrium
             # Load initial eq data from both boxes
             df_box1 = np.genfromtxt(init_gemc_liq)
             df_box2 = np.genfromtxt(init_gemc_vap)
@@ -1050,7 +1050,7 @@ def check_eq(job):
     #Get box data
     # Process and add the restart data to eq_col for each property in each box
     eq_data_dict = {}
-    prop_cols = [5]  # Use number of moles to decide equilibrium
+    prop_cols = [5, 6]  # Use number of moles and density to decide equilibrium
     for b in range(2):
         box_name = "Liquid" if b == 0 else "Vapor"
         for i, prop_index in enumerate(prop_cols):
@@ -1061,42 +1061,44 @@ def check_eq(job):
             eq_col = np.genfromtxt(eq_col_file, delimiter=",")
             # Save the eq_col and file to a dictionary for later use
             eq_data_dict[key] = {"data": eq_col, "file": eq_col_file}
-            if i ==0 and b==0:
-                eq_col_liq = eq_data_dict[key]["data"]
+
+    eq_col_liq_density = eq_data_dict["Liquid_6"]["data"]
+    eq_col_liq_molec = eq_data_dict["Liquid_5"]["data"]
+
     # Get the eq data for liquid box n_mols
-    results, adf_test = get_pymser_results(eq_col_liq)
+    results, adf_test = get_pymser_results(eq_col_liq_molec)
 
     # Only count this run as ready for production if between 30 and 770 molecules are in the liquid box
-    n_liq = np.mean(eq_col_liq[results["t0"]:])
-    if  n_liq < 30 or n_liq > 770:  # 30
+    n_liq = np.mean(eq_col_liq_molec[results["t0"]:])
+    if  n_liq < 30 or n_liq > (job.sp.N_vap + job.sp.N_liq - 30):  # 30
         # Otherwise add to the job document that the production failed
         job.doc["nmol_under_30"] = True
         job.doc["check_me"] = True
         prod_ready["nmol_under_30"] = False
 
-    # Estimate the slope of the number of molecules in the liquid box vs step number
+    # Estimate the slope of the density of the liquid box vs step number
     custom_args, custom_args_gemc = _get_custom_args(job)
-    steps = np.arange(0, len(eq_col_liq)) * custom_args["prop_freq"]
-    win_len = max(3, int(len(eq_col_liq) * 0.1) | 1)
-    dydx = savgol_filter(eq_col_liq, window_length=win_len, polyorder=2, deriv=1)
-    eq_col_est = savgol_filter(eq_col_liq, window_length=win_len, polyorder=2)
+    steps = np.arange(0, len(eq_col_liq_density)) * custom_args["prop_freq"]
+    win_len = max(3, int(len(eq_col_liq_density) * 0.1) | 1)
+    dydx = savgol_filter(eq_col_liq_density, window_length=win_len, polyorder=2, deriv=1)
+    eq_col_est = savgol_filter(eq_col_liq_density, window_length=win_len, polyorder=2)
 
     #Plot the number of molecules in the liquid box vs step number and the slope
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    ax1.plot(steps, eq_col_liq, label="Original Data", alpha=0.5)
+    ax1.plot(steps, eq_col_liq_density, label="Original Data", alpha=0.5)
     ax1.plot(steps, eq_col_est, color='red', label="Smoothed Data")
     ax1.set_xlabel("Sweeps")
-    ax1.set_ylabel("Number of Molecules in Liquid Box")
+    ax1.set_ylabel("Mass Density of Liquid Box " + r"(kg/m$^3$)")
     ax1.legend()
-    ax1.set_title("Liquid Box Molecules vs Sweeps")
+    ax1.set_title("Liquid Box Density vs Sweeps")
     ax2.plot(steps, dydx, color='green', label="Slope (dN/dx)")
     ax2.axhline(0, color='black', linestyle='--')
     ax2.set_xlabel("Sweeps")
     ax2.set_ylabel("Slope")
     ax2.legend()
-    ax2.set_title("Slope of Liquid Box Molecules vs Sweeps")
+    ax2.set_title("Slope of Liquid Box Density vs Sweeps")
     plt.tight_layout()
-    plt.savefig(job.fn("liq_box_slope.png"))
+    plt.savefig(job.fn("liq_dens_slope.png"))
 
     #Delete gemc_eq_fin if check_me is True. 
     if job.doc.get("check_me", False):
@@ -1107,7 +1109,7 @@ def check_eq(job):
     if (job.doc.get("check_me", False) and job.doc.get("nsteps_gemc_eq", 0) >= 150000):
         # When this step happens, at least 200K steps should have been run
 
-        #Check if the number of molecules in the liquid box is decreasing on average
+        #Check if the density in the liquid box is decreasing on average
         #Count percentage of points with positive slope
         pos_slope = np.count_nonzero(dydx > 0)
         pct_pos = pos_slope/len(dydx)*100
@@ -1322,12 +1324,12 @@ def check_prod_data(job):
         density_liq = df_box1[:, density_col - 1]
         density_vap = df_box2[:, density_col - 1]
 
-        # Compare each line of nmols_liq and nmols_vap, if the row is ever bigger for the vapor box, print the job id
+        # Compare each line of density liq and density vap, if the row is ever bigger for the vapor box, print the job id
         mask = density_vap > density_liq
         # print(mask)
         if np.any(mask):
             print(
-                f"Job {job.id} has a vapor box with more molecules than the liquid box"
+                f"Job {job.id} has a vapor box with higher density than the liquid box"
             )
             # Print mol_name, T, and restart from statepont
             print(
@@ -2644,11 +2646,14 @@ def get_pymser_results(eq_col):
 def check_equil_converge(job, eq_data_dict, prod_tol):
     equil_matrix = []
     res_matrix = []
-    prop_cols = [5]
-    prop_names = ["Number of Moles"]
+    check_cols = [6]
+    prop_names = ["Mass Density (kg/m3)"]
     try:
+        all_keys = list(eq_data_dict.keys())
+        #Get only keys that match the check columns (in this case only density for both boxes)
+        keys_to_check = [s for s in all_keys if any(str(c) in s for c in check_cols)]
         # Load data for both boxes
-        for key in list(eq_data_dict.keys()):
+        for key in keys_to_check:
             eq_col = eq_data_dict[key]["data"]
             results, adf_test_failed = get_pymser_results(eq_col)
             # Check if equilibrated and meets production tolerance
@@ -2665,14 +2670,14 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
             # box = df_box1 if i < len(prop_cols) else df_box2
             # box_name = "Liquid" if i < len(prop_cols) else "Vapor"
             # col_vals = box[:, prop_cols[i % len(prop_cols)] - 1]
-            key_name = list(eq_data_dict.keys())[i]
+            key_name = keys_to_check[i]
             box_name = key_name.rsplit("_", 1)[0]
             col_vals = eq_data_dict[key_name]["data"]
             # plot all
 
             # if not all(equil_matrix):
             plot_res_pymser(
-                job, col_vals, res_matrix[i], prop_names[i % len(prop_cols)], box_name
+                job, col_vals, res_matrix[i], prop_names[i % len(check_cols)], box_name
             )
 
             # Display outcome
