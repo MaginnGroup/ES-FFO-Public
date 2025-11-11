@@ -1901,7 +1901,7 @@ DispCorr	            = EnerPres	    ; apply analytical tail corrections
 ; Velocity generation
 gen_vel                 = no        ; Do not assign velocities from Maxwell distribution
 """.format(
-        temp=job.sp.T, press=int(job.sp.P * 5), nsteps=job.sp.nsteps_npzzat_eq
+        temp=job.sp.T, press=job.sp.P * 5, nsteps=job.sp.nsteps_npzzat_eq
     )
 
     return contents
