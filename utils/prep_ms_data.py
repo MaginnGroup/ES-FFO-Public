@@ -75,16 +75,22 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
         "Pvap": ("expt_Pvap", molecule.Pvap_bounds, molecule.expt_Pvap),
         "Hvap": ("expt_Hvap", molecule.Hvap_bounds, molecule.expt_Hvap),
         "vap_density": ("expt_vap_density", molecule.vap_density_bounds, molecule.expt_vap_density),
+        "diff_coeff": ("expt_diff_coeff", molecule.diff_coeff_bounds, molecule.expt_diff_coeff),
     }
 
     # Add optional columns if they exist
     for old_col, (expt_col, bounds_func, expt_map) in optional_props.items():
-        if old_col in df_all.columns:
+        if old_col in df_all.columns and bounds_func is not None: #If the column exists and bounds are defined
             sim_col = "sim_" + old_col
             df_all.rename(columns={old_col: sim_col}, inplace=True)
-            df_all[expt_col] = df_all["temperature"].map(expt_map)
             scaling_info[sim_col] = bounds_func
             scaling_info[expt_col] = bounds_func
+            # Map experimental values to temperatures
+            try:
+                df_all[expt_col] = df_all["temperature"].map(expt_map)
+            #If temperature does not exist in the mapping make it nan
+            except KeyError: 
+                df_all[expt_col] = np.nan
 
     if "sim_liq_density" in df_all.columns and "sim_vap_density" in df_all.columns:
         Tc, rhoc = calc_critical(df_all)
@@ -101,7 +107,12 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
 
         # Scale other properties
         for col, bounds_func in scaling_info.items():
-            df_all[col] = values_real_to_scaled(df_all[col], bounds_func)
+            #Scale the column if we have bounds defined
+            if bounds_func is not None:
+                df_all[col] = values_real_to_scaled(df_all[col], bounds_func)
+            #Delete the column if we do not have bounds defined
+            else:
+                df_all.drop(columns=col, inplace=True)
 
     # Split out vapor and liquid samples
     df_liquid = df_all[df_all["is_liquid"] == True]
@@ -211,7 +222,8 @@ def prepare_df_errors(df_data, data_dict, mol_name):
                 "Hvap": ("expt_Hvap", molecule.expt_Hvap),
                 "vap_density": ("expt_vap_density", molecule.expt_vap_density),
                 "Tc": ("expt_Tc", molecule.expt_Tc),
-                "rhoc": ("expt_rhoc", molecule.expt_rhoc),}
+                "rhoc": ("expt_rhoc", molecule.expt_rhoc),
+                "diff_coeff": ("expt_diff_coeff", molecule.expt_diff_coeff),}
             
             # Add optional columns if they exist
             for old_col, (expt_col, expt_map) in all_props.items():
@@ -224,14 +236,16 @@ def prepare_df_errors(df_data, data_dict, mol_name):
                     else:
                         try:
                             values[expt_col] = values["temperature"].map(expt_map)
-                        #If temperature does not exist in the mapping skip it
+                        #If temperature does not exist in the mapping make it nan
                         except KeyError: 
-                            pass
+                            values[expt_col] = np.nan
         
             def calculate_objs(expt_values, sim_values, property_name, molecule_name):
                 try:
-                    fin_sim = sim_values[np.isfinite(sim_values)]
-                    fin_expt = expt_values[np.isfinite(sim_values)]
+                    #Find indeces where both expt and sim values are finite
+                    finite_indices = np.isfinite(expt_values) & np.isfinite(sim_values)
+                    fin_sim = sim_values[finite_indices]
+                    fin_expt = expt_values[finite_indices]
                     mse = mean_squared_error(fin_expt, fin_sim)
                     mapd = mean_absolute_percentage_error(fin_expt, fin_sim) * 100.0
                     mae = mean_absolute_error(fin_expt, fin_sim)
@@ -243,7 +257,7 @@ def prepare_df_errors(df_data, data_dict, mol_name):
                     mse, mapd, mae, mpd = np.nan, np.nan, np.nan, np.nan
                 return mse, mapd, mae, mpd
 
-            for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap"]:
+            for prop in ["liq_density", "surf_tens", "vap_density", "Pvap", "Hvap", "diff_coeff"]:
                 if "sim_" + prop in values.columns:
                     mse, mapd, mae, mpd = calculate_objs(values["expt_" + prop], values["sim_" + prop], prop, mol_name)
                     new_quantities["mse_" + prop] = mse
