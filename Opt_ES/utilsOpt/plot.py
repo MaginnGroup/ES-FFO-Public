@@ -810,7 +810,8 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     results = []
     for label, df in zip(df_labels, df_mse_list):
         # Get columns that exist in the dataframe
-        existing_cols = list(set(cols).intersection(df.columns))
+        # existing_cols = list(set(cols).intersection(df.columns))
+        existing_cols = [c for c in cols if c in df.columns]
         if len(existing_cols) > 0:
             # Compute mean error for available columns
             avg_errors = df[existing_cols].mean()
@@ -846,7 +847,8 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
             return 'gray'
 
     #Get indeces where train molecules are in all molecules
-    len_train = len(set(molec_names).intersection(train_molecs))
+    # len_train = len(set(molec_names).intersection(train_molecs))
+    len_train = len([m for m in molec_names if m in train_molecs])
     left_indices = np.arange(len_train)
     right_indices =  np.arange(len_train, len(molec_names))
 
