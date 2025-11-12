@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn
 from scipy.stats import linregress
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
-from matplotlib.ticker import MultipleLocator, AutoMinorLocator
+from matplotlib.ticker import MultipleLocator, AutoMinorLocator, MaxNLocator
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, variances_scaled_to_real
 from fffit.fffit.plot import plot_model_performance, plot_model_vs_test, plot_slices_temperature, plot_slices_params, plot_model_vs_exp, plot_obj_contour
 from utils.molec_class_files import esolvs
@@ -290,9 +290,9 @@ def get_min_max(curr_min, curr_max, new_vals, std_dev=None):
     
     return curr_min, curr_max
 
-def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
+def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     """
-    Plot the surface tension for a given molecule and force field
+    Plot a specific property for a given molecule and force field
 
     Parameters
     ----------
@@ -300,6 +300,8 @@ def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
         Dictionary containing the molecule data
     df_ff_dict : dict
         Dictionary containing the force field data
+    prop_name : str
+        The name of the property to plot
 
     Returns
     -------
@@ -322,21 +324,20 @@ def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
     # df_markers = ['o', 's', '^', '*', 'p', 'd']
     # df_z_order = [6,3,2,1,5,4]
+    prop_data = getattr(mol_data, "expt_" + prop_name)
+    if prop_name == "diff_coeff":
+        #multiply by 10**9 
+        for key in prop_data.keys():
+            prop_data[key] = prop_data[key]*1e9
 
     #Initialize min and max values
-    if molec not in ["R152", "R134"]:
-        min_temp = min(mol_data.expt_surf_tens.keys())
-        max_temp = max(mol_data.expt_surf_tens.keys())
-        min_st = min(mol_data.expt_surf_tens.values())
-        max_st = max(mol_data.expt_surf_tens.values())
-    else:
-        for df in df_ff_list:
-            if df is not None:
-                min_temp = min(df["temperature"].values)
-                max_temp = max(df["temperature"].values)
-                min_st = min(df["sim_surf_tens"].values)
-                max_st = max(df["sim_surf_tens"].values)
-                break
+    for df in df_ff_list:
+        if df is not None:
+            min_temp = min(df["temperature"].values)
+            max_temp = max(df["temperature"].values)
+            min_st = min(df["sim_" + prop_name].values)
+            max_st = max(df["sim_" + prop_name].values)
+            break
 
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
@@ -361,49 +362,57 @@ def plot_surf_tens(molec_dict, df_ff_dict, save_name = None):
         df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
         if df_ff is not None:
-            all_props = ["sim_surf_tens"]
+            all_props = ["sim_" + prop_name]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
             grouped = df_ff.groupby(["temperature"])[all_props]
-            
-            x_props = ["sim_surf_tens"]
+            x_props = ["sim_" + prop_name]
             # Calculate mean and standard deviation for each group
             means = grouped.mean().reset_index()
             stds = grouped.std(ddof=0).reset_index()
 
             for x_prop in x_props:
                 #Set new max and mins
-                min_st, max_st = get_min_max( min_st, max_st, means[x_prop].values, stds[x_prop].values)
-                
+                if prop_name == "diff_coeff":
+                    #multiply by 10**9 
+                    means[x_prop] = means[x_prop]*1e9
+                    stds[x_prop] = stds[x_prop]*1e9
+                min_st, max_st = get_min_max(min_st, max_st, means[x_prop].values, stds[x_prop].values)
                 # #Plot opt_scheme_ms vle curve
-                ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
+                ax2.errorbar(means["temperature"], means[x_prop],xerr=1.96*stds[x_prop],
                             color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order,)
 
     #Plot experimental data
     if molec not in ["R152", "R134"]:
-        ax2.scatter(mol_data.expt_surf_tens.values(),mol_data.expt_surf_tens.keys(),
+        ax2.scatter(prop_data.keys(), prop_data.values(),
             color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
 
     #Set Axes
-    ax2.set_xlim(min_st*0.95,max_st*1.05)
-    number_of_ticks = int(np.ceil((ax2.get_xlim()[1] - ax2.get_xlim()[0]) / 500))
-    if number_of_ticks > 2:
-        ax2.xaxis.set_major_locator(MultipleLocator(500))
-    else:
-        ax2.xaxis.set_major_locator(MultipleLocator(200))
-    ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
+    ax2.set_ylim(min_st*0.95,max_st*1.05)
+    #Set 5 ticks on y axis
+    ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
+
     
-    ax2.set_ylim(min_temp*0.95, max_temp*1.05)
-    ax2.yaxis.set_major_locator(MultipleLocator(40))
-    ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
+    ax2.set_xlim(min_temp*0.95, max_temp*1.05)
+    ax2.xaxis.set_major_locator(MaxNLocator(nbins=6))
+    ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=26, pad=10)
     ax2.tick_params("both", which="major", length=8)
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
 
-    ax2.set_ylabel("T (K)", fontsize=32, labelpad=10)
-    ax2.set_xlabel(r"$\mathregular{\gamma}$ (mN/m)", fontsize=32, labelpad=15)
+    ax2.set_xlabel("T (K)", fontsize=32, labelpad=10)
+    titles = {"surf_tens": r"$\mathregular{\gamma}$ (mN/m)",
+              "liq_density": r"$\mathregular{\rho_{liq}}$ (kg/m$^3$)",
+              "vap_density": r"$\mathregular{\rho_{vap}}$ (kg/m$^3$)",
+              "Pvap": r"$\mathregular{P_{vap}}$ (bar)",
+              "Hvap": r"$\mathregular{H_{vap}}$ (kJ/kg)",
+              "diff_coeff": r"D (10$^{-9}$ m$^2$/s)"}
+    if prop_name in titles:
+        ax2.set_ylabel(titles[prop_name], fontsize=32, labelpad=15)
+    else:
+        ax2.set_ylabel(prop_name, fontsize=32, labelpad=15)
     for axis in ['top','bottom','left','right']:
         ax2.spines[axis].set_linewidth(2.0)
 

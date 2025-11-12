@@ -18,7 +18,7 @@ if str(root_path) not in sys.path:
 # Now import using package structure relative to ES-FFO root
 from utils.molec_class_files import esolvs
 from utils.prep_ms_data import prepare_df_props, prepare_df_errors
-from Opt_ES.utilsOpt.plot import plot_vle_envelopes, plot_surf_tens, plot_pvap_hvap, plot_err_each_prop, plot_err_avg_props
+from Opt_ES.utilsOpt.plot import plot_vle_envelopes, plot_misc_prop, plot_pvap_hvap, plot_err_each_prop, plot_err_avg_props
 from Opt_ES.utilsOpt import atom_type
 from Opt_ES.utilsOpt.signac import save_signac_results, get_signac_results
 
@@ -120,6 +120,7 @@ os.makedirs(full_at_dir, exist_ok=True)
 pdf_vle = PdfPages(os.path.join(full_at_dir ,"vle.pdf"))
 pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
 pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
+pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 
 #For each molecule
 molecules = df_paramsets['molecule'].unique().tolist()
@@ -142,13 +143,16 @@ for molec in molecules:
     pdf_hpvap.savefig(plot_pvap_hvap(one_molec_dict, ff_molec_dict), bbox_inches='tight')
     plt.close()
     if ift_proj is not None:
-        pdf_st.savefig(plot_surf_tens(one_molec_dict, ff_molec_dict), bbox_inches='tight')
+        pdf_st.savefig(plot_misc_prop(one_molec_dict, ff_molec_dict, prop_name="surf_tens"), bbox_inches='tight')
+        plt.close()
+        pdf_diff.savefig(plot_misc_prop(one_molec_dict, ff_molec_dict, prop_name="diff_coeff"), bbox_inches='tight')
         plt.close()
 #Close figures    
 pdf_vle.close()
 pdf_hpvap.close()
 if ift_proj is not None:
     pdf_st.close()
+    pdf_diff.close()
 
 #Get error dict labels ready
 df_err_dict = {}
