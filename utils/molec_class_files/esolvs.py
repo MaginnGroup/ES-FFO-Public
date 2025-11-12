@@ -23,6 +23,7 @@ class EsolvsConstants:
         expt_Pvap,
         expt_Hvap,
         expt_vap_density,
+        expt_diff_coeff = None,
         uncertainty={},
     ):
         """Initialize the class with experimental data"""
@@ -45,6 +46,7 @@ class EsolvsConstants:
         self.expt_Pvap = expt_Pvap
         self.expt_Hvap = expt_Hvap
         self.expt_vap_density = self.get_vap_density(expt_vap_density)
+        self.expt_diff_coeff = expt_diff_coeff
         self.uncertainty = self.process_unc(uncertainty)
 
         # Check that the experimental data keys are the same for density, Pvap, and surface tension
@@ -116,6 +118,7 @@ class EsolvsConstants:
             "expt_vap_density",
             "expt_surf_tens",
             "expt_Pvap",
+            "expt_diff_coeff",
             "expt_Hvap",
         ]:
             if key not in uncertainty.keys():
@@ -165,6 +168,8 @@ class EsolvsConstants:
             prop = self.expt_Pvap
         elif prop_name == "expt_Hvap":
             prop = self.expt_Hvap
+        elif prop_name == "expt_diff_coeff":
+            prop = self.expt_diff_coeff
         else:
             raise ValueError("Invalid property name")
 
@@ -218,7 +223,17 @@ class EsolvsConstants:
         upper_bound = np.max(list(self.expt_Hvap.values()))
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
-
+    
+    @property
+    def diff_coeff_bounds(self):
+        """Bounds on diffusion coefficient in units of m^2/s"""
+        if self.expt_diff_coeff is not None:
+            lower_bound = np.min(list(self.expt_diff_coeff.values()))
+            upper_bound = np.max(list(self.expt_diff_coeff.values()))
+            bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
+        else:
+            bounds = None
+        return bounds
 
 # Ethylene glycol (EG)
 name = "EG"
@@ -349,6 +364,14 @@ expt_vap_density = {
     413.15: 0.24479,
 }
 
+# DOI: doi: 10.1021/je60048a003 (m^2/s)
+expt_diff_coeff = {
+    298.15: 9.61*10**-11,
+    303.15: 1.136*10**-10,
+    313.15: 1.509*10**-10,
+    323.15: 2.067*10**-10,
+}
+
 uncertainty = {
     "expt_surf_tens": 0.01,
     "expt_liq_density": 0.001,
@@ -372,6 +395,7 @@ EG = EsolvsConstants(
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
+    expt_diff_coeff= expt_diff_coeff,
     uncertainty=uncertainty,
 )
 
@@ -477,6 +501,10 @@ expt_Hvap = {
     298.15: 982.734,
 }
 
+#From https://doi.org/10.1038/s41467-021-27842-z (m^2/s)
+expt_diff_coeff = {
+    298: 1.65e-12,
+}
 uncertainty = {
     "expt_liq_density": 0.0021,
     "expt_surf_tens": 0.0050,
@@ -501,6 +529,7 @@ Gly = EsolvsConstants(
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=None,
+    expt_diff_coeff= expt_diff_coeff,
     uncertainty=uncertainty,
 )
 
@@ -758,6 +787,7 @@ uncertainty = {
     "expt_liq_density": 0.001,
     "expt_surf_tens": 0.0126,
     "expt_vap_density": 0.001,
+    "expt_diff_coeff": 0.0137,
 }
 
 # REFPROP
@@ -769,6 +799,11 @@ expt_Hvap = {
     400.0: 944.57,
 }
 
+expt_diff_coeff = {
+    288.15: 1.84*10**-9,
+    298.15: 2.21*10**-9,
+    313.15: 3.01*10**-9,
+}
 # Create an instance of the EsolvsConstants class
 MeOH = EsolvsConstants(
     name=name,
@@ -786,6 +821,8 @@ MeOH = EsolvsConstants(
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
+    expt_diff_coeff=expt_diff_coeff,
+    uncertainty=uncertainty,    
 )
 
 # Dimethylformamide (DMF)
@@ -901,11 +938,21 @@ expt_Hvap = {
     298.15: 641.538,
 }
 
+# From DOI: 10.1039/C6RA18085J (m^2/s)
+expt_diff_coeff = {
+    222: 3.01*10**-10,
+    243: 5.57*10**-10,
+    274: 1.11*10**-9,
+    298: 1.64*10**-9,
+    334: 2.59*10**-9,
+}
+
 uncertainty = {
     "expt_liq_density": 1.43e-6,
     "expt_surf_tens": 0.0065,
     "expt_Pvap": 0.03428,
     "expt_Hvap": 0.0126,
+    "expt_diff_coeff": 0.06232,
 }
 
 # Create an instance of the EsolvsConstants class
@@ -925,6 +972,7 @@ DMF = EsolvsConstants(
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
+    expt_diff_coeff=expt_diff_coeff,
     uncertainty=uncertainty,
 )
 
@@ -1040,10 +1088,17 @@ expt_Hvap = {
     368.15: 615.641,
 }
 
+#From DOI https://doi.org/10.1039/TF9716701302
+expt_diff_coeff = {
+    288.2: 6.5*10**-10,
+    299.2: 8.4*10**-10,
+    308.2: 1.1*10**-9,
+}
 uncertainty = {
     "expt_liq_density": 0.003,
     "expt_surf_tens": 0.0012,
     "expt_Pvap": 0.067,
+    "expt_diff_coeff": 0.05,
 }
 
 # Create an instance of the EsolvsConstants class
@@ -1063,6 +1118,7 @@ DMSO = EsolvsConstants(
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
+    expt_diff_coeff= expt_diff_coeff,
     uncertainty=uncertainty,
 )
 
@@ -1439,6 +1495,13 @@ expt_Hvap = {
     384.10: 451.584,
 }
 
+# DOI: 10.1021/acs.jced.1c00101 (m^2/s) (Estimations from plot)
+expt_diff_coeff = {
+    263: 2.6*10**-10,
+    303: 5.9*10**-10,
+    353: 1.8*10**-9,
+}
+
 uncertainty = {
     "expt_surf_tens": 0.0064,
     "expt_Hvap": 0.0050,
@@ -1461,6 +1524,8 @@ DEC = EsolvsConstants(
     expt_Pvap=expt_Pvap,
     expt_Hvap=expt_Hvap,
     expt_vap_density=expt_vap_density,
+    expt_diff_coeff=expt_diff_coeff,
+    uncertainty=uncertainty,
 )
 
 
