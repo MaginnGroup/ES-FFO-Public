@@ -484,8 +484,8 @@ def inter_prod_sim(job):
 
 @IFT_group
 @Project.pre.after(inter_prod_sim)
-@Project.post(lambda job: "surf_tens" in job.doc and "ift_liq_dens" in job.doc)
-@Project.post(lambda job: "surf_tens_unc" in job.doc and "ift_liq_dens_unc" in job.doc)
+@Project.post(lambda job: "surf_tens" in job.doc and "ift_liq_dens" in job.doc and "diff_coeff" in job.doc)
+@Project.post(lambda job: "surf_tens_unc" in job.doc and "ift_liq_dens_unc" in job.doc and "diff_coeff_unc" in job.doc)
 @Project.operation(directives={"omp_num_threads": 8})
 def calculate_props(job):
     """Calculate the density"""
@@ -545,6 +545,28 @@ def calculate_props(job):
 
         job.doc[name] = mean
         job.doc[name + "_unc"] = std
+    
+    #Scrub values for diffusion coefficient
+    with job:
+        npzzat_sim_name = "npzzat_prod"
+        npzzat_dir = f"../{npzzat_sim_name}/"
+        command = f"gmx msd -f {npzzat_dir}{npzzat_sim_name}.xtc -s {npzzat_dir}{npzzat_sim_name}.tpr -o msd.xvg -sel 0"
+        subprocess.run(command, text=True, check=True, shell=True, cwd=sim_name)
+
+        with open(job.fn(f"{sim_name}/msd.xvg")) as f:
+            for line in f:
+                if "D[" in line:
+                    clean = line.replace('(', '').replace(')', '')
+                    # Split at '=' to isolate the numbers
+                    numbers_part = clean.split('=')[1].strip()  # "2.0144 +/- 0.0775 1e-5 cm^2/s"
+                    # Split by spaces and pick the numbers
+                    tokens = numbers_part.split()
+                    D_value = float(tokens[0])
+                    D_std   = float(tokens[2])
+                    break
+        # Save to job document
+        job.doc["diff_coeff"] = D_value*10**-9 #m^2/s
+        job.doc["diff_coeff_unc"] = D_std*10**-9 #m^2/s
 
 
 #####################################################################

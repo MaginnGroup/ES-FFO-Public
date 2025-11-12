@@ -60,7 +60,7 @@ gemc_proj = signac.get_project("gemc_val")
 gemc_props = ["vap_density", "Hvap", "Pvap", "liq_enthalpy", "vap_enthalpy"]
 try:
     ift_proj = signac.get_project("ift_val")
-    ift_props = ["liq_density", "surf_tens"]
+    ift_props = ["liq_density", "surf_tens", "diff_coeff"]
 except:
     ift_proj = None
     ift_props = []
