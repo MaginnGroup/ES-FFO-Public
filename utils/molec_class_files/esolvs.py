@@ -23,7 +23,7 @@ class EsolvsConstants:
         expt_Pvap,
         expt_Hvap,
         expt_vap_density,
-        expt_diff_coeff = None,
+        expt_diff_coeff = {},
         uncertainty={},
     ):
         """Initialize the class with experimental data"""
@@ -227,7 +227,7 @@ class EsolvsConstants:
     @property
     def diff_coeff_bounds(self):
         """Bounds on diffusion coefficient in units of m^2/s"""
-        if self.expt_diff_coeff is not None:
+        if self.expt_diff_coeff:
             lower_bound = np.min(list(self.expt_diff_coeff.values()))
             upper_bound = np.max(list(self.expt_diff_coeff.values()))
             bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
