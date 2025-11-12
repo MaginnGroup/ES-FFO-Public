@@ -787,7 +787,7 @@ uncertainty = {
     "expt_liq_density": 0.001,
     "expt_surf_tens": 0.0126,
     "expt_vap_density": 0.001,
-    "expt_diff_coeff": 0.0137,
+    "expt_diff_coeff": 0.008,
 }
 
 # REFPROP
@@ -800,9 +800,11 @@ expt_Hvap = {
 }
 
 expt_diff_coeff = {
-    288.15: 1.84*10**-9,
-    298.15: 2.21*10**-9,
-    313.15: 3.01*10**-9,
+    278.2: 1.67*10**-9,
+    283.2: 1.82*10**-9,
+    298.2: 2.42*10**-9,
+    313.2: 3.09*10**-9,
+    328.2: 3.80*10**-9,
 }
 # Create an instance of the EsolvsConstants class
 MeOH = EsolvsConstants(
