@@ -20,7 +20,7 @@ for job in group:
         op_name = "inter_prod"
         if f"{op_name}_fin" not in job.doc and "ld_fail" not in job.doc:
             count += 1
-            # print(job.id)
+            print(job.id)
             
             #Print the last line of the run_npt_prod.out log file
             log_file = job.fn(f"run_{op_name}.out")
@@ -29,9 +29,10 @@ for job in group:
                     lines = f.readlines()
                     if lines:
                         last_line = lines[-1].strip()
-                        if "Sat" in last_line:
-                            print(last_line)
-                            print(f"Job {job.id}")
+                        print(last_line)
+                        # if "Sat" in last_line:
+                        #     print(last_line)
+                        #     print(f"Job {job.id}")
             else:
                 print(f"Job {job.id} Log file does not exist.")
 print(f"Total unfinished jobs: {count}/{count_running}")
