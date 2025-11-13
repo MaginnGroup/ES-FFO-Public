@@ -104,8 +104,8 @@ def get_signac_results(project_dict, data_dict):
                 else:
                     all_data_dict[dir_name] = df
                 
-            else:
-                print(f"Warning: {mol_name} not found in data_dict. Skipping.")
+            # else:
+            #     print(f"Warning: {mol_name} not found in data_dict. Skipping.")
         data_dicts[key] = all_data_dict
 
     #Merge dfs in data_dicts for which the files are the same

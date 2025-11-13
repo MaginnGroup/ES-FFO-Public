@@ -253,7 +253,7 @@ def prepare_df_errors(df_data, data_dict, mol_name):
                     mpd = np.average(pct_errors)
                 except ValueError as e:
                     print(f"Error in calculating {property_name} for {molecule_name}: {e}. Setting MSE, MAE, and MAPD to NaN")
-                    print("Exp", expt_values, "\n Sim", sim_values)
+                    # print("Exp", expt_values, "\n Sim", sim_values)
                     mse, mapd, mae, mpd = np.nan, np.nan, np.nan, np.nan
                 return mse, mapd, mae, mpd
 

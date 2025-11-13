@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn
 from scipy.stats import linregress
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
-from matplotlib.ticker import MultipleLocator, AutoMinorLocator, MaxNLocator
+from matplotlib.ticker import LogLocator, MultipleLocator, AutoMinorLocator, MaxNLocator
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, variances_scaled_to_real
 from fffit.fffit.plot import plot_model_performance, plot_model_vs_test, plot_slices_temperature, plot_slices_params, plot_model_vs_exp, plot_obj_contour
 from utils.molec_class_files import esolvs
@@ -325,19 +325,25 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     # df_markers = ['o', 's', '^', '*', 'p', 'd']
     # df_z_order = [6,3,2,1,5,4]
     prop_data = getattr(mol_data, "expt_" + prop_name)
-    if prop_name == "diff_coeff":
+    # if prop_name == "diff_coeff":
         #multiply by 10**9 
-        for key in prop_data.keys():
-            prop_data[key] = prop_data[key]*1e9
+        # for key in prop_data.keys():
+        #     prop_data[key] = prop_data[key]*1e9
 
     #Initialize min and max values
-    for df in df_ff_list:
-        if df is not None:
-            min_temp = min(df["temperature"].values)
-            max_temp = max(df["temperature"].values)
-            min_st = min(df["sim_" + prop_name].values)
-            max_st = max(df["sim_" + prop_name].values)
-            break
+    if molec not in ["R152", "R134"]:
+        min_temp = min(prop_data.keys())
+        max_temp = max(prop_data.keys())
+        min_st = min(prop_data.values())
+        max_st = max(prop_data.values())
+        
+    # for df in df_ff_list:
+    #     if df is not None:
+    #         min_temp = min(df["temperature"].values)
+    #         max_temp = max(df["temperature"].values)
+    #         min_st = min(df["sim_" + prop_name].values)
+    #         max_st = max(df["sim_" + prop_name].values)
+    #         break
 
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
@@ -362,6 +368,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
         if df_ff is not None:
+            min_temp, max_temp = get_min_max(min_temp, max_temp, df_ff["temperature"].values)
             all_props = ["sim_" + prop_name]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
             grouped = df_ff.groupby(["temperature"])[all_props]
@@ -372,11 +379,12 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
 
             for x_prop in x_props:
                 #Set new max and mins
-                if prop_name == "diff_coeff":
-                    #multiply by 10**9 
-                    means[x_prop] = means[x_prop]*1e9
-                    stds[x_prop] = stds[x_prop]*1e9
+                # if prop_name == "diff_coeff":
+                #     #multiply by 10**9 
+                #     means[x_prop] = means[x_prop]*1e9
+                #     stds[x_prop] = stds[x_prop]*1e9
                 min_st, max_st = get_min_max(min_st, max_st, means[x_prop].values, stds[x_prop].values)
+                # print(min_st, max_st)
                 # #Plot opt_scheme_ms vle curve
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
@@ -388,9 +396,16 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
             color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
 
     #Set Axes
-    ax2.set_ylim(min_st*0.95,max_st*1.05)
-    #Set 5 ticks on y axis
-    ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
+    #Use a log10 scale for diff_coeff
+    if prop_name == "diff_coeff":
+        ax2.set_yscale("log")
+        # ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
+        ax2.yaxis.set_major_locator(LogLocator(base=10, numticks=5))
+        # pyplot.locator_params(nbins=4)
+    else:
+        ax2.set_ylim(min_st*0.95,max_st*1.05)
+        #Set 5 ticks on y axis
+        ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
 
     
     ax2.set_xlim(min_temp*0.95, max_temp*1.05)
@@ -408,7 +423,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
               "vap_density": r"$\mathregular{\rho_{vap}}$ (kg/m$^3$)",
               "Pvap": r"$\mathregular{P_{vap}}$ (bar)",
               "Hvap": r"$\mathregular{H_{vap}}$ (kJ/kg)",
-              "diff_coeff": r"D (10$^{-9}$ m$^2$/s)"}
+              "diff_coeff": r"D (m$^2$/s)"}
     if prop_name in titles:
         ax2.set_ylabel(titles[prop_name], fontsize=32, labelpad=15)
     else:
@@ -422,7 +437,11 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     # handles, labels = ax2.get_legend_handles_labels()
     # for h in handles: h.set_linestyle("")
     ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
-    ax2.text(0.60,  0.82, molec, fontsize=30, transform=ax2.transAxes)
+    if prop_name == "diff_coeff":
+        #Put text in lower right
+        ax2.text(0.60,  0.15, molec, fontsize=30, transform=ax2.transAxes)
+    else:
+        ax2.text(0.60,  0.82, molec, fontsize=30, transform=ax2.transAxes)
     fig.subplots_adjust(bottom=0.2, top=0.75, left=0.15, right=0.95, wspace=0.55)
 
     return fig
