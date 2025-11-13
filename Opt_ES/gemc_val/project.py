@@ -253,11 +253,21 @@ def NVT_liqbox(job):
                 job.doc["nvt_fin"] = True
         #Otherwise this job has failed
         except:
-            job.doc.nvt_failed == True
-            raise Exception(
-                "NVT failed with critical and experimental starting conditions and the molecule is "
-                + job.sp.mol_name
-            )
+            # if job failed with critical conditions as intial conditions, terminate with error
+            if job.doc.get("use_crit", False):
+                # If so, terminate with error and log failure in job document
+                job.doc.gemc_failed = True
+                raise Exception("NVT failed with critical and experimental starting conditions and the molecule is "+ job.sp.mol_name)
+            # Otherwise, try with critical conditions
+            else:  
+                job.doc.use_crit = True
+                #Delete variables from previous failed run
+                del job.doc["vapboxl"]  # calc_boxes
+                del job.doc["liqboxl"]  # calc_boxes
+                #Delete previous data files
+                with job:
+                    for file_path in glob.glob("nvt.*"):
+                        os.remove(file_path)
 
 @nptnvt_group
 @ProjectGEMC.pre.after(NVT_liqbox)
