@@ -378,9 +378,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                     stds[x_prop] = stds[x_prop]*1e9
                 min_st, max_st = get_min_max(min_st, max_st, means[x_prop].values, stds[x_prop].values)
                 # #Plot opt_scheme_ms vle curve
-                ax2.errorbar(means["temperature"], means[x_prop],xerr=1.96*stds[x_prop],
+                ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
-                            zorder = df_z_order,)
+                            zorder = df_z_order, label = df_label)
 
     #Plot experimental data
     if molec not in ["R152", "R134"]:
@@ -446,7 +446,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     molec = list(molec_dict.keys())[0]
     mol_data = molec_dict[molec]
     # Plot VLE envelopes
-    fig, ax2 = plt.subplots(1, 1, figsize=(6,6))    
+    fig, ax2 = plt.subplots(1, 1, figsize=(6,6.1))    
     
     df_keys, df_ffs =  zip(*df_ff_dict.items())
     df_labels = list(df_keys)
@@ -463,18 +463,21 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     #Initialize min and max values
     if molec not in ["R152", "R134"]:
         min_temp = min(mol_data.expt_liq_density.keys())
-        max_temp = mol_data.expt_Tc
-        min_rho = min(mol_data.expt_vap_density.values())
         max_rho = max(mol_data.expt_liq_density.values())
-    else:
-        for df in df_ff_list:
-            if df is not None:
-                min_temp = min(df["temperature"].values)
-                max_temp = max(df["temperature"].values)
-                min_rho = min(df["sim_vap_density"].values)
-                max_rho = max(df["sim_liq_density"].values)
-                break
+        max_temp = max(mol_data.expt_liq_density.keys())
+        min_rho = min(mol_data.expt_liq_density.values())
+        # max_temp = mol_data.expt_Tc
+        # min_rho = min(mol_data.expt_vap_density.values())
+    # else:
+    #     for df in df_ff_list:
+    #         if df is not None:
+    #             min_temp = min(df["temperature"].values)
+    #             max_temp = max(df["temperature"].values)
+    #             min_rho = min(df["sim_vap_density"].values)
+    #             max_rho = max(df["sim_liq_density"].values)
+    #             break
 
+    label_prop = None
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
@@ -498,50 +501,64 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
         if df_ff is not None:
+            #Check that there are data points for vapor density
             all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
+
+            #Check that there are data points for vapor density for all df
+            if df_ff["sim_vap_density"].isnull().all():
+                x_props = ["sim_liq_density"]
+                has_vap = False
+                label_prop = df_label
+            else:
+                x_props = ["sim_liq_density", "sim_vap_density"]
+                has_vap = True
+
             grouped = df_ff.groupby(["temperature"])[all_props]
-            
-            x_props = ["sim_liq_density", "sim_vap_density"]
+
             # Calculate mean and standard deviation for each group
             means = grouped.mean().reset_index()
             stds = grouped.std(ddof=0).reset_index()
 
             for x_prop in x_props:
-                #Set new max and mins
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means[x_prop].values, stds[x_prop].values)
                 
                 # #Plot opt_scheme_ms vle curve
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
-                            zorder = df_z_order,)
+                            zorder = df_z_order, label=label_prop)
 
-            #Plot critical points
-            min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
-            ax2.errorbar(means["sim_rhoc"].values[0],means["sim_Tc"].values[0], xerr=1.96*stds["sim_rhoc"].values[0],
-                        color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
-                        zorder = df_z_order, label = df_label)
+            #Plot critical points if available
+            if has_vap:
+                min_rho, max_rho = get_min_max(min_rho, max_rho,  means["sim_Tc"].values, stds["sim_Tc"].values)
+                min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
+                ax2.errorbar(means["sim_rhoc"].values[0],means["sim_Tc"].values[0], xerr=1.96*stds["sim_rhoc"].values[0],
+                            color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                            zorder = df_z_order, label = df_label)
 
     #Plot experimental data
     if molec not in ["R152", "R134"]:
         ax2.scatter(mol_data.expt_liq_density.values(),mol_data.expt_liq_density.keys(),
             color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
-        ax2.scatter(mol_data.expt_vap_density.values(),mol_data.expt_vap_density.keys(),
-            color="black",marker="x",linewidths=2,s=100, zorder = 7)
-        ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="x", linewidths=2, 
-                    s=100, zorder = 7)
+        if has_vap:
+            ax2.scatter(mol_data.expt_vap_density.values(),mol_data.expt_vap_density.keys(),
+                color="black",marker="x",linewidths=2,s=100, zorder = 7)
+            ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="x", linewidths=2, 
+                        s=100, zorder = 7)
 
     #Set Axes
     ax2.set_xlim(min_rho*0.95,max_rho*1.05)
-    number_of_ticks = int(np.ceil((ax2.get_xlim()[1] - ax2.get_xlim()[0]) / 500))
-    if number_of_ticks > 2:
-        ax2.xaxis.set_major_locator(MultipleLocator(500))
-    else:
-        ax2.xaxis.set_major_locator(MultipleLocator(200))
+    # number_of_ticks = int(np.ceil((ax2.get_xlim()[1] - ax2.get_xlim()[0]) / 500))
+    ax2.xaxis.set_major_locator(MaxNLocator(nbins=4))
+    # if number_of_ticks > 2:
+    #     ax2.xaxis.set_major_locator(MultipleLocator(500))
+    # else:
+    #     ax2.xaxis.set_major_locator(MultipleLocator(200))
     ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
     
     ax2.set_ylim(min_temp*0.95, max_temp*1.05)
-    ax2.yaxis.set_major_locator(MultipleLocator(40))
+    ax2.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    # ax2.yaxis.set_major_locator(MultipleLocator(40))
     ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=26, pad=10)
@@ -604,32 +621,32 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
 
     #Initialize min and max values
     if molec not in ["R152", "R134"]:
-        min_temp = max(np.array(list(mol_data.expt_Pvap.keys())))
-        max_temp = mol_data.expt_Tc
+        min_temp = min(np.array(list(mol_data.expt_Pvap.keys())))
+        max_temp = max(np.array(list(mol_data.expt_Pvap.keys())))
         min_pvap = min(np.log(np.array(list(mol_data.expt_Pvap.values()))))
         max_pvap = max(np.log(np.array(list(mol_data.expt_Pvap.values()))))
-    else:
-        for df in df_ff_list:
-            if df is not None:
-                min_temp = min(df["temperature"].values)
-                max_temp = max(df["temperature"].values)
-                pvap_data = df["sim_Pvap"].values
-                finite_pvap = pvap_data[np.isfinite(np.log(pvap_data))]
-                min_pvap = np.nanmin(np.log(finite_pvap)) if finite_pvap.size > 0 else 0
-                max_pvap = np.nanmax(np.log(df["sim_Pvap"].values))
-                break
+    # else:
+    #     for df in df_ff_list:
+    #         if df is not None:
+    #             min_temp = min(df["temperature"].values)
+    #             max_temp = max(df["temperature"].values)
+    #             pvap_data = df["sim_Pvap"].values
+    #             finite_pvap = pvap_data[np.isfinite(np.log(pvap_data))]
+    #             min_pvap = np.nanmin(np.log(finite_pvap)) if finite_pvap.size > 0 else 0
+    #             max_pvap = np.nanmax(np.log(df["sim_Pvap"].values))
+    #             break
 
     if molec not in ["R152", "R134", "R143"]:
         min_hvap = min(mol_data.expt_Hvap.values())
         max_hvap = max(mol_data.expt_Hvap.values())
-    else:
-        for df in df_ff_list:
-            if df is not None:
-                hvap_data = df["sim_Hvap"].values
-                finite_hvap = hvap_data[np.isfinite(hvap_data)]
-                min_hvap = np.min(finite_hvap) if finite_hvap.size > 0 else 0
-                max_hvap = max(finite_hvap) if finite_hvap.size > 0 else 0
-                break
+    # else:
+    #     for df in df_ff_list:
+    #         if df is not None:
+    #             hvap_data = df["sim_Hvap"].values
+    #             finite_hvap = hvap_data[np.isfinite(hvap_data)]
+    #             min_hvap = np.min(finite_hvap) if finite_hvap.size > 0 else 0
+    #             max_hvap = max(finite_hvap) if finite_hvap.size > 0 else 0
+    #             break
 
     # Plot Pvap / Hvap
     fig, axs = plt.subplots(nrows=1, ncols=2,figsize=(12,6))
@@ -658,10 +675,17 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         
         df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
 
+        no_df_data = 0
+
         if df_ff is not None: #and ("Potoff" in df_label or "GAFF" in df_label)
+            #Check if there are data points for Pvap and Hvap
             x_props = ["sim_Pvap", "sim_Hvap"]
             df_ff.replace("", np.nan, inplace=True)
             df_ff.dropna(subset=["sim_Pvap", "sim_Hvap"], inplace=True)
+            #Check that there are data points for hvap for all df
+            if df_ff.empty:
+                no_df_data += 1
+                continue
             # grouped = df_ff.groupby(["temperature", "atom_type"])[x_props]
             grouped = df_ff.groupby(["temperature"])[x_props]
             
@@ -729,10 +753,10 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     # axs[0].xaxis.set_major_locator(MultipleLocator(40))
     # axs[0].xaxis.set_minor_locator(AutoMinorLocator(4))
 
-    if min_pvap <= -1:
-        axs[0].set_ylim(min_pvap * 1.05, max_pvap * 1.05)
-    else:
-        axs[0].set_ylim(min_pvap * 0.95, max_pvap * 1.05)
+    min_mult = 1.05 if min_pvap <= -1 else 0.95
+    max_mult = 1.05 if max_pvap >= 1 else 0.95
+
+    axs[0].set_ylim(min_pvap * min_mult, max_pvap * max_mult)
     # axs[0].yaxis.set_major_locator(MultipleLocator(10))
     # axs[0].yaxis.set_minor_locator(AutoMinorLocator(5))
 
@@ -861,25 +885,28 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
         cols = [item for item in cols]
         names = [item for item in names]
 
-    fig, axs = plt.subplots(len(props), axs_col, figsize=(6*len(props), 8*axs_col), sharex = False)
+    fig, axs = plt.subplots(len(props), axs_col, figsize=(3*len(df_mse_list), 3*len(props)), sharex = False)
     # Plot each column in a subplot
+    label_set = False
     for i, (ax, column, name) in enumerate(zip(axs.flatten(), cols, names)):
         bar_width = 0.1
         max_val_f = 0
 
-        if i % 2 ==0:
+        if axs_col == 1:
             indices = left_indices
             mol_names = molec_names[:len_train]
         else:
             indices = right_indices
             mol_names = molec_names[len_train:]
-        
-        for j, df in enumerate(df_mse_list):
+
+        for j, df in enumerate([results_df]):
             if column in df.columns:
                 if j < len(df_mse_list):
                     max_val = np.nanmax(df[column].values)
                     max_val_f = max(max_val, max_val_f)
-                ax.bar(indices + j*bar_width, df[column].iloc[indices], bar_width, label=df_labels[j].split("_")[0], color = get_color(df_labels[j]))
+                    max_val_f = max_val_f if not np.isnan(max_val_f) else 1
+            label=df_labels[j].split("_")[0] if not label_set else None
+            ax.bar(indices + j*bar_width, df[column], bar_width, label=label, color = get_color(df_labels[j])) #df[column].iloc[indices]
             
         ax.set_ylim(0, max_val_f*1.05)
         ax.set_title(name, fontsize = 24) 
@@ -900,7 +927,8 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
         handles, labels = axs[0, 0].get_legend_handles_labels()
     else:
         handles, labels = axs[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.10), ncol=3, fontsize = 20)
+    #Drop duplicate labels
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=3, fontsize = 20)
 
     # Adjust layout
     fig.supxlabel('Molecule', fontsize = 24)
@@ -911,8 +939,8 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     fig.supylabel(titley, fontsize = 24)
 
     # Add Training and Testing labels
-    fig.text(0.075, 0.99, "Training Set", ha="left", va="top", fontsize=20)
     if axs_col == 2:
+        fig.text(0.075, 0.99, "Training Set", ha="left", va="top", fontsize=20)
         fig.text(0.99, 0.99, "Testing Set", ha="right", va="top", fontsize=20)
 
     #Explain missing HFC-143 data
@@ -932,6 +960,169 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     #     plt.savefig(save_name + ".png", bbox_inches='tight')
     # Show the plot
     return fig
+
+# def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = None):
+#     """
+#     Plot the error for each property for a given molecule and force field
+
+#     Parameters
+#     ----------
+#     molec_names : list
+#         List of molecule names
+#     err_path_dict : dict
+#         Dictionary containing the error data for each force field
+#     obj : str
+#         The type of error to plot (e.g., 'mapd' or 'mae')
+#     save_name : str, optional
+#         The name of the file to save the plot to
+    
+#     Returns
+#     -------
+#     fig : matplotlib.figure.Figure
+#         The figure object containing the plot
+#     """
+#     props = ["liq_density", "vap_density", "Pvap", "Hvap", "surf_tens"]
+#     cols = [obj + "_" + prop for prop in props]
+#     if obj == "mae":
+#         names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
+#     else:
+#         names = ["Liquid Density", "Vapor Density", "Vapor Pressure", "Heat of Vaporization", "Surface Tension"]
+#     # cols = [item for item in cols for _ in range(2)]
+#     # names = [item for item in names for _ in range(2)]
+    
+#     df_keys, df_ffs =  zip(*err_path_dict.items())
+#     df_labels = list(df_keys)
+#     df_mse_list = list(df_ffs)
+
+#     train_molecs = ["EG","Gly", "MeOH", "DMSO","DEC","DMF"]
+#     results = []
+#     for label, df in zip(df_labels, df_mse_list):
+#         # Get columns that exist in the dataframe
+#         # existing_cols = list(set(cols).intersection(df.columns))
+#         existing_cols = [c for c in cols if c in df.columns]
+#         if len(existing_cols) > 0:
+#             # Compute mean error for available columns
+#             avg_errors = df[existing_cols].mean()
+#             # Store results in list as dictionary
+#             result_row = {"method": label}
+#             result_row.update(avg_errors.to_dict())
+#             results.append(result_row)
+
+#     # Convert to pandas DataFrame
+#     results_df = pd.DataFrame(results)
+#     if save_name is not None:
+#         results_df.to_csv(save_name + ".csv", index=False)
+#     # for label, df in zip(df_labels, df_mse_list):
+#     #     # Get the columns which exitst in the dataframe
+#     #     existing_cols = list(set(cols).intersection(df.columns))
+#     #     print(existing_cols)
+#     #     if len(existing_cols) > 0:
+#     #         #Get the average errors for training and testing molecules for each property
+#     #         avg_errors = df[existing_cols].mean()
+#     #         print(f"Average {obj} for all molecules using {label}:")
+#     #         print(avg_errors)
+
+#     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
+#     #Choose color basede on FF label (ATs diff colors Dis=blue, 1=red, 2=orange, literature =gray
+#     def get_color(label):
+#         if "AT-Dis" in label:
+#             return "blue"
+#         elif "AT-3" in label:
+#             return 'red'
+#         elif "AT-4" in label:
+#             return 'orange'
+#         else:
+#             return 'gray'
+
+#     #Get indeces where train molecules are in all molecules
+#     # len_train = len(set(molec_names).intersection(train_molecs))
+#     len_train = len([m for m in molec_names if m in train_molecs])
+#     left_indices = np.arange(len_train)
+#     right_indices =  np.arange(len_train, len(molec_names))
+
+#     if len(right_indices) > 0:
+#         axs_col = 2
+#         cols = [item for item in cols for _ in range(2)]
+#         names = [item for item in names for _ in range(2)]
+#     else:
+#         axs_col = 1
+#         cols = [item for item in cols]
+#         names = [item for item in names]
+
+#     print(len(props), axs_col)
+
+#     fig, axs = plt.subplots(len(props), axs_col, figsize=(6*len(props), 8*axs_col), sharex = False)
+#     # Plot each column in a subplot
+#     for i, (ax, column, name) in enumerate(zip(axs.flatten(), cols, names)):
+#         bar_width = 0.1
+#         max_val_f = 0
+
+#         if axs_col == 1:
+#             indices = left_indices
+#             mol_names = molec_names[:len_train]
+#         else:
+#             indices = right_indices
+#             mol_names = molec_names[len_train:]
+#         print(mol_names)
+#         for j, df in enumerate(df_mse_list):
+#             if column in df.columns:
+#                 if j < len(df_mse_list):
+#                     max_val = np.nanmax(df[column].values)
+#                     max_val_f = max(max_val, max_val_f)
+#                     max_val_f = max_val_f if not np.isnan(max_val_f) else 1
+#                 ax.bar(indices + j*bar_width, df[column].iloc[indices], bar_width, label=df_labels[j].split("_")[0], color = get_color(df_labels[j]))
+            
+#         ax.set_ylim(0, max_val_f*1.05)
+#         ax.set_title(name, fontsize = 24) 
+#         ax.set_xticks(indices + bar_width)
+#         ax.tick_params(axis='y', labelsize=20)
+
+#         molec_names_use = []
+#         for molec in mol_names:
+#             if molec not in ["R14", "R50", "R170", "R116"]:
+#                 #Substitute mole string R w/ HFC
+#                 molec_names_use.append(molec.replace("R","HFC"))
+#             else:
+#                 molec_names_use.append(molec)
+
+#         ax.set_xticklabels(molec_names_use, fontsize=20)
+    
+#     if axs_col == 2:
+#         handles, labels = axs[0, 0].get_legend_handles_labels()
+#     else:
+#         handles, labels = axs[0].get_legend_handles_labels()
+#     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.10), ncol=3, fontsize = 20)
+
+#     # Adjust layout
+#     fig.supxlabel('Molecule', fontsize = 24)
+#     if obj == "mapd":
+#         titley = obj.upper() + " (%)"
+#     else:
+#         titley = obj.upper()
+#     fig.supylabel(titley, fontsize = 24)
+
+#     # Add Training and Testing labels
+#     fig.text(0.075, 0.99, "Training Set", ha="left", va="top", fontsize=20)
+#     if axs_col == 2:
+#         fig.text(0.99, 0.99, "Testing Set", ha="right", va="top", fontsize=20)
+
+#     #Explain missing HFC-143 data
+# #     fig.text(
+# #     0.85, 0.1,  # Adjust these coordinates based on the image placement
+# #     "Experimental\n Data\n Unavailable",
+# #     fontsize=20,
+# #     color="black",
+# #     ha="center",  # Center horizontally
+# #     va="center",  # Center vertically
+# #     bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
+# # )
+
+#     plt.tight_layout(rect=[0.01, 0.0, 1, 1])
+#     #Save figure to jpg
+#     # if save_name is not None:
+#     #     plt.savefig(save_name + ".png", bbox_inches='tight')
+#     # Show the plot
+#     return fig
 
 def plot_err_avg_props(molec_names, err_path_dict, obj = 'mapd', save_name = None):
     """

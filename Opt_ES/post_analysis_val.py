@@ -33,7 +33,7 @@ print(f"Script location: {Path(__file__).parent}")
 obj_choice = "ExpVal"
 at_numbers = [0] #0 is distinct ATs
 #Dictionary of all molecules of interest
-mol_names = ["MeOH"] #["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
+mol_names = ["MeOH", "Gly"] #["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
 
 ### Do not modify below this point ###
 
@@ -123,36 +123,34 @@ pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
 pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 
 #For each molecule
-molecules = df_paramsets['molecule'].unique().tolist()
+molecules = mol_names #df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
     #Get the data for the molecule from each FF if it exists
     one_molec_dict = {molec: molec_dict[molec]}
     ff_molec_dict = {}
     for file_name, df_ff in prop_dict.items():
-        #Create a label for the FF from the AT:
-        label = get_label_from_fn(file_name, ff_names, ff_labels) #+ "_" + molec
-        #Add molecule data to dict for plotting
-        df_molec = copy.copy(df_ff[df_ff['molecule'] == molec])
-        ff_molec_dict[label] = df_molec
+        if molec in file_name:
+            #Create a label for the FF from the AT:
+            label = get_label_from_fn(file_name, ff_names, ff_labels) #+ "_" + molec
+            #Add molecule data to dict for plotting
+            df_molec = copy.copy(df_ff[df_ff['molecule'] == molec])
+            ff_molec_dict[label] = df_molec
     
     #Plot Vle, Hvap, and Pvap and save to different pdfs
-    #TO DO: Modify plotting functions to do what I need
-    pdf_vle.savefig(plot_vle_envelopes(one_molec_dict, ff_molec_dict), bbox_inches='tight')
-    # plt.show()
+    pdf_vle.savefig(plot_vle_envelopes(one_molec_dict, copy.deepcopy(ff_molec_dict)), bbox_inches='tight', orientation='portrait')
     plt.close()
-    pdf_hpvap.savefig(plot_pvap_hvap(one_molec_dict, ff_molec_dict), bbox_inches='tight')
+    pdf_hpvap.savefig(plot_pvap_hvap(one_molec_dict, copy.deepcopy(ff_molec_dict)), bbox_inches='tight')
     plt.close()
-    if ift_proj is not None:
-        pdf_st.savefig(plot_misc_prop(one_molec_dict, ff_molec_dict, prop_name="surf_tens"), bbox_inches='tight')
-        plt.close()
-        pdf_diff.savefig(plot_misc_prop(one_molec_dict, ff_molec_dict, prop_name="diff_coeff"), bbox_inches='tight')
-        plt.close()
+    pdf_st.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="surf_tens"), bbox_inches='tight')
+    plt.close() 
+    pdf_diff.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="diff_coeff"), bbox_inches='tight')
+    plt.close()
+        
 #Close figures    
 pdf_vle.close()
 pdf_hpvap.close()
-if ift_proj is not None:
-    pdf_st.close()
-    pdf_diff.close()
+pdf_st.close()
+pdf_diff.close()
 
 #Get error dict labels ready
 df_err_dict = {}
