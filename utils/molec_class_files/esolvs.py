@@ -508,7 +508,7 @@ expt_diff_coeff = {
     306: 2.68e-12,
     313: 4.87e-12,
     321: 9.83e-12,
-    329: 1.86e-12,
+    329: 1.86e-11,
 }
 uncertainty = {
     "expt_liq_density": 0.0021,
