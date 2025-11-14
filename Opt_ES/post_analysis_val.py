@@ -36,17 +36,11 @@ at_numbers = [0] #0 is distinct ATs
 mol_names = ["MeOH", "Gly"] #["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
 
 ### Do not modify below this point ###
-
-def get_label_from_fn(file_name, ff_names, ff_labels):
+def get_label_from_fn(file_name):
     for s in file_name.split("/"):
         if s.startswith("at_"):
             at_num = int(s.split("_")[1])
             label = atom_type.make_atom_type_class(at_num).scheme_plot_name
-            break
-        elif s in ff_names:
-            #Otherwise create the label from a literature name
-            idx = ff_names.index(s)
-            label = ff_labels[idx]
             break
         else:
             label = "Unknown"
@@ -99,20 +93,6 @@ for file, df_molec in all_df_data.items():
         df_paramsets["molecule"] = molec
         df_paramsets.to_csv(os.path.join(file_save, "error_data.csv"))
         error_dict[file_save] = df_paramsets
-    
-
-#Get Results from Literature Data (for comparison)
-#Load csvs for Opt_FF, GAFF, NW, Trappe, and Potoff, and BBFF
-ff_names = ["Potoff", "TraPPE", "Wang_FFO", "BBFF"]
-ff_labels = ["Potoff et al.", "TraPPE", "Previous Work", ""]
-# for ff_name, ff_label in zip(ff_names, ff_labels):
-    #Get FF data
-    #Loop over each molecule and create property and error data
-    # for mol_name, df_data in df_dict.items():
-    #     prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True)
-    #     prop_dict[file] = df_all
-    #     error_lit = prepare_df_errors(df_data, data_dict, mol_name)
-    #     error_dict[file] = error_lit
 
 #Plot VLE, Hvap/Pvap, and ST
 full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), "ms_val")
@@ -122,6 +102,10 @@ pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
 pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
 pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 
+#Add literature FF data to prop_dict
+file_save_lit = "analysis/lit_ff_data.csv"
+lit_data = pd.read_csv(file_save_lit, header=0)
+
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
@@ -130,11 +114,16 @@ for molec in molecules:
     ff_molec_dict = {}
     for file_name, df_ff in prop_dict.items():
         if molec in file_name:
-            #Create a label for the FF from the AT:
-            label = get_label_from_fn(file_name, ff_names, ff_labels) #+ "_" + molec
             #Add molecule data to dict for plotting
             df_molec = copy.copy(df_ff[df_ff['molecule'] == molec])
+            #Create a label for the FF from the AT:
+            label = get_label_from_fn(file_name) #+ "_" + molec
             ff_molec_dict[label] = df_molec
+
+    lit_data_molec = copy.copy(lit_data[lit_data['molecule'] == molec])
+    groups = lit_data_molec.groupby('ref_name')
+    for name, group in groups:
+        ff_molec_dict[name] = group
     
     #Plot Vle, Hvap, and Pvap and save to different pdfs
     pdf_vle.savefig(plot_vle_envelopes(one_molec_dict, copy.deepcopy(ff_molec_dict)), bbox_inches='tight', orientation='portrait')
@@ -158,7 +147,7 @@ molec_names = mol_names
 for file, data_df_err in error_dict.items():
     #Load the error data for the file
     #Remove all columns not related to error metrics
-    label_base = get_label_from_fn(file, ff_names, ff_labels)
+    label_base = get_label_from_fn(file)
     label_molec = data_df_err["molecule"].values[0]
     label = label_base + "_" + label_molec
     err_data = data_df_err.filter(regex="mapd|mse|mae")

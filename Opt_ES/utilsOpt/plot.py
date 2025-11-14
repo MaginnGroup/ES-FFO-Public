@@ -317,9 +317,24 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
+    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
+               "Huang et. al.": ('#0989d9', '^', 1),
+               "Jahn et. al.": ('red', '*', 1),
+               "Caleman et. al.": ('green', 'p', 1),
+               "Senapati et. al.": ('purple', 'd', 1),
+               "Borin & Skaf": ('brown', 'h', 1),
+               "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
+               "Luo et. al.": ('olive', 'v', 1)
+               }
+
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    # df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs))]
+    num_lit = sum("AT" not in key for key in df_labels)
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-num_lit)]
+
+    for i, key in enumerate(df_labels):
+        if "AT-" in key: #color, marker, z_order)
+            key_map[key] = (df_colors[i], "o", len(df_ff_list))
+
     # df_labels, df_ffs = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
     # df_markers = ['o', 's', '^', '*', 'p', 'd']
@@ -331,11 +346,10 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         #     prop_data[key] = prop_data[key]*1e9
 
     #Initialize min and max values
-    if molec not in ["R152", "R134"]:
-        min_temp = min(prop_data.keys())
-        max_temp = max(prop_data.keys())
-        min_st = min(prop_data.values())
-        max_st = max(prop_data.values())
+    min_temp = min(prop_data.keys())
+    max_temp = max(prop_data.keys())
+    min_st = min(prop_data.values())
+    max_st = max(prop_data.values())
         
     # for df in df_ff_list:
     #     if df is not None:
@@ -349,23 +363,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
-        if "AT-" in df_label:
-            df_z_order = len(df_ff_list)
-            df_marker = "o"
-        elif "GAFF" in df_label:
-            df_z_order = 3
-            df_marker = "s"
-        elif "Potoff" in df_label:
-            df_z_order = 2
-            df_marker = "^"
-        elif "TraPPE" in df_label:
-            df_z_order = 1
-            df_marker = "*"
-        else:
-            df_z_order = 4
-            df_marker = "p"
+        df_color, df_marker, df_z_order = key_map.get(df_label, ('black', 'o', 2))
 
-        df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
+        # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
         if df_ff is not None:
             min_temp, max_temp = get_min_max(min_temp, max_temp, df_ff["temperature"].values)
@@ -373,6 +373,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
             grouped = df_ff.groupby(["temperature"])[all_props]
             x_props = ["sim_" + prop_name]
+            if df_ff["sim_" + prop_name].isnull().all():
+                continue
             # Calculate mean and standard deviation for each group
             means = grouped.mean().reset_index()
             stds = grouped.std(ddof=0).reset_index()
@@ -387,13 +389,12 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 # print(min_st, max_st)
                 # #Plot opt_scheme_ms vle curve
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
-                            color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                            color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
 
     #Plot experimental data
-    if molec not in ["R152", "R134"]:
-        ax2.scatter(prop_data.keys(), prop_data.values(),
-            color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
+    ax2.scatter(prop_data.keys(), prop_data.values(),
+        color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = len(df_ff_list)+1)
 
     #Set Axes
     #Use a log10 scale for diff_coeff
@@ -471,8 +472,24 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
+    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
+               "Huang et. al.": ('#0989d9', '^', 1),
+               "Jahn et. al.": ('red', '*', 1),
+               "Caleman et. al.": ('green', 'p', 1),
+               "Senapati et. al.": ('purple', 'd', 1),
+               "Borin & Skaf": ('brown', 'h', 1),
+               "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
+               "Luo et. al.": ('olive', 'v', 1)
+               }
+    
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs))]
+    num_lit = sum("AT" not in key for key in df_labels)
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-num_lit)]
+
+    for i, key in enumerate(df_labels):
+        if "AT-" in key: #color, marker, z_order)
+            key_map[key] = (df_colors[i], "o", len(df_ff_list))
+
     # df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
     # df_labels, df_ffs = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
@@ -480,13 +497,12 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     # df_z_order = [6,3,2,1,5,4]
 
     #Initialize min and max values
-    if molec not in ["R152", "R134"]:
-        min_temp = min(mol_data.expt_liq_density.keys())
-        max_rho = max(mol_data.expt_liq_density.values())
-        max_temp = max(mol_data.expt_liq_density.keys())
-        min_rho = min(mol_data.expt_liq_density.values())
-        # max_temp = mol_data.expt_Tc
-        # min_rho = min(mol_data.expt_vap_density.values())
+    min_temp = min(mol_data.expt_liq_density.keys())
+    max_rho = max(mol_data.expt_liq_density.values())
+    max_temp = max(mol_data.expt_liq_density.keys())
+    min_rho = min(mol_data.expt_liq_density.values())
+    # max_temp = mol_data.expt_Tc
+    # min_rho = min(mol_data.expt_vap_density.values())
     # else:
     #     for df in df_ff_list:
     #         if df is not None:
@@ -495,44 +511,38 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     #             min_rho = min(df["sim_vap_density"].values)
     #             max_rho = max(df["sim_liq_density"].values)
     #             break
-
+    liq_data_present = False
+    vap_data_present = False
     label_prop = None
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
-        if "AT-" in df_label:
-            df_z_order = len(df_ff_list)
-            df_marker = "o"
-        elif "GAFF" in df_label:
-            df_z_order = 3
-            df_marker = "s"
-        elif "Potoff" in df_label:
-            df_z_order = 2
-            df_marker = "^"
-        elif "TraPPE" in df_label:
-            df_z_order = 1
-            df_marker = "*"
-        else:
-            df_z_order = 4
-            df_marker = "p"
-
-        df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
+        df_color, df_marker, df_z_order = key_map[df_label]
+        # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
         if df_ff is not None:
             #Check that there are data points for vapor density
             all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
+            x_props = []
+            has_vap = True
+            has_liq = True
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
-
+            #Check that there are data points for liquid density for all df
+            if df_ff["sim_liq_density"].isnull().all():
+                has_liq = False
+                label_prop = df_label
+            else:
+                x_props.append("sim_liq_density")
+                liq_data_present = True
             #Check that there are data points for vapor density for all df
             if df_ff["sim_vap_density"].isnull().all():
-                x_props = ["sim_liq_density"]
                 has_vap = False
                 label_prop = df_label
             else:
-                x_props = ["sim_liq_density", "sim_vap_density"]
-                has_vap = True
-
+                x_props.append("sim_vap_density")
+                vap_data_present = True
+    
             grouped = df_ff.groupby(["temperature"])[all_props]
 
             # Calculate mean and standard deviation for each group
@@ -544,26 +554,27 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                 
                 # #Plot opt_scheme_ms vle curve
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
-                            color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                            color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
 
             #Plot critical points if available
-            if has_vap:
+            if has_vap and has_liq:
                 min_rho, max_rho = get_min_max(min_rho, max_rho,  means["sim_Tc"].values, stds["sim_Tc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
                 ax2.errorbar(means["sim_rhoc"].values[0],means["sim_Tc"].values[0], xerr=1.96*stds["sim_rhoc"].values[0],
-                            color=df_colors[i],markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                            color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
 
     #Plot experimental data
-    if molec not in ["R152", "R134"]:
+    if liq_data_present or (not liq_data_present and not vap_data_present):
         ax2.scatter(mol_data.expt_liq_density.values(),mol_data.expt_liq_density.keys(),
             color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
-        if has_vap:
-            ax2.scatter(mol_data.expt_vap_density.values(),mol_data.expt_vap_density.keys(),
-                color="black",marker="x",linewidths=2,s=100, zorder = 7)
-            ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="x", linewidths=2, 
-                        s=100, zorder = 7)
+    if vap_data_present or (not liq_data_present and not vap_data_present):
+        ax2.scatter(mol_data.expt_vap_density.values(),mol_data.expt_vap_density.keys(),
+            color="black",marker="x",linewidths=2,s=100, zorder = 7)
+    if liq_data_present and vap_data_present:
+        ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="x", linewidths=2, 
+                    s=100, zorder = len(df_ff_list)+1)
 
     #Set Axes
     ax2.set_xlim(min_rho*0.95,max_rho*1.05)
@@ -629,9 +640,23 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
+    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
+               "Huang et. al.": ('#0989d9', '^', 1),
+               "Jahn et. al.": ('red', '*', 1),
+               "Caleman et. al.": ('green', 'p', 1),
+               "Senapati et. al.": ('purple', 'd', 1),
+               "Borin & Skaf": ('brown', 'h', 1),
+               "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
+               "Luo et. al.": ('olive', 'v', 1)
+               }
+    
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
-    # df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-5)] + ['gray', 'brown', 'orange', 'olive', 'olive']
-    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs))]
+    num_lit = sum("AT" not in key for key in df_labels)
+    df_colors = [cmap(i) for i in np.linspace(0, 1, len(df_ffs)-num_lit)]
+
+    for i, key in enumerate(df_labels):
+        if "AT-" in key: #color, marker, z_order)
+            key_map[key] = (df_colors[i], "o", len(df_ff_list))
 
     # df_labels = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
@@ -639,11 +664,10 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     # df_z_order = [6,3,2,1,5,4]
 
     #Initialize min and max values
-    if molec not in ["R152", "R134"]:
-        min_temp = min(np.array(list(mol_data.expt_Pvap.keys())))
-        max_temp = max(np.array(list(mol_data.expt_Pvap.keys())))
-        min_pvap = min(np.log(np.array(list(mol_data.expt_Pvap.values()))))
-        max_pvap = max(np.log(np.array(list(mol_data.expt_Pvap.values()))))
+    min_temp = min(np.array(list(mol_data.expt_Pvap.keys())))
+    max_temp = max(np.array(list(mol_data.expt_Pvap.keys())))
+    min_pvap = min(np.log(np.array(list(mol_data.expt_Pvap.values()))))
+    max_pvap = max(np.log(np.array(list(mol_data.expt_Pvap.values()))))
     # else:
     #     for df in df_ff_list:
     #         if df is not None:
@@ -655,9 +679,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     #             max_pvap = np.nanmax(np.log(df["sim_Pvap"].values))
     #             break
 
-    if molec not in ["R152", "R134", "R143"]:
-        min_hvap = min(mol_data.expt_Hvap.values())
-        max_hvap = max(mol_data.expt_Hvap.values())
+    min_hvap = min(mol_data.expt_Hvap.values())
+    max_hvap = max(mol_data.expt_Hvap.values())
     # else:
     #     for df in df_ff_list:
     #         if df is not None:
@@ -676,35 +699,32 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
-        if "AT-" in df_label:
-            df_z_order = len(df_ff_list)
-            df_marker = "o"
-        elif "GAFF" in df_label:
-            df_z_order = 3
-            df_marker = "s"
-        elif "Potoff" in df_label:
-            df_z_order = 2
-            df_marker = "^"
-        elif "TraPPE" in df_label:
-            df_z_order = 1
-            df_marker = "*"
-        else:
-            df_z_order = 4
-            df_marker = "p"
+        df_color, df_marker, df_z_order = key_map[df_label]
         
-        df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
-
-        no_df_data = 0
+        # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
 
         if df_ff is not None: #and ("Potoff" in df_label or "GAFF" in df_label)
             #Check if there are data points for Pvap and Hvap
-            x_props = ["sim_Pvap", "sim_Hvap"]
+            # x_props = ["sim_Pvap", "sim_Hvap"]
             df_ff.replace("", np.nan, inplace=True)
-            df_ff.dropna(subset=["sim_Pvap", "sim_Hvap"], inplace=True)
+            # df_ff.dropna(subset=["sim_Pvap", "sim_Hvap"], inplace=True)
             #Check that there are data points for hvap for all df
-            if df_ff.empty:
-                no_df_data += 1
-                continue
+            x_props = []
+            has_pvap = True
+            has_hvap = True
+            #Check that there are data points for liquid density for all df
+            if df_ff["sim_Pvap"].isnull().all():
+                has_pvap = False
+                label_prop = df_label
+            else:
+                x_props.append("sim_Pvap")
+            #Check that there are data points for vapor density for all df
+            if df_ff["sim_Hvap"].isnull().all():
+                has_hvap = False
+                label_prop = df_label
+            else:
+                x_props.append("sim_Hvap")
+
             # grouped = df_ff.groupby(["temperature", "atom_type"])[x_props]
             grouped = df_ff.groupby(["temperature"])[x_props]
             
@@ -722,50 +742,42 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
             
             #Plot 1/T vs log(Pvap) 
             #Plot if not all nan
-            finite_indices = np.where(means["sim_Pvap"].values > 0)[0]
-            log_Pvap_finite =  np.log(means["sim_Pvap"].values[finite_indices])
-            if len(log_Pvap_finite) > 0:
-                std_log_pvap = (stds["sim_Pvap"].values/means["sim_Pvap"].values)[finite_indices]
-                temps_finite = means["temperature"].values[finite_indices]
-                # print(df_label, molec)
-                # print(log_Pvap_finite, std_log_pvap)
-                # print(min_pvap, max_pvap)
-                min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
-                axs[0].errorbar(1/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
-                            color=df_colors[i], markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
-                            zorder = df_z_order,label = df_label)
-                # axs[0].scatter(1/means["temperature"], np.log(means["sim_Pvap"]), color=df_colors[i], 
-                #             s=70,alpha=0.5, label = df_label, marker = df_marker,
-                #             zorder = df_z_order)
+            if has_pvap:
+                finite_indices = np.where(means["sim_Pvap"].values > 0)[0]
+                log_Pvap_finite =  np.log(means["sim_Pvap"].values[finite_indices])
+                if len(log_Pvap_finite) > 0:
+                    std_log_pvap = (stds["sim_Pvap"].values/means["sim_Pvap"].values)[finite_indices]
+                    temps_finite = means["temperature"].values[finite_indices]
+                    # print(df_label, molec)
+                    # print(log_Pvap_finite, std_log_pvap)
+                    # print(min_pvap, max_pvap)
+                    min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
+                    axs[0].errorbar(1/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
+                                color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                                zorder = df_z_order,label = df_label)
+                    # axs[0].scatter(1/means["temperature"], np.log(means["sim_Pvap"]), color=df_colors[i], 
+                    #             s=70,alpha=0.5, label = df_label, marker = df_marker,
+                    #             zorder = df_z_order)
             #Plot T vs Hvap
-            if not np.all(np.isnan(means["sim_Hvap"].values)):
+            if has_hvap and not np.all(np.isnan(means["sim_Hvap"].values)):
                 # print(means["sim_Hvap"].values, stds["sim_Hvap"].values)
                 finite_indices = np.isfinite(means["sim_Hvap"].values)
                 Hvap_finite =  means["sim_Hvap"].values[finite_indices]
                 std_hvap = stds["sim_Hvap"].values[finite_indices]
                 temps_finite = means["temperature"].values[finite_indices]
-                
-                    
                 min_hvap, max_hvap = get_min_max(min_hvap, max_hvap, Hvap_finite, std_hvap)
-                # if "AT-" in df_label and molec == "R152":
-                #     print(min_hvap, max_hvap)
-                #     print(Hvap_finite, std_hvap)
                 axs[1].errorbar(temps_finite, Hvap_finite, yerr=1.96*std_hvap,
                             color=df_colors[i], markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order,)
-                # axs[1].scatter(means["temperature"],means["sim_Hvap"], color=df_colors[i], 
-                #             s=70,alpha=0.5, marker = df_marker,
-                #             zorder = df_z_order)
+
         
     #Plot experimental pvap
-    if molec not in ["R152", "R134"]:
-        axs[0].scatter(1/np.array(list(mol_data.expt_Pvap.keys())),
-                       np.log(np.array(list(mol_data.expt_Pvap.values()))),
-            color="black",marker="x",label="Experiment",s=100,zorder = 7)
+    axs[0].scatter(1/np.array(list(mol_data.expt_Pvap.keys())),
+                    np.log(np.array(list(mol_data.expt_Pvap.values()))),
+        color="black",marker="x",label="Experiment",s=100,zorder = len(df_ff_list)+1)
     #Plot experimental Hvap
-    if molec not in ["R152", "R134", "R143"]:
-        axs[1].scatter(mol_data.expt_Hvap.keys(),mol_data.expt_Hvap.values(),
-            color="black",marker="x",label="Experiment",s=100, zorder = 7)
+    axs[1].scatter(mol_data.expt_Hvap.keys(),mol_data.expt_Hvap.values(),
+        color="black",marker="x",label="Experiment",s=100, zorder = len(df_ff_list)+1)
 
     #Set axes details
     axs[0].set_xlim((1/max_temp)*0.95,(1/min_temp)*1.05)
@@ -865,6 +877,8 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
 
     # Convert to pandas DataFrame
     results_df = pd.DataFrame(results)
+    #Sort alphabetically by Method
+    results_df = results_df.sort_values(by="method").reset_index(drop=True)
     if save_name is not None:
         results_df.to_csv(save_name + ".csv", index=False)
     # for label, df in zip(df_labels, df_mse_list):

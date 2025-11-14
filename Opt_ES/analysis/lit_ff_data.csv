@@ -1,0 +1,23 @@
+molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,sim_Tc,sim_rhoc,ref_name,short_name
+MeOH,250,831.338,0,0.003,,27.75,,521.9,255,Martinez-Jimenez et. al.,MJ
+MeOH,298,781.716,0.04,0.051,,23.15,2.00E-09,521.9,255,Martinez-Jimenez et. al.,MJ
+MeOH,400,672.232,3.45,2.9,,14.05,,521.9,255,Martinez-Jimenez et. al.,MJ
+MeOH,450,605.457,13.8,11.302,,9.15,,521.9,255,Martinez-Jimenez et. al.,MJ
+MeOH,475,556.825,26.28,20.183,,6.6,,521.9,255,Martinez-Jimenez et. al.,MJ
+MeOH,500,462.739,49.44,33.114,,3.65,,521.9,255,Martinez-Jimenez et. al.,MJ
+EG,325,1083.18357,0.001433817,0.000925,1131.73836,,,722,366.213,Huang et. al.,Huang
+EG,350,1066.42467,0.006908391,0.0051,1123.183502,,,722,366.213,Huang et. al.,Huang
+EG,400,1032.013062,0.13667814,0.07226,1063.573385,,,722,366.213,Huang et. al.,Huang
+EG,450,991.481352,1.3854024,0.5144,985.564685,,,722,366.213,Huang et. al.,Huang
+Gly,320,1240,,,,,2.20E-09,,,Jahn et. al.,Jahn
+Gly,350,1214,,,,,4.06E-08,,,Jahn et. al.,Jahn
+Gly,380,1191,,,,,2.67E-07,,,Jahn et. al.,Jahn
+Gly,400,1173,,,,,7.02E-07,,,Jahn et. al.,Jahn
+DMF,298.15,,,,46.08,36.1,,,,Caleman et. al.,Caleman
+DMSO,298,1080,,,,33.9,1.05E-09,,,Senapati,Senapati
+DMSO,323,1050,,,,29.6,1.70E-09,,,Senapati,Senapati
+DMSO,348,1010,,,,24.9,2.00E-09,,,Senapati,Senapati
+DMSO,373,980,,,,22.3,2.50E-09,,,Senapati,Senapati
+DMSO,298,,,,670.9330603,,,,,Borin & Skaf,BS
+DEC,298.15,969.85,,,396.0044019,26.1,,,,Garcia-Melgarejo et. al.,GM
+,298,,,,,,2.34E-09,,,Luo et. al.,Luo
