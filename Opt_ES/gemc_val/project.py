@@ -1167,7 +1167,7 @@ def check_eq(job):
             for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
                 #Check if another simulation has completed production and equilibration and passed the check
                 all_conditions = {"no_overlap": True, "Nexc_good": True, "gemc_eq_fin": True, "prod_ready": True}
-                if all(job_new.doc.get(key, False) == val for key, val in all_conditions.items()):
+                if all(job_new.doc.get(key, False) == val for key, val in all_conditions.items()) and job_new.id != job.id:
                     #Restart from this job (ONLY if it looks like the simulation will never equilibrate)
                     job.doc["restart_from"] = job_new.id
                     prod_ready["rst_data"] = False
@@ -1440,7 +1440,7 @@ def check_prod_data(job):
                 for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
                     #Check if another simulation has completed production and equilibration and passed the check
                     all_conditions = {"no_overlap": True, "Nexc_good": True, "gemc_eq_fin": True, "prod_ready": True}
-                    if all(job_new.doc.get(key, False) == val for key, val in all_conditions.items()):
+                    if all(job_new.doc.get(key, False) == val for key, val in all_conditions.items()) and job_new.id != job.id:
                         #Restart from this job (ONLY if it looks like the simulation will never work)
                         job.doc["restart_from"] = job_new.id
                         found_rst = True
