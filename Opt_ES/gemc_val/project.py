@@ -1166,7 +1166,10 @@ def check_eq(job):
             project = signac.get_project()
             for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
                 #Check if another simulation has completed production and equilibration and passed the check
-                all_conditions = {"no_overlap": True, "Nexc_good": True, "gemc_eq_fin": True, "prod_ready": True}
+                if os.path.exists(job_new.fn("Liquid_eq_col_6")): #If checking density, "Nexc_good" is not needed
+                    all_conditions = {"no_overlap": True, "gemc_eq_fin": True, "prod_ready": True}
+                else:
+                    all_conditions = {"no_overlap": True, "Nexc_good": True, "gemc_eq_fin": True, "prod_ready": True}
                 if all(job_new.doc.get(key, False) == val for key, val in all_conditions.items()) and job_new.id != job.id:
                     #Restart from this job (ONLY if it looks like the simulation will never equilibrate)
                     job.doc["restart_from"] = job_new.id
@@ -1353,8 +1356,6 @@ def check_prod_data(job):
         
         #Initialize log file as last production file
         filename = sorted(glob.glob(job.fn("prod*out.log")))[-1]
-        #Find last restart of production
-        # filename = job.fn("prod.out.log")
 
         #Find the last instance of the words insert and delete starting from the bottom of the file
         # Read file lines
@@ -1389,20 +1390,36 @@ def check_prod_data(job):
         #Otherwise, if we have at least 200 insertions and deletions, check that they are within 5% of each other to make sure more steps aren't needed
         else:
             pct_diff_thresh = 5
-        #Check that the insert and delete values are within the acceptable % of each other
-        if pct_diff > pct_diff_thresh:
-            statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
-            statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
-            check_dict["Nexc_good"] = False
-            
-        # Add gemc_failed to job doc and add no_overlap to job doc
-        prod_good = np.all(list(check_dict.values()))
 
+        #Set values in job doc
         job.doc.no_overlap = check_dict["no_overlap"]
         job.doc.Nexc_good = check_dict["Nexc_good"]
         job.doc.Nexc_suff = check_dict["Nexc_suff"]
 
-        ##If Nexc is not equilibrated, we just need more eq steps
+        #Check if we are tracking density for equilibrium (track density = don't check nmols)
+        check_dens = os.path.exists(job.fn(f"Liquid_eq_col_{density_col}.csv"))
+        
+        #Check that the insert and delete values are within the acceptable % of each other
+        if pct_diff > pct_diff_thresh:
+            statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
+            statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
+            #If we are tracking density for equilibrium, just update the job doc
+            if check_dens:
+                job.doc.Nexc_good = False
+            #If we are tracking nmols for equilibrium, update check_dict to ensure more eq steps are run if necessary
+            else:
+                check_dict["Nexc_good"] = False
+                
+            
+        # Check whether all production checks are good
+        prod_good = np.all(list(check_dict.values()))
+
+        #Print any warnings to equilibration output file
+        if statement != "":
+            with open(job.fn("Equil_Output.txt"), "a") as f:
+                print(statement, file=f)
+
+        ##If just Nexc is not equilibrated and we're tracking Nmols, we just need more eq steps
         if not check_dict["Nexc_good"] and check_dict["no_overlap"]:
             #Add the production phase steps to the eq data and restart from there
             num_prod_steps = job.doc.total_gemc_steps - job.doc.nsteps_gemc_eq
@@ -1427,11 +1444,8 @@ def check_prod_data(job):
         #             mv=True,
         #             subfolder=results_folder,
         #         )
-        #If there is overlap, or if there aren't enough exchanges, try with critical conditions or terminate if already done so
+        #If there is overlap, or if there aren't enough exchanges, try with critical conditions or terminate if already done so and no restart found
         elif not prod_good:
-            if statement != "":
-                with open(job.fn("Equil_Output.txt"), "a") as f:
-                    print(statement, file=f)
             #If we have already tried with critical conditions,
             if job.doc.get("use_crit", False):
                 #See if we can restart from another job
@@ -1440,7 +1454,11 @@ def check_prod_data(job):
                 project = signac.get_project()
                 for job_new in project.find_jobs({"mol_name":job.sp.mol_name, "atom_type":job.sp.atom_type, "T":job.sp.T}):
                     #Check if another simulation has completed production and equilibration and passed the check
-                    all_conditions = {"no_overlap": True, "Nexc_good": True, "gemc_eq_fin": True, "prod_ready": True}
+                    if os.path.exists(job_new.fn("Liquid_eq_col_6")): #If checking density, "Nexc_good" is not needed
+                        all_conditions = {"no_overlap": True, "gemc_eq_fin": True, "prod_ready": True}
+                    #If we are tracking nmols it is
+                    else:
+                        all_conditions = {"no_overlap": True, "Nexc_good": True, "gemc_eq_fin": True, "prod_ready": True}
                     if all(job_new.doc.get(key, False) == val for key, val in all_conditions.items()) and job_new.id != job.id:
                         #Restart from this job (ONLY if it looks like the simulation will never work)
                         job.doc["restart_from"] = job_new.id
