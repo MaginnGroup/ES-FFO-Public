@@ -1372,8 +1372,9 @@ def check_prod_data(job):
         job.doc["insert_val"] = insert_val
         job.doc["delete_val"] = delete_val
         job.doc["pct_diff"] = pct_diff
-        #Check number of insert and delete values, if we have less than 10 insertions or deletions, something is probably wrong
-        if int((insert_val + delete_val)/2) < 10: #int(N_mols/2):
+
+        #Check number of insert and delete values, if we have less than 10 insertions or deletions or zero of both, something is probably wrong
+        if int((insert_val + delete_val)/2) < 10 or (insert_val==0 and delete_val==0): #int(N_mols/2):
             print(f"Job {job.id}")
             statement += f"Job {job.id} production has a low number of insertions or deletions"  + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, N_mols: {N_mols}"
@@ -1389,7 +1390,7 @@ def check_prod_data(job):
         else:
             pct_diff_thresh = 5
         #Check that the insert and delete values are within the acceptable % of each other
-        if pct_diff > pct_diff_thresh :
+        if pct_diff > pct_diff_thresh:
             statement += f"Job {job.id} production has a large difference between insert and delete counts" + "\n"
             statement += f"Insert: {insert_val}, Delete: {delete_val}, Percent Difference: {pct_diff:.2f}%"
             check_dict["Nexc_good"] = False
