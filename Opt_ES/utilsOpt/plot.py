@@ -878,7 +878,7 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     # Convert to pandas DataFrame
     results_df = pd.DataFrame(results)
     #Sort alphabetically by Method
-    results_df = results_df.sort_values(by="method").reset_index(drop=True)
+    # results_df = results_df.sort_values(by="method").reset_index(drop=True)
     if save_name is not None:
         results_df.to_csv(save_name + ".csv", index=False)
     # for label, df in zip(df_labels, df_mse_list):
