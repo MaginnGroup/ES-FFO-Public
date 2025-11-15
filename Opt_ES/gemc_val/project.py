@@ -264,6 +264,8 @@ def NVT_liqbox(job):
                 #Delete variables from previous failed run
                 del job.doc["vapboxl"]  # calc_boxes
                 del job.doc["liqboxl"]  # calc_boxes
+                if "vap_box_mult" in job.doc.keys():
+                    del job.doc["vap_box_mult"]
                 #Delete previous data files
                 with job:
                     for file_path in glob.glob("nvt.*"):
@@ -1039,6 +1041,8 @@ def run_gemc_eq(job):
             job.doc.use_crit = True
             if "equil_fail" in job.doc:
                 del job.doc["equil_fail"]
+            if "vap_box_mult" in job.doc:
+                del job.doc["vap_box_mult"]
 
 def check_eq(job):
     from scipy.signal import savgol_filter
@@ -1185,6 +1189,8 @@ def check_eq(job):
             else:
                 job.doc["use_crit"] = True
                 delete_data(job, "gemc.eq", mv=True, subfolder=folder_name)
+                if "vap_box_mult" in job.doc:
+                    del job.doc["vap_box_mult"]
             
     #Delete the check_me flag
     if "check_me" in job.doc.keys():
