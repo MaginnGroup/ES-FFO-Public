@@ -1072,43 +1072,42 @@ def check_eq(job):
             # Save the eq_col and file to a dictionary for later use
             eq_data_dict[key] = {"data": eq_col, "file": eq_col_file}
 
-    eq_col_liq_density = eq_data_dict["Liquid_6"]["data"]
-    eq_col_liq_molec = eq_data_dict["Liquid_5"]["data"]
+    eq_col_vap_density = eq_data_dict["Vapor_6"]["data"]
+    eq_col_vap_molec = eq_data_dict["Vapor_5"]["data"]
 
     # Get the eq data for liquid box n_mols
-    results, adf_test = get_pymser_results(eq_col_liq_molec)
-
-    # Only count this run as ready for production if between 30 and 770 molecules are in the liquid box
-    n_liq = np.mean(eq_col_liq_molec[results["t0"]:])
-    if  n_liq < 30 or n_liq > (job.sp.N_vap + job.sp.N_liq - 30):  # 30
+    results, adf_test = get_pymser_results(eq_col_vap_molec)
+    # Only count this run as ready for production if between 30 and 770 molecules are in the vapor box
+    n_vap = np.mean(eq_col_vap_molec[results["t0"]:])
+    if  n_vap < 30 or n_vap > (job.sp.N_vap + job.sp.N_liq - 30):  # 30
         # Otherwise add to the job document that the production failed
         job.doc["nmol_under_30"] = True
         job.doc["check_me"] = True
         prod_ready["nmol_under_30"] = False
 
-    # Estimate the slope of the density of the liquid box vs step number
+    # Estimate the slope of the density of the vapor box vs step number
     custom_args, custom_args_gemc = _get_custom_args(job)
-    steps = np.arange(0, len(eq_col_liq_density)) * custom_args["prop_freq"]
-    win_len = max(3, int(len(eq_col_liq_density) * 0.1) | 1)
-    dydx = savgol_filter(eq_col_liq_density, window_length=win_len, polyorder=2, deriv=1)
-    eq_col_est = savgol_filter(eq_col_liq_density, window_length=win_len, polyorder=2)
+    steps = np.arange(0, len(eq_col_vap_density)) * custom_args["prop_freq"]
+    win_len = max(3, int(len(eq_col_vap_density) * 0.1) | 1)
+    dydx = savgol_filter(eq_col_vap_density, window_length=win_len, polyorder=2, deriv=1)
+    eq_col_est = savgol_filter(eq_col_vap_density, window_length=win_len, polyorder=2)
 
-    #Plot the number of molecules in the liquid box vs step number and the slope
+    #Plot the number of molecules in the vapor box vs step number and the slope
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-    ax1.plot(steps, eq_col_liq_density, label="Original Data", alpha=0.5)
+    ax1.plot(steps, eq_col_vap_density, label="Original Data", alpha=0.5)
     ax1.plot(steps, eq_col_est, color='red', label="Smoothed Data")
     ax1.set_xlabel("Sweeps")
-    ax1.set_ylabel("Mass Density of Liquid Box " + r"(kg/m$^3$)")
+    ax1.set_ylabel("Mass Density of Vapor Box " + r"(kg/m$^3$)")
     ax1.legend()
-    ax1.set_title("Liquid Box Density vs Sweeps")
+    ax1.set_title("Vapor Box Density vs Sweeps")
     ax2.plot(steps, dydx, color='green', label="Slope (dN/dx)")
     ax2.axhline(0, color='black', linestyle='--')
     ax2.set_xlabel("Sweeps")
     ax2.set_ylabel("Slope")
     ax2.legend()
-    ax2.set_title("Slope of Liquid Box Density vs Sweeps")
+    ax2.set_title("Slope of Vapor Box Density vs Sweeps")
     plt.tight_layout()
-    plt.savefig(job.fn("liq_dens_slope.png"))
+    plt.savefig(job.fn("vap_dens_slope.png"))
 
     #Delete gemc_eq_fin if check_me is True. 
     if job.doc.get("check_me", False):
