@@ -1212,6 +1212,8 @@ def gemc_eq_restart(job):
             prod_ready = True
         else:
             run_gemc_eq(job)
+            if job.doc.get("gemc_failed", False):
+                break
             prod_ready = check_eq(job)
 # @eq_group            
 # @ProjectGEMC.pre.after(run_gemc_eq)
@@ -1222,6 +1224,7 @@ def gemc_eq_restart(job):
 @prod_group
 @ProjectGEMC.pre.after(gemc_eq_restart)
 @ProjectGEMC.pre(lambda job: job.doc.get("prod_ready", False))
+@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc)
 @ProjectGEMC.post(gemc_prod_complete)
 @ProjectGEMC.operation(directives={"omp_num_threads": 4})
 def run_gemc_prod(job):
