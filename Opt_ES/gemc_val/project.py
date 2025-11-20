@@ -1512,6 +1512,7 @@ def del_job(job):
 @prod_group
 @ProjectGEMC.pre.after(run_gemc_prod)
 @ProjectGEMC.pre.after(check_prod_data)
+@ProjectGEMC.pre(lambda job: "gemc_failed" not in job.doc) 
 @ProjectGEMC.post.isfile("energy.png")
 @ProjectGEMC.post(lambda job: "liq_density" in job.doc)
 @ProjectGEMC.post(lambda job: "vap_density" in job.doc)
