@@ -511,6 +511,7 @@ def delete_data_prod(job, mv=True, subfolder="results_old"):
         del job.doc["pct_diff"]
         del job.doc["insert_val"]
         del job.doc["delete_val"]
+    if "Nexc_suff" in job.doc.keys():
         del job.doc["Nexc_suff"]
 
 def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
@@ -565,6 +566,8 @@ def delete_data_gemc(job, run_name, mv=True, subfolder="results_old"):
         del job.doc["pct_diff"]
         del job.doc["insert_val"]
         del job.doc["delete_val"]
+    # if "Nexc_suff" in job.doc.keys():
+    #     del job.doc["Nexc_suff"]
 
 def delete_data(job, run_name, mv=True, subfolder="results_old"):
     "Delete data from previous operations"
@@ -626,6 +629,8 @@ def delete_data(job, run_name, mv=True, subfolder="results_old"):
         del job.doc["pct_diff"]
         del job.doc["insert_val"]
         del job.doc["delete_val"]
+    if "Nexc_suff" in job.doc.keys():
+        del job.doc["Nexc_suff"]
 
 
 def make_usable_xyz(job, filename, box):
