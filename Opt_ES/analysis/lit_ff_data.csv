@@ -1,4 +1,4 @@
-molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,sim_Tc,sim_rhoc,ref_name,short_name
+molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,Tc,rhoc,ref_name,short_name
 MeOH,250,831.338,0,0.003,,27.75,,521.9,255,Martinez-Jimenez et. al.,MJ
 MeOH,298,781.716,0.04,0.051,,23.15,2.00E-09,521.9,255,Martinez-Jimenez et. al.,MJ
 MeOH,400,672.232,3.45,2.9,,14.05,,521.9,255,Martinez-Jimenez et. al.,MJ
@@ -14,10 +14,24 @@ Gly,350,1214,,,,,4.06E-08,,,Jahn et. al.,Jahn
 Gly,380,1191,,,,,2.67E-07,,,Jahn et. al.,Jahn
 Gly,400,1173,,,,,7.02E-07,,,Jahn et. al.,Jahn
 DMF,298.15,,,,46.08,36.1,,,,Caleman et. al.,Caleman
+DMF,308,960,,0.010022,,,,,,Vahid & Maginn,VE
+DMF,311,955,,0.0157,,,,,,Vahid & Maginn,VE
+DMF,313,935,,0.019419,,,,,,Vahid & Maginn,VE
+DMF,324,944,,0.021853,,,,,,Vahid & Maginn,VE
+DMF,328,943,,0.025181,,,,,,Vahid & Maginn,VE
+DMF,298,,,,,,1.25E-09,,,Chalaris & Samios,CS
 DMSO,298,1080,,,,33.9,1.05E-09,,,Senapati,Senapati
 DMSO,323,1050,,,,29.6,1.70E-09,,,Senapati,Senapati
 DMSO,348,1010,,,,24.9,2.00E-09,,,Senapati,Senapati
 DMSO,373,980,,,,22.3,2.50E-09,,,Senapati,Senapati
 DMSO,298,,,,670.9330603,,,,,Borin & Skaf,BS
+DMSO,355,,,0.01674,,,,,,Vahid & Maginn,VE
+DMSO,367,,,0.030729,,,,,,Vahid & Maginn,VE
+DMSO,380,,,0.07643,,,,,,Vahid & Maginn,VE
+DMSO,309,1035,,,,,,,,Vahid & Maginn,VE
+DMSO,314,1030,,,,,,,,Vahid & Maginn,VE
+DMSO,319,1024,,,,,,,,Vahid & Maginn,VE
+DMSO,327,1019,,,,,,,,Vahid & Maginn,VE
+DMSO,339,1001,,,,,,,,Vahid & Maginn,VE
 DEC,298.15,969.85,,,396.0044019,26.1,,,,Garcia-Melgarejo et. al.,GM
-,298,,,,,,2.34E-09,,,Luo et. al.,Luo
+DEC,298,,,,,,2.34E-09,,,Luo et. al.,Luo
