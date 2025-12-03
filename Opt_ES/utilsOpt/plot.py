@@ -325,7 +325,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Borin & Skaf": ('brown', 'h', 1),
                "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
                "Luo et. al.": ('olive', 'v', 1),
-               "Vahid & Maginn": ('cyan', '8', 1),
+               "Vahid & Maginn": ('yellow', 'P', 1),
                "Chalaris & Samios": ('magenta', '4', 1)
                }
 
@@ -482,7 +482,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Borin & Skaf": ('brown', 'h', 1),
                "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
                "Luo et. al.": ('olive', 'v', 1),
-               "Vahid & Maginn": ('cyan', '8', 1),
+               "Vahid & Maginn": ('yellow', 'P', 1),
                "Chalaris & Samios": ('magenta', '4', 1)
                }
     
@@ -652,7 +652,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Borin & Skaf": ('brown', 'h', 1),
                "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
                "Luo et. al.": ('olive', 'v', 1),
-               "Vahid & Maginn": ('cyan', '8', 1),
+               "Vahid & Maginn": ('yellow', 'P', 1),
                "Chalaris & Samios": ('magenta', '4', 1)
                }
     
@@ -773,7 +773,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                 temps_finite = means["temperature"].values[finite_indices]
                 min_hvap, max_hvap = get_min_max(min_hvap, max_hvap, Hvap_finite, std_hvap)
                 axs[1].errorbar(temps_finite, Hvap_finite, yerr=1.96*std_hvap,
-                            color=df_colors[i], markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                            color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order,)
 
         
