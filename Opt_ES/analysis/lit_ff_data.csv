@@ -1,4 +1,4 @@
-molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,Tc,rhoc,ref_name,short_name
+molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,sim_Tc,sim_rhoc,ref_name,short_name
 MeOH,250,831.338,0,0.003,,27.75,,521.9,255,Martinez-Jimenez et. al.,MJ
 MeOH,298,781.716,0.04,0.051,,23.15,2.00E-09,521.9,255,Martinez-Jimenez et. al.,MJ
 MeOH,400,672.232,3.45,2.9,,14.05,,521.9,255,Martinez-Jimenez et. al.,MJ
