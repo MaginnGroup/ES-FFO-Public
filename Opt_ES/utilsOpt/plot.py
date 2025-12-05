@@ -326,7 +326,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
                "Luo et. al.": ('olive', 'v', 1),
                "Vahid & Maginn": ('yellow', 'P', 1),
-               "Chalaris & Samios": ('magenta', '4', 1)
+               "Chalaris & Samios": ('magenta', '4', 1),
+               "Jorgensen": ('chartreuse', '<', 1),
+               "Gonzalez-Salgado & Vega": ('indigo', '1', 1)
                }
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -483,7 +485,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
                "Luo et. al.": ('olive', 'v', 1),
                "Vahid & Maginn": ('yellow', 'P', 1),
-               "Chalaris & Samios": ('magenta', '4', 1)
+               "Chalaris & Samios": ('magenta', '4', 1),
+               "Jorgensen": ('chartreuse', '<', 1),
+               "Gonzalez-Salgado & Vega": ('indigo', '1', 1)
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -653,7 +657,9 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
                "Luo et. al.": ('olive', 'v', 1),
                "Vahid & Maginn": ('yellow', 'P', 1),
-               "Chalaris & Samios": ('magenta', '4', 1)
+               "Chalaris & Samios": ('magenta', '4', 1),
+               "Jorgensen": ('chartreuse', '<', 1),
+               "Gonzalez-Salgado & Vega": ('indigo', '1', 1)
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -825,7 +831,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         #Substitute mole string R w/ HFC
         molec = molec.replace("R","HFC")
     axs[0].text(0.08, 0.3, molec, fontsize=20, transform=axs[0].transAxes)
-    axs[0].legend(loc="lower left", bbox_to_anchor=(0.35, 1.05), ncol=3, fontsize=16, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
+    axs[0].legend(loc="lower left", bbox_to_anchor=(0.05, 1.05), ncol=3, fontsize=16, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
 
     fig.subplots_adjust(bottom=0.15, top=0.85, left=0.15, right=0.85, wspace=0.55, hspace=0.5)
 
