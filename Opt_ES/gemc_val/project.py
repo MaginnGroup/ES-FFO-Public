@@ -2751,7 +2751,12 @@ def check_equil_converge(job, eq_data_dict, prod_tol):
         # This will cause an error in the GEMC operation which lets us know that the job failed
         raise Exception(f"Error processing job {job.id}: {e}")
 
-    return all(equil_matrix)
+    if len(eq_col) <= 3.5*1e5:
+        #For shorter simulations, require both boxes to be equilibrated
+        return all(equil_matrix)
+    else:
+        #Return true if either liquid or vapor box is equilibrated for long simulations
+        return any(equil_matrix)
 
 
 if __name__ == "__main__":
