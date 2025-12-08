@@ -318,17 +318,17 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     df_ff_list = list(df_ffs)
 
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
-               "Huang et. al.": ('#0989d9', '^', 1),
-               "Jahn et. al.": ('red', '*', 1),
-               "Caleman et. al.": ('green', 'p', 1),
-               "Senapati et. al.": ('purple', 'd', 1),
-               "Borin & Skaf": ('brown', 'h', 1),
-               "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
-               "Luo et. al.": ('olive', 'v', 1),
-               "Vahid & Maginn": ('yellow', 'P', 1),
-               "Chalaris & Samios": ('magenta', '4', 1),
-               "Jorgensen": ('chartreuse', '<', 1),
-               "Gonzalez-Salgado & Vega": ('indigo', '1', 1)
+               "Jorgensen": ('tab:orange', '>', 1),
+               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
+               "Huang et. al.": ('gray', 's', 1),
+               "Jahn et. al.": ('gray', 's', 1),
+               "Caleman et. al.": ('gray', 's', 1),
+               "Vahid & Maginn": ('tab:orange', '>', 1),
+               "Chalaris & Samios": ('tab:green', 'p', 1),
+               "Senapati et. al.": ('gray', 's', 1),
+               "Borin & Skaf": ('tab:green', 'p', 1),
+               "Garcia-Melgarejo et. al.": ('gray', 's', 1),
+               "Luo et. al.": ('tab:orange', '>*', 1),
                }
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -392,6 +392,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 min_st, max_st = get_min_max(min_st, max_st, means[x_prop].values, stds[x_prop].values)
                 # print(min_st, max_st)
                 # #Plot opt_scheme_ms vle curve
+                if df_label == "AT-Dis":
+                    df_label = "This Work"
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
@@ -477,17 +479,17 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
-               "Huang et. al.": ('#0989d9', '^', 1),
-               "Jahn et. al.": ('red', '*', 1),
-               "Caleman et. al.": ('green', 'p', 1),
-               "Senapati et. al.": ('purple', 'd', 1),
-               "Borin & Skaf": ('brown', 'h', 1),
-               "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
-               "Luo et. al.": ('olive', 'v', 1),
-               "Vahid & Maginn": ('yellow', 'P', 1),
-               "Chalaris & Samios": ('magenta', '4', 1),
-               "Jorgensen": ('chartreuse', '<', 1),
-               "Gonzalez-Salgado & Vega": ('indigo', '1', 1)
+               "Jorgensen": ('red', '*', 1),
+               "Gonzalez-Salgado & Vega": ('#0989d9', 'p', 1),
+               "Huang et. al.": ('gray', 's', 1),
+               "Jahn et. al.": ('gray', 's', 1),
+               "Caleman et. al.": ('gray', 's', 1),
+               "Vahid & Maginn": ('red', '*', 1),
+               "Chalaris & Samios": ('#0989d9', 'p', 1),
+               "Senapati et. al.": ('gray', 's', 1),
+               "Borin & Skaf": ('#0989d9', 'p', 1),
+               "Garcia-Melgarejo et. al.": ('gray', 's', 1),
+               "Luo et. al.": ('red', '*', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -556,20 +558,27 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             # Calculate mean and standard deviation for each group
             means = grouped.mean().reset_index()
             stds = grouped.std(ddof=0).reset_index()
+            
+            # print(df_label, has_liq, has_vap)
+            # print(means)
 
             for x_prop in x_props:
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means[x_prop].values, stds[x_prop].values)
                 
                 # #Plot opt_scheme_ms vle curve
+                if label_prop == "AT-Dis":
+                    label_prop = "This Work"
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
 
             #Plot critical points if available
             if has_vap and has_liq:
+                if df_label == "AT-Dis":
+                    df_label = "This Work"
                 min_rho, max_rho = get_min_max(min_rho, max_rho,  means["sim_Tc"].values, stds["sim_Tc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
-                ax2.errorbar(means["sim_rhoc"].values[0],means["sim_Tc"].values[0], xerr=1.96*stds["sim_rhoc"].values[0],
+                ax2.errorbar(means["sim_rhoc"].dropna().iloc[0],means["sim_Tc"].dropna().iloc[0], xerr=1.96*stds["sim_rhoc"].dropna().iloc[0],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
 
@@ -649,17 +658,17 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
-               "Huang et. al.": ('#0989d9', '^', 1),
-               "Jahn et. al.": ('red', '*', 1),
-               "Caleman et. al.": ('green', 'p', 1),
-               "Senapati et. al.": ('purple', 'd', 1),
-               "Borin & Skaf": ('brown', 'h', 1),
-               "Garcia-Melgarejo et. al.": ('orange', 'D', 1),
-               "Luo et. al.": ('olive', 'v', 1),
-               "Vahid & Maginn": ('yellow', 'P', 1),
-               "Chalaris & Samios": ('magenta', '4', 1),
-               "Jorgensen": ('chartreuse', '<', 1),
-               "Gonzalez-Salgado & Vega": ('indigo', '1', 1)
+               "Jorgensen": ('red', '*', 1),
+               "Gonzalez-Salgado & Vega": ('#0989d9', 'p', 1),
+               "Huang et. al.": ('gray', 's', 1),
+               "Jahn et. al.": ('gray', 's', 1),
+               "Caleman et. al.": ('gray', 's', 1),
+               "Vahid & Maginn": ('red', '*', 1),
+               "Chalaris & Samios": ('#0989d9', 'p', 1),
+               "Senapati et. al.": ('gray', 's', 1),
+               "Borin & Skaf": ('#0989d9', 'p', 1),
+               "Garcia-Melgarejo et. al.": ('gray', 's', 1),
+               "Luo et. al.": ('red', '*', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -764,6 +773,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     # print(log_Pvap_finite, std_log_pvap)
                     # print(min_pvap, max_pvap)
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
+                    if df_label == "AT-Dis":
+                        df_label = "This Work"
                     axs[0].errorbar(1/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
