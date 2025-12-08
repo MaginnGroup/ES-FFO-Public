@@ -479,17 +479,17 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
-               "Jorgensen": ('red', '*', 1),
-               "Gonzalez-Salgado & Vega": ('#0989d9', 'p', 1),
+               "Jorgensen": ('tab:orange', '>', 1),
+               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
                "Huang et. al.": ('gray', 's', 1),
                "Jahn et. al.": ('gray', 's', 1),
                "Caleman et. al.": ('gray', 's', 1),
-               "Vahid & Maginn": ('red', '*', 1),
-               "Chalaris & Samios": ('#0989d9', 'p', 1),
+               "Vahid & Maginn": ('tab:orange', '>', 1),
+               "Chalaris & Samios": ('tab:green', 'p', 1),
                "Senapati et. al.": ('gray', 's', 1),
-               "Borin & Skaf": ('#0989d9', 'p', 1),
+               "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
-               "Luo et. al.": ('red', '*', 1),
+               "Luo et. al.": ('tab:orange', '>*', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -658,17 +658,17 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
-               "Jorgensen": ('red', '*', 1),
-               "Gonzalez-Salgado & Vega": ('#0989d9', 'p', 1),
+               "Jorgensen": ('tab:orange', '>', 1),
+               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
                "Huang et. al.": ('gray', 's', 1),
                "Jahn et. al.": ('gray', 's', 1),
                "Caleman et. al.": ('gray', 's', 1),
-               "Vahid & Maginn": ('red', '*', 1),
-               "Chalaris & Samios": ('#0989d9', 'p', 1),
+               "Vahid & Maginn": ('tab:orange', '>', 1),
+               "Chalaris & Samios": ('tab:green', 'p', 1),
                "Senapati et. al.": ('gray', 's', 1),
-               "Borin & Skaf": ('#0989d9', 'p', 1),
+               "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
-               "Luo et. al.": ('red', '*', 1),
+               "Luo et. al.": ('tab:orange', '>*', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
