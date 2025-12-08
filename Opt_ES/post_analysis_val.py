@@ -134,6 +134,10 @@ for molec in molecules:
     plt.close() 
     pdf_diff.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="diff_coeff"), bbox_inches='tight')
     plt.close()
+    pdf_vle.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="liq_density"), bbox_inches='tight')
+    plt.close()
+    pdf_vle.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="vap_density"), bbox_inches='tight')
+    plt.close()
         
 #Close figures    
 pdf_vle.close()

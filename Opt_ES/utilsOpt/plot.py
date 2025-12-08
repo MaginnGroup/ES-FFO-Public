@@ -537,6 +537,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             x_props = []
             has_vap = True
             has_liq = True
+            label_prop = df_label
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
             #Check that there are data points for liquid density for all df
             if df_ff["sim_liq_density"].isnull().all():
@@ -572,7 +573,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                             zorder = df_z_order, label=label_prop)
 
             #Plot critical points if available
-            if has_vap and has_liq:
+            if has_vap and has_liq and molec != "DMSO":
                 if df_label == "AT-Dis":
                     df_label = "This Work"
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
@@ -591,7 +592,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     if vap_data_present or (not liq_data_present and not vap_data_present):
         ax2.scatter(mol_data.expt_vap_density.values(),mol_data.expt_vap_density.keys(),
             color="black",marker="x",linewidths=2,s=100, zorder = 7)
-    if liq_data_present and vap_data_present:
+    if liq_data_present and vap_data_present and molec != "DMSO":
         ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="x", linewidths=2, 
                     s=100, zorder = len(df_ff_list)+1)
 
@@ -625,8 +626,18 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         molec = molec.replace("R","HFC")
     # handles, labels = ax2.get_legend_handles_labels()
     # for h in handles: h.set_linestyle("")
-    ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
-    ax2.text(0.60,  0.82, molec, fontsize=30, transform=ax2.transAxes)
+
+    # Collect handles and labels
+    handles, labels = ax2.get_legend_handles_labels()
+
+    # Remove duplicates while preserving order
+    unique = dict()
+    for h, l in zip(handles, labels):
+        if l not in unique:
+            unique[l] = h
+
+    ax2.legend(unique.values(), unique.keys(), loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    ax2.text(0.65,  0.82, molec, fontsize=30, transform=ax2.transAxes)
     fig.subplots_adjust(bottom=0.2, top=0.75, left=0.15, right=0.95, wspace=0.55)
 
     return fig
@@ -777,7 +788,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
                     if df_label == "AT-Dis":
                         df_label = "This Work"
-                    axs[0].errorbar(1/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
+                    axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
                     # axs[0].scatter(1/means["temperature"], np.log(means["sim_Pvap"]), color=df_colors[i], 
@@ -797,7 +808,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
 
         
     #Plot experimental pvap
-    axs[0].scatter(1/np.array(list(mol_data.expt_Pvap.keys())),
+    axs[0].scatter(1000/np.array(list(mol_data.expt_Pvap.keys())),
                     np.log(np.array(list(mol_data.expt_Pvap.values()))),
         color="black",marker="x",label="Experiment",s=100,zorder = len(df_ff_list)+1)
     #Plot experimental Hvap
@@ -821,7 +832,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     axs[0].xaxis.set_ticks_position("both")
     axs[0].yaxis.set_ticks_position("both")
 
-    axs[0].set_xlabel("1/T " + r"$\mathregular{K^{-1}}$", fontsize=16, labelpad=8)
+    axs[0].set_xlabel("1000/T " + r"$\mathregular{K^{-1}}$", fontsize=16, labelpad=8)
     axs[0].set_ylabel(r"$\mathregular{ln(P_{vap})}$ (bar)", fontsize=16, labelpad=8)
 
     # axs[1].set_xlim(min_temp*0.95,max_temp*1.05)
