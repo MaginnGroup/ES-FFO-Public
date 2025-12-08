@@ -325,10 +325,10 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Caleman et. al.": ('gray', 's', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
-               "Senapati et. al.": ('gray', 's', 1),
+               "Senapati": ('gray', 's', 1),
                "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
-               "Luo et. al.": ('tab:orange', '>*', 1),
+               "Luo et. al.": ('tab:orange', '>', 1),
                }
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -410,7 +410,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         ax2.yaxis.set_major_locator(LogLocator(base=10, numticks=5))
         # pyplot.locator_params(nbins=4)
     else:
-        ax2.set_ylim(min_st*0.95,max_st*1.05)
+        # ax2.set_ylim(min_st*0.95,max_st*1.05)
         #Set 5 ticks on y axis
         ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
 
@@ -486,10 +486,10 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Caleman et. al.": ('gray', 's', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
-               "Senapati et. al.": ('gray', 's', 1),
+               "Senapati": ('gray', 's', 1),
                "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
-               "Luo et. al.": ('tab:orange', '>*', 1),
+               "Luo et. al.": ('tab:orange', '>', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -558,13 +558,12 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             # Calculate mean and standard deviation for each group
             means = grouped.mean().reset_index()
             stds = grouped.std(ddof=0).reset_index()
-            
-            # print(df_label, has_liq, has_vap)
-            # print(means)
+
+            min_temp, max_temp = get_min_max(min_temp, max_temp, means["temperature"].values)
 
             for x_prop in x_props:
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means[x_prop].values, stds[x_prop].values)
-                
+                            
                 # #Plot opt_scheme_ms vle curve
                 if label_prop == "AT-Dis":
                     label_prop = "This Work"
@@ -576,11 +575,14 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             if has_vap and has_liq:
                 if df_label == "AT-Dis":
                     df_label = "This Work"
-                min_rho, max_rho = get_min_max(min_rho, max_rho,  means["sim_Tc"].values, stds["sim_Tc"].values)
+                min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
-                ax2.errorbar(means["sim_rhoc"].dropna().iloc[0],means["sim_Tc"].dropna().iloc[0], xerr=1.96*stds["sim_rhoc"].dropna().iloc[0],
+                try:
+                    ax2.errorbar(means["sim_rhoc"].dropna().iloc[0],means["sim_Tc"].dropna().iloc[0], xerr=1.96*stds["sim_rhoc"].dropna().iloc[0],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
+                except:
+                    pass
 
     #Plot experimental data
     if liq_data_present or (not liq_data_present and not vap_data_present):
@@ -594,7 +596,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                     s=100, zorder = len(df_ff_list)+1)
 
     #Set Axes
-    ax2.set_xlim(min_rho*0.95,max_rho*1.05)
+    # ax2.set_xlim(min_rho*0.95,max_rho*1.05)
     # number_of_ticks = int(np.ceil((ax2.get_xlim()[1] - ax2.get_xlim()[0]) / 500))
     ax2.xaxis.set_major_locator(MaxNLocator(nbins=4))
     # if number_of_ticks > 2:
@@ -603,7 +605,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     #     ax2.xaxis.set_major_locator(MultipleLocator(200))
     ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
     
-    ax2.set_ylim(min_temp*0.95, max_temp*1.05)
+    # ax2.set_ylim(min_temp*0.95, max_temp*1.05)
     ax2.yaxis.set_major_locator(MaxNLocator(nbins=5))
     # ax2.yaxis.set_major_locator(MultipleLocator(40))
     ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
@@ -665,10 +667,10 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Caleman et. al.": ('gray', 's', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
-               "Senapati et. al.": ('gray', 's', 1),
+               "Senapati": ('gray', 's', 1),
                "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
-               "Luo et. al.": ('tab:orange', '>*', 1),
+               "Luo et. al.": ('tab:orange', '>', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -791,7 +793,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                 min_hvap, max_hvap = get_min_max(min_hvap, max_hvap, Hvap_finite, std_hvap)
                 axs[1].errorbar(temps_finite, Hvap_finite, yerr=1.96*std_hvap,
                             color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
-                            zorder = df_z_order,)
+                            zorder = df_z_order,label = df_label)
 
         
     #Plot experimental pvap
@@ -803,14 +805,14 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         color="black",marker="x",label="Experiment",s=100, zorder = len(df_ff_list)+1)
 
     #Set axes details
-    axs[0].set_xlim((1/max_temp)*0.95,(1/min_temp)*1.05)
+    # axs[0].set_xlim((1/max_temp)*0.95,(1/min_temp)*1.05)
     # axs[0].xaxis.set_major_locator(MultipleLocator(40))
     # axs[0].xaxis.set_minor_locator(AutoMinorLocator(4))
 
     min_mult = 1.05 if min_pvap <= -1 else 0.95
     max_mult = 1.05 if max_pvap >= 1 else 0.95
 
-    axs[0].set_ylim(min_pvap * min_mult, max_pvap * max_mult)
+    # axs[0].set_ylim(min_pvap * min_mult, max_pvap * max_mult)
     # axs[0].yaxis.set_major_locator(MultipleLocator(10))
     # axs[0].yaxis.set_minor_locator(AutoMinorLocator(5))
 
@@ -822,11 +824,11 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     axs[0].set_xlabel("1/T " + r"$\mathregular{K^{-1}}$", fontsize=16, labelpad=8)
     axs[0].set_ylabel(r"$\mathregular{ln(P_{vap})}$ (bar)", fontsize=16, labelpad=8)
 
-    axs[1].set_xlim(min_temp*0.95,max_temp*1.05)
+    # axs[1].set_xlim(min_temp*0.95,max_temp*1.05)
     # axs[1].xaxis.set_major_locator(MultipleLocator(40))
     # axs[1].xaxis.set_minor_locator(AutoMinorLocator(4))
 
-    axs[1].set_ylim(min_hvap*0.95, max_hvap*1.05)
+    # axs[1].set_ylim(min_hvap*0.95, max_hvap*1.05)
     # axs[1].yaxis.set_major_locator(MultipleLocator(100))
     # axs[1].yaxis.set_minor_locator(AutoMinorLocator(5))
 
@@ -842,7 +844,23 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         #Substitute mole string R w/ HFC
         molec = molec.replace("R","HFC")
     axs[0].text(0.08, 0.3, molec, fontsize=20, transform=axs[0].transAxes)
-    axs[0].legend(loc="lower left", bbox_to_anchor=(0.05, 1.05), ncol=3, fontsize=16, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
+
+    #Get unique labels for legend from axs 0 and 1
+    # Collect handles and labels from each subplot
+    handles0, labels0 = axs[0].get_legend_handles_labels()
+    handles1, labels1 = axs[1].get_legend_handles_labels()
+
+    # Combine them
+    handles = handles0 + handles1
+    labels = labels0 + labels1
+
+    # Remove duplicates while preserving order
+    unique = dict()
+    for h, l in zip(handles, labels):
+        if l not in unique:
+            unique[l] = h
+
+    axs[0].legend(unique.values(), unique.keys(), loc="lower left", bbox_to_anchor=(0.05, 1.05), ncol=3, fontsize=16, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
 
     fig.subplots_adjust(bottom=0.15, top=0.85, left=0.15, right=0.85, wspace=0.55, hspace=0.5)
 

@@ -33,7 +33,7 @@ print(f"Script location: {Path(__file__).parent}")
 obj_choice = "ExpVal"
 at_numbers = [0] #0 is distinct ATs
 #Dictionary of all molecules of interest
-mol_names = ["Gly", "MeOH", "DMF"] #["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
+mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"] #["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
 
 ### Do not modify below this point ###
 def get_label_from_fn(file_name):
