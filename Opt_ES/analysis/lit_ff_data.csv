@@ -15,8 +15,11 @@ MeOH,270,,,0.018467,,,,,,Gonzalez-Salgado & Vega,GSV
 MeOH,280,803.8807,0.049,0.035394,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
 MeOH,300,783.1706,0.15,0.112876,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
 MeOH,350,732.087,1.295,1.09259,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
-MeOH,400,674.2341,6.738,5.70621,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
-MeOH,450,599.0456,24.431,19.58,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
+MeOH,400,674.2341,6.738,5.70621,,15.3,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
+MeOH,450,599.0456,24.431,19.58,,10.8,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
+MeOH,250,,,,,29.15,,,,Gonzalez-Salgado & Vega,GSV
+MeOH,298,,,,,24.7,,,,Gonzalez-Salgado & Vega,GSV
+MeOH,500,,,,,5.8,,,,Gonzalez-Salgado & Vega,GSV
 EG,325,1083.18357,0.001433817,0.000925,1131.73836,,,722,366.213,Huang et. al.,Huang
 EG,350,1066.42467,0.006908391,0.0051,1123.183502,,,722,366.213,Huang et. al.,Huang
 EG,400,1032.013062,0.13667814,0.07226,1063.573385,,,722,366.213,Huang et. al.,Huang
