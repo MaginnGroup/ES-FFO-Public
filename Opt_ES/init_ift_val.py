@@ -24,7 +24,7 @@ obj_choice = "ExpVal"
 gen_FF_mols = ["EG", "Gly", "MeOH"]
 num_restarts = 3
 # Load class properies for each training molecule
-mol_names = [ "EG", "Gly", "MeOH", "DMSO", "DEC", "DMF",]  # ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]  # ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
 
 
@@ -214,6 +214,11 @@ def init_project():
                     for i, temp in enumerate(temps):
                         max_vd = molec_data.expt_vap_density[max(temps)]
                         min_ld = molec_data.expt_liq_density[max(temps)]
+                        if (molec_name == "EG" or molec_name == "MeOH") and temp <= 430:
+                            #For EG and MeOH, set rho_thresh to avoid new data added at high T
+                            valid_temps = [t for t in temps if t <= 430]
+                            max_vd = molec_data.expt_vap_density[max(valid_temps)]
+                            min_ld = molec_data.expt_liq_density[max(valid_temps)]
                         rho_thresh = (max_vd + min_ld) / 2.0
                         for j, sample in enumerate(scaled_params):
                             # Get the LD estimate for the given sample

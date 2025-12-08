@@ -176,10 +176,6 @@ class EsolvsConstants:
         # Get the temperature bounds
         lower_bound = np.min(list(prop.keys()))
         upper_bound = np.max(list(prop.keys()))
-        #For EG and MeOH, make bounds the max value lower than temperatures of 430 K to avoid new data added
-        if self.name == "EG" or self.name == "MeOH":
-            lower_bound = np.min([k for k in prop.keys() if k <= 430.0])
-            upper_bound = np.max([k for k in prop.keys() if k <= 430.0])
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
 
@@ -189,10 +185,6 @@ class EsolvsConstants:
 
         lower_bound = np.min(list(self.expt_liq_density.values()))
         upper_bound = np.max(list(self.expt_liq_density.values()))
-        #For EG and MeOH, make bounds the max value lower than temperatures of 430 K to avoid new data added
-        if self.name == "EG" or self.name == "MeOH":
-            lower_bound = np.min([v for k, v in self.expt_liq_density.items() if k <= 430.0])
-            upper_bound = np.max([v for k, v in self.expt_liq_density.items() if k <= 430.0])
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
     
@@ -202,10 +194,6 @@ class EsolvsConstants:
 
         lower_bound = np.min(list(self.expt_vap_density.values()))
         upper_bound = np.max(list(self.expt_vap_density.values()))
-        if self.name == "EG" or self.name == "MeOH":
-            lower_bound = np.min([v for k, v in self.expt_vap_density.items() if k <= 430.0])
-            upper_bound = np.max([v for k, v in self.expt_vap_density.items() if k <= 430.0])
-
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
 
@@ -215,11 +203,6 @@ class EsolvsConstants:
 
         lower_bound = np.min(list(self.expt_surf_tens.values()))
         upper_bound = np.max(list(self.expt_surf_tens.values()))
-
-        if self.name == "EG" or self.name == "MeOH":
-            lower_bound = np.min([v for k, v in self.expt_surf_tens.items() if k <= 430.0])
-            upper_bound = np.max([v for k, v in self.expt_surf_tens.items() if k <= 430.0])
-
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
 
@@ -229,11 +212,6 @@ class EsolvsConstants:
 
         lower_bound = np.min(list(self.expt_Pvap.values()))
         upper_bound = np.max(list(self.expt_Pvap.values()))
-
-        if self.name == "EG" or self.name == "MeOH":
-            lower_bound = np.min([v for k, v in self.expt_Pvap.items() if k <= 430.0])
-            upper_bound = np.max([v for k, v in self.expt_Pvap.items() if k <= 430.0])
-
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
 
@@ -243,11 +221,6 @@ class EsolvsConstants:
 
         lower_bound = np.min(list(self.expt_Hvap.values()))
         upper_bound = np.max(list(self.expt_Hvap.values()))
-
-        if self.name == "EG" or self.name == "MeOH":
-            lower_bound = np.min([v for k, v in self.expt_Hvap.items() if k <= 430.0])
-            upper_bound = np.max([v for k, v in self.expt_Hvap.items() if k <= 430.0])
-
         bounds = np.asarray([lower_bound, upper_bound], dtype=np.float32)
         return bounds
     
@@ -353,12 +326,6 @@ expt_liq_density = {
     393.15: 1040.2,
     403.15: 1032.3,
     413.15: 1024.3,
-    450.00: 993.42,
-    500.00: 947.11,
-    550.00: 893.68,
-    600.00: 829.28,
-    650.00: 745.05,
-    700.00: 602.22,
 }
 
 # From REFPROP
@@ -368,12 +335,6 @@ expt_surf_tens = {
     393.15: 39.533,
     403.15: 38.587,
     413.15: 37.634,
-    450.00: 34.062,
-    500.00: 29.033,
-    550.00: 23.738,
-    600.00: 18.076,
-    650.00: 11.837,
-    700.00: 4.3463,
 }
 
 # From REFPROP
@@ -383,12 +344,6 @@ expt_Pvap = {
     393.15: (5.6304 * u.kPa).to_value(u.bar),
     403.15: (8.8396 * u.kPa).to_value(u.bar),
     413.15: (13.518 * u.kPa).to_value(u.bar),
-    450.00: (53.184 * u.kPa).to_value(u.bar),
-    500.00: (232.08 * u.kPa).to_value(u.bar),
-    550.00: (737.87 * u.kPa).to_value(u.bar),
-    600.00: (1881.0 * u.kPa).to_value(u.bar),
-    650.00: (4111.8 * u.kPa).to_value(u.bar),
-    700.00: (8155.7 * u.kPa).to_value(u.bar),
 }
 
 # From REFPROP
@@ -398,12 +353,6 @@ expt_Hvap = {
     393.15: 961.57,
     403.15: 951.01,
     413.15: 940.46,
-    450.00: 901.26,
-    500.00: 845.255,
-    550.00: 781.37,
-    600.00: 701.38,
-    650.00: 588.55,
-    700.00: 376.95,
 }
 
 # From REFPROP
@@ -413,12 +362,6 @@ expt_vap_density = {
     393.15: 0.10702,
     403.15: 0.16393,
     413.15: 0.24479,
-    450.00: 0.88837,
-    500.00: 3.5446,
-    550.00: 10.606,
-    600.00: 26.462,
-    650.00: 60.398,
-    700.00: 150.11,
 }
 
 # DOI: doi: 10.1021/je60048a003 (m^2/s)
@@ -815,8 +758,6 @@ expt_surf_tens = {
     300.0: 21.993,
     350.0: 17.727,
     400.0: 12.928,
-    450.0: 7.3155,
-    500.0: 1.2466, 
 }
 
 # REFPROP
@@ -826,8 +767,6 @@ expt_liq_density = {
     300.0: 784.51,
     350.0: 735.84,
     400.0: 678.59,
-    450.0: 600.49,
-    500.0: 451.53,
 }
 
 # REFPROP
@@ -837,8 +776,6 @@ expt_vap_density = {
     300.0: 0.24623,
     350.0: 1.9053,
     400.0: 8.7343,
-    450.0: 30.831,
-    500.0: 109.88,
 }
 
 # REFPROP
@@ -848,8 +785,6 @@ expt_Pvap = {
     300.0: (18.682 * u.kPa).to_value(u.bar),
     350.0: (161.72 * u.kPa).to_value(u.bar),
     400.0: (773.74 * u.kPa).to_value(u.bar),
-    450.0: (2543.3 * u.kPa).to_value(u.bar),
-    500.0: (6525.0 * u.kPa).to_value(u.bar),
 }
 
 # REFPROP
@@ -867,8 +802,6 @@ expt_Hvap = {
     300.0: 1166.17,
     350.0: 1075.936,
     400.0: 944.57,
-    450.0: 739.19,
-    500.0: 547.03,
 }
 
 #From DOI: 10.1039/F19858100769 (m^2/s)

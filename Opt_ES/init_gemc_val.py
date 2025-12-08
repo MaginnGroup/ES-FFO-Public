@@ -10,7 +10,7 @@ sys.path.remove("..")
 from utilsOpt import opt_atom_types
 
 # Load class properies for each training molecule
-mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]
+mol_names = ["EG", "Gly", "MeOH", "DMSO", "DEC", "DMF"]
 gen_FF_mols = ["EG", "Gly", "MeOH"]
 molec_dict = esolvs.make_dict(mol_names)
 
@@ -51,6 +51,34 @@ def get_gaff_sp(molec_data, state_point):
     for param in param_names:
         state_point[param] = molec_data.gaff_params[param]
     return state_point
+
+def sp_within_bounds(analyzer):
+    """
+    Check if the state point parameters are within the molecule's bounds
+    """
+    param_bounds, param_names = analyzer.get_param_bnds_names()
+    #Get the max sigma from the bounds and names
+    sigma_vals = [v for n, v in zip(param_names, param_bounds) if "sigma" in n]
+    max_sigma = np.max(sigma_vals)
+    param_bnds = analyzer.values_real_to_pref(param_bounds.T).T
+    all_molec_dir = analyzer.use_dir_name
+    if os.path.exists(all_molec_dir / "unique_best_set.csv"):
+        all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
+    #Get the best set where no bound is approached
+    param_vals = all_df.to_numpy()
+    # Find which bounds are different
+    lower_bnd = param_bnds[:, 0]
+    upper_bnd = param_bnds[:, 1]
+    dif_bnds = lower_bnd != upper_bnd
+    # Check closeness to bounds for params that have variable bounds
+    close_to_lower = np.isclose(param_vals[:,dif_bnds], lower_bnd[dif_bnds])
+    close_to_upper = np.isclose(param_vals[:,dif_bnds], upper_bnd[dif_bnds])
+    close_any = np.logical_or(close_to_lower, close_to_upper)
+    # A "valid" row has no True in close_any
+    valid_rows = ~close_any.any(axis=1)
+    # Pick first valid row or the first row if none are valid
+    best_idx = np.argmax(valid_rows) if valid_rows.any() else 0
+    return best_idx
 
 # Loop over all molecules
 for molec_name, molec_data in molec_dict.items():
@@ -104,7 +132,7 @@ for molec_name, molec_data in molec_dict.items():
                 break
             # Get best set
             if at_number == 0:
-                best_idx = 0
+                best_idx = sp_within_bounds(setup)
             else:
                 #Get the best set where no bound is approached
                 param_vals = all_df.to_numpy()
