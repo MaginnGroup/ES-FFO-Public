@@ -317,18 +317,19 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
-    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
-               "Jorgensen": ('tab:orange', '>', 1),
-               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
-               "Huang et. al.": ('gray', 's', 1),
-               "Jahn et. al.": ('gray', 's', 1),
-               "Caleman et. al.": ('gray', 's', 1),
-               "Vahid & Maginn": ('tab:orange', '>', 1),
-               "Chalaris & Samios": ('tab:green', 'p', 1),
-               "Senapati": ('gray', 's', 1),
-               "Borin & Skaf": ('tab:green', 'p', 1),
-               "Garcia-Melgarejo et. al.": ('gray', 's', 1),
-               "Luo et. al.": ('tab:orange', '>', 1),
+    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1, False),
+               "Jorgensen": ('tab:orange', '>', 1, False),
+               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1, False),
+               "Huang et. al.": ('gray', 's', 1, False),
+               "Jahn et. al.": ('gray', 's', 1, False),
+               "Caleman et. al.": ('gray', 's', 1, False),
+               "Vahid & Maginn": ('tab:orange', '>', 1, False),
+               "Chalaris & Samios": ('tab:green', 'p', 1, False),
+               "Senapati": ('gray', 's', 1, False),
+               "Borin & Skaf": ('tab:green', 'p', 1, False),
+               "Garcia-Melgarejo et. al.": ('gray', 's', 1, False),
+               "Luo et. al.": ('tab:orange', '>', 1, False),
+               "Wang et. al.": ('tab:red', 'D', 1, True),
                }
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -337,7 +338,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
 
     for i, key in enumerate(df_labels):
         if "AT-" in key: #color, marker, z_order)
-            key_map[key] = (df_colors[i], "o", len(df_ff_list))
+            key_map[key] = (df_colors[i], "o", len(df_ff_list), True)
 
     # df_labels, df_ffs = ["This Work", "GAFF", "Potoff et al.", "TraPPE", "Wang et al.", "Befort et al." ]
     # df_colors = ['blue', 'gray', '#0989d9', 'red', 'green','purple']
@@ -354,24 +355,27 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     max_temp = max(prop_data.keys())
     min_st = min(prop_data.values())
     max_st = max(prop_data.values())
-        
-    # for df in df_ff_list:
-    #     if df is not None:
-    #         min_temp = min(df["temperature"].values)
-    #         max_temp = max(df["temperature"].values)
-    #         min_st = min(df["sim_" + prop_name].values)
-    #         max_st = max(df["sim_" + prop_name].values)
-    #         break
+    # else:
+    #     for df in df_ff_list:
+    #         if df is not None:
+    #             min_temp = min(df["temperature"].values)
+    #             max_temp = max(df["temperature"].values)
+    #             min_st = min(df["sim_" + prop_name].values)
+    #             max_st = max(df["sim_" + prop_name].values)
+    #             print(f"Plotting {prop_name} for {molec}, initial min/max: {min_st}/{max_st}, {min_temp}/{max_temp}")
+    #             break
+
+    
 
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
-        df_color, df_marker, df_z_order = key_map.get(df_label, ('black', 'o', 2))
-
+        df_color, df_marker, df_z_order, show_df = key_map.get(df_label, ('black', 'o', 2, True))
+        
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
-        if df_ff is not None:
+        if df_ff is not None: #and show_df:
             min_temp, max_temp = get_min_max(min_temp, max_temp, df_ff["temperature"].values)
             all_props = ["sim_" + prop_name]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
@@ -399,6 +403,13 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                             zorder = df_z_order, label = df_label)
 
     #Plot experimental data
+    # if molec in ["MeOH", "EG"]:
+    #     keys = np.array(list(prop_data.keys()))
+    #     vals = np.array(list(prop_data.values()))
+    #     mask = keys < 430
+    #     ax2.scatter(keys[mask], vals[mask],
+    #     color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = len(df_ff_list)+1)
+    # else:
     ax2.scatter(prop_data.keys(), prop_data.values(),
         color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = len(df_ff_list)+1)
 
@@ -415,9 +426,12 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
 
     
-    ax2.set_xlim(min_temp*0.95, max_temp*1.05)
+    # print(f"Final min/max for {prop_name} for {molec}: {min_st}/{max_st}, {min_temp}/{max_temp}")
     ax2.xaxis.set_major_locator(MaxNLocator(nbins=6))
     ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
+    # if molec in ["MeOH", "EG"]:
+    #     max_temp =430
+    ax2.set_xlim(min_temp*0.95, max_temp*1.05)
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=26, pad=10)
     ax2.tick_params("both", which="major", length=8)
@@ -438,11 +452,6 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     for axis in ['top','bottom','left','right']:
         ax2.spines[axis].set_linewidth(2.0)
 
-    if molec not in ["R14", "R50", "R170", "R116"]:
-        #Substitute mole string R w/ HFC
-        molec = molec.replace("R","HFC")
-    # handles, labels = ax2.get_legend_handles_labels()
-    # for h in handles: h.set_linestyle("")
     ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     if prop_name == "diff_coeff":
         #Put text in lower right
@@ -490,6 +499,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
                "Luo et. al.": ('tab:orange', '>', 1),
+               "Wang et. al.": ('tab:red', 'D', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -682,6 +692,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Borin & Skaf": ('tab:green', 'p', 1),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
                "Luo et. al.": ('tab:orange', '>', 1),
+               "Wang et. al.": ('tab:red', 'D', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap

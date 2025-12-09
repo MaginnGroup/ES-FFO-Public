@@ -106,6 +106,36 @@ pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 file_save_lit = "analysis/lit_ff_data.csv"
 lit_data = pd.read_csv(file_save_lit, header=0)
 
+for molec_name in mol_names:
+    #Get the data from the original workflow for the best NW parameter set
+    pareto_sets = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/final-params.csv", header = 0, index_col = 0)
+    all_data = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/results.csv", header = 0, index_col = 0)
+    #Get the row where the mapd_surf_tens column is lowest
+    best_row = pareto_sets.loc[pareto_sets['mapd_surf_tens'].idxmin()]
+    #Return the array of all parameters (ignore mapd columns)
+    param_set = best_row.drop(labels=[col for col in best_row.index if "mapd" in col])
+    #Find the final parameters with the lowest surface tension
+    param_set = pd.DataFrame(param_set).T
+    mask = (all_data[param_set.columns] == param_set.iloc[0]).all(axis=1)
+
+    #Apply mask
+    all_data = all_data[mask]
+    all_data = all_data.sort_values(by='temperature', ascending=True)
+    all_data = pd.DataFrame(all_data)
+    #Add molecule column
+    all_data['molecule'] = molec_name
+    #Add ref name and short name columns
+    all_data['ref_name'] = 'Wang et. al.'
+    all_data['short_name'] = 'NW'
+    #Add sim to any column name that contains" liq_" or "surf_"
+    for col in all_data.columns:
+        if "liq_" in col or "surf_" in col:
+            all_data = all_data.rename(columns={col: "sim_" + col})
+    #Return the array of all parameters (ignore mapd columns)
+    lit_data = pd.concat([lit_data, all_data.reindex(columns=lit_data.columns)], ignore_index=True)
+
+#Save lit data with sim columns for future use
+lit_data.to_csv("analysis/lit_ff_data_w_NW.csv", index=False)
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
