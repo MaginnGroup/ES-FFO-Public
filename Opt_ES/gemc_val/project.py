@@ -985,8 +985,9 @@ def run_gemc_eq(job):
                 # Increase the counter
                 count += 1
 
-            # Set the step counter to whatever the final number of equilibration steps was
-            job.doc.nsteps_gemc_eq = total_eq_steps
+            # Set the step counter to whatever the final number of equilibration steps was OR The existing number of steps, whichever is larger
+            #This prevents reducing the number of equilibration steps and causing an error in mc.restart for production
+            job.doc.nsteps_gemc_eq = np.maximum(total_eq_steps, existing_eq_steps)
             job.doc.equil_fail = False
             # If we have at least 10* the number of production steps in equilibrium
             if job.doc.nsteps_gemc_eq > 10 * job.sp.nsteps_gemc_prod:
