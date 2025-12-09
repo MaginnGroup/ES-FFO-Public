@@ -344,13 +344,17 @@ def plot_sim_exp(mol_data, df_data, property_name):
                          zorder = 1, label = label)
 
     #Plot experimental data
+    #For MeOH and EG ignore T data > 430
+    if mol_data.name in ["MeOH", "EG"]:
+        exp_data = {k: v for k, v in exp_data.items() if k <= 430}
+
     ax2.scatter(exp_data.keys(), exp_data.values(),
         color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 2)
 
     #Set Axes
-    ax2.set_ylim(min_st*0.95,max_st*1.05)
+    # ax2.set_ylim(min_st*0.95,max_st*1.05)
     ax2.yaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
-    ax2.set_xlim(min_temp*0.95, max_temp*1.05)
+    # ax2.set_xlim(min_temp*0.95, max_temp*1.05)
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=20, pad=10)
     ax2.tick_params("both", which="major", length=8)
