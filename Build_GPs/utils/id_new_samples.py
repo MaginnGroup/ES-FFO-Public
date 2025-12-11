@@ -916,6 +916,9 @@ def check_mse_10(df_all_molec, data_dict, target_total=25, dist_seed=1, save_csv
         molecule = data_dict[mol_name]
         # Pull the results from all iterations + calculate the MSE
         df_results = df_csv.dropna().copy()
+        #Group by param names and remove any parameter sets that don't have at least 5 points
+        df_results = df_results.groupby(list(molecule.param_names)).filter(lambda x: len(x) >= 5)
+        
         df_results["expt_liq_density"] = df_results["temperature"].apply(
             lambda x: molecule.expt_liq_density[x]
         )

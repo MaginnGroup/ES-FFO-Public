@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.ticker import MultipleLocator, AutoMinorLocator
@@ -296,6 +297,84 @@ def get_min_max(curr_min, curr_max, new_vals, std_dev=None):
     
     return curr_min, curr_max
 
+# def plot_sim_exp(mol_data, df_data, property_name):
+    
+#     """
+#     Plot the surface tension for a given molecule and force field
+
+#     Parameters
+#     ----------
+#     molec_dict : dict
+#         Dictionary containing the molecule data
+#     df_ff_dict : dict
+#         Dictionary containing the force field data
+
+#     Returns
+#     -------
+#     fig : matplotlib.figure.Figure
+#         The figure object containing the plot
+#     """
+#     # Plot VLE envelopes
+#     fig, ax2 = plt.subplots(1, 1, figsize=(6,6))    
+
+#     #Initialize min and max values
+#     exp_data, prop_bounds, prop_name = get_exp_data(mol_data, property_name)
+#     min_temp = min(exp_data.keys())
+#     max_temp = max(exp_data.keys())
+#     min_st = min(exp_data.values())
+#     max_st = max(exp_data.values())
+    
+#     prop_vals = df_data[property_name].values
+#     prop_unc = df_data[property_name + "_unc"].values
+
+#     #Set new max and mins
+#     min_st, max_st = get_min_max(min_st, max_st, prop_vals, prop_unc)
+#     # #Plot opt_scheme_ms vle curve
+#     if len(df_data) == 1:
+#         ax2.errorbar(df_data["temperature"].values, prop_vals, yerr=1.96*prop_unc,
+#                     color="blue",markersize=10, linestyle='None', marker = "o", alpha=0.5, 
+#                     zorder = 1, label = "Simulation")
+#     else:
+#         param_names = list(mol_data.param_names)
+#         for i, ((param_vals), group_df) in enumerate(df_data.groupby(param_names)):
+#             label = "Simulation" if i == 0 else None
+#             prop_vals = group_df[property_name].values
+#             prop_unc = group_df[property_name + "_unc"].values
+#             ax2.errorbar(group_df["temperature"].values, prop_vals, yerr=1.96*prop_unc,
+#                          markersize=10, linestyle='None', marker = "o", alpha=0.5, 
+#                          zorder = 1, label = label)
+
+#     #Plot experimental data
+#     #For MeOH and EG ignore T data > 430
+#     if mol_data.name in ["MeOH", "EG"]:
+#         exp_data = {k: v for k, v in exp_data.items() if k <= 430}
+
+#     ax2.scatter(exp_data.keys(), exp_data.values(),
+#         color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 2)
+
+#     #Set Axes
+#     # ax2.set_ylim(min_st*0.95,max_st*1.05)
+#     ax2.yaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
+#     # ax2.set_xlim(min_temp*0.95, max_temp*1.05)
+    
+#     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=20, pad=10)
+#     ax2.tick_params("both", which="major", length=8)
+#     ax2.xaxis.set_ticks_position("both")
+#     ax2.yaxis.set_ticks_position("both")
+
+#     ax2.set_xlabel("T (K)", fontsize=20, labelpad=10)
+#     # ax2.set_ylabel(r"$\mathregular{\gamma}$ (mN/m)", fontsize=32, labelpad=15)
+#     ax2.set_ylabel(prop_name, fontsize=20, labelpad=15)
+#     # for axis in ['top','bottom','left','right']:
+#     #     ax2.spines[axis].set_linewidth(2.0)
+
+#     # for h in handles: h.set_linestyle("")
+#     fig.legend(loc="upper center", ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+#     ax2.text(0.60,  0.82, mol_data.name, fontsize=30, transform=ax2.transAxes)
+#     fig.subplots_adjust(bottom=0.2, top=0.85, left=0.15, right=0.95, wspace=0.55)
+
+#     return fig
+
 def plot_sim_exp(mol_data, df_data, property_name):
     
     """
@@ -314,7 +393,11 @@ def plot_sim_exp(mol_data, df_data, property_name):
         The figure object containing the plot
     """
     # Plot VLE envelopes
-    fig, ax2 = plt.subplots(1, 1, figsize=(6,6))    
+    fig, ax2 = plt.subplots(1, 1, figsize=(6,6)) 
+    matplotlib.rcdefaults()
+    plt.style.use('default')
+    # ax2.set_prop_cycle(None)
+       
 
     #Initialize min and max values
     exp_data, prop_bounds, prop_name = get_exp_data(mol_data, property_name)
@@ -323,25 +406,48 @@ def plot_sim_exp(mol_data, df_data, property_name):
     min_st = min(exp_data.values())
     max_st = max(exp_data.values())
     
-    prop_vals = df_data[property_name].values
-    prop_unc = df_data[property_name + "_unc"].values
-
-    #Set new max and mins
-    min_st, max_st = get_min_max(min_st, max_st, prop_vals, prop_unc)
-    # #Plot opt_scheme_ms vle curve
-    if len(df_data) == 1:
-        ax2.errorbar(df_data["temperature"].values, prop_vals, yerr=1.96*prop_unc,
-                    color="blue",markersize=10, linestyle='None', marker = "o", alpha=0.5, 
-                    zorder = 1, label = "Simulation")
+    # Normalize df_data into iterable (label, df) pairs
+    if isinstance(df_data, dict):
+        items = df_data.items()
+        default_label = None
+        label_exp = "Exp."
+        ncol = len(df_data) + 1
     else:
+        items = [("Simulation", df_data)]
+        default_label = "Simulation"
+        label_exp = "Experiment"
+        ncol = 2
+
+    for label, df in items:
+        prop_vals = df[property_name].values
+        prop_unc = df[property_name + "_unc"].values
+
+        # Update min/max
+        min_st, max_st = get_min_max(min_st, max_st, prop_vals, prop_unc)
+
+        # Case 1: Only one row → no grouping needed
+        if len(df) == 1:
+            ax2.errorbar(
+                df["temperature"].values, prop_vals, yerr=1.96 * prop_unc,
+                color="blue", markersize=10, linestyle='None', marker="o",
+                alpha=0.5, zorder=1,
+                label=label if default_label is None else default_label,
+            )
+            continue
+
+        # Case 2: Multiple rows → group by params
         param_names = list(mol_data.param_names)
-        for i, ((param_vals), group_df) in enumerate(df_data.groupby(param_names)):
-            label = "Simulation" if i == 0 else None
+        for i, ((param_names), group_df) in enumerate(df.groupby(param_names)):
+            grp_label = label if default_label is None else (default_label if i == 0 else None)
+
             prop_vals = group_df[property_name].values
             prop_unc = group_df[property_name + "_unc"].values
-            ax2.errorbar(group_df["temperature"].values, prop_vals, yerr=1.96*prop_unc,
-                         markersize=10, linestyle='None', marker = "o", alpha=0.5, 
-                         zorder = 1, label = label)
+            
+            ax2.errorbar(
+                group_df["temperature"].values, prop_vals, yerr=1.96 * prop_unc,
+                markersize=10, linestyle='None', marker="o", alpha=0.5,
+                zorder=1, label=grp_label
+            )
 
     #Plot experimental data
     #For MeOH and EG ignore T data > 430
@@ -349,7 +455,7 @@ def plot_sim_exp(mol_data, df_data, property_name):
         exp_data = {k: v for k, v in exp_data.items() if k <= 430}
 
     ax2.scatter(exp_data.keys(), exp_data.values(),
-        color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 2)
+        color="black",marker="x",linewidths=2,s=100,label=label_exp, zorder = 2)
 
     #Set Axes
     # ax2.set_ylim(min_st*0.95,max_st*1.05)
@@ -368,7 +474,7 @@ def plot_sim_exp(mol_data, df_data, property_name):
     #     ax2.spines[axis].set_linewidth(2.0)
 
     # for h in handles: h.set_linestyle("")
-    fig.legend(loc="upper center", ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    fig.legend(loc="upper center", ncol=ncol, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     ax2.text(0.60,  0.82, mol_data.name, fontsize=30, transform=ax2.transAxes)
     fig.subplots_adjust(bottom=0.2, top=0.85, left=0.15, right=0.95, wspace=0.55)
 
