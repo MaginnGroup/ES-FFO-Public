@@ -403,3 +403,37 @@ def eval_model_performance(models, x_data, y_data, property_bounds, xtrain=None,
         print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
 
     return mse_model, mse_label
+
+def loo_model_perform(models, x_data, y_data, property_bounds):
+    """Plot the predictions vs. result for one or more GP models
+
+    Parameters
+    ----------
+    models : dict { label : model }
+        Each model to be plotted (value, GPFlow model) is provided
+        with a label (key, string)
+    x_data : np.array
+        data to create model predictions for
+    y_data : np.ndarray
+        correct answer
+    property_bounds : array-like
+        bounds for scaling density between physical
+        and dimensionless values
+
+    Returns
+    -------
+    matplotlib.Figure.figure
+    """
+    y_data_physical = values_scaled_to_real(y_data, property_bounds)
+    # print("True Values", y_data_physical)
+
+    for label, model in models.items():
+        gp_mu, gp_var = model.predict_f(x_data)
+        gp_mu_physical = values_scaled_to_real(gp_mu, property_bounds)
+        # print("GP Pred",gp_mu_physical)
+        meansqerr = np.nanmean((gp_mu_physical - y_data_physical.reshape(-1, 1)) ** 2)
+        mapd = np.nanmean(np.abs((gp_mu_physical - y_data_physical.reshape(-1, 1)) / y_data_physical.reshape(-1, 1))) * 100.0
+
+        # print("Model: {}. Mean squared err: {:.2e}".format(label, meansqerr))
+
+    return meansqerr, mapd
