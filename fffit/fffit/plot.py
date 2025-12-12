@@ -323,6 +323,7 @@ def plot_model_vs_exp(
     property_bounds,
     plot_bounds=[220.0, 340.0],
     property_name="property",
+    other_data = None
 ):
     """Plots the GP model(s) as a function of temperature with all other parameters
     taken as param_values. Overlays training and testing points with the same
@@ -346,6 +347,9 @@ def plot_model_vs_exp(
         temperature bounds for the plot
     property_name : str, optional, default="property"
         property name with units for axis label
+    other_data : pd.DataFrame, optional
+        Additional data to plot with error bars if available
+        0 = temperature, 1 = property, 2 = uncertainty (if available)
 
     Returns
     -------
@@ -370,7 +374,7 @@ def plot_model_vs_exp(
 
                 mean = values_scaled_to_real(mean_scaled, property_bounds)
                 var = variances_scaled_to_real(var_scaled, property_bounds)
-                ax.plot(vals, mean, lw=2, label=key + " " + label)
+                ax.plot(vals, mean, lw=2, label=key, zorder = 1) #+ " " + label)
                 ax.fill_between(
                     vals[:, 0],
                     mean[:, 0] - 1.96 * np.sqrt(var[:, 0]),
@@ -379,17 +383,42 @@ def plot_model_vs_exp(
                 )
 
     ax.set_title("GP Model vs. Exp Data for " + label)
+    
+    if isinstance(other_data, dict):
+        extra_markers = ['^','D','p','P','*']
+        #Determine z_order
+        for i, (data_key, df) in enumerate(other_data.items()):
+            other_temps = df.iloc[:,0]
+            other_property = df.iloc[:,1]
+            if df.shape[1] > 2:
+                other_unc = df.iloc[:,2]
+                ax.errorbar(other_temps, other_property, yerr=other_unc, fmt=extra_markers[i % len(extra_markers)], label=data_key, alpha = 0.5, zorder =4-i)
+            else:
+                ax.plot(other_temps, other_property, extra_markers[i % len(extra_markers)], label=data_key, alpha = 0.5, zorder =4-i)
+
+    #If label is MeOH or EG, limit exp temperature to plot to less than 430K
+    if "MeOH" in label or "EG" in label:
+        exp_data = {k:v for k,v in exp_data.items() if k <= 430.0}
+        
     exp_temp = np.array(list(exp_data.keys()))
     exp_property = np.array(list(exp_data.values()))
-    ax.plot(exp_temp, exp_property, "s", color="black", label="Exp")
-
+    ax.plot(exp_temp, exp_property, "s", color="black", label="Exp",zorder=2)
+    
     ax.set_xlabel("Temperature")
     ax.set_ylabel(property_name)
     # print(property_name)
-    if "Liquid Density" in property_name or "Enthalpy" in property_name:
-        plt.legend(loc="lower left")
-    else:
-        plt.legend(loc="upper left")
+    handles, labels = ax.get_legend_handles_labels()
+    #Move "Exp" to the end of the legend
+    if "Exp" in labels:
+        exp_index = labels.index("Exp")
+        handles.append(handles.pop(exp_index))
+        labels.append(labels.pop(exp_index))
+    ncol = len(labels) if len(labels) < 4 else np.ceil(len(labels)/2)
+    ax.legend(handles, labels,loc='lower center',bbox_to_anchor=(0.5, 1.05),ncol=ncol, frameon=True)
+    # if "Liquid Density" in property_name or "Enthalpy" in property_name or "Surface Tension" in property_name:
+    #     plt.legend(loc="lower left")
+    # else:
+    #     plt.legend(loc="upper left")
     # fig.legend()
 
     if not mpl_is_inline:
