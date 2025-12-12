@@ -19,9 +19,11 @@ num_restarts = 3  # Number of restarts for replications
 n_vap = 160  # number of molecules in vapor phase
 n_liq = 640
 obj_choice = "ExpVal"  # Objective to consider
+mode = "no_opt"
 
 # Initialize project
-project = signac.init_project("gemc_val")
+proj_name = "gemc_val" if mode == None else f"gemc_val_{mode}"
+project = signac.init_project(proj_name)
 
 def unpack_molec_values(molec_name, at_class, sample, state_point):
     """
@@ -126,31 +128,42 @@ for molec_name, molec_data in molec_dict.items():
             max_sigma = np.max(sigma_vals)
             param_bnds =setup.values_real_to_pref(param_bounds)
             all_molec_dir = setup.use_dir_name
-            if os.path.exists(all_molec_dir / "unique_best_set.csv"):
-                all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
+            if mode == "opt" or mode == None:
+                if os.path.exists(all_molec_dir / "unique_best_set.csv"):
+                    all_df = pd.read_csv(all_molec_dir / "unique_best_set.csv", header=0)
+                else:
+                    break
+                # Get best set
+                if at_number == 0:
+                    best_idx = sp_within_bounds(setup)
+                else:
+                    #Get the best set where no bound is approached
+                    param_vals = all_df.to_numpy()
+                    # Find which bounds are different
+                    lower_bnd = param_bnds[:, 0]
+                    upper_bnd = param_bnds[:, 1]
+                    dif_bnds = lower_bnd != upper_bnd
+                    # Check closeness to bounds for params that have variable bounds
+                    close_to_lower = np.isclose(param_vals[:,dif_bnds], lower_bnd[dif_bnds])
+                    close_to_upper = np.isclose(param_vals[:,dif_bnds], upper_bnd[dif_bnds])
+                    close_any = np.logical_or(close_to_lower, close_to_upper)
+                    # A "valid" row has no True in close_any
+                    valid_rows = ~close_any.any(axis=1)
+                    # Pick first valid row or the first row if none are valid
+                    best_idx = np.argmax(valid_rows) if valid_rows.any() else 0
+                all_best_real = setup.values_pref_to_real(all_df.iloc[best_idx].values)
             else:
-                break
-            # Get best set
-            if at_number == 0:
-                best_idx = sp_within_bounds(setup)
-            else:
-                #Get the best set where no bound is approached
-                param_vals = all_df.to_numpy()
-                # Find which bounds are different
-                lower_bnd = param_bnds[:, 0]
-                upper_bnd = param_bnds[:, 1]
-                dif_bnds = lower_bnd != upper_bnd
-                # Check closeness to bounds for params that have variable bounds
-                close_to_lower = np.isclose(param_vals[:,dif_bnds], lower_bnd[dif_bnds])
-                close_to_upper = np.isclose(param_vals[:,dif_bnds], upper_bnd[dif_bnds])
-                close_any = np.logical_or(close_to_lower, close_to_upper)
-                # A "valid" row has no True in close_any
-                valid_rows = ~close_any.any(axis=1)
-                # Pick first valid row or the first row if none are valid
-                best_idx = np.argmax(valid_rows) if valid_rows.any() else 0
+                #If not using optimized parameter sets, putt the lowest IFT error set from IFT pareto iterations
+                # Load all IFT pareto sets and choose the one with the lowest ST error
+                pareto_sets = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/final-params.csv", header = 0, index_col = 0)
+                #Get the row where the mapd_surf_tens column is lowest
+                best_idx = pareto_sets['mapd_surf_tens'].idxmin()
+                best_row = pareto_sets.loc[best_idx]
+                #Return the array of all parameters (ignore mapd columns)
+                all_best_real = best_row.drop(labels=[col for col in best_row.index if "mapd" in col]).values
 
             state_point["param_set"] = best_idx + 1
-            all_best_real = setup.values_pref_to_real(all_df.iloc[best_idx].values)
+            
             # Parameters in units nm and kJ/mol
             if at_number > 0:
                 param_matrix = setup.at_class.get_transformation_matrix({molec_name: molec_data})
