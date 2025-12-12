@@ -7,6 +7,7 @@ files_for_tests/*
 *Project*-*.o*
 *Project*-bundle*
 *iter-1_old*
+*bad_iter2*
 *LHS_5*
 analysis_old*
 *.pdf
