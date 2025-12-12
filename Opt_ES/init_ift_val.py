@@ -26,7 +26,7 @@ num_restarts = 3
 # Load class properies for each training molecule
 mol_names = ["EG" , "Gly", "MeOH", "DMSO", "DEC", "DMF"]  # ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
 molec_dict = esolvs.make_dict(mol_names)
-
+mode = "no_opt" #"no_opt" # "opt"
 
 def calc_nmols(sp):
     """
@@ -163,7 +163,8 @@ def init_project():
             vle_iter = determine_iter(molec_name)
 
             # Initialize project
-            project = signac.init_project("ift_val")
+            proj_name = f"ift_val_{mode}" if mode != None else "ift_val"
+            project = signac.init_project(proj_name)
 
             # Get the parameter bounds for the molecule
             bounds = molec_data.param_bounds
@@ -178,11 +179,22 @@ def init_project():
                 if at_number == 0 or molec_name in gen_FF_mols:
                     # Load samples from the opt_at_params Results folder
                     analyzer = opt_atom_types.Analyze_opt_res(molec_names, at_number, 1, obj_choice)
-                    unique_real = pd.read_csv(os.path.join(analyzer.use_dir_name , "unique_best_set.csv"), header=0).values
-                    best_idx = sp_within_bounds(analyzer)
-                    # best_idx = 0 if at_number == 0 else 2  # Use only the best set
-                    #Write script to only use 2nd best set for generalized FFs to avoid bound issues
-                    unique_best = unique_real[best_idx]  # Use only the best set
+
+                    if mode == None or mode == "opt":
+                        unique_real = pd.read_csv(os.path.join(analyzer.use_dir_name , "unique_best_set.csv"), header=0).values
+                        best_idx = sp_within_bounds(analyzer)
+                        # best_idx = 0 if at_number == 0 else 2  # Use only the best set
+                        #Write script to only use 2nd best set for generalized FFs to avoid bound issues
+                        unique_best = unique_real[best_idx]  # Use only the best set
+                    else:
+                        # Load all IFT pareto sets and choose the one with the lowest ST error
+                        pareto_sets = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/final-params.csv", header = 0, index_col = 0)
+                        #Get the row where the mapd_surf_tens column is lowest
+                        best_idx = pareto_sets['mapd_surf_tens'].idxmin()
+                        best_row = pareto_sets.loc[best_idx]
+                        #Return the array of all parameters (ignore mapd columns)
+                        unique_real = best_row.drop(labels=[col for col in best_row.index if "mapd" in col]).values
+                        unique_best = analyzer.values_real_to_pref(unique_real.reshape(1,-1)).flatten()
                     # If using generalized atom types, transform the parameters to the distinct parameters for the molecule
                     if at_number > 0:
                         param_matrix = analyzer.at_class.get_transformation_matrix({molec_name: molec_data})
