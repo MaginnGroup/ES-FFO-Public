@@ -266,6 +266,9 @@ def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_see
         os.makedirs(dir_name, exist_ok=True)
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
+        param_names = list(data.param_names)
+        #Remove groups of parameters that do not have at least 5 LD points with groupby
+        df_liq = df_liq.groupby(param_names).filter(lambda x: len(x) >= 5)
 
         models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(
             df_liq, data, dir_name, gp_shuffle_seed

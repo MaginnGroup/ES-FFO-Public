@@ -6,6 +6,7 @@ files_for_tests/*
 *example_output_files
 *Project*-*.o*
 *Project*-bundle*
+*iter-1_old*
 *LHS_5*
 analysis_old*
 *.pdf
