@@ -91,12 +91,24 @@ def get_gp_data_from_pkl(key_list):
         gp_dict = {}    
         with open(file_fin, "rb") as pickle_file:
             gp_models, best_labels = pickle.load(pickle_file)
-            for prop in best_labels.keys():
+
+        for prop in best_labels.keys():
+            if prop == "sim_liq_density":
+                #Use LD GPs for liq density
+                files_ld = sorted(glob.glob(f"{path_use}/Build_GPs/analysis/{key}/ld_iters/iter-*/gp_models.pkl"))
+                file_fin_ld = Path(files_ld[-1])
+                #Ensure the file exists
+                assert (file_fin_ld.exists()), f"{os.path.abspath(file_fin_ld)} does not exist. Check file path carefully."
+                #Load the last file (most recent LD iter GPs) 
+                with open(file_fin_ld, "rb") as pickle_file_ld:
+                    gp_models_ld, best_labels_ld = pickle.load(pickle_file_ld)
+                gp_dict[prop] = gp_models_ld[prop]["RQ"]
+            else:
                 #Use GP for liq density and Matern 52 for ST
                 kern = "RQ" if "liq" in prop else "Matern52"
                 gp_dict[prop] = gp_models[prop][kern]
 
-            all_gp_dict[key] = gp_dict
+        all_gp_dict[key] = gp_dict
 
     return all_gp_dict
 
@@ -517,13 +529,29 @@ class Problem_Setup:
         test_data = {}
         train_data = {}
         for strng in ["train", "test"]:
-            # OPTIONAL (but not implemented here) append the MD density gp to the VLE density gp dictionary w/ key "MD Density"
-            files = sorted(glob.glob(f"Build_GPs/analysis/{molec_key}/vle_iters/iter-*/best_gp_models.pkl"))
-            file_fin = files[-1]
-            dir_fin = os.path.join(os.path.dirname(file_fin), "train_test_sets")
-            dict = train_data if strng == "train" else test_data
+            # # OPTIONAL (but not implemented here) append the MD density gp to the VLE density gp dictionary w/ key "MD Density"
+            # files = sorted(glob.glob(f"Build_GPs/analysis/{molec_key}/vle_iters/iter-*/best_gp_models.pkl"))
+            # file_fin = files[-1]
+            # dir_fin = os.path.join(os.path.dirname(file_fin), "train_test_sets")
+            # dict = train_data if strng == "train" else test_data
 
+            # for prop_key in prop_keys:
+            #     file_x = os.path.join(dir_fin, f"{prop_key}_x_{strng}.csv")
+            #     file_y =  os.path.join(dir_fin, f"{prop_key}_y_{strng}.csv")
+            #     x = np.loadtxt(file_x, delimiter=",", skiprows=1)            
+            #     prop_data = np.loadtxt(file_y, delimiter=",", skiprows=1)
+            #     dict[prop_key] = prop_data
+            #     dict[prop_key + "_x"] = x
+            # OPTIONAL (but not implemented here) append the MD density gp to the VLE density gp dictionary w/ key "MD Density"
             for prop_key in prop_keys:
+                if prop_key != "sim_liq_density":
+                    files = sorted(glob.glob(f"Build_GPs/analysis/{molec_key}/vle_iters/iter-*/best_gp_models.pkl"))
+                else:
+                    #Use LD GPs for liq density
+                    files = sorted(glob.glob(f"Build_GPs/analysis/{molec_key}/ld_iters/iter-*/best_gp_models.pkl"))
+                file_fin = files[-1]
+                dir_fin = os.path.join(os.path.dirname(file_fin), "train_test_sets")
+                dict = train_data if strng == "train" else test_data
                 file_x = os.path.join(dir_fin, f"{prop_key}_x_{strng}.csv")
                 file_y =  os.path.join(dir_fin, f"{prop_key}_y_{strng}.csv")
                 x = np.loadtxt(file_x, delimiter=",", skiprows=1)            
