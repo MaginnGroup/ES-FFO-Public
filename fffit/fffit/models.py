@@ -37,6 +37,18 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
                 as a trainable (or fitting) parameter. If False, this value is
                 fixed at 10^-5.
                 The default is True.
+            . mean_function : string
+                Type of mean function for the GP model. One of:
+                    . 'Zero' - No mean function
+                    . 'Linear' - Linear mean function
+                The default is 'Zero'.
+            . anisotropic : boolean
+                Whether to use anisotropic lengthscales (one per input
+                dimension) or isotropic (one lengthscale for all input
+                dimensions).                The default is True.
+            . noise_var : float
+                Initial value for the noise variance of the likelihood.
+                Default is 1e-5.
         The default is {}.
 
     Raises
@@ -56,6 +68,7 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
     trainLikelihood=gpConfig.get('trainLikelihood','True')
     typeMeanFunc=gpConfig.get('mean_function','Zero')
     anisotropy=gpConfig.get('anisotropic','True')
+    noise_var=gpConfig.get('noise_var',10**-5)
     
     #Get hyperparameters
     hypers = get_init_hypers(retrain, x_train, anisotropy= anisotropy)
@@ -91,7 +104,7 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
         raise ValueError('Invalid mean function type')
 
     # Build GP model    
-    model=gpflow.models.GPR((x_train,y_train.reshape(-1,1)),gpKernel,mean_function=mf, noise_variance=10**-5)
+    model=gpflow.models.GPR((x_train,y_train.reshape(-1,1)),gpKernel,mean_function=mf, noise_variance=noise_var)
     # model_pretrain = copy.deepcopy(model)
     # print(gpflow.utilities.print_summary(model_pretrain))
     condition_number = np.linalg.cond(model.kernel(x_train))
