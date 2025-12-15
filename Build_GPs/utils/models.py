@@ -9,12 +9,15 @@ import pickle
 from matplotlib.backends.backend_pdf import PdfPages
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn import svm
+from sklearn.linear_model import LinearRegression
+import glob
+import pathlib as Path
 
 # sys.path.append("../")
 sys.path.append("../..")
 from utils.prep_ms_data import prepare_df_props
 from fffit.fffit.models import run_gpflow_scipy
-from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real
+from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real, variances_scaled_to_real
 from fffit.fffit.plot import plot_model_performance
 
 sys.path.remove("../..")
@@ -200,6 +203,10 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
         "mean_function": "Linear",
     }
 
+    #FOr IFT set noise vriance
+    # if property_name == "sim_surf_tens":
+    #     gpConfig["trainLikelihood"] = False
+
     ### Fit GP Model to liquid density
     param_names = list(data.param_names) + ["temperature"]
 
@@ -227,6 +234,87 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
 
     return models, x_train, y_train, x_test, y_test
 
+def get_Eotvos_scale(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_seed=42):
+    # Get all data
+    eotvos_coeffs = {}
+    for mol_name, df_csv in all_df_data.items():
+        #Get LD GPs
+        files_ld = sorted(glob.glob(f"Build_GPs/analysis/{mol_name}/ld_iters/iter-*/gp_models.pkl"))
+        file_fin_ld = Path(files_ld[-1])
+        #Ensure the file exists
+        assert (file_fin_ld.exists()), f"{os.path.abspath(file_fin_ld)} does not exist. Check file path carefully."
+        #Load the last file (most recent LD iter GPs) 
+        with open(file_fin_ld, "rb") as pickle_file_ld:
+            gp_models_ld, best_labels_ld = pickle.load(pickle_file_ld)
+        LD_model = gp_models_ld["sim_liq_density"]["RQ"]
+        data = data_dict[mol_name]
+        #Get Tc, and ST values
+        Tc = data.expt_Tc
+        st_exp_data = data.expt_surf_tens
+        if mol_name  == "MeOH" or mol_name == "EG":
+            #Only get values where key < 430
+            st_exp_data = {k: v for k, v in st_exp_data.items() if k < 430}
+        st_data = st_exp_data.values()
+
+        # Filter out rows with NaN values
+        df_csv = df_csv.dropna().copy() 
+        ld_threshold = (
+            min(list(data.expt_liq_density.values()))
+            + max(list(data.expt_vap_density.values()))
+        ) / 2
+        # df_csv = all_df_data[mol_name]
+        iter_num = df_csv["iter"].max()
+
+        dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
+        os.makedirs(dir_name, exist_ok=True)
+        #Get only liquid data, but do not scale
+        df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale = False)
+        df_all_scl, df_liq_scl, df_vapor_scl = prepare_df_props(df_csv, data, ld_threshold, scale = True)
+        param_names = list(data.param_names)
+        #Remove groups of parameters that do not have at least 5 LD points with groupby
+        df_liq = df_liq.groupby(param_names).filter(lambda x: len(x) >= 5)
+        df_liq_scl = df_liq_scl.groupby(param_names).filter(lambda x: len(x) >= 5)
+
+        groups = df_liq.groupby(param_names)
+        groups_scl = df_liq_scl.groupby(param_names)
+
+        #Initialize eotvos mad list
+        eotvos_mad_list = []
+        for i, ((param_vals, group_df), (_, group_df_scl)) in enumerate(zip(groups, groups_scl)):
+            #Organize group_df by temperature
+            group_df = group_df.sort_values(by="temperature")
+            #For each group, get sim_surf_tens and temperatures
+            sim_surf_tens = group_df["sim_surf_tens"].values
+            # sim_liq_dens = group_df["sim_liq_density"].values
+            #Get GP-predicted LD
+            GP_data = group_df_scl[param_names + ["temperature"]].values
+            sim_liq_dens_scl, unc = LD_model.predict_f(GP_data)
+            
+            #Unscale GP-LD values
+            y_bounds = data.liq_density_bounds
+            y_bounds_st = data.surf_tens_bounds
+            sim_liq_dens = values_scaled_to_real(sim_liq_dens_scl, y_bounds).flatten()
+
+            #Fit Eotvos equation (ST = k*(M/rho_l)^(-2/3)*(Tc - 6 - T))
+            temperatures = group_df["temperature"].values
+            # X_eotvos = (Tc - 6 -temperatures).reshape(-1, 1)
+            X_eotvos = temperatures.reshape(-1, 1)
+            y_eotvos = sim_surf_tens*(((data.molecular_weight/1000) / (sim_liq_dens)) ** (2/3))
+            reg = LinearRegression(fit_intercept=True).fit(X_eotvos, y_eotvos)
+            #Predict ST using Eotvos
+            eotvos_ST = reg.predict(X_eotvos)/(((data.molecular_weight/1000) / (sim_liq_dens)) ** (2/3))
+            #Claculate MAD between Eotvos and sim_surf_tens
+            mad_eotvos = np.mean(np.abs(eotvos_ST - sim_surf_tens))
+            
+            eotvos_mad_list.append(mad_eotvos)
+        #Get the maximum Eotvos MAD for this molecule, this is the estimated "true" stdev
+        #If glycerol use the mean, otherwise use max
+        if mol_name == "Gly":
+            avg_eotvos_mad = np.mean(eotvos_mad_list)
+        else:
+            avg_eotvos_mad = np.max(eotvos_mad_list)
+        eotvos_coeffs[mol_name] = avg_eotvos_mad
+    return eotvos_coeffs
 
 def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_seed=42):
     """
