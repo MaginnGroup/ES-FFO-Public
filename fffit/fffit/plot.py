@@ -392,7 +392,7 @@ def plot_model_vs_exp(
             other_property = df.iloc[:,1]
             if df.shape[1] > 2:
                 other_unc = df.iloc[:,2]
-                ax.errorbar(other_temps, other_property, yerr=other_unc, fmt=extra_markers[i % len(extra_markers)], label=data_key, alpha = 0.5, zorder =4-i)
+                ax.errorbar(other_temps, other_property, yerr=1.96*other_unc, fmt=extra_markers[i % len(extra_markers)], label=data_key, alpha = 0.5, zorder =4-i)
             else:
                 ax.plot(other_temps, other_property, extra_markers[i % len(extra_markers)], label=data_key, alpha = 0.5, zorder =4-i)
 
