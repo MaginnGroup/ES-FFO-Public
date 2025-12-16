@@ -10,6 +10,7 @@ files_for_tests/*
 *old_data*
 *no_outlier*
 *bad_iter2*
+*Eot_*
 *LHS_5*
 analysis_old*
 *.pdf

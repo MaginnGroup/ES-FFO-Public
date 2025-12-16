@@ -89,6 +89,29 @@ def variances_scaled_to_real(scaled_variances, bounds):
 
     return scaled_variances * (bounds[:, 1] - bounds[:, 0]) ** 2
 
+def variances_real_to_scaled(real_variances, bounds):
+    """Convert variance in scaled dimensionless values to physical units
+
+    Parameters
+    ----------
+    real_variances : array_like, shape=(n,m)
+        Input variances (unscaled)
+    bounds : array_like, shape=(m,2)
+        Bounds to scale `real_variances`. Lower bound is 0 and upper bound
+        is 1 in `real_values`.
+
+    Returns
+    -------
+    real_vars : np.ndarray, shape=(n,m)
+        The variance values in unscaled units
+    """
+    real_variances, bounds = _clean_bounds_values(real_variances, bounds)
+
+    if (real_variances < 0.0).any():
+        raise ValueError("Variance cannot be less than zero")
+
+    return real_variances / (bounds[:, 1] - bounds[:, 0]) ** 2
+
 
 def _clean_bounds_values(values, bounds):
     values = np.asarray(values)

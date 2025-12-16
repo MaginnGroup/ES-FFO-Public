@@ -68,11 +68,13 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
     trainLikelihood=gpConfig.get('trainLikelihood','True')
     typeMeanFunc=gpConfig.get('mean_function','Zero')
     anisotropy=gpConfig.get('anisotropic','True')
-    noise_var=gpConfig.get('noise_var',10**-5)
+    
     
     #Get hyperparameters
     hypers = get_init_hypers(retrain, x_train, anisotropy= anisotropy)
     lengthscale_, variance_, alpha_, white_var = hypers
+    #set noise variance as white_var unless specified otherwise
+    noise_var=gpConfig.get('noise_var',white_var)
     # print("lengthscale_", lengthscale_)
     # print("variance_", variance_)
     # print("alpha_", alpha_)
@@ -91,7 +93,16 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
     
     # Add White kernel
     if useWhiteKernel: 
-        gpKernel=gpKernel+gpflow.kernels.White(variance = white_var)
+        gpKernel=gpKernel+gpflow.kernels.White(variance = noise_var)
+        #Set initial noise variance as untrainable if the noise_var is not the same as white_var
+        if noise_var != white_var:
+            gpflow.utilities.set_trainable(gpKernel.kernels[-1].variance,False)
+        noise_variance = 1e-5 #This value is the GP jitter default
+    else:
+        if noise_var != white_var:
+            noise_variance = noise_var #This would be the Eotvos scaled variance
+        else:
+            noise_variance = 1e-5 #This value is the GP jitter default
             
     # Add Mean function
     if typeMeanFunc == 'Zero':
@@ -104,7 +115,7 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
         raise ValueError('Invalid mean function type')
 
     # Build GP model    
-    model=gpflow.models.GPR((x_train,y_train.reshape(-1,1)),gpKernel,mean_function=mf, noise_variance=noise_var)
+    model=gpflow.models.GPR((x_train,y_train.reshape(-1,1)),gpKernel,mean_function=mf, noise_variance=noise_variance)
     # model_pretrain = copy.deepcopy(model)
     # print(gpflow.utilities.print_summary(model_pretrain))
     condition_number = np.linalg.cond(model.kernel(x_train))

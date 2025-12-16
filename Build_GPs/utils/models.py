@@ -11,13 +11,13 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn import svm
 from sklearn.linear_model import LinearRegression
 import glob
-import pathlib as Path
+from pathlib import Path
 
 # sys.path.append("../")
 sys.path.append("../..")
 from utils.prep_ms_data import prepare_df_props
 from fffit.fffit.models import run_gpflow_scipy
-from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real, variances_scaled_to_real
+from fffit.fffit.utils import shuffle_and_split, values_scaled_to_real, variances_scaled_to_real, values_real_to_scaled, variances_real_to_scaled
 from fffit.fffit.plot import plot_model_performance
 
 sys.path.remove("../..")
@@ -69,7 +69,7 @@ def get_exp_data(molec_object, prop_key):
     return exp_data, property_bounds, property_name
 
 
-def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
+def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42, eotvos_scale=None):
     """
     Get the best GP model for a given property and save the training and test data to a file.
 
@@ -126,7 +126,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
                     df_data_filt = df_data
 
                 models, x_train, y_train, x_test, y_test = fit_gp_models(
-                    df_data_filt, data, prop_name, None, gp_shuffle_seed, False, data_path=dir_train_test
+                    df_data_filt, data, prop_name, None, gp_shuffle_seed, False, data_path=dir_train_test, eotvos_scale=eotvos_scale
                 )
                 exp_data, property_bounds, name = get_exp_data(data, prop_name)
                 # The best model is the one with the lowest MSE on the test set and not overfitting
@@ -156,7 +156,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
     }
 
     # Optionally, put the best_label here, but for now we use RQ as the best model
-    models_rq = {prop: models_props[prop]["RQ"] for prop in models_props.keys()}
+    models_rq = {prop: models_props[prop]["RQ"] for prop in models_props.keys() if "RQ" in models_props[prop].keys()}
 
     if not os.path.exists(best_model_path):
         with open(best_model_path, "wb") as f:
@@ -171,7 +171,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
     return models_best, models_rq, models_props, dir_train_test, best_labels
 
 
-def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig=False, data_path=None):
+def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig=False, data_path=None, eotvos_scale=None):
     """
     Fit GP models to the given property data and plot the model performance.
 
@@ -203,7 +203,9 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
     y_test : np.ndarray
         The test labels for the GP models.
     """
-    if data.name == "Glycerol":
+    # if (data.name != "Glycerol" and "liq_density" not in property_name) or (data.name == "Gly" and "liq_density" in property_name):
+    # if data.name == "Glycerol":
+    if "surf_tens" in property_name or (data.name == "Gly" and "liq_density" in property_name):
         gpConfig = {
             "useWhiteKernel": True, #Swap for Gly 
             "trainLikelihood": False, #Swap for Gly
@@ -218,10 +220,11 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
             "mean_function": "Linear",
         }
 
-    #FOr IFT set noise vriance
-    # if property_name == "sim_surf_tens":
-    #     gpConfig["trainLikelihood"] = False
-
+    #For IFT set noise vriance
+    if eotvos_scale != None and "surf_tens" in property_name:
+        gpConfig["trainLikelihood"] = False
+        gpConfig["noise_var"] = eotvos_scale #This is a scaled variance
+    # print(gpConfig)
     ### Fit GP Model to liquid density
     param_names = list(data.param_names) + ["temperature"]
 
@@ -243,8 +246,8 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
 
     # Fit model
     models = {}
-
-    for kernel in ["RBF", "Matern32", "Matern52", "RQ"]:
+    kernels = ["RBF", "Matern32", "Matern52", "RQ"]
+    for kernel in kernels:
         gpConfig["kernel"] = kernel
         models[kernel] = run_gpflow_scipy(x_train, y_train, gpConfig, restarts=3)
 
@@ -257,87 +260,92 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
 
     return models, x_train, y_train, x_test, y_test
 
-def get_Eotvos_scale(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_seed=42):
+def get_Eotvos_scale(df_csv, data_dict, mol_name, iter_type="vle_iters"):
     # Get all data
-    eotvos_coeffs = {}
-    for mol_name, df_csv in all_df_data.items():
-        #Get LD GPs
-        files_ld = sorted(glob.glob(f"Build_GPs/analysis/{mol_name}/ld_iters/iter-*/gp_models.pkl"))
-        file_fin_ld = Path(files_ld[-1])
-        #Ensure the file exists
-        assert (file_fin_ld.exists()), f"{os.path.abspath(file_fin_ld)} does not exist. Check file path carefully."
-        #Load the last file (most recent LD iter GPs) 
-        with open(file_fin_ld, "rb") as pickle_file_ld:
-            gp_models_ld, best_labels_ld = pickle.load(pickle_file_ld)
-        LD_model = gp_models_ld["sim_liq_density"]["RQ"]
-        data = data_dict[mol_name]
-        #Get Tc, and ST values
-        Tc = data.expt_Tc
-        st_exp_data = data.expt_surf_tens
-        if mol_name  == "MeOH" or mol_name == "EG":
-            #Only get values where key < 430
-            st_exp_data = {k: v for k, v in st_exp_data.items() if k < 430}
-        st_data = st_exp_data.values()
+    #Get LD GPs
+    files_ld = sorted(glob.glob(f"analysis/{mol_name}/ld_iters/iter-*/gp_models.pkl"))
+    file_fin_ld = Path(files_ld[-1])
+    #Ensure the file exists
+    assert (file_fin_ld.exists()), f"{os.path.abspath(file_fin_ld)} does not exist. Check file path carefully."
+    #Load the last file (most recent LD iter GPs) 
+    with open(file_fin_ld, "rb") as pickle_file_ld:
+        gp_models_ld, best_labels_ld = pickle.load(pickle_file_ld)
+    LD_model = gp_models_ld["sim_liq_density"]["RQ"]
+    data = data_dict[mol_name]
+    #Get Tc, and ST values
+    Tc = data.expt_Tc
+    st_exp_data = data.expt_surf_tens
+    if mol_name  == "MeOH" or mol_name == "EG":
+        #Only get values where key < 430
+        st_exp_data = {k: v for k, v in st_exp_data.items() if k < 430}
+    st_data = st_exp_data.values()
 
-        # Filter out rows with NaN values
-        df_csv = df_csv.dropna().copy() 
-        ld_threshold = (
-            min(list(data.expt_liq_density.values()))
-            + max(list(data.expt_vap_density.values()))
-        ) / 2
-        # df_csv = all_df_data[mol_name]
-        iter_num = df_csv["iter"].max()
+    # Filter out rows with NaN values
+    df_csv = df_csv.dropna().copy() 
+    ld_threshold = (
+        min(list(data.expt_liq_density.values()))
+        + max(list(data.expt_vap_density.values()))
+    ) / 2
+    # df_csv = all_df_data[mol_name]
+    iter_num = df_csv["iter"].max()
 
-        dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
-        os.makedirs(dir_name, exist_ok=True)
-        #Get only liquid data, but do not scale
-        df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale = False)
-        df_all_scl, df_liq_scl, df_vapor_scl = prepare_df_props(df_csv, data, ld_threshold, scale = True)
-        param_names = list(data.param_names)
-        #Remove groups of parameters that do not have at least 5 LD points with groupby
-        df_liq = df_liq.groupby(param_names).filter(lambda x: len(x) >= 5)
-        df_liq_scl = df_liq_scl.groupby(param_names).filter(lambda x: len(x) >= 5)
+    dir_name = f"analysis/{mol_name}/{iter_type}/iter-{str(iter_num)}"
+    os.makedirs(dir_name, exist_ok=True)
+    #Get only liquid data, but do not scale
+    df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold, scale = False)
+    df_all_scl, df_liq_scl, df_vapor_scl = prepare_df_props(df_csv, data, ld_threshold, scale = True)
+    param_names = list(data.param_names)
+    #Remove groups of parameters that do not have at least 5 LD points with groupby
+    df_liq = df_liq.groupby(param_names).filter(lambda x: len(x) >= 5)
+    df_liq_scl = df_liq_scl.groupby(param_names).filter(lambda x: len(x) >= 5)
 
-        groups = df_liq.groupby(param_names)
-        groups_scl = df_liq_scl.groupby(param_names)
+    groups = df_liq.groupby(param_names)
+    groups_scl = df_liq_scl.groupby(param_names)
 
-        #Initialize eotvos mad list
-        eotvos_mad_list = []
-        for i, ((param_vals, group_df), (_, group_df_scl)) in enumerate(zip(groups, groups_scl)):
-            #Organize group_df by temperature
-            group_df = group_df.sort_values(by="temperature")
-            #For each group, get sim_surf_tens and temperatures
-            sim_surf_tens = group_df["sim_surf_tens"].values
-            # sim_liq_dens = group_df["sim_liq_density"].values
-            #Get GP-predicted LD
-            GP_data = group_df_scl[param_names + ["temperature"]].values
-            sim_liq_dens_scl, unc = LD_model.predict_f(GP_data)
-            
-            #Unscale GP-LD values
-            y_bounds = data.liq_density_bounds
-            y_bounds_st = data.surf_tens_bounds
-            sim_liq_dens = values_scaled_to_real(sim_liq_dens_scl, y_bounds).flatten()
+    #Initialize eotvos mad list
+    eotvos_mad_list = []
+    for i, ((param_vals, group_df), (_, group_df_scl)) in enumerate(zip(groups, groups_scl)):
+        #Organize group_df by temperature
+        group_df = group_df.sort_values(by="temperature")
+        #For each group, get sim_surf_tens and temperatures
+        sim_surf_tens = group_df["sim_surf_tens"].values
+        # sim_liq_dens = group_df["sim_liq_density"].values
+        #Get GP-predicted LD
+        GP_data = group_df_scl[param_names + ["temperature"]].values
+        sim_liq_dens_scl, unc = LD_model.predict_f(GP_data)
+        
+        #Unscale GP-LD values
+        y_bounds = data.liq_density_bounds
+        y_bounds_st = data.surf_tens_bounds
+        sim_liq_dens = values_scaled_to_real(sim_liq_dens_scl, y_bounds).flatten()
 
-            #Fit Eotvos equation (ST = k*(M/rho_l)^(-2/3)*(Tc - 6 - T))
-            temperatures = group_df["temperature"].values
-            # X_eotvos = (Tc - 6 -temperatures).reshape(-1, 1)
-            X_eotvos = temperatures.reshape(-1, 1)
-            y_eotvos = sim_surf_tens*(((data.molecular_weight/1000) / (sim_liq_dens)) ** (2/3))
-            reg = LinearRegression(fit_intercept=True).fit(X_eotvos, y_eotvos)
-            #Predict ST using Eotvos
-            eotvos_ST = reg.predict(X_eotvos)/(((data.molecular_weight/1000) / (sim_liq_dens)) ** (2/3))
-            #Claculate MAD between Eotvos and sim_surf_tens
-            mad_eotvos = np.mean(np.abs(eotvos_ST - sim_surf_tens))
-            
-            eotvos_mad_list.append(mad_eotvos)
-        #Get the maximum Eotvos MAD for this molecule, this is the estimated "true" stdev
-        #If glycerol use the mean, otherwise use max
-        if mol_name == "Gly":
-            avg_eotvos_mad = np.mean(eotvos_mad_list)
-        else:
-            avg_eotvos_mad = np.max(eotvos_mad_list)
-        eotvos_coeffs[mol_name] = avg_eotvos_mad
-    return eotvos_coeffs
+        #Fit Eotvos equation (ST = k*(M/rho_l)^(-2/3)*(Tc - 6 - T))
+        temperatures = group_df["temperature"].values
+        # X_eotvos = (Tc - 6 -temperatures).reshape(-1, 1)
+        X_eotvos = temperatures.reshape(-1, 1)
+        y_eotvos = sim_surf_tens*(((data.molecular_weight/1000) / (sim_liq_dens)) ** (2/3))
+        reg = LinearRegression(fit_intercept=True).fit(X_eotvos, y_eotvos)
+        #Predict ST using Eotvos
+        eotvos_ST = reg.predict(X_eotvos)/(((data.molecular_weight/1000) / (sim_liq_dens)) ** (2/3))
+        #Claculate MAD between Eotvos and sim_surf_tens
+        mad_eotvos = np.mean(np.abs(eotvos_ST - sim_surf_tens))
+        
+        eotvos_mad_list.append(mad_eotvos)
+    #Get the maximum Eotvos MAD for this molecule, this is the estimated "true" stdev
+    #If glycerol use the mean, otherwise use max
+    if mol_name == "Gly":
+        avg_eotvos_mad = np.average(eotvos_mad_list)
+    else:
+        avg_eotvos_mad = np.max(eotvos_mad_list)
+    #Save EotvosMAD list to a csv
+    eotvos_df = pd.DataFrame(eotvos_mad_list, columns=["Eotvos_MAD"])
+    eotvos_df.to_csv(f"{dir_name}/Eotvos_MAD_values.csv", index=False)
+
+    eotvos_var = avg_eotvos_mad**2
+    # print(f"Eotvos variance for {mol_name} is {eotvos_var:.4f} (MAD: {avg_eotvos_mad:.4f})")
+    eotvos_var_scl = variances_real_to_scaled(np.array([[eotvos_var]]), data.surf_tens_bounds).flatten()[0]
+    # print(f"Eotvos scaled variance for {mol_name} is {eotvos_var_scl:.6f}")
+    return eotvos_var, eotvos_var_scl
 
 def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_seed=42):
     """
@@ -379,11 +387,23 @@ def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_see
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
         param_names = list(data.param_names)
 
+        if iter_type == "vle_iters":
+            #Get Eotvos scale for this molecule
+            eotvos_var, eotvos_var_scl = get_Eotvos_scale(df_csv, data_dict, mol_name, iter_type=iter_type)
+            #Set eotvos_var_scl to None to ignore Eotvos scaling and have the GP learn noise variance
+            # eotvos_var_scl = None
+
         models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(
-            df_liq, data, dir_name, gp_shuffle_seed
+            df_liq, data, dir_name, gp_shuffle_seed, eotvos_scale=eotvos_var_scl
         )
 
         models_molecs[mol_name] = models_best
+        #Print hyperparameters of each best model
+        #Print best kernels too
+        # print(f"Best GP model hyperparameters for {mol_name}:") 
+        # for prop, model in models_best.items():
+        #     print(f" Property: {prop}, Kernel: {best_labels[prop]}")
+        #     gpflow.utilities.print_summary(model)
 
     # Save all models to a file if there are multiple molecules
     if len(list(all_df_data.keys())) > 1:
