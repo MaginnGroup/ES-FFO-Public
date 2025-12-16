@@ -114,12 +114,19 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
             "sim_Hvap",
         ]
         param_names = list(data.param_names) + ["temperature"]
+        lj_param_names = list(data.param_names)
         # Get the property names from the data
         for prop_name in property_names:
             # Make GP models for each property that exists
             if prop_name in df_data.columns:
+                #Remove groups of parameters that do not have at least 5 LD points with groupby
+                if data.name == "DEC" and "vle_iters" in path_gps:  #DEC VLE special case where we need to filter an outlier
+                    df_data_filt = df_data.groupby(lj_param_names).filter(lambda x: len(x) >= 5) 
+                else:
+                    df_data_filt = df_data
+
                 models, x_train, y_train, x_test, y_test = fit_gp_models(
-                    df_data, data, prop_name, None, gp_shuffle_seed, False
+                    df_data_filt, data, prop_name, None, gp_shuffle_seed, False, data_path=dir_train_test
                 )
                 exp_data, property_bounds, name = get_exp_data(data, prop_name)
                 # The best model is the one with the lowest MSE on the test set and not overfitting
@@ -164,7 +171,7 @@ def get_prop_best_model(df_data, data, path_gps, gp_shuffle_seed=42):
     return models_best, models_rq, models_props, dir_train_test, best_labels
 
 
-def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig=False):
+def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig=False, data_path=None):
     """
     Fit GP models to the given property data and plot the model performance.
 
@@ -196,12 +203,20 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
     y_test : np.ndarray
         The test labels for the GP models.
     """
-    gpConfig = {
-        "useWhiteKernel": False, #Swap for Gly 
-        "trainLikelihood": True, #Swap for Gly
-        "anisotropic": True,
-        "mean_function": "Linear",
-    }
+    if data.name == "Glycerol":
+        gpConfig = {
+            "useWhiteKernel": True, #Swap for Gly 
+            "trainLikelihood": False, #Swap for Gly
+            "anisotropic": True,
+            "mean_function": "Linear",
+        }
+    else:
+        gpConfig = {
+            "useWhiteKernel": False,
+            "trainLikelihood": True,
+            "anisotropic": True,
+            "mean_function": "Linear",
+        }
 
     #FOr IFT set noise vriance
     # if property_name == "sim_surf_tens":
@@ -210,13 +225,21 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
     ### Fit GP Model to liquid density
     param_names = list(data.param_names) + ["temperature"]
 
-    x_train, y_train, x_test, y_test = shuffle_and_split(
-        df_data,
-        param_names,
-        property_name,
-        shuffle_seed=gp_shuffle_seed,
-        fraction_train=0.8,
-    )
+    #Check for existing data
+
+    if data_path is not None and os.path.exists(os.path.join(data_path, f"{property_name}_x_train.csv")):
+        x_train = np.loadtxt(os.path.join(data_path, f"{property_name}_x_train.csv"), delimiter=",", skiprows=1, usecols=range(1, len(param_names)+1))
+        y_train = np.loadtxt(os.path.join(data_path, f"{property_name}_y_train.csv"), delimiter=",", skiprows=1, usecols=1)
+        x_test = np.loadtxt(os.path.join(data_path, f"{property_name}_x_test.csv"), delimiter=",", skiprows=1, usecols=range(1, len(param_names)+1))
+        y_test = np.loadtxt(os.path.join(data_path, f"{property_name}_y_test.csv"), delimiter=",", skiprows=1, usecols=1)
+    else:
+        x_train, y_train, x_test, y_test = shuffle_and_split(
+            df_data,
+            param_names,
+            property_name,
+            shuffle_seed=gp_shuffle_seed,
+            fraction_train=0.8,
+        )
 
     # Fit model
     models = {}
@@ -355,8 +378,6 @@ def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_see
 
         df_all, df_liq, df_vapor = prepare_df_props(df_csv, data, ld_threshold)
         param_names = list(data.param_names)
-        #Remove groups of parameters that do not have at least 5 LD points with groupby
-        df_liq = df_liq.groupby(param_names).filter(lambda x: len(x) >= 5)
 
         models_best, models_rq, all_models, dir_train_test, best_labels = get_prop_best_model(
             df_liq, data, dir_name, gp_shuffle_seed
