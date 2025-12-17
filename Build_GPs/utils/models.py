@@ -12,6 +12,8 @@ from sklearn import svm
 from sklearn.linear_model import LinearRegression
 import glob
 from pathlib import Path
+from gpflow.utilities import parameter_dict
+
 
 # sys.path.append("../")
 sys.path.append("../..")
@@ -224,6 +226,7 @@ def fit_gp_models(df_data, data, property_name, pdf, gp_shuffle_seed=1, save_fig
     if eotvos_scale != None and "surf_tens" in property_name:
         gpConfig["trainLikelihood"] = False
         gpConfig["noise_var"] = eotvos_scale #This is a scaled variance
+        gpConfig["mean_function"] = "Custom"
     # print(gpConfig)
     ### Fit GP Model to liquid density
     param_names = list(data.param_names) + ["temperature"]
@@ -401,9 +404,15 @@ def get_best_models(all_df_data, data_dict, iter_type="ld_iters", gp_shuffle_see
         #Print hyperparameters of each best model
         #Print best kernels too
         # print(f"Best GP model hyperparameters for {mol_name}:") 
-        # for prop, model in models_best.items():
-        #     print(f" Property: {prop}, Kernel: {best_labels[prop]}")
-        #     gpflow.utilities.print_summary(model)
+        for prop, model in models_best.items():
+            # print(f" Property: {prop}, Kernel: {best_labels[prop]}")
+            # gpflow.utilities.print_summary(model)
+            #Send to a text file
+            with open(f"{dir_name}/best_model_hypers.txt", "w") as f:
+                params = parameter_dict(model)
+                f.write(f"Property: {prop}, Kernel: {best_labels[prop]}\n")
+                for k, v in params.items():
+                    f.write(f"{k}: {v.numpy()}\n")
 
     # Save all models to a file if there are multiple molecules
     if len(list(all_df_data.keys())) > 1:

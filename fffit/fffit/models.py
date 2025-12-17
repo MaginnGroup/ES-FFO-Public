@@ -6,6 +6,15 @@ from gpflow.utilities import print_summary
 import warnings
 # tf.config.run_functions_eagerly(True)
 import copy
+    
+class MaskedLinear(gpflow.mean_functions.MeanFunction):
+    def __init__(self, linear_mean, mask):
+        super().__init__()
+        self.linear_mean = linear_mean
+        self.mask = mask
+
+    def __call__(self, X):
+        return self.linear_mean(X * self.mask)
 
 def buildGP(x_train, y_train, gpConfig, retrain = 0):
 
@@ -111,6 +120,19 @@ def buildGP(x_train, y_train, gpConfig, retrain = 0):
         mf = gpflow.mean_functions.Linear(
                 A=np.zeros(x_train.shape[1]).reshape(-1, 1)
             )
+    elif typeMeanFunc == 'Custom':
+        #Combine a linear and zero mean function
+        lin_mean = gpflow.mean_functions.Linear(
+                A=np.zeros(x_train.shape[1]).reshape(-1, 1)
+            )
+        #Get the shape of the sigma input data
+        zero_dims = int((x_train.shape[1] -1)/2)
+        #Make an array of ones and zeros where the first half are ones and the second half are zeros
+        lin_array = np.concatenate([np.zeros(zero_dims), np.ones(x_train.shape[1] - zero_dims)])
+        
+        mf = MaskedLinear(lin_mean, lin_array)
+    
+
     else:
         raise ValueError('Invalid mean function type')
 
