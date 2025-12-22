@@ -997,7 +997,7 @@ def run_md_wo_eqcheck(job, sim_name, last_sim_name):
             # Make a directory for the simulation
             os.makedirs(sim_name, exist_ok=True)
             if sim_name != "em":
-                w_gpu = " -ntomp 16 -nb gpu -pme gpu -bonded gpu -pin on"
+                w_gpu = " -ntomp 16 -update gpu -nb gpu -pme gpu -bonded gpu -pin on"
                 # If we are skipping the EM step and want to run nvt normally
                 if "skip_em" in job.doc.keys() and job.doc["skip_em"] and sim_name == "nvt_eq":
                     #Set last directory to system
