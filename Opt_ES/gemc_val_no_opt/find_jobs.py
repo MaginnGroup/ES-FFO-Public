@@ -9,15 +9,16 @@ project = signac.get_project()
 count = 0
 count_running = 0
 # Loop over all jobs in the project
-group = project.find_jobs({"mol_name": "DEC"})
+group = project.find_jobs()
+#load all jobds in project
 for job in group:
     # Check if job document exists
     # print(f"Checking job {job.id}")
     if os.path.exists(job.fn("signac_job_document.json")):
         count_running += 1
-        if "gemc_failed" in job.doc.keys():
+        if "nvt_fin" not in job.doc.keys():
             count += 1
-            print(f"Job {job.id} T {job.sp.T} restart {job.sp.restart} has gemc_failed in doc.")
+            print(f"Job {job.id} mol_name {job.sp.mol_name} T {job.sp.T} restart {job.sp.restart} has gemc_failed in doc.")
         # # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         # #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
         # if not os.path.exists(job.fn("Vapor_eq_col_6.csv")) and "liq_density" not in job.doc.keys() and "gemc_failed" not in job.doc.keys():

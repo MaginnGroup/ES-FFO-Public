@@ -27,7 +27,7 @@ seed = 1  # Seed to use
 molec_names = ["EG", "Gly", "MeOH"]  # Training data to consider
 
 # Get best_run data saved in one csv from all jobs
-project = signac.get_project("opt_at_params")
+project = signac.get_project("opt_at_params_new")
 filtered_jobs = project.find_jobs({"obj_choice": obj_choice, "atom_type": at_number})
 grouped_jobs = filtered_jobs.groupby("training_molecules")
 for statepoint_value, group in grouped_jobs:
