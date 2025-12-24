@@ -2,10 +2,10 @@ import signac
 import json
 import os
 
-project = signac.init_project("opt_at_params")
+project = signac.init_project("opt_at_params_new")
 
 # Set Initial Parameters
-Atom_Types = [0,1,2]
+Atom_Types = [0]
 repeats = 25  # Repeats for full optimization
 repeats_ind = 25  # Repeats for individual molecule optimization
 lhs_pts = int(1e5)  # Number of LHS points to generate
