@@ -24,7 +24,7 @@ obj_choice = "ExpVal"  # Objective to consider
 at_number = 0 # atom type to consider (1 or 2)
 seed = 1  # Seed to use
 # molec_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]  # Training data to consider
-molec_names = ["EG", "Gly", "MeOH"]  # Training data to consider
+molec_names = ["EG", "Gly", "MeOH", "DMSO", "DMF", "DEC"]  # Training data to consider
 
 # Get best_run data saved in one csv from all jobs
 project = signac.get_project("opt_at_params_new")
@@ -94,7 +94,21 @@ def get_vis(at_number, molec_list,  seed, obj_choice):
             save_label=x_label_set,
         )
 
-
+def get_jac_hess(at_number, molec_list,  seed, obj_choice):
+    visual = opt_atom_types.Vis_Results(molec_list, at_number, seed, obj_choice)
+    param_bnds, param_names = visual.get_param_bnds_names()
+    # Set parameter set of interest (in this case get the best parameter set)
+    x_label = "best_set"
+    all_molec_dir = visual.use_dir_name
+    path_best_sets = os.path.join(all_molec_dir, "best_per_run.csv")
+    assert os.path.exists(path_best_sets), "best_per_run.csv not found in directory"
+    all_df = pd.read_csv(path_best_sets, header=0)
+    first_param_name = param_names[0] + "_cum"
+    last_param_name = param_names[-1] + "_cum"
+    all_sets = all_df.loc[:, first_param_name:last_param_name].values
+    unique_best_sets = visual.get_unique_sets(
+        all_sets, save_data=save_data, save_label=x_label
+    )
     for i in range(unique_best_sets.shape[0]):
         x_label_set = x_label + "_" + str(i + 1)
         best_set = unique_best_sets.iloc[i, :].values
@@ -121,8 +135,11 @@ def get_vis(at_number, molec_list,  seed, obj_choice):
 if at_number == 0:
     for molec in molec_names:
         get_vis(at_number, [molec], seed, obj_choice)
+    for molec in molec_names:
+        get_jac_hess(at_number, [molec], seed, obj_choice)
 else:
     get_vis(at_number, molec_names, seed, obj_choice)
+    get_jac_hess(at_number, molec_names, seed, obj_choice)
 """
     # Plot optimization result heat maps
     visual.plot_obj_hms(best_set, x_label_set)
