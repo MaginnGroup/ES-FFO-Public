@@ -161,7 +161,7 @@ def calc_box_helper(job):
     # Save to job document file
     job.doc.liqboxl = liqboxl  # nm, compatible with mbuild
 
-    return job.doc.liqboxl, job.doc.vapboxl
+    return job.doc.liqboxl, job.doc.vapboxl  # Return box lengths with 20% buffer
 
 @nptnvt_group
 @ProjectGEMC.post(lambda job: "vapboxl" in job.doc)
@@ -229,6 +229,7 @@ def NVT_liqbox(job):
             job.doc["nvt_fin"] = True
     #If it doesn't work, try with critical point starting conditions
     except:
+        job.doc.use_crit = True
         # Note this overwrites liquid and vapor box lengths in job.doc
         liqbox, vapbox = calc_box_helper(job)
         # Create system with box lengths based on critical points
@@ -239,7 +240,6 @@ def NVT_liqbox(job):
 
         try:
             with job:
-                job.doc.use_crit = True
                 # Run equilibration
                 mc.run(
                     system=system,

@@ -104,7 +104,7 @@ def get_gp_data_from_pkl(key_list):
                     gp_models_ld, best_labels_ld = pickle.load(pickle_file_ld)
                 gp_dict[prop] = gp_models_ld[prop]["RQ"]
             else:
-                #Use GP for liq density and Matern 52 for ST
+                #Use RQ GP for liq density and Matern 32 for ST
                 kern = "RQ" if "liq" in prop else "Matern32"
                 gp_dict[prop] = gp_models[prop][kern]
 
