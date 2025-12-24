@@ -1676,16 +1676,21 @@ class Opt_ATs(Problem_Setup):
             save_csv_path1 = self.use_dir_name / "pareto_info.csv"
             if save_csv_path1.exists():
                 all_pareto_info = pd.read_csv(save_csv_path1, header=0)
+                #If uing IFT point, use all points as pareto points
+                pareto_data = all_pareto_info
+                pareto_points = pareto_data[param_names].copy()
             # Otherwise generate 10**5 pareto sets, and save the data
             else:
                 all_pareto_info = self.gen_pareto_sets(
                     int(10**5), self.at_class.at_bounds_nm_kjmol, save_data=True
                 )
-            # Get dominated vs nondominated points
-            pareto_data = all_pareto_info[all_pareto_info["is_pareto"] == True]
-            dominated_data = all_pareto_info[all_pareto_info["is_pareto"] == False]
-            pareto_points = pareto_data[param_names].copy()
-            dom_points = dominated_data[param_names].copy()
+
+                # Get dominated vs nondominated points
+                pareto_data = all_pareto_info[all_pareto_info["is_pareto"] == True]
+                pareto_points = pareto_data[param_names].copy()
+                dominated_data = all_pareto_info[all_pareto_info["is_pareto"] == False]
+                dom_points = dominated_data[param_names].copy()
+            
             # Ensure we are using less repeats than pareto optimal points
             if len(pareto_points) < self.repeats:
                 # Could opt to use more repeats than # of pareto sets
@@ -2094,7 +2099,7 @@ class Vis_Results(Analyze_opt_res):
                     y_bounds,
                     plot_bounds=molec_object.temperature_bounds(),
                     property_name=y_names,
-                    )
+                    ), bbox_inches='tight'
                 )
                 # pdf.savefig(
                 #     plot_model_vs_test(
