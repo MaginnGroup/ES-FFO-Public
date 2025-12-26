@@ -1516,6 +1516,10 @@ class Opt_ATs(Problem_Setup):
         obj: float, the objective function from the formula defined in the paper
         """
         assert isinstance(theta_guess, np.ndarray), "theta_guess must be an np.ndarray"
+        #Unscale to real units (delete if failure occurs)
+        param_bounds, param_names = self.get_param_bnds_names()
+        theta_guess = values_scaled_to_real(theta_guess.reshape(1, -1), param_bounds).flatten()
+
         obj, sse_pieces, var_ratios, gaff_penalty = self.calc_obj(theta_guess)
 
         # Scale theta_guess to preferred units
@@ -1575,6 +1579,9 @@ class Opt_ATs(Problem_Setup):
         #     self.obj_choice = "ExpVal"
         #     obj_changed = True
 
+        #Scale theta_guess between 0-1 for optimization
+        theta_guess = values_real_to_scaled(theta_guess.reshape(1, -1), param_bnds).flatten()
+
         for i in range(1, len(ranked_indices) + 1):
             # Create a mask to identify which parameters are being optimized
             # Note that ranked_indices is 0-based
@@ -1597,7 +1604,7 @@ class Opt_ATs(Problem_Setup):
             )
 
             # Reconstruct the full parameter list with optimized values
-            theta_opt = theta_guess
+            theta_opt = values_scaled_to_real(theta_guess.reshape(1, -1), param_bnds).flatten()
             theta_opt[mask] = solution.x
             loss_k_params[i, :] = theta_opt
             loss_k[i] = solution.fun
@@ -1746,11 +1753,21 @@ class Opt_ATs(Problem_Setup):
         # solution = optimize.least_squares(self.__scipy_min_fxn, param_inits[run], bounds=bounds,
         #                                  method='trf', verbose = 0)
         # print("set: ", param_inits[run])
+        #Ensure param_inits is in scaled units (from real data)
+        param_inits_scaled = values_real_to_scaled(param_inits, param_bnds)
+        param_bnds_scl = values_real_to_scaled(param_bnds.T, param_bnds).T
 
+        # solution = optimize.minimize(
+        #     self.__scipy_min_fxn,
+        #     param_inits[run],
+        #     bounds=param_bnds,
+        #     method="L-BFGS-B",
+        #     options={"disp": False, "eps": 1e-10, "ftol": 1e-10},
+        # )
         solution = optimize.minimize(
             self.__scipy_min_fxn,
-            param_inits[run],
-            bounds=param_bnds,
+            param_inits_scaled[run],
+            bounds=param_bnds_scl,
             method="L-BFGS-B",
             options={"disp": False, "eps": 1e-10, "ftol": 1e-10},
         )
