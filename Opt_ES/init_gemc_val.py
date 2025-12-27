@@ -178,7 +178,7 @@ for molec_name, molec_data in molec_dict.items():
             # Loop over temperatures
             for temp in temps:
                 #Only make jobs for the first and last temp for speed
-                if temp == temps[0] or temp == temps[-1]:
+                if (temp == temps[0] or temp == temps[-1]) or (temp==temps[-2] and molec_name in ["EG", "MeOH"]):
                     state_point["T"] = float(temp)  # K
                     state_point["P"] =float(press[temp])  # bar
                     state_point["expt_liq_density"] = molec_data.expt_liq_density[temp]  # kg/m^3

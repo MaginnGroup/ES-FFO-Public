@@ -17,7 +17,7 @@ for job in group:
         count_running += 1
         # if "eq_liq_dens" in job.document and job.doc["eq_liq_dens"] < 1.0:
         #     print(f"Job {job.id} has eq_liq_dens < 1.0: {job.doc['eq_liq_dens']}")
-        op_name = "inter_prod"
+        op_name = "em"
         if f"{op_name}_fin" not in job.doc and "ld_fail" not in job.doc:
             count += 1
             print(job.id)
@@ -35,4 +35,6 @@ for job in group:
                         #     print(f"Job {job.id}")
             else:
                 print(f"Job {job.id} Log file does not exist.")
+    else:
+        print(f"Job {job.id} document does not exist.")
 print(f"Total unfinished jobs: {count}/{count_running}")
