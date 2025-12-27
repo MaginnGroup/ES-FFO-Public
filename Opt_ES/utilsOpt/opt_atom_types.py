@@ -886,19 +886,27 @@ class Problem_Setup:
 
             # Set columns for costs
             if s == 0:
-                costs = pd.DataFrame(columns=prop_names)
-            df_sums_reordered = df_sums[costs.columns]
+                costs_obj = pd.DataFrame(columns=prop_names)
+            df_sums_reordered = df_sums[costs_obj.columns]
             # Concatenate the DataFrames along the rows axis
-            costs = pd.concat([costs, df_sums_reordered], ignore_index=True)
+            costs_obj = pd.concat([costs_obj, df_sums_reordered], ignore_index=True)
 
+        if not (self.distinct_at and self.ift_pareto_csv.exists()):
+            costs_use = costs_obj.copy(deep=True)
+        else:
+            costs_use = pareto_info[["mapd_liq_density", "mapd_surf_tens"]].copy(deep=True)
         # Sort based on non-dominated sorting (call fffit.find_pareto_set(data, is_pareto_efficient)
         idcs, pareto_cost, dom_cost = find_pareto_set(
-            costs.to_numpy(), is_pareto_efficient
+            costs_use.to_numpy(), is_pareto_efficient
         )
         # Put samples and cost values in order
         df_samples = pd.DataFrame(samples, columns=param_names)
-        costs["is_pareto"] = idcs
-        pareto_info = pd.concat([df_samples, costs], axis=1)
+        costs_use["is_pareto"] = idcs
+        #Use only pareto optimal sets (from actual simulation, not objective when possible)
+        if self.distinct_at and self.ift_pareto_csv.exists():
+            pareto_info = pd.concat([df_samples.reset_index(drop=True), costs_obj.reset_index(drop=True), costs_use.reset_index(drop=True)], axis=1)
+        else:
+            pareto_info = pd.concat([df_samples, costs_obj], axis=1)
         pareto_info["Min Obj"] = pareto_info[prop_names].sum(axis=1)
 
         # Save pareto info
@@ -1416,7 +1424,12 @@ class Analyze_opt_res(Problem_Setup):
             save_label, (str, type(None))
         ), "save_label must be a string or None"
         # Scale values from preferred to real units
-        all_param_sets_real = self.values_pref_to_real(all_param_sets)
+        print(all_param_sets.shape, all_param_sets)
+        if all_param_sets.shape[0] == 1:
+            all_param_sets_real = self.values_pref_to_real(all_param_sets).reshape(1,-1)
+        else:
+            all_param_sets_real = self.values_pref_to_real(all_param_sets)
+
         # Scale values between 0 and 1 with minmax scaler
         scaler = MinMaxScaler()
         #Get correct bounds/names for distinct vs general AT
@@ -1600,7 +1613,7 @@ class Opt_ATs(Problem_Setup):
                 theta_estim,
                 bounds=param_bnds[ranked_indices[:i], :],
                 method="L-BFGS-B",
-                options={"disp": False, "eps": 1e-10, "ftol": 1e-10},
+                options={"disp": False, "eps": 1e-10, "ftol": 1e-12},
             )
 
             # Reconstruct the full parameter list with optimized values
@@ -1685,6 +1698,7 @@ class Opt_ATs(Problem_Setup):
                 all_pareto_info = pd.read_csv(save_csv_path1, header=0)
                 #If uing IFT point, use all points as pareto points
                 pareto_data = all_pareto_info
+                pareto_data = all_pareto_info[all_pareto_info["is_pareto"] == True]
                 pareto_points = pareto_data[param_names].copy()
             # Otherwise generate 10**5 pareto sets, and save the data
             else:
@@ -1769,7 +1783,7 @@ class Opt_ATs(Problem_Setup):
             param_inits_scaled[run],
             bounds=param_bnds_scl,
             method="L-BFGS-B",
-            options={"disp": False, "eps": 1e-10, "ftol": 1e-10},
+            options={"disp": False, "eps": 1e-10, "ftol": 1e-12},
         )
         # End timer and calculate total run time
         time_end = time.time()
