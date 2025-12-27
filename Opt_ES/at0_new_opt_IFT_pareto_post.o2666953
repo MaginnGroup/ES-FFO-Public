@@ -21,3 +21,33 @@ To enable the following instructions: AVX2 FMA, in other operations, rebuild Ten
   warnings.warn(
 /scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
   warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for ACN. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for THF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for ACN. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for THF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for ACN. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for THF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for ACN. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for THF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for ACN. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for THF. Many functions will not work without GP Data
+  warnings.warn(
+/scratch365/mcarlozo/ES-FFO/Opt_ES/utilsOpt/opt_atom_types.py:167: UserWarning: No gp data found for DCM. Many functions will not work without GP Data
+  warnings.warn(
