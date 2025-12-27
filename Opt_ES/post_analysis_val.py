@@ -50,10 +50,10 @@ molec_dict = esolvs.make_dict(mol_names)
 prop_dict = {} #Store dfs for FF property comparison {"file":df}
 error_dict = {} #Store dfs for FF error comparison {"file":df}
 #Can filter out specific param sets here if needed
-gemc_proj = signac.get_project("gemc_val")
+gemc_proj = signac.get_project("gemc_val_no_opt")
 gemc_props = ["vap_density", "Hvap", "Pvap", "liq_enthalpy", "vap_enthalpy"]
 try:
-    ift_proj = signac.get_project("ift_val")
+    ift_proj = signac.get_project("ift_val_no_opt")
     ift_props = ["liq_density", "surf_tens", "diff_coeff"]
 except:
     ift_proj = None
@@ -102,40 +102,54 @@ pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
 pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
 pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 
-#Add literature FF data to prop_dict
+#### Add literature FF data to prop_dict
+# file_save_lit = "analysis/lit_ff_data.csv"
+# lit_data = pd.read_csv(file_save_lit, header=0)
+
+# for molec_name in mol_names:
+#     #Get the data from the original workflow for the best NW parameter set
+#     pareto_sets = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/final-params.csv", header = 0, index_col = 0)
+#     all_data = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/results.csv", header = 0, index_col = 0)
+#     #Get the row where the mapd_surf_tens column is lowest
+#     best_row = pareto_sets.loc[pareto_sets['mapd_surf_tens'].idxmin()]
+#     #Return the array of all parameters (ignore mapd columns)
+#     param_set = best_row.drop(labels=[col for col in best_row.index if "mapd" in col])
+#     #Find the final parameters with the lowest surface tension
+#     param_set = pd.DataFrame(param_set).T
+#     mask = (all_data[param_set.columns] == param_set.iloc[0]).all(axis=1)
+
+#     #Apply mask
+#     all_data = all_data[mask]
+#     all_data = all_data.sort_values(by='temperature', ascending=True)
+#     all_data = pd.DataFrame(all_data)
+#     #Add molecule column
+#     all_data['molecule'] = molec_name
+#     #Add ref name and short name columns
+#     all_data['ref_name'] = 'Wang et. al.'
+#     all_data['short_name'] = 'NW'
+#     #Add sim to any column name that contains" liq_" or "surf_"
+#     for col in all_data.columns:
+#         if "liq_" in col or "surf_" in col:
+#             all_data = all_data.rename(columns={col: "sim_" + col})
+#     #Return the array of all parameters (ignore mapd columns)
+#     lit_data = pd.concat([lit_data, all_data.reindex(columns=lit_data.columns)], ignore_index=True)
+
+# #Save lit data with sim columns for future use
+# lit_data.to_csv("analysis/lit_ff_data_w_NW.csv", index=False)
+
+####Add old FF data to lit_data
 file_save_lit = "analysis/lit_ff_data.csv"
 lit_data = pd.read_csv(file_save_lit, header=0)
-
 for molec_name in mol_names:
-    #Get the data from the original workflow for the best NW parameter set
-    pareto_sets = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/final-params.csv", header = 0, index_col = 0)
-    all_data = pd.read_csv(f"../Build_GPs/analysis/{molec_name}/vle_iters/iter-1/results.csv", header = 0, index_col = 0)
-    #Get the row where the mapd_surf_tens column is lowest
-    best_row = pareto_sets.loc[pareto_sets['mapd_surf_tens'].idxmin()]
-    #Return the array of all parameters (ignore mapd columns)
-    param_set = best_row.drop(labels=[col for col in best_row.index if "mapd" in col])
-    #Find the final parameters with the lowest surface tension
-    param_set = pd.DataFrame(param_set).T
-    mask = (all_data[param_set.columns] == param_set.iloc[0]).all(axis=1)
+    df_old_FF = pd.read_csv(f"analysis_old/at_00/{molec_name}/ExpVal/opt_res/ms_val/ms_data.csv", header = 0, index_col = 0)
+    #Drop all column without sim_ in the name or "temperature" or "molecule"
+    cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
+    df_old_FF = df_old_FF[cols_to_keep]
+    df_old_FF['ref_name'] = 'Old FF'
+    df_old_FF['short_name'] = 'Old FF'
+    lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
+lit_data.to_csv("analysis/lit_ff_data_w_oldFF.csv", index=False)
 
-    #Apply mask
-    all_data = all_data[mask]
-    all_data = all_data.sort_values(by='temperature', ascending=True)
-    all_data = pd.DataFrame(all_data)
-    #Add molecule column
-    all_data['molecule'] = molec_name
-    #Add ref name and short name columns
-    all_data['ref_name'] = 'Wang et. al.'
-    all_data['short_name'] = 'NW'
-    #Add sim to any column name that contains" liq_" or "surf_"
-    for col in all_data.columns:
-        if "liq_" in col or "surf_" in col:
-            all_data = all_data.rename(columns={col: "sim_" + col})
-    #Return the array of all parameters (ignore mapd columns)
-    lit_data = pd.concat([lit_data, all_data.reindex(columns=lit_data.columns)], ignore_index=True)
-
-#Save lit data with sim columns for future use
-lit_data.to_csv("analysis/lit_ff_data_w_NW.csv", index=False)
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()
 for molec in molecules:

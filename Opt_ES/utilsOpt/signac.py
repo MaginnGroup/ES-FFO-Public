@@ -63,6 +63,8 @@ def get_signac_results(project_dict, data_dict):
                     for row in range(len(group_df)):
                         new_job = group_df.sort_values(by=["T"]).iloc[row]
                         job = project.open_job(id=new_job["job"])
+                        #Round all param vals to 14 decimal places to avoid floating point issues
+                        param_vals = tuple([round(val, 14) for val in param_vals])
                         # Extract the parameters into a dict
                         new_row = {
                             name: param for (name, param) in zip(param_names, param_vals)
@@ -125,7 +127,8 @@ def get_signac_results(project_dict, data_dict):
         merged_df = dfs_to_merge[0]
         if len(dfs_to_merge) > 1:
             for df in dfs_to_merge[1:]:
-                merged_df = pd.merge(merged_df, df, how="outer")
+                key_cols = [c for c in df.columns if c.startswith(("sigma_", "epsilon_")) or c in ["temperature", "restart", "molecule"]]
+                merged_df = pd.merge(merged_df, df, how="outer", on=key_cols)
         all_data_dict[file] = merged_df
 
     # gemc_dict = data_dict(project_names[0])

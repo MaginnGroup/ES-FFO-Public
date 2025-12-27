@@ -329,7 +329,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Borin & Skaf": ('tab:green', 'p', 1, False),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1, False),
                "Luo et. al.": ('tab:orange', '>', 1, False),
-               "Wang et. al.": ('tab:red', 'D', 1, True),
+               "Wang et. al.": ('tab:red', 'D', 1, False),
+               "Old FF": ('tab:blue', '+', 1, False),
                }
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -500,6 +501,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
                "Luo et. al.": ('tab:orange', '>', 1),
                "Wang et. al.": ('tab:red', 'D', 1),
+               "Old FF": ('tab:blue', '+', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -693,6 +695,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
                "Luo et. al.": ('tab:orange', '>', 1),
                "Wang et. al.": ('tab:red', 'D', 1),
+               "Old FF": ('tab:blue', '+', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
