@@ -27,7 +27,7 @@ print(f"Script location: {Path(__file__).parent}")
 
 #After jobs are finished
 #save signac results for each atom for a given atom typing scheme and number of training parameters
-
+opt_status = "opt"
 
 #Change me as needed
 obj_choice = "ExpVal"
@@ -50,10 +50,10 @@ molec_dict = esolvs.make_dict(mol_names)
 prop_dict = {} #Store dfs for FF property comparison {"file":df}
 error_dict = {} #Store dfs for FF error comparison {"file":df}
 #Can filter out specific param sets here if needed
-gemc_proj = signac.get_project("gemc_val_no_opt")
+gemc_proj = signac.get_project(f"gemc_val_{opt_status}")
 gemc_props = ["vap_density", "Hvap", "Pvap", "liq_enthalpy", "vap_enthalpy"]
 try:
-    ift_proj = signac.get_project("ift_val_no_opt")
+    ift_proj = signac.get_project(f"ift_val_{opt_status}")
     ift_props = ["liq_density", "surf_tens", "diff_coeff"]
 except:
     ift_proj = None
@@ -63,7 +63,7 @@ except:
 #Get Results from GEMC and IFT Simulations
 project_dict = {"gemc":[gemc_proj, gemc_props],
                 "ift": [ift_proj, ift_props]}
-all_df_data = get_signac_results(project_dict, molec_dict)
+all_df_data = get_signac_results(project_dict, molec_dict, proj_name=opt_status)
 all_df_data = save_signac_results(all_df_data)
 
 #Calculate MAPD and MSE for each T point
@@ -95,7 +95,7 @@ for file, df_molec in all_df_data.items():
         error_dict[file_save] = df_paramsets
 
 #Plot VLE, Hvap/Pvap, and ST
-full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), "ms_val")
+full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), f"ms_val_{opt_status}")
 os.makedirs(full_at_dir, exist_ok=True)
 pdf_vle = PdfPages(os.path.join(full_at_dir ,"vle.pdf"))
 pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
@@ -149,6 +149,20 @@ for molec_name in mol_names:
     df_old_FF['short_name'] = 'Old FF'
     lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
 lit_data.to_csv("analysis/lit_ff_data_w_oldFF.csv", index=False)
+
+file_save_lit = "analysis/lit_ff_data_w_oldFF.csv"
+lit_data = pd.read_csv(file_save_lit, header=0)
+for molec_name in mol_names:
+    other_opt = "no_opt" if opt_status == "opt" else "opt"
+    ref_name = "IFT FF" if opt_status == "opt" else "Opt FF"
+    df_old_FF = pd.read_csv(f"analysis/at_00/{molec_name}/ExpVal/opt_res/ms_val_{other_opt}/ms_data.csv", header = 0, index_col = 0)
+    #Drop all column without sim_ in the name or "temperature" or "molecule"
+    cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
+    df_old_FF = df_old_FF[cols_to_keep]
+    df_old_FF['ref_name'] = ref_name
+    df_old_FF['short_name'] = ref_name
+    lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
+lit_data.to_csv("analysis/lit_ff_data_w_comp.csv", index=False)
 
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()
@@ -208,9 +222,9 @@ for error_obj in error_objs:
     #Make error Plots
     if len(at_numbers) == 1:
         at_class = atom_type.make_atom_type_class(at_numbers[0])
-        full_at_dir = os.path.join("analysis", at_class.scheme_name, obj_choice, "ms_val")
+        full_at_dir = os.path.join("analysis", at_class.scheme_name, obj_choice, f"ms_val_{opt_status}")
     else:
-        full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), obj_choice, "ms_val")
+        full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), obj_choice, f"ms_val_{opt_status}")
     os.makedirs(full_at_dir, exist_ok=True)
     pdf_MAPD = PdfPages(os.path.join(full_at_dir , error_obj.upper() + ".pdf"))
     #For each molecule

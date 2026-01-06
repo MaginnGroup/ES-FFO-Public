@@ -9,7 +9,7 @@ from .opt_atom_types import Problem_Setup
 #Import opt_atom_types
 # sys.path.append("../")
 
-def get_signac_results(project_dict, data_dict):
+def get_signac_results(project_dict, data_dict, proj_name = "no_opt"):
     """Save the signac results to a CSV file.
 
     Parameters
@@ -99,7 +99,7 @@ def get_signac_results(project_dict, data_dict):
 
                 #Add data to all_data_dict
                 # If the data directory is already in the dictionary, concatenate the dataframes
-                dir_name = os.path.join(setup.use_dir_name, "ms_val")
+                dir_name = os.path.join(setup.use_dir_name, f"ms_val_{proj_name}")
                 if dir_name in all_data_dict:
                     all_data_dict[dir_name] = pd.concat([all_data_dict[dir_name], df])
                 # If the data directory is not in the dictionary, add the dataframe
