@@ -145,8 +145,8 @@ for molec_name in mol_names:
     #Drop all column without sim_ in the name or "temperature" or "molecule"
     cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
     df_old_FF = df_old_FF[cols_to_keep]
-    df_old_FF['ref_name'] = 'Old FF'
-    df_old_FF['short_name'] = 'Old FF'
+    df_old_FF['ref_name'] = 'Old Opt FF'
+    df_old_FF['short_name'] = 'Old Opt FF'
     lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
 lit_data.to_csv("analysis/lit_ff_data_w_oldFF.csv", index=False)
 
@@ -162,7 +162,7 @@ for molec_name in mol_names:
     df_old_FF['ref_name'] = ref_name
     df_old_FF['short_name'] = ref_name
     lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
-lit_data.to_csv("analysis/lit_ff_data_w_comp.csv", index=False)
+lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
 
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()

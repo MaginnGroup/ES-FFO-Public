@@ -330,7 +330,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Garcia-Melgarejo et. al.": ('gray', 's', 1, False),
                "Luo et. al.": ('tab:orange', '>', 1, False),
                "Wang et. al.": ('tab:red', 'D', 1, False),
-               "Old FF": ('tab:blue', '+', 1, False),
+               "Old Opt FF": ('tab:blue', '+', 1, False),
                "IFT FF": ('tab:purple', '^', 1, False),
                "Opt FF": ('tab:purple', '^', 1, False),
                }
@@ -400,7 +400,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 # print(min_st, max_st)
                 # #Plot opt_scheme_ms vle curve
                 if df_label == "AT-Dis":
-                    df_label = "This Work"
+                    df_label = "Opt FF"
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
@@ -503,7 +503,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
                "Luo et. al.": ('tab:orange', '>', 1),
                "Wang et. al.": ('tab:red', 'D', 1),
-               "Old FF": ('tab:blue', '+', 1),
+               "Old Opt FF": ('tab:blue', '+', 1),
                "IFT FF": ('tab:purple', '^', 1),
                "Opt FF": ('tab:purple', '^', 1),
                }
@@ -583,7 +583,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                             
                 # #Plot opt_scheme_ms vle curve
                 if label_prop == "AT-Dis":
-                    label_prop = "This Work"
+                    label_prop = "Opt FF"
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
@@ -591,7 +591,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             #Plot critical points if available
             if has_vap and has_liq and molec != "DMSO":
                 if df_label == "AT-Dis":
-                    df_label = "This Work"
+                    df_label = "Opt FF"
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
                 try:
@@ -699,7 +699,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Garcia-Melgarejo et. al.": ('gray', 's', 1),
                "Luo et. al.": ('tab:orange', '>', 1),
                "Wang et. al.": ('tab:red', 'D', 1),
-               "Old FF": ('tab:blue', '+', 1),
+               "Old Opt FF": ('tab:blue', '+', 1),
                "IFT FF": ('tab:purple', '^', 1),
                "Opt FF": ('tab:purple', '^', 1),
                }
@@ -807,7 +807,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     # print(min_pvap, max_pvap)
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
                     if df_label == "AT-Dis":
-                        df_label = "This Work"
+                        df_label = "Opt FF"
                     axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
