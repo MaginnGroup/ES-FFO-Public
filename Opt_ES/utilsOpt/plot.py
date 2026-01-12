@@ -808,7 +808,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
                     if df_label == "AT-Dis":
                         df_label = "Opt FF"
-                    axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = std_log_pvap,
+                    axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = 1.96*std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
                     # axs[0].scatter(1/means["temperature"], np.log(means["sim_Pvap"]), color=df_colors[i], 

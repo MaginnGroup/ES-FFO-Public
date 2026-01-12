@@ -178,18 +178,18 @@ for molec_name, molec_data in molec_dict.items():
             # Loop over temperatures
             for temp in temps:
                 #Only make jobs for the first and last temp for speed
-                if (temp == temps[0] or temp == temps[-1]) or (temp==temps[-2] and molec_name in ["EG", "MeOH"]):
-                    state_point["T"] = float(temp)  # K
-                    state_point["P"] =float(press[temp])  # bar
-                    state_point["expt_liq_density"] = molec_data.expt_liq_density[temp]  # kg/m^3
-                    # For each restart
-                    for restart in range(num_restarts):
-                        state_point["restart"] = restart + 1 
-                        # Loop over all scaled samples
-                        for sample in scaled_params:
-                            state_point, max_sigma_ff = unpack_molec_values(
-                                    molec_name, setup.at_class, sample, state_point
-                                ) 
-                            state_point["max_sigma"] = max_sigma
-                            job = project.open_job(state_point)
-                            job.init()
+                # if (temp == temps[0] or temp == temps[-1]) or (temp==temps[-2] and molec_name in ["EG", "MeOH"]):
+                state_point["T"] = float(temp)  # K
+                state_point["P"] =float(press[temp])  # bar
+                state_point["expt_liq_density"] = molec_data.expt_liq_density[temp]  # kg/m^3
+                # For each restart
+                for restart in range(num_restarts):
+                    state_point["restart"] = restart + 1 
+                    # Loop over all scaled samples
+                    for sample in scaled_params:
+                        state_point, max_sigma_ff = unpack_molec_values(
+                                molec_name, setup.at_class, sample, state_point
+                            ) 
+                        state_point["max_sigma"] = max_sigma
+                        job = project.open_job(state_point)
+                        job.init()

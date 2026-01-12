@@ -273,9 +273,9 @@ def init_project():
                                 state_point["restart"] = restart + 1
                                 # Open the job and initialize if it doesn't already exist
                                 #Only make jobs for the first and last temperature for speed
-                                if temp == temps[0] or temp == temps[-1]:
-                                    job = project.open_job(state_point)
-                                    job.init()
+                                # if temp == temps[0] or temp == temps[-1]:
+                                job = project.open_job(state_point)
+                                job.init()
         else:
             print(
                 f"Skipping {molec_name} as it is not ready for VLE iters. No params-iter-1.csv found."
