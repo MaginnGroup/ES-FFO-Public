@@ -46,11 +46,11 @@ def get_exp_data(molec_object, prop_key):
     if "vap_density" in prop_key:
         exp_data = molec_object.expt_vap_density
         property_bounds = molec_object.vap_density_bounds
-        property_name = "Vapor Density [kg/m^3]"
+        property_name = "Vapor Density [kg/m" + r"$^3$" + "]"
     elif "liq_density" in prop_key:
         exp_data = molec_object.expt_liq_density
         property_bounds = molec_object.liq_density_bounds
-        property_name = "Liquid Density [kg/m^3]"
+        property_name = "Liquid Density [kg/m" + r"$^3$" + "]"
     elif "Pvap" in prop_key:
         exp_data = molec_object.expt_Pvap
         property_bounds = molec_object.Pvap_bounds
