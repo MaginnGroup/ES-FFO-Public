@@ -137,17 +137,23 @@ def calc_critical(df):
     """
     Tc = []
     rhoc = []
-    values = df
-    # for group, values in df.groupby(['molecule']):    
-    #Need to group by molecule and do this for each molecule
-    temps = values["temperature"].values
-    liq_density = values["sim_liq_density"].values
-    vap_density = values["sim_vap_density"].values
+
+    #Drop rows where either liq or vap density is nan
+    df_valid = df.dropna(subset=["sim_liq_density", "sim_vap_density"])
+
+    #Only get temps where both liq and vap density exist
+    temps = df_valid["temperature"].values
+    liq_density = df_valid["sim_liq_density"].values
+    vap_density = df_valid["sim_vap_density"].values
+    # values = df
+    # temps = values["temperature"].values
+    # liq_density = values["sim_liq_density"].values
+    # vap_density = values["sim_vap_density"].values
 
     #Check that all temps are not the same
     if all(x == temps[0] for x in temps):
-        Tc += [np.nan]*len(temps)
-        rhoc += [np.nan]*len(temps)
+        Tc += [np.nan]*len(df)
+        rhoc += [np.nan]*len(df)
     else:
         # Critical Point (Law of rectilinear diameters)
         slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
@@ -163,9 +169,9 @@ def calc_critical(df):
         Tc_mol = np.abs(intercept2 / slope2)
         rhoc_mol = intercept1 + slope1 * Tc_mol
 
-        # if len(temps) == 5:
-        Tc += list([Tc_mol])*len(temps)
-        rhoc += list([rhoc_mol])*len(temps)
+        # Add correct number of entries for each molecule (even for nan value Temps)
+        Tc += list([Tc_mol])*len(df)
+        rhoc += list([rhoc_mol])*len(df)
         
     return Tc, rhoc
 
