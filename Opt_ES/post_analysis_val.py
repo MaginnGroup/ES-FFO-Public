@@ -139,18 +139,18 @@ pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 
 ####Add old FF data to lit_data
 file_save_lit = "analysis/lit_ff_data.csv"
-lit_data = pd.read_csv(file_save_lit, header=0)
-for molec_name in mol_names:
-    df_old_FF = pd.read_csv(f"analysis_old/at_00/{molec_name}/ExpVal/opt_res/ms_val/ms_data.csv", header = 0, index_col = 0)
-    #Drop all column without sim_ in the name or "temperature" or "molecule"
-    cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
-    df_old_FF = df_old_FF[cols_to_keep]
-    df_old_FF['ref_name'] = 'Old Opt FF'
-    df_old_FF['short_name'] = 'Old Opt FF'
-    lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
-lit_data.to_csv("analysis/lit_ff_data_w_oldFF.csv", index=False)
+# lit_data = pd.read_csv(file_save_lit, header=0)
+# for molec_name in mol_names:
+#     df_old_FF = pd.read_csv(f"analysis_old/at_00/{molec_name}/ExpVal/opt_res/ms_val/ms_data.csv", header = 0, index_col = 0)
+#     #Drop all column without sim_ in the name or "temperature" or "molecule"
+#     cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
+#     df_old_FF = df_old_FF[cols_to_keep]
+#     df_old_FF['ref_name'] = 'Old Opt FF'
+#     df_old_FF['short_name'] = 'Old Opt FF'
+#     lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
+# lit_data.to_csv("analysis/lit_ff_data_w_oldFF.csv", index=False)
 
-file_save_lit = "analysis/lit_ff_data_w_oldFF.csv"
+# file_save_lit = "analysis/lit_ff_data_w_oldFF.csv"
 lit_data = pd.read_csv(file_save_lit, header=0)
 for molec_name in mol_names:
     other_opt = "no_opt" if opt_status == "opt" else "opt"
