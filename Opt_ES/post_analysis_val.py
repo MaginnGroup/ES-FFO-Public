@@ -163,6 +163,8 @@ for molec_name in mol_names:
     df_old_FF['short_name'] = ref_name
     lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
 lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
+lit_data_error = prepare_df_errors(lit_data, molec_dict, molec_name)
+lit_data_error.to_csv("analysis/lit_error_data.csv")
 
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()

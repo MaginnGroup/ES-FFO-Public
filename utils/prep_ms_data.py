@@ -197,6 +197,7 @@ def prepare_df_errors(df_data, data_dict, mol_name):
         critical temperature, critical density
     """
     molecule = data_dict[mol_name]
+    all_molec = False
     #sort by molecule and temperature -- added by Ning Wang
     new_data = []
     if "iter" in df_data.columns:
@@ -210,10 +211,15 @@ def prepare_df_errors(df_data, data_dict, mol_name):
         group_keys = list(molecule.param_names)
     else:
         #For literature csv data files
-        groupby_data = df.groupby(["molecule"])
-        group_keys = ["molecule"]
+        groupby_data = df.groupby(["molecule", "ref_name"])
+        group_keys = ["molecule", "ref_name"]
+        all_molec = True
     #Sort by param names to be able to save these values
     for group, values in groupby_data:
+        if all_molec:
+            mol_name = group[0]
+            molecule = data_dict[mol_name]
+
         new_quantities = {}
 
         if len(values) > 0:
@@ -237,7 +243,10 @@ def prepare_df_errors(df_data, data_dict, mol_name):
                 if "sim_" + old_col in values.columns and not "expt_" + old_col in values.columns:
                     #For Tc and rhoc, add a single value directly
                     if old_col in ["Tc", "rhoc"]:
-                        values[expt_col] = np.array([expt_map])
+                        if not all_molec:
+                            values[expt_col] = np.array([expt_map])
+                        else:
+                            values[expt_col] = expt_map
                     #Otherwise map the values to the temperature
                     else:
                         try:
