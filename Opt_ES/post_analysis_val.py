@@ -166,6 +166,22 @@ lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
 lit_data_error = prepare_df_errors(lit_data, molec_dict, molec_name)
 lit_data_error.to_csv("analysis/lit_error_data.csv")
 
+#For each file in error dict, add the data to the lit data if it is not already there (if it is not already in prop dict)
+new_lit_data = copy.copy(lit_data_error)
+for file_err, df_err in error_dict.items():
+    df_err["ref_name"] = "IFT FF" if opt_status == "no_opt" else "Opt FF"
+    #Add the data to the lit data if it is not already there (if it is not already in prop dict)
+    new_lit_data = pd.concat([new_lit_data, df_err], join="inner", ignore_index=True)
+#Sort by molecule and remove rows where columns other than ref_name and molecule are NaN
+ref_order = ["Opt FF", "IFT FF"]
+new_lit_data["ref_name"] = pd.Categorical(
+    new_lit_data["ref_name"],
+    categories=ref_order + sorted(set(new_lit_data["ref_name"]) - set(ref_order)),
+    ordered=True,)
+new_lit_data = new_lit_data.sort_values(["molecule", "ref_name"])
+new_lit_data = new_lit_data.dropna(subset=[col for col in new_lit_data.columns if col not in ["ref_name", "molecule"]], how='all').reset_index(drop=True)
+new_lit_data.to_csv("analysis/comp_err_data.csv")
+    
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
