@@ -402,7 +402,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 if df_label == "AT-Dis":
                     df_label = "GP-Optimized FF"
                 elif df_label == "IFT FF":
-                    df_label = "IFT Iter FF (Lowest " + "$\gamma$" + " MPD)"
+                    df_label = "IFT Iter FF (Lowest " + "$\gamma$" + " MAPD)"
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
@@ -587,7 +587,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                 if label_prop == "AT-Dis":
                     label_prop = "GP-Optimized FF"
                 elif label_prop == "IFT FF":
-                    label_prop = "IFT Iter FF (Lowest " + "$\gamma$" + " MPD)"
+                    label_prop = "IFT Iter FF (Lowest " + "$\gamma$" + " MAPD)"
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
@@ -597,7 +597,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                 if df_label == "AT-Dis":
                     df_label = "GP-Optimized FF"
                 elif df_label == "IFT FF":
-                    df_label = "IFT Iter FF (Lowest " + "$\gamma$" + " MPD)"
+                    df_label = "IFT Iter FF (Lowest " + "$\gamma$" + " MAPD)"
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
                 try:
@@ -815,7 +815,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     if df_label == "AT-Dis":
                         df_label = "GP-Optimized FF"
                     elif df_label == "IFT FF":
-                        df_label = "IFT Iter FF (Lowest " + "$\gamma$" + " MPD)"
+                        df_label = "IFT Iter FF (Lowest " + "$\gamma$" + " MAPD)"
                     axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = 1.96*std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
