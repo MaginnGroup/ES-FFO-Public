@@ -467,7 +467,7 @@ def plot_sim_exp(mol_data, df_data, property_name):
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
 
-    ax2.set_xlabel("T (K)", fontsize=20, labelpad=10)
+    ax2.set_xlabel(r"$T$/K", fontsize=20, labelpad=10)
     # ax2.set_ylabel(r"$\mathregular{\gamma}$ (mN/m)", fontsize=32, labelpad=15)
     ax2.set_ylabel(prop_name, fontsize=20, labelpad=15)
     # for axis in ['top','bottom','left','right']:

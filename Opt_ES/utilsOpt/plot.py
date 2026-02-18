@@ -443,12 +443,12 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
 
-    ax2.set_xlabel("T (K)", fontsize=32, labelpad=10)
-    titles = {"surf_tens": r"$\mathregular{\gamma}$ (mN/m)",
-              "liq_density": r"$\mathregular{\rho_{liq}}$ (kg/m$^3$)",
-              "vap_density": r"$\mathregular{\rho_{vap}}$ (kg/m$^3$)",
-              "Pvap": r"$\mathregular{P_{vap}}$ (bar)",
-              "Hvap": r"$\mathregular{H_{vap}}$ (kJ/kg)",
+    ax2.set_xlabel(r"$T$/K", fontsize=32, labelpad=10)
+    titles = {"surf_tens": r"$\gamma$/mN$\cdot$m$^{-1}$", # r"$\mathregular{\gamma}$ (mN/m)"
+              "liq_density": r"$\rho_{l}$/kg$\cdot$m$^{-3}$",
+              "vap_density": r"$\mathregular{\rho_{v}}$/kg$\cdot$m$^{-3}$",
+              "Pvap": r"$P_{vap}$/bar",
+              "Hvap": r"$H_{vap}$/kJ$\cdot$kg$^{-1}$",
               "diff_coeff": r"D (m$^2$/s)"}
     if prop_name in titles:
         ax2.set_ylabel(titles[prop_name], fontsize=32, labelpad=15)
@@ -638,8 +638,8 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
 
-    ax2.set_ylabel("T (K)", fontsize=32, labelpad=10)
-    ax2.set_xlabel(r"$\mathregular{\rho}$ (kg/m$\mathregular{^3}$)", fontsize=32, labelpad=15)
+    ax2.set_ylabel(r"$T$/K", fontsize=32, labelpad=10)
+    ax2.set_xlabel(r"$\rho$/kg$\cdot$m$^{-3}$", fontsize=32, labelpad=15)
     for axis in ['top','bottom','left','right']:
         ax2.spines[axis].set_linewidth(2.0)
 
@@ -860,8 +860,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     axs[0].xaxis.set_ticks_position("both")
     axs[0].yaxis.set_ticks_position("both")
 
-    axs[0].set_xlabel("1000/T " + r"$\mathregular{K^{-1}}$", fontsize=16, labelpad=8)
-    axs[0].set_ylabel(r"$\mathregular{ln(P_{vap})}$ (bar)", fontsize=16, labelpad=8)
+    axs[0].set_xlabel(r"$1000\cdot T^{-1}$" + r"/$\mathregular{K^{-1}}$", fontsize=16, labelpad=8)
+    axs[0].set_ylabel(r"$\mathregular{ln}P_{vap}$/bar", fontsize=16, labelpad=8)
 
     # axs[1].set_xlim(min_temp*0.95,max_temp*1.05)
     # axs[1].xaxis.set_major_locator(MultipleLocator(40))
@@ -876,8 +876,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     axs[1].xaxis.set_ticks_position("both")
     axs[1].yaxis.set_ticks_position("both")
 
-    axs[1].set_xlabel("T (K)", fontsize=16, labelpad=8)
-    axs[1].set_ylabel(r"$\mathregular{\Delta H_{vap}}$ (kJ/kg)", fontsize=16, labelpad=8)
+    axs[1].set_xlabel(r"$T$/K", fontsize=16, labelpad=8)
+    axs[1].set_ylabel(r"$\Delta H_{vap}$/kJ$\cdot$kg$^{-1}$", fontsize=16, labelpad=8)
 
     if molec not in ["R14", "R50", "R170", "R116"]:
         #Substitute mole string R w/ HFC
@@ -931,9 +931,9 @@ def plot_err_each_prop(molec_names, err_path_dict, obj = 'mapd', save_name = Non
     props = ["liq_density", "vap_density", "Pvap", "Hvap", "surf_tens"]
     cols = [obj + "_" + prop for prop in props]
     if obj == "mae":
-        names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
+        names = [r"\rho_l" + r"/kg$\cdot$m$^{-3}$", r"\rho_v" + r"/kg$\cdot$m$^{-3}$", r"$P_{vap}$" + r"/bar", r"$\Delta H_{vap}$" + r"/kJ$\cdot$kg$^{-1}$", r"$\gamma$" + r"/mN$\cdot$m$^{-1}$"]
     else:
-        names = ["Liquid Density", "Vapor Density", "Vapor Pressure", "Heat of Vaporization", "Surface Tension"]
+        names = [r"\rho_l", r"\rho_v", r"$P_{vap}$", r"$\Delta H_{vap}$", r"$\gamma$"]
     # cols = [item for item in cols for _ in range(2)]
     # names = [item for item in names for _ in range(2)]
     
@@ -1269,7 +1269,8 @@ def plot_err_avg_props(molec_names, err_path_dict, obj = 'mapd', save_name = Non
 
     props = ["liq_density", "vap_density", "Pvap", "Hvap", "surf_tens"]
     cols = [obj + "_" + prop for prop in props]
-    names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
+    # names = ["Liquid Density " + r"$(kg/m^3)$", "Vapor Density " + r"$(kg/m^3)$", "Vapor Pressure " + r"$(bar)$", "Heat of Vaporization " + r"$(kJ/kg)$", "Surface Tension " + r"$(mN/m)$"]
+    names = [r"\rho_l" + r"/kg$\cdot$m$^{-3}$", r"\rho_v" + r"/kg$\cdot$m$^{-3}$", r"$P_{vap}$" + r"/bar", r"$\Delta H_{vap}$" + r"/kJ$\cdot$kg$^{-1}$", r"$\gamma$" + r"/mN$\cdot$m$^{-1}$"]
     cols = [item for item in cols for _ in range(2)]
     names = [item for item in names for _ in range(2)]
     

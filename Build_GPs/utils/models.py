@@ -46,23 +46,23 @@ def get_exp_data(molec_object, prop_key):
     if "vap_density" in prop_key:
         exp_data = molec_object.expt_vap_density
         property_bounds = molec_object.vap_density_bounds
-        property_name = "Vapor Density [kg/m" + r"$^3$" + "]"
+        property_name = r"$\rho_v$/kg$\cdot$m$^{-3}$" #"Vapor Density [kg/m" + r"$^3$" + "]"
     elif "liq_density" in prop_key:
         exp_data = molec_object.expt_liq_density
         property_bounds = molec_object.liq_density_bounds
-        property_name = "Liquid Density [kg/m" + r"$^3$" + "]"
+        property_name = r"$\rho_l$/kg$\cdot$m$^{-3}$"
     elif "Pvap" in prop_key:
         exp_data = molec_object.expt_Pvap
         property_bounds = molec_object.Pvap_bounds
-        property_name = "Vapor Pressure [bar]"
+        property_name = r"$P_{vap}$/bar$"
     elif "Hvap" in prop_key:
         exp_data = molec_object.expt_Hvap
         property_bounds = molec_object.Hvap_bounds
-        property_name = "Enthalpy of Vaporization [kJ/kg]"
+        property_name = r"$\Delta H_{vap}$/kJ$\cdot$kg$^{-1}$"
     elif "surf_tens" in prop_key:
         exp_data = molec_object.expt_surf_tens
         property_bounds = molec_object.surf_tens_bounds
-        property_name = "Surface Tension [mN/m]"
+        property_name = r"$\gamma$/mN$\cdot$m$^{-1}$"
     else:
         raise (
             ValueError,
