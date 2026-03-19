@@ -22,6 +22,7 @@ R125_29*_ex*
 Build_GPs/analysis/R125/*
 density_iters/old/*
 *old2*
+.vscode
 
 # Distribution / packaging
 .Python
