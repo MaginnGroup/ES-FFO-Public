@@ -329,7 +329,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Borin & Skaf": ('tab:green', 'p', 1, False),
                "Garcia-Melgarejo et. al.": ('gray', 's', 1, False),
                "Luo et. al.": ('tab:orange', '>', 1, False),
-               "Wang et. al.": ('magenta', 'D', 1, False),
+               "Wang et. al.": ('tab:magenta', 'D', 1, False),
                "Old Opt FF": ('tab:blue', '+', 1, False),
                "IFT FF": ('tab:red', '^', 1, False),
                "Opt FF": ('tab:red', '^', 1, False),
@@ -438,7 +438,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     #     max_temp =430
     ax2.set_xlim(min_temp*0.95, max_temp*1.05)
     
-    ax2.tick_params("both", direction="in", which="both", length=4, labelsize=26, pad=10)
+    ax2.tick_params("both", direction="in", which="both", length=4, labelsize=22, pad=10)
     ax2.tick_params("both", which="major", length=8)
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
@@ -451,13 +451,16 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
               "Hvap": r"$H_{vap}$/kJ$\cdot$kg$^{-1}$",
               "diff_coeff": r"D (m$^2$/s)"}
     if prop_name in titles:
-        ax2.set_ylabel(titles[prop_name], fontsize=32, labelpad=15)
+        ax2.set_ylabel(titles[prop_name], fontsize=32, labelpad=10)
     else:
-        ax2.set_ylabel(prop_name, fontsize=32, labelpad=15)
+        ax2.set_ylabel(prop_name, fontsize=32, labelpad=10)
     for axis in ['top','bottom','left','right']:
         ax2.spines[axis].set_linewidth(2.0)
 
-    ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    #Get legends and handles
+    handles, labels = ax2.get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=2, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    # ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     if prop_name == "diff_coeff":
         #Put text in lower right
         ax2.text(0.60,  0.15, molec, fontsize=30, transform=ax2.transAxes)
@@ -492,22 +495,22 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
-    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1, False),
-               "Jorgensen": ('tab:orange', '>', 1, False),
-               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1, False),
-               "Huang et. al.": ('gray', 's', 1, False),
-               "Jahn et. al.": ('gray', 's', 1, False),
-               "Caleman et. al.": ('gray', 's', 1, False),
-               "Vahid & Maginn": ('tab:orange', '>', 1, False),
-               "Chalaris & Samios": ('tab:green', 'p', 1, False),
-               "Senapati": ('gray', 's', 1, False),
-               "Borin & Skaf": ('tab:green', 'p', 1, False),
-               "Garcia-Melgarejo et. al.": ('gray', 's', 1, False),
-               "Luo et. al.": ('tab:orange', '>', 1, False),
-               "Wang et. al.": ('magenta', 'D', 1, False),
-               "Old Opt FF": ('tab:blue', '+', 1, False),
-               "IFT FF": ('tab:red', '^', 1, False),
-               "Opt FF": ('tab:red', '^', 1, False),
+    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
+               "Jorgensen": ('tab:orange', '>', 1),
+               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
+               "Huang et. al.": ('gray', 's', 1),
+               "Jahn et. al.": ('gray', 's', 1),
+               "Caleman et. al.": ('gray', 's', 1),
+               "Vahid & Maginn": ('tab:orange', '>', 1),
+               "Chalaris & Samios": ('tab:green', 'p', 1),
+               "Senapati": ('gray', 's', 1),
+               "Borin & Skaf": ('tab:green', 'p', 1),
+               "Garcia-Melgarejo et. al.": ('gray', 's', 1),
+               "Luo et. al.": ('tab:orange', '>', 1),
+               "Wang et. al.": ('magenta', 'D', 1),
+               "Old Opt FF": ('tab:blue', '+', 1),
+               "IFT FF": ('tab:red', '^', 1),
+               "Opt FF": ('tab:red', '^', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -633,13 +636,13 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     # ax2.yaxis.set_major_locator(MultipleLocator(40))
     ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
     
-    ax2.tick_params("both", direction="in", which="both", length=4, labelsize=26, pad=10)
+    ax2.tick_params("both", direction="in", which="both", length=4, labelsize=20, pad=10)
     ax2.tick_params("both", which="major", length=8)
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
 
     ax2.set_ylabel(r"$T$/K", fontsize=32, labelpad=10)
-    ax2.set_xlabel(r"$\rho$/kg$\cdot$m$^{-3}$", fontsize=32, labelpad=15)
+    ax2.set_xlabel(r"$\rho$/kg$\cdot$m$^{-3}$", fontsize=32, labelpad=10)
     for axis in ['top','bottom','left','right']:
         ax2.spines[axis].set_linewidth(2.0)
 
@@ -658,9 +661,10 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         if l not in unique:
             unique[l] = h
 
-    ax2.legend(unique.values(), unique.keys(), loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     ax2.text(0.65,  0.82, molec, fontsize=30, transform=ax2.transAxes)
     fig.subplots_adjust(bottom=0.2, top=0.75, left=0.15, right=0.95, wspace=0.55)
+    fig.legend(unique.values(), unique.keys(), loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=2, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+
 
     return fig
 
@@ -692,22 +696,22 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
-    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1, False),
-               "Jorgensen": ('tab:orange', '>', 1, False),
-               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1, False),
-               "Huang et. al.": ('gray', 's', 1, False),
-               "Jahn et. al.": ('gray', 's', 1, False),
-               "Caleman et. al.": ('gray', 's', 1, False),
-               "Vahid & Maginn": ('tab:orange', '>', 1, False),
-               "Chalaris & Samios": ('tab:green', 'p', 1, False),
-               "Senapati": ('gray', 's', 1, False),
-               "Borin & Skaf": ('tab:green', 'p', 1, False),
-               "Garcia-Melgarejo et. al.": ('gray', 's', 1, False),
-               "Luo et. al.": ('tab:orange', '>', 1, False),
-               "Wang et. al.": ('magenta', 'D', 1, False),
-               "Old Opt FF": ('tab:blue', '+', 1, False),
-               "IFT FF": ('tab:red', '^', 1, False),
-               "Opt FF": ('tab:red', '^', 1, False),
+    key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
+               "Jorgensen": ('tab:orange', '>', 1),
+               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
+               "Huang et. al.": ('gray', 's', 1),
+               "Jahn et. al.": ('gray', 's', 1),
+               "Caleman et. al.": ('gray', 's', 1),
+               "Vahid & Maginn": ('tab:orange', '>', 1),
+               "Chalaris & Samios": ('tab:green', 'p', 1),
+               "Senapati": ('gray', 's', 1),
+               "Borin & Skaf": ('tab:green', 'p', 1),
+               "Garcia-Melgarejo et. al.": ('gray', 's', 1),
+               "Luo et. al.": ('tab:orange', '>', 1),
+               "Wang et. al.": ('magenta', 'D', 1),
+               "Old Opt FF": ('tab:blue', '+', 1),
+               "IFT FF": ('tab:red', '^', 1),
+               "Opt FF": ('tab:red', '^', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -751,7 +755,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     #             break
 
     # Plot Pvap / Hvap
-    fig, axs = plt.subplots(nrows=1, ncols=2,figsize=(12,6))
+    fig, axs = plt.subplots(nrows=1, ncols=2,figsize=(12.2,6))
     #fig, ax1 = plt.subplots(1, 1, figsize=(6,6))
 
     #Loop over dfs of given ff results
@@ -855,13 +859,13 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     # axs[0].yaxis.set_major_locator(MultipleLocator(10))
     # axs[0].yaxis.set_minor_locator(AutoMinorLocator(5))
 
-    axs[0].tick_params("both", direction="in", which="both", length=2, labelsize=16, pad=10)
-    axs[0].tick_params("both", which="major", length=4)
+    axs[0].tick_params("both", direction="in", which="both", length=4, labelsize=20, pad=10)
+    axs[0].tick_params("both", which="major", length=8)
     axs[0].xaxis.set_ticks_position("both")
     axs[0].yaxis.set_ticks_position("both")
 
-    axs[0].set_xlabel(r"$1000\cdot T^{-1}$" + r"/$\mathregular{K^{-1}}$", fontsize=16, labelpad=8)
-    axs[0].set_ylabel(r"$\mathregular{ln}(P_{vap}$/bar)", fontsize=16, labelpad=8)
+    axs[0].set_xlabel(r"$1000\cdot T^{-1}$" + r"/$\mathregular{K^{-1}}$", fontsize=32, labelpad=10)
+    axs[0].set_ylabel(r"$\mathregular{ln}(P_{vap}$/bar)", fontsize=32, labelpad=10)
 
     # axs[1].set_xlim(min_temp*0.95,max_temp*1.05)
     # axs[1].xaxis.set_major_locator(MultipleLocator(40))
@@ -871,18 +875,22 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     # axs[1].yaxis.set_major_locator(MultipleLocator(100))
     # axs[1].yaxis.set_minor_locator(AutoMinorLocator(5))
 
-    axs[1].tick_params("both", direction="in", which="both", length=2, labelsize=16, pad=10)
-    axs[1].tick_params("both", which="major", length=4)
+    axs[1].tick_params("both", direction="in", which="both", length=4, labelsize=20, pad=10)
+    axs[1].tick_params("both", which="major", length=8)
     axs[1].xaxis.set_ticks_position("both")
     axs[1].yaxis.set_ticks_position("both")
 
-    axs[1].set_xlabel(r"$T$/K", fontsize=16, labelpad=8)
-    axs[1].set_ylabel(r"$\Delta H_{vap}$/kJ$\cdot$kg$^{-1}$", fontsize=16, labelpad=8)
+    axs[1].set_xlabel(r"$T$/K", fontsize=32, labelpad=10)
+    axs[1].set_ylabel(r"$\Delta H_{vap}$/kJ$\cdot$kg$^{-1}$", fontsize=32, labelpad=10)
 
     if molec not in ["R14", "R50", "R170", "R116"]:
         #Substitute mole string R w/ HFC
         molec = molec.replace("R","HFC")
-    axs[0].text(0.08, 0.3, molec, fontsize=20, transform=axs[0].transAxes)
+    axs[0].text(0.08, 0.3, molec, fontsize=30, transform=axs[0].transAxes)
+
+    for axis in ['top','bottom','left','right']:
+        axs[0].spines[axis].set_linewidth(2.0)
+        axs[1].spines[axis].set_linewidth(2.0)
 
     #Get unique labels for legend from axs 0 and 1
     # Collect handles and labels from each subplot
@@ -899,7 +907,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         if l not in unique:
             unique[l] = h
 
-    axs[0].legend(unique.values(), unique.keys(), loc="lower left", bbox_to_anchor=(0.05, 1.05), ncol=3, fontsize=16, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
+    fig.legend(unique.values(), unique.keys(), loc="lower center", bbox_to_anchor=(0.5, 0.88), ncol=2, fontsize=20, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
 
     fig.subplots_adjust(bottom=0.15, top=0.85, left=0.15, right=0.85, wspace=0.55, hspace=0.5)
 

@@ -467,15 +467,18 @@ def plot_sim_exp(mol_data, df_data, property_name):
     ax2.xaxis.set_ticks_position("both")
     ax2.yaxis.set_ticks_position("both")
 
-    ax2.set_xlabel(r"$T$/K", fontsize=20, labelpad=10)
+    ax2.set_xlabel(r"$T$/K", fontsize=32, labelpad=10)
     # ax2.set_ylabel(r"$\mathregular{\gamma}$ (mN/m)", fontsize=32, labelpad=15)
-    ax2.set_ylabel(prop_name, fontsize=20, labelpad=15)
+    ax2.set_ylabel(prop_name, fontsize=32, labelpad=15)
     # for axis in ['top','bottom','left','right']:
     #     ax2.spines[axis].set_linewidth(2.0)
 
     # for h in handles: h.set_linestyle("")
-    fig.legend(loc="upper center", ncol=ncol, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    fig.legend(loc="upper center", ncol=ncol, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     ax2.text(0.60,  0.82, mol_data.name, fontsize=30, transform=ax2.transAxes)
     fig.subplots_adjust(bottom=0.2, top=0.85, left=0.15, right=0.95, wspace=0.55)
+
+    for axis in ['top','bottom','left','right']:
+        ax2.spines[axis].set_linewidth(2.0)
 
     return fig
