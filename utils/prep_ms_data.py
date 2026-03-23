@@ -11,6 +11,142 @@ import copy
 from fffit.fffit.utils import values_real_to_scaled
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 
+def estimate_hvaps(df_data, data_dict, mol_name):
+    """Estimate Hvap values for rows where we have Pvap and temperature but not Hvap using the Clausius-Clapeyron relation
+
+    Parameters
+    ----------
+    df_data : pandas.DataFrame
+        Dataframe with columns "temperature", "sim_Pvap", and "sim_Hvap" and optionally "ref_name" and "molecule"
+    data_dict : dictionary of EsolvsConstants
+        A dictionary mapping molecule names to their constants class instances with expt_Hvap defined
+    mol_name : str
+        The name of the molecule to be evaluated (must be a key in data_dict)
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        The input dataframe with missing Hvap values filled in where possible
+    """
+    #Check that we have the necessary columns to do this estimation
+    if not all(col in df_data.columns for col in ["temperature", "sim_Pvap"]):
+        raise ValueError("Dataframe must contain columns 'temperature' and 'sim_Pvap' to estimate Hvap values")
+    
+    #Calculate Hvap using the Clausius-Clapeyron relation: Hvap = -R * T * ln(Pvap/P0), where P0 is 1 atm in Pa
+    R = 8.314*(10**-3) # kJ/(mol*K)
+
+    def get_hvap_est(df_grp, molecule, noisy = False):
+        Texps = molecule.expt_Hvap.keys()
+        #initialize dictionary to hold estimated Hvap values at each experimental temperature, iinitialize each with nan value
+        H_est = {Texp: np.nan for Texp in Texps}
+        H_method = {Texp: "skipped" for Texp in Texps}
+        if noisy:
+            print("Texps", Texps)
+        #Group data by temperature 
+        for Texp in Texps:
+            #If at least one Hvap temperature matches the experimental temperature, and sim_Hvap data exists:
+            if Texp in df_grp["temperature"].values and not all(pd.isna(df_grp[df_grp["temperature"] == Texp]["sim_Hvap"].values)):
+                #Get the average Hvap value at this temperature if there are multiple entries
+                H_est[Texp] = np.mean(df_grp[df_grp["temperature"] == Texp]["sim_Hvap"].values) 
+                H_method[Texp] = "direct"
+            else: #Texp not in df_grp["temperature"].values:
+                #Get the closest temperature to Texp which is higher and lower for which Pvap data exists
+                #Check that we have data on both sides of the experimental temperature
+                if not any(df_grp["temperature"] > Texp) or not any(df_grp["temperature"] < Texp):
+                    continue #If we do not have data on both sides of the experimental temperature, skip this Texp
+                T_higher = np.nanmin(df_grp[df_grp["temperature"] > Texp]["temperature"])
+                T_lower = np.nanmax(df_grp[df_grp["temperature"] < Texp]["temperature"])
+                if noisy:
+                    print("T_higher", T_higher, "T_lower", T_lower)
+                if pd.isna(T_higher) or pd.isna(T_lower):
+                    continue #If we do not have data on both sides of the experimental temperature, skip this Texp
+                #Get the Pvap values at these temperatures
+                Pvap_higher = df_grp[df_grp["temperature"] == T_higher]["sim_Pvap"].values
+                Pvap_lower = df_grp[df_grp["temperature"] == T_lower]["sim_Pvap"].values
+                if noisy:
+                    print("Pvap_higher", Pvap_higher, "Pvap_lower", Pvap_lower)
+                #If we do not have Pvap data at either of these temperatures, skip this Texp
+                if (len(Pvap_higher) == 0 or len(Pvap_lower) == 0) or all(pd.isna(Pvap_higher)) or all(pd.isna(Pvap_lower)):
+                    continue
+                else:
+                #Get the averages of the Pvap values at these temperatures if there are multiple entries
+                    Pvap_higher_avg = np.nanmean(Pvap_higher)
+                    Pvap_lower_avg = np.nanmean(Pvap_lower)
+
+                    # print("Pvap_higher_avg", Pvap_higher_avg, "Pvap_lower_avg", Pvap_lower_avg)
+                    #Estimate Hvap at Texp using the Clausius-Clapeyron relation
+                    H_est_scl = -np.log(Pvap_higher_avg / Pvap_lower_avg) * R / (1/T_higher - 1/T_lower) #kJ/mol
+                    #Convert to kJ/kg using the molar mass of the molecule
+                    H_est_kJ_per_kg = H_est_scl / molecule.molecular_weight * 1000
+                    if noisy:
+                        print("Estimated Hvap at Texp", Texp, "is", H_est_kJ_per_kg, "kJ/mol")
+                    H_est[Texp] = H_est_kJ_per_kg
+                    H_method[Texp] = "estimated"
+
+        if noisy:
+            print("H_est", H_est)
+            print("H_method", H_method)
+        return H_est, H_method
+        
+    test_mol = data_dict[mol_name]
+
+    if list(test_mol.param_names)[0] in df_data.columns:
+        #Get H_est for each group of parameter
+        df = df_data.sort_values(by=["temperature"])
+        molecule = data_dict[mol_name]
+        H_est, H_method = get_hvap_est(df, molecule)
+        #Create a new df of the molecule param names, temperatures, estimated Hvap values, and experimental Hvap values
+        df_est = pd.DataFrame({
+            "t_exp": list(H_est.keys()),
+            "est_Hvap": list(H_est.values()),
+            "H_method": list(H_method.values())
+        })
+        df_est["expt_Hvap"] = df_est["t_exp"].map(molecule.expt_Hvap)
+
+        #Calculate APD for the estimated Hvap values compared to the experimental values
+        finite_indices = np.isfinite(df_est["expt_Hvap"]) & np.isfinite(df_est["est_Hvap"])
+        if finite_indices.sum() > 0:
+            df_est["apd_Hvap"] = (np.abs(df_est["est_Hvap"][finite_indices] - df_est["expt_Hvap"][finite_indices]) / df_est["expt_Hvap"][finite_indices]) * 100
+            mapd = mean_absolute_percentage_error(df_est["expt_Hvap"][finite_indices], df_est["est_Hvap"][finite_indices]) * 100.0
+            df_est["mapd_Hvap"] = mapd
+        
+        #add molecule param names to the df from the original df
+        for param in molecule.param_names:
+            if param in df.columns:
+                df_est[param] = df[param].iloc[0] #Assume all rows with the same temperature have the same parameter values
+    else:
+        df = df_data.sort_values(by=["molecule", "ref_name", "temperature"])
+        #For each reference in the dataframe, get the H_est for that reference and add it to a new dataframe with the reference name, temperature, estimated Hvap, and experimental Hvap
+        df_est_list = []
+        for (mol_name, ref_name), df_ref in df.groupby(["molecule", "ref_name"]):
+            # print(mol_name, ref_name)
+            molecule = data_dict[mol_name]
+            # if "Melgarejo" in ref_name:
+            #     print("Found Melgarejo reference")
+            #     H_est = get_hvap_est(df_ref, molecule, noisy=True)
+            # else:
+            H_est, H_method = get_hvap_est(df_ref, molecule)
+            df_est_ref = pd.DataFrame({
+                "molecule": molecule.name,
+                "ref_name": ref_name,
+                "t_exp": list(H_est.keys()),
+                "est_Hvap": list(H_est.values()),
+                "H_method": list(H_method.values())
+            })
+            df_est_ref["expt_Hvap"] = df_est_ref["t_exp"].map(molecule.expt_Hvap)
+
+            #Calculate APD for the estimated Hvap values compared to the experimental values
+            finite_indices = np.isfinite(df_est_ref["expt_Hvap"]) & np.isfinite(df_est_ref["est_Hvap"])
+            if finite_indices.sum() > 0:
+                df_est_ref["apd_Hvap"] = (np.abs(df_est_ref["est_Hvap"][finite_indices] - df_est_ref["expt_Hvap"][finite_indices]) / df_est_ref["expt_Hvap"][finite_indices]) * 100
+                mapd = mean_absolute_percentage_error(df_est_ref["expt_Hvap"][finite_indices], df_est_ref["est_Hvap"][finite_indices]) * 100.0
+                df_est_ref["mapd_Hvap"] = mapd
+
+            df_est_list.append(df_est_ref)
+        df_est = pd.concat(df_est_list, ignore_index=True)
+
+    return df_est
+
 def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
     """Prepare a pandas dataframe for fitting a GP model to density data
 
@@ -92,6 +228,8 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
             except KeyError: 
                 df_all[expt_col] = np.nan
 
+
+    #Calculate ciritcal points if sim liq density and vap density exist
     if "sim_liq_density" in df_all.columns and "sim_vap_density" in df_all.columns:
         Tc, rhoc = calc_critical(df_all)
         df_all["sim_Tc"] = Tc

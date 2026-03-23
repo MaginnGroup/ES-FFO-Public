@@ -17,7 +17,7 @@ if str(root_path) not in sys.path:
 
 # Now import using package structure relative to ES-FFO root
 from utils.molec_class_files import esolvs
-from utils.prep_ms_data import prepare_df_props, prepare_df_errors
+from utils.prep_ms_data import estimate_hvaps, prepare_df_props, prepare_df_errors
 from Opt_ES.utilsOpt.plot import plot_vle_envelopes, plot_misc_prop, plot_pvap_hvap, plot_err_each_prop, plot_err_avg_props
 from Opt_ES.utilsOpt import atom_type
 from Opt_ES.utilsOpt.signac import save_signac_results, get_signac_results
@@ -83,6 +83,11 @@ for file, df_molec in all_df_data.items():
             #Save single molecule propery data
             df_all, df_liq, df_vap = prepare_df_props(df_molec, molec_dict[molec], 0, scale = False)
             file_save = file
+
+        #Save df for Hvap estimates
+        df_H_est = estimate_hvaps(df_all, molec_dict, molec)
+        data_H_loc = os.path.join(file_save, "Hvap_estimates.csv")
+        df_H_est.to_csv(data_H_loc)
 
         #Save prop data
         data_loc = os.path.join(file_save, "ms_data.csv")
@@ -165,6 +170,10 @@ for molec_name in mol_names:
 lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
 lit_data_error = prepare_df_errors(lit_data, molec_dict, molec_name)
 lit_data_error.to_csv("analysis/lit_error_data.csv")
+
+ #Save df for Hvap estimates
+h_est_lit_data = estimate_hvaps(lit_data, molec_dict, molec)
+h_est_lit_data.to_csv(f"analysis/lit_Hvap_est_w_{other_opt}.csv", index=False)
 
 #For each file in error dict, add the data to the lit data if it is not already there (if it is not already in prop dict)
 new_lit_data = copy.copy(lit_data_error)
