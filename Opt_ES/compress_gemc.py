@@ -6,13 +6,17 @@ import shutil
 import tarfile
 import subprocess
 
-mode = "compress" #compress or decompress or check
+mode = "decompress" #compress or decompress or check
 
 # Load the project
-project = signac.get_project("Opt_ES/gemc_val_opt")
+project = signac.get_project("gemc_val_opt")
+count = 0
 #Loop over all jobs in the project
 for job in project.find_jobs():
-# for job in project.find_jobs({"mol_name": "MeOH", "T":500.0, "restart": 3}):
+# for job in project.find_jobs({"mol_name": "EG", "T":378.15, "restart": 2}):
+    if count == 0:
+        print(job.id)
+        count += 1
     #If gemc failed or vap_density and liq_density in job.doc
     job_init_doc = job.fn("signac_job_document.json")
     # Check if the file exists
@@ -33,18 +37,18 @@ for job in project.find_jobs():
                 keep_files = ["gemc.eq.out.box1.prp", "npt.eq.out.prp", "nvt.eq.out.prp"]
 
                 try:
-                    last_prod = sorted(glob.glob("prod.*.box1.prp"))[-1]
-                    keep_files += last_prod
+                    last_prod = sorted(glob.glob("prod.*out.box1.prp"))[-1]
+                    keep_files.append(last_prod)
                 except:
                     pass
                 try:
                     last_eq = sorted(glob.glob("gemc.eq.*.out.box1.prp"))[-1]
-                    keep_files += last_eq
+                    keep_files.append(last_eq)
                 except:
                     pass
                 try:
                     last_eq_chk = sorted(glob.glob("gemc.eq*out.chk"))[-1]
-                    keep_files += last_eq_chk
+                    keep_files.append(last_eq_chk)
                 except:
                     pass
                 
