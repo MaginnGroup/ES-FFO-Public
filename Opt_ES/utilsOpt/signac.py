@@ -97,6 +97,13 @@ def get_signac_results(project_dict, data_dict, proj_name = "no_opt"):
                 df["restart"] = restart
                 df["molecule"] = mol_name
 
+                #Convert Pvap units from bar to kPa (1 bar = 100 kPa)
+                # if "Pvap" in df.columns:
+                #     df["Pvap"] = df["Pvap"] * 100
+                #     if "Pvap_unc" in df.columns:
+                #         df["Pvap_unc"] = df["Pvap_unc"] * 100
+                
+
                 #Add data to all_data_dict
                 # If the data directory is already in the dictionary, concatenate the dataframes
                 dir_name = os.path.join(setup.use_dir_name, f"ms_val_{proj_name}")

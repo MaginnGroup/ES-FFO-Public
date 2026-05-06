@@ -320,6 +320,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1, False),
                "Jorgensen": ('tab:orange', '>', 1, False),
                "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1, False),
+               "Chen et. al.": ('purple', 'd', 1, False),
+               "Stubbs et. al.": ('purple', 'd', 1, False),
                "Huang et. al.": ('gray', 's', 1, False),
                "Jahn et. al.": ('gray', 's', 1, False),
                "Caleman et. al.": ('gray', 's', 1, False),
@@ -348,10 +350,10 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     # df_markers = ['o', 's', '^', '*', 'p', 'd']
     # df_z_order = [6,3,2,1,5,4]
     prop_data = getattr(mol_data, "expt_" + prop_name)
-    # if prop_name == "diff_coeff":
-        #multiply by 10**9 
-        # for key in prop_data.keys():
-        #     prop_data[key] = prop_data[key]*1e9
+
+    if prop_name == "Pvap":
+        for key in prop_data.keys():
+            prop_data[key] = prop_data[key]*100 #Convert from bar to kPa for plotting
 
     #Initialize min and max values
     min_temp = min(prop_data.keys())
@@ -378,7 +380,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
-        if df_ff is not None: #and show_df:
+        if df_ff is not None and "Vahid" not in df_label: #and show_df:
             min_temp, max_temp = get_min_max(min_temp, max_temp, df_ff["temperature"].values)
             all_props = ["sim_" + prop_name]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
@@ -392,17 +394,17 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
 
             for x_prop in x_props:
                 #Set new max and mins
-                # if prop_name == "diff_coeff":
-                #     #multiply by 10**9 
-                #     means[x_prop] = means[x_prop]*1e9
-                #     stds[x_prop] = stds[x_prop]*1e9
+                if prop_name == "Pvap": #Convert from bar to kPa for plotting -- multiply by 100
+                    #multiply by 10**9 
+                    means[x_prop] = means[x_prop]*100
+                    stds[x_prop] = stds[x_prop]*100
                 min_st, max_st = get_min_max(min_st, max_st, means[x_prop].values, stds[x_prop].values)
                 # print(min_st, max_st)
                 # #Plot opt_scheme_ms vle curve
                 if df_label == "AT-Dis":
-                    df_label = "GP-Optimized FF"
+                    df_label = "GP-Opt IFT FF"
                 elif df_label == "IFT FF":
-                    df_label = "Lowest " + r"$\gamma$" + " MAPD FF"
+                    df_label = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
@@ -447,7 +449,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     titles = {"surf_tens": r"$\gamma$/mN$\cdot$m$^{-1}$", # r"$\mathregular{\gamma}$ (mN/m)"
               "liq_density": r"$\rho_{l}$/kg$\cdot$m$^{-3}$",
               "vap_density": r"$\mathregular{\rho_{v}}$/kg$\cdot$m$^{-3}$",
-              "Pvap": r"$P_{vap}$/bar",
+              "Pvap": r"$P_{vap}$/kPa",
               "Hvap": r"$H_{vap}$/kJ$\cdot$kg$^{-1}$",
               "diff_coeff": r"D (m$^2$/s)"}
     if prop_name in titles:
@@ -498,6 +500,8 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
                "Jorgensen": ('tab:orange', '>', 1),
                "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
+               "Chen et. al.": ('purple', 'd', 1),
+               "Stubbs et. al.": ('purple', 'd', 1),
                "Huang et. al.": ('gray', 's', 1),
                "Jahn et. al.": ('gray', 's', 1),
                "Caleman et. al.": ('gray', 's', 1),
@@ -552,7 +556,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         df_color, df_marker, df_z_order = key_map[df_label]
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         
-        if df_ff is not None:
+        if df_ff is not None and "Vahid" not in df_label:
             #Check that there are data points for vapor density
             all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
             x_props = []
@@ -588,9 +592,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                             
                 # #Plot opt_scheme_ms vle curve
                 if label_prop == "AT-Dis":
-                    label_prop = "GP-Optimized FF"
+                    label_prop = "GP-Opt IFT FF"
                 elif label_prop == "IFT FF":
-                    label_prop = "Lowest " + r"$\gamma$" + " MAPD FF"
+                    label_prop = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
@@ -598,9 +602,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             #Plot critical points if available
             if has_vap and has_liq and molec != "DMSO":
                 if df_label == "AT-Dis":
-                    df_label = "GP-Optimized FF"
+                    df_label = "GP-Opt IFT FF"
                 elif df_label == "IFT FF":
-                    df_label = "Lowest " + r"$\gamma$" + " MAPD FF"
+                    df_label = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
                 try:
@@ -699,6 +703,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     key_map = {"Martinez-Jimenez et. al.": ('gray', 's', 1),
                "Jorgensen": ('tab:orange', '>', 1),
                "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
+               "Chen et. al.": ('purple', 'd', 1),
+               "Stubbs et. al.": ('purple', 'd', 1),
                "Huang et. al.": ('gray', 's', 1),
                "Jahn et. al.": ('gray', 's', 1),
                "Caleman et. al.": ('gray', 's', 1),
@@ -730,8 +736,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     #Initialize min and max values
     min_temp = min(np.array(list(mol_data.expt_Pvap.keys())))
     max_temp = max(np.array(list(mol_data.expt_Pvap.keys())))
-    min_pvap = min(np.log(np.array(list(mol_data.expt_Pvap.values()))))
-    max_pvap = max(np.log(np.array(list(mol_data.expt_Pvap.values()))))
+    min_pvap = min(np.log(np.array(list(mol_data.expt_Pvap.values()))*100)) #Convert from bar to kPa for plotting
+    max_pvap = max(np.log(np.array(list(mol_data.expt_Pvap.values()))*100)) #Convert from bar to kPa for plotting
     # else:
     #     for df in df_ff_list:
     #         if df is not None:
@@ -763,11 +769,16 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
+        #Convert from bar to kPa for plotting
+        if df_ff is not None and "Vahid" not in df_label:
+            df_ff["sim_Pvap"] = df_ff["sim_Pvap"]*100
+
+
         df_color, df_marker, df_z_order = key_map[df_label]
         
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
 
-        if df_ff is not None: #and ("Potoff" in df_label or "GAFF" in df_label)
+        if df_ff is not None and "Vahid" not in df_label:
             #Check if there are data points for Pvap and Hvap
             # x_props = ["sim_Pvap", "sim_Hvap"]
             df_ff.replace("", np.nan, inplace=True)
@@ -817,9 +828,9 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     # print(min_pvap, max_pvap)
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
                     if df_label == "AT-Dis":
-                        df_label = "GP-Optimized FF"
+                        df_label = "GP-Opt IFT FF"
                     elif df_label == "IFT FF":
-                        df_label = "Lowest " + r"$\gamma$" + " MAPD FF"
+                        df_label = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
                     axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = 1.96*std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
@@ -839,9 +850,9 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                             zorder = df_z_order,label = df_label)
 
         
-    #Plot experimental pvap
+    #Plot experimental pvap (kPa)
     axs[0].scatter(1000/np.array(list(mol_data.expt_Pvap.keys())),
-                    np.log(np.array(list(mol_data.expt_Pvap.values()))),
+                    np.log(np.array(list(mol_data.expt_Pvap.values()))*100),
         color="black",marker="x",label="Experiment",s=100,zorder = len(df_ff_list)+1)
     #Plot experimental Hvap
     axs[1].scatter(mol_data.expt_Hvap.keys(),mol_data.expt_Hvap.values(),
@@ -865,7 +876,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     axs[0].yaxis.set_ticks_position("both")
 
     axs[0].set_xlabel(r"$1000\cdot T^{-1}$" + r"/$\mathregular{K^{-1}}$", fontsize=32, labelpad=10)
-    axs[0].set_ylabel(r"$\mathregular{ln}(P_{vap}$/bar)", fontsize=32, labelpad=10)
+    axs[0].set_ylabel(r"$\mathregular{ln}(P_{vap}$/kPa)", fontsize=32, labelpad=10)
 
     # axs[1].set_xlim(min_temp*0.95,max_temp*1.05)
     # axs[1].xaxis.set_major_locator(MultipleLocator(40))
@@ -886,7 +897,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     if molec not in ["R14", "R50", "R170", "R116"]:
         #Substitute mole string R w/ HFC
         molec = molec.replace("R","HFC")
-    axs[0].text(0.08, 0.3, molec, fontsize=30, transform=axs[0].transAxes)
+    axs[0].text(0.08, 0.15, molec, fontsize=30, transform=axs[0].transAxes)
 
     for axis in ['top','bottom','left','right']:
         axs[0].spines[axis].set_linewidth(2.0)

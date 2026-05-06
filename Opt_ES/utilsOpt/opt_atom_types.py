@@ -1108,7 +1108,7 @@ class Analyze_opt_res(Problem_Setup):
         else:
             all_best_gp = None
 
-        param_dict["Optimized Set (GP)"] = all_best_gp
+        param_dict["GP-Opt IFT FF (GP Predicted)"] = all_best_gp
 
         molec_dir = self.make_results_dir([molec_ind])
         if os.path.exists(molec_dir / "best_per_run.csv"):
@@ -1152,7 +1152,7 @@ class Analyze_opt_res(Problem_Setup):
         )
         paper_best_gp = tf.convert_to_tensor(paper_best_gp, dtype=tf.float64)
 
-        param_dict["Best IFT Set (GP)"] = paper_best_gp
+        param_dict["Base IFT FF (GP Predicted)"] = paper_best_gp
 
         molec_gaff = np.array(
             list(self.molec_data_dict[molec_ind].gaff_params.values())
