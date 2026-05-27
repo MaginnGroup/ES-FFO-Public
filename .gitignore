@@ -21,6 +21,7 @@ R125_29*_ex*
 *.so
 Build_GPs/analysis/R125/*
 density_iters/old/*
+*DEC_old*
 *old2*
 .vscode
 
