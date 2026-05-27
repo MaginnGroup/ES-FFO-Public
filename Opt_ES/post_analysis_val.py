@@ -70,7 +70,8 @@ all_df_data = save_signac_results(all_df_data)
 for file, df_molec in all_df_data.items():
     #Determine if file contains data for > 1 molecule (generalized FFs)
     file_pieces = file.split("/")
-    train_mol_str = file_pieces[7]#This will be train_mol_str
+    train_mol_str = file_pieces[9]#This will be train_mol_str
+    # print(file_pieces, train_mol_str)
     train_moles = train_mol_str.split("-")
     #Prepare and save data for each individual molecule when genFF is being evaluated
     for molec in train_moles:

@@ -402,9 +402,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 # print(min_st, max_st)
                 # #Plot opt_scheme_ms vle curve
                 if df_label == "AT-Dis":
-                    df_label = "GP-Opt IFT FF"
+                    df_label = "GP-Opt"
                 elif df_label == "IFT FF":
-                    df_label = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
+                    df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
@@ -592,9 +592,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                             
                 # #Plot opt_scheme_ms vle curve
                 if label_prop == "AT-Dis":
-                    label_prop = "GP-Opt IFT FF"
+                    label_prop = "GP-Opt"
                 elif label_prop == "IFT FF":
-                    label_prop = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
+                    label_prop = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
@@ -602,9 +602,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             #Plot critical points if available
             if has_vap and has_liq and molec != "DMSO":
                 if df_label == "AT-Dis":
-                    df_label = "GP-Opt IFT FF"
+                    df_label = "GP-Opt"
                 elif df_label == "IFT FF":
-                    df_label = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
+                    df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
                 min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
                 try:
@@ -828,9 +828,9 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     # print(min_pvap, max_pvap)
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
                     if df_label == "AT-Dis":
-                        df_label = "GP-Opt IFT FF"
+                        df_label = "GP-Opt"
                     elif df_label == "IFT FF":
-                        df_label = "Base IFT FF" #"Lowest " + r"$\gamma$" + " MAPD FF"
+                        df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
                     axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = 1.96*std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
