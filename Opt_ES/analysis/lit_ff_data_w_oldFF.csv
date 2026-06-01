@@ -1,10 +1,10 @@
 molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,sim_Tc,sim_rhoc,ref_name,short_name
-MeOH,250.0,831.338,0.0,0.003,,27.75,,521.9,255.0,Martinez-Jimenez et. al.,MJ
-MeOH,298.0,781.716,0.04,0.051,,23.15,2e-09,521.9,255.0,Martinez-Jimenez et. al.,MJ
-MeOH,400.0,672.232,3.45,2.9,,14.05,,521.9,255.0,Martinez-Jimenez et. al.,MJ
-MeOH,450.0,605.457,13.8,11.302,,9.15,,521.9,255.0,Martinez-Jimenez et. al.,MJ
-MeOH,475.0,556.825,26.28,20.183,,6.6,,521.9,255.0,Martinez-Jimenez et. al.,MJ
-MeOH,500.0,462.739,49.44,33.114,,3.65,,521.9,255.0,Martinez-Jimenez et. al.,MJ
+MeOH,250.0,831.338,0.0,0.003,,27.75,,521.9,255.0,Martinez-Jimenez et al.,MJ
+MeOH,298.0,781.716,0.04,0.051,,23.15,2e-09,521.9,255.0,Martinez-Jimenez et al.,MJ
+MeOH,400.0,672.232,3.45,2.9,,14.05,,521.9,255.0,Martinez-Jimenez et al.,MJ
+MeOH,450.0,605.457,13.8,11.302,,9.15,,521.9,255.0,Martinez-Jimenez et al.,MJ
+MeOH,475.0,556.825,26.28,20.183,,6.6,,521.9,255.0,Martinez-Jimenez et al.,MJ
+MeOH,500.0,462.739,49.44,33.114,,3.65,,521.9,255.0,Martinez-Jimenez et al.,MJ
 MeOH,270.0,,,0.041613,,,,,,Jorgensen,Jorgensen
 MeOH,280.0,780.8753805,0.11,0.078079,,,,489.9727,268.39,Jorgensen,Jorgensen
 MeOH,300.0,761.1030286,0.319,0.239138,,,,489.9727,268.39,Jorgensen,Jorgensen
@@ -17,18 +17,32 @@ MeOH,300.0,783.1706,0.15,0.112876,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
 MeOH,350.0,732.087,1.295,1.09259,,,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
 MeOH,400.0,674.2341,6.738,5.70621,,15.3,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
 MeOH,450.0,599.0456,24.431,19.58,,10.8,,521.4528,265.23,Gonzalez-Salgado & Vega,GSV
+MeOH,275.0,807.2,0.0543,0.0382,1280.27,,,502.0,285.4,Chen et al.,Chen
+MeOH,300.0,782.1,0.231,0.171,1233.46,,,502.0,285.4,Chen et al.,Chen
+MeOH,325.0,753.2,0.653,0.522,1171.04,,,502.0,285.4,Chen et al.,Chen
+MeOH,375.0,692.7,4.22,3.547,1024.97,,,502.0,285.4,Chen et al.,Chen
+MeOH,425.0,628.3,21.1,15.75,788.7,,,502.0,285.4,Chen et al.,Chen
+MeOH,475.0,518.8,110.5,49.604,397.94,,,502.0,285.4,Chen et al.,Chen
 MeOH,250.0,,,,,29.15,,,,Gonzalez-Salgado & Vega,GSV
 MeOH,298.0,,,,,24.7,,,,Gonzalez-Salgado & Vega,GSV
 MeOH,500.0,,,,,5.8,,,,Gonzalez-Salgado & Vega,GSV
-EG,325.0,1083.18357,0.001433817,0.000925,1131.73836,,,722.0,366.213,Huang et. al.,Huang
-EG,350.0,1066.42467,0.006908391,0.0051,1123.183502,,,722.0,366.213,Huang et. al.,Huang
-EG,400.0,1032.013062,0.13667814,0.07226,1063.573385,,,722.0,366.213,Huang et. al.,Huang
-EG,450.0,991.481352,1.3854024,0.5144,985.564685,,,722.0,366.213,Huang et. al.,Huang
-Gly,320.0,1240.0,,,,,2.2e-09,,,Jahn et. al.,Jahn
-Gly,350.0,1214.0,,,,,4.06e-08,,,Jahn et. al.,Jahn
-Gly,380.0,1191.0,,,,,2.67e-07,,,Jahn et. al.,Jahn
-Gly,400.0,1173.0,,,,,7.02e-07,,,Jahn et. al.,Jahn
-DMF,298.15,,,,46.08,36.1,,,,Caleman et. al.,Caleman
+EG,350.0,1066.42467,0.006908391,0.0051,1123.183502,,,722.0,366.213,Huang et al.,Huang
+EG,400.0,1032.013062,0.13667814,0.07226,1063.573385,,,722.0,366.213,Huang et al.,Huang
+EG,450.0,991.481352,1.3854024,0.5144,985.564685,,,722.0,366.213,Huang et al.,Huang
+EG,500.0,944.618502,2.8440474,2.2459,905.7999033,,,722.0,366.213,Huang et al.,Huang
+EG,550.0,891.871416,11.4289491,7.251,807.0404382,,,722.0,366.213,Huang et al.,Huang
+EG,600.0,826.83447,26.268024,17.81,699.9194458,,,722.0,366.213,Huang et al.,Huang
+EG,650.0,746.88831,57.631995,37.32,568.9705172,,,722.0,366.213,Huang et al.,Huang
+EG,450.0,983.714,0.954,0.553,,,,718.3,340.4,Stubbs et al.,Stubbs
+EG,500.0,932.2,4.32,2.7211,,,,718.3,340.4,Stubbs et al.,Stubbs
+EG,550.0,855.3,10.06,6.604,,,,718.3,340.4,Stubbs et al.,Stubbs
+EG,600.0,785.4,29.75,19.003,,,,718.3,340.4,Stubbs et al.,Stubbs
+EG,650.0,670.9,62.4,39.002,,,,718.3,340.4,Stubbs et al.,Stubbs
+Gly,320.0,1240.0,,,,,2.2e-09,,,Jahn et al.,Jahn
+Gly,350.0,1214.0,,,,,4.06e-08,,,Jahn et al.,Jahn
+Gly,380.0,1191.0,,,,,2.67e-07,,,Jahn et al.,Jahn
+Gly,400.0,1173.0,,,,,7.02e-07,,,Jahn et al.,Jahn
+DMF,298.15,,,,46.08,36.1,,,,Caleman et al.,Caleman
 DMF,308.0,960.0,,0.010022,,,,,,Vahid & Maginn,VE
 DMF,311.0,955.0,,0.0157,,,,,,Vahid & Maginn,VE
 DMF,313.0,935.0,,0.019419,,,,,,Vahid & Maginn,VE
@@ -48,8 +62,8 @@ DMSO,314.0,1030.0,,,,,,,,Vahid & Maginn,VE
 DMSO,319.0,1024.0,,,,,,,,Vahid & Maginn,VE
 DMSO,327.0,1019.0,,,,,,,,Vahid & Maginn,VE
 DMSO,339.0,1001.0,,,,,,,,Vahid & Maginn,VE
-DEC,298.15,969.85,,,396.0044019,26.1,,,,Garcia-Melgarejo et. al.,GM
-DEC,298.0,,,,,,2.34e-09,,,Luo et. al.,Luo
+DEC,298.15,969.85,,,396.0044019,26.1,,,,Garcia-Melgarejo et al.,GM
+DEC,298.0,,,,,,2.34e-09,,,Luo et al.,Luo
 EG,378.15,1072.7158124055063,,,,44.07775,1.5756e-09,,,Old Opt FF,Old Opt FF
 EG,378.15,1072.8250886657056,0.099519114078486,0.0501063372928286,896.0714144868632,42.44200000000001,1.4969e-09,,,Old Opt FF,Old Opt FF
 EG,378.15,1072.913410563509,0.1021523351456,0.0514323371371,898.3396573604543,43.537000000000006,1.5289e-09,,,Old Opt FF,Old Opt FF

@@ -143,8 +143,9 @@ pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
 # #Save lit data with sim columns for future use
 # lit_data.to_csv("analysis/lit_ff_data_w_NW.csv", index=False)
 
-####Add old FF data to lit_data
 file_save_lit = "analysis/lit_ff_data.csv"
+
+####Add old FF data to lit_data
 # lit_data = pd.read_csv(file_save_lit, header=0)
 # for molec_name in mol_names:
 #     df_old_FF = pd.read_csv(f"analysis_old/at_00/{molec_name}/ExpVal/opt_res/ms_val/ms_data.csv", header = 0, index_col = 0)
@@ -155,26 +156,31 @@ file_save_lit = "analysis/lit_ff_data.csv"
 #     df_old_FF['short_name'] = 'Old Opt FF'
 #     lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
 # lit_data.to_csv("analysis/lit_ff_data_w_oldFF.csv", index=False)
-
 # file_save_lit = "analysis/lit_ff_data_w_oldFF.csv"
+
 lit_data = pd.read_csv(file_save_lit, header=0)
+
+##ADD otherr FF data to lit data
+# for molec_name in mol_names:
+#     other_opt = "no_opt" if opt_status == "opt" else "opt"
+#     ref_name = "IFT FF" if opt_status == "opt" else "Opt FF"
+#     df_old_FF = pd.read_csv(f"analysis/at_00/{molec_name}/ExpVal/opt_res/ms_val_{other_opt}/ms_data.csv", header = 0, index_col = 0)
+#     #Drop all column without sim_ in the name or "temperature" or "molecule"
+#     cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
+#     df_old_FF = df_old_FF[cols_to_keep]
+#     df_old_FF['ref_name'] = ref_name
+#     df_old_FF['short_name'] = ref_name
+#     df_old_FF_lit_data = df_old_FF.reindex(columns=lit_data.columns)
+#     lit_data = pd.concat([lit_data, df_old_FF_lit_data], ignore_index=True)
+# lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
 for molec_name in mol_names:
-    other_opt = "no_opt" if opt_status == "opt" else "opt"
-    ref_name = "IFT FF" if opt_status == "opt" else "Opt FF"
-    df_old_FF = pd.read_csv(f"analysis/at_00/{molec_name}/ExpVal/opt_res/ms_val_{other_opt}/ms_data.csv", header = 0, index_col = 0)
-    #Drop all column without sim_ in the name or "temperature" or "molecule"
-    cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
-    df_old_FF = df_old_FF[cols_to_keep]
-    df_old_FF['ref_name'] = ref_name
-    df_old_FF['short_name'] = ref_name
-    lit_data = pd.concat([lit_data, df_old_FF.reindex(columns=lit_data.columns)], ignore_index=True)
-lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
+    pass
 lit_data_error = prepare_df_errors(lit_data, molec_dict, molec_name)
 lit_data_error.to_csv("analysis/lit_error_data.csv")
 
  #Save df for Hvap estimates
 h_est_lit_data = estimate_hvaps(lit_data, molec_dict, molec)
-h_est_lit_data.to_csv(f"analysis/lit_Hvap_est_w_{other_opt}.csv", index=False)
+# h_est_lit_data.to_csv(f"analysis/lit_Hvap_est_w_{other_opt}.csv", index=False)
 
 #For each file in error dict, add the data to the lit data if it is not already there (if it is not already in prop dict)
 new_lit_data = copy.copy(lit_data_error)
@@ -203,7 +209,10 @@ for molec in molecules:
             #Add molecule data to dict for plotting
             df_molec = copy.copy(df_ff[df_ff['molecule'] == molec])
             #Create a label for the FF from the AT:
-            label = get_label_from_fn(file_name) #+ "_" + molec
+            if opt_status == "opt":
+                label = get_label_from_fn(file_name) #+ "_" + molec
+            else:
+                label = "IFT FF"
             ff_molec_dict[label] = df_molec
 
     lit_data_molec = copy.copy(lit_data[lit_data['molecule'] == molec])

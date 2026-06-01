@@ -278,6 +278,8 @@ def calc_critical(df):
 
     #Drop rows where either liq or vap density is nan
     df_valid = df.dropna(subset=["sim_liq_density", "sim_vap_density"])
+    #Reorder by temperature
+    df_valid = df_valid.sort_values(by="temperature")
 
     #Only get temps where both liq and vap density exist
     temps = df_valid["temperature"].values
@@ -420,7 +422,16 @@ def prepare_df_errors(df_data, data_dict, mol_name):
 
             for prop in ["Tc", "rhoc"]:
                 if "sim_" + prop in values.columns:
-                    mse, mapd, mae, mpd = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, mol_name)
+                    #Get the first non-nan value for the experimental and simulated critical point properties to calculate the errors, 
+                    # since these properties should be constant across all temperatures for a given molecule/parameter set
+                    expt_values = values["expt_" + prop].dropna().values
+                    sim_values = values["sim_" + prop].dropna().values
+
+                    if len(expt_values) > 0 and len(sim_values) > 0:
+                        mse, mapd, mae, mpd = calculate_objs(np.array([expt_values[0]]), np.array([sim_values[0]]), prop, mol_name)
+                    else:
+                        mse, mapd, mae, mpd = calculate_objs(np.array([values["expt_" + prop].values[0]]), np.array([values["sim_" + prop].values[0]]), prop, mol_name)
+                    
                     new_quantities["mse_" + prop] = mse
                     new_quantities["mapd_" + prop] = mapd
                     new_quantities["mae_" + prop] = mae
