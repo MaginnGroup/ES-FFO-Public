@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import qmc
 import pandas as pd
+import tensorflow as tf
 
 def values_real_to_scaled(values, bounds):
     """Convert values in physical units to values scaled by bounds
@@ -245,3 +246,73 @@ def generate_lhs(samples, bounds, seed, labels = None):
         sample.columns = labels
 
     return lhs_data
+
+def values_scaled_to_real_tf(scaled_values, bounds):
+    scaled_values = tf.convert_to_tensor(scaled_values, dtype=tf.float64)
+    bounds = tf.convert_to_tensor(bounds, dtype=tf.float64)
+
+    scaled_values, bounds = clean_bounds_values_tf(scaled_values, bounds)
+
+    
+    lower = bounds[:, 0]
+    upper = bounds[:, 1]
+    
+    return scaled_values * (upper - lower) + lower
+
+def clean_bounds_values_tf(values, bounds):
+    values = tf.convert_to_tensor(values, dtype=tf.float64)
+    bounds = tf.convert_to_tensor(bounds, dtype=tf.float64)
+    
+    # Ensure bounds shape (m, 2)
+    bounds = tf.reshape(bounds, (-1, 2))
+    
+    lower = bounds[:, 0]
+    upper = bounds[:, 1]
+    
+    # Check bounds validity
+    tf.debugging.assert_less_equal(
+        lower, upper,
+        message="Lower bound must be <= upper bound"
+    )
+    
+    m = tf.shape(bounds)[0]
+    
+    # Handle case where only one bound
+    def reshape_single():
+        return tf.reshape(values, (-1, 1))
+    
+    def validate_multi():
+        tf.debugging.assert_rank(
+            values, 2,
+            message="Values must be 2D when multiple bounds"
+        )
+        tf.debugging.assert_equal(
+            tf.shape(values)[1], m,
+            message="Mismatch between values columns and bounds"
+        )
+        return values
+    
+    values = tf.cond(m == 1, reshape_single, validate_multi)
+    
+    return values, bounds
+
+def values_real_to_scaled_tf(values, bounds):
+    values = tf.convert_to_tensor(values, dtype=tf.float64)
+    bounds = tf.convert_to_tensor(bounds, dtype=tf.float64)
+    values, bounds = clean_bounds_values_tf(values, bounds)
+    
+    lower = bounds[:, 0]
+    upper = bounds[:, 1]
+    
+    denom = upper - lower
+    equal_mask = tf.equal(denom, 0.0)
+    
+    # Avoid division by zero
+    safe_denom = tf.where(equal_mask, tf.ones_like(denom), denom)
+    
+    normalized = (values - lower) / safe_denom
+    
+    # Set columns where bounds are equal → 0
+    normalized = tf.where(equal_mask, tf.zeros_like(normalized), normalized)
+    
+    return normalized
