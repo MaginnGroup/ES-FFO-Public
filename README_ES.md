@@ -17,11 +17,18 @@ ES-FFO/ is the top level directory. It contains: <br />
 2. utils/ contains functions used by all pieces of this workflow including molecule experimental data and reference parameters <br />
 3. block_averages/ contains a code for block averaging via the methods in H. Flyvbjerg and H.G. Peterson. Error estimates on averages of correlated data. J. Chem. Phys. 91:461-466, 1989.<br />
 4. fffit/ contains another set of utility functions used by multiple aspects of this workflow. <br />
-5. Build_GPs/ contains the workflow runs and analyzed results from applying the methods in Wang et al. 2023 <br />
-6. Opt_ES/ contains the workflow runs and analyzed results from applying the methods in genFF Paper HERE which create the generalized FF parameter set(s).<br />
-7. Opt_ESFF_MS/ contains the molecular simulation results and analysis of the FF(s) developed in step 6 and GAFF benchmarks.  <br />
-13. hfcs-fffit.yml is the environment for running this workflow. <br />
-
+5. Build_GPs/ contains the workflow runs and analyzed results from applying the methods in Wang et al. 2023 and create Base FFs <br />
+6. Opt_ES/ contains the workflow runs and analyzed results from applying the methods in Carlozo et al. 2025. to create GP-optimized FFs <br />
+7. Opt_ES/ Also contains the molecular simulation results and analysis of the FF(s) developed in steps 5 and 6.  <br />
+8. hfcs-fffit.yml is the environment for running this workflow. <br />
+9. submit_jobs is a shell script for submitting jobs to the cluster. <br />
+10. create_analysis_figs.ipynb is a jupyter notebook for creating the final analysis figures including all figures from running the scripts in 11-17. <br />
+11. make_corr_figs_all_molec.py is a python script for creating correlation figures for all molecules. Figures X-Y in main text. <br />
+12. make_corr_figs_one_molec.py is a python script for creating correlation figures for individual molecules. Figures X-Y in main text. <br />
+13. make_GP_vs_sim_and_sens.py is a python script for creating figures comparing GP and actual predictions and generating the results for individual molecule sensitivity analyses. Figures X-Y and Tables A-B in main text. <br />
+14. make_ift_val_figs.py is a python script for creating visualizations of the interfactial tension boxes for all IFT simulations. <br />
+15. make_param_comp_figs.py is a python script for creating parameter comparison figures. Figures X-Y in main text. <br />
+16. make_pareto_comp_figs.py is a python script for visualizing differences between pareto-optimal LJ parameter sets in IFT (and LD) iterations. Figures X-Y in main text. <br />
 
 ### utils/
 This directory contains:
