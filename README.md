@@ -322,7 +322,7 @@ which should fix the problem. This is not an optimal solution and is something w
 If you are aware of a robust solution to this issue, please let us know by raising an issue or sending an email!
 
 ## Credits
-The authors thank the financial support from the National Science Foundation via two grants: EFRI DChem: Next-generation Low Global Warming Refrigerants, Award no. 2029354 and Collaborative Research: Development and Application of a Molecular and Process Design Framework for the Separation of Hydrofluorocarbon Mixtures, Award no. CBET-1917474. This research is based upon work supported by the National Science Foundation under award number ERC-2330175 for the Engineering Research Center EARTH. Computing resources were provided by the Center for Research Computing (CRC) at the University of Notre Dame. We also thank the Shiflett group from The University of Kansas for their collaboration. MC acknowledges support from the Graduate Assistance in Areas of National Need fellowship from the Department of Education, grant number P200A210048. 
+This research is based upon work supported by the National Science Foundation under award number EEC-2330175 for the Engineering Research Center EARTH. Computing resources were provided by the Center for Research Computing (CRC) at the University of Notre Dame. MC acknowledges support from the Graduate Assistance in Areas of National Need fellowship from the Department of Education, grant number P200A210048.
 
 ## Contact
 Please contact Montana Carlozo (mcarlozo@nd.edu) with any questions, suggestions, or issues.
