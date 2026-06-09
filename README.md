@@ -23,12 +23,12 @@ ES-FFO/ is the top level directory. It contains: <br />
 8. hfcs-fffit.yml is the environment for running this workflow. <br />
 9. submit_jobs is a shell script for submitting jobs to the cluster. <br />
 10. create_analysis_figs.ipynb is a jupyter notebook for creating the final analysis figures including all figures from running the scripts in 11-17. <br />
-11. make_corr_figs_all_molec.py is a python script for creating correlation figures for all molecules. Figures X-Y in main text. <br />
-12. make_corr_figs_one_molec.py is a python script for creating correlation figures for individual molecules. Figures X-Y in main text. <br />
-13. make_GP_vs_sim_and_sens.py is a python script for creating figures comparing GP and actual predictions and generating the results for individual molecule sensitivity analyses. Figures X-Y and Tables A-B in main text. <br />
-14. make_ift_val_figs.py is a python script for creating visualizations of the interfactial tension boxes for all IFT simulations. <br />
-15. make_param_comp_figs.py is a python script for creating parameter comparison figures. Figures X-Y in main text. <br />
-16. make_pareto_comp_figs.py is a python script for visualizing differences between pareto-optimal LJ parameter sets in IFT (and LD) iterations. Figures X-Y in main text. <br />
+11. make_corr_figs_all_molec.py is a python script for creating correlation figures for all molecules. Figure 12, Figure 14, and SI Figure S12 in the main text. <br />
+12. make_corr_figs_one_molec.py is a python script for creating correlation figures for individual molecules. SI Figures S1-S6 and SI Figures S13-S24 in the main text. <br />
+13. make_GP_vs_sim_and_sens.py is a python script for creating figures comparing GP and actual predictions and generating the results for individual molecule sensitivity analyses. Figure 9, SI Figure S11, and SI Tables S2-S13 in the main text. <br />
+14. make_ift_val_figs.py is a python script for creating visualizations of the interfactial tension boxes for all ST simulations. <br />
+15. make_param_comp_figs.py is a python script for creating parameter comparison figures. Figures 10-11 and SI Figures S7-S10 in the main text. <br />
+16. make_pareto_comp_figs.py is a python script for visualizing differences between pareto-optimal LJ parameter sets in ST (and LD) iterations. Figure 13 in the main text. <br />
 
 ### utils/
 This directory contains:
@@ -47,19 +47,19 @@ This directory contains functions used by both workflows:
 ### Build_GPs/
 This directory contains all data related to running the workflow of Wang et al. including:
 1. analysis/mol/ld_iters: Results for liquid density (LD) iterations for each molecule "mol"
-2. analysis/mol/vle_iters: Results for interfacial tension (IFT) iterations
-3. utils/*.py: Functions for analyzing the results of LD and IFT iterations
+2. analysis/mol/vle_iters: Results for surface tension (ST) iterations
+3. utils/*.py: Functions for analyzing the results of LD and ST iterations
 4. ld_iters/ : The signac project directory for running the LD iterations including project.py, templates/, and workspace/
-5. vle_iters/ : The signac project directory for running the IFT iterations including project.py, templates/, and workspace/
-6. gen_lhs_samples.py: A script for generating the LHS data necessary for LD and IFT iterations
+5. vle_iters/ : The signac project directory for running the ST iterations including project.py, templates/, and workspace/
+6. gen_lhs_samples.py: A script for generating the LHS data necessary for LD and ST iterations
 7. init_LD.py: A script to generate the signac project for LD iterations
-8. init_IFT.py: A script to generate the signac project for IFT iterations
+8. init_IFT.py: A script to generate the signac project for ST iterations
 9. post_ld.py: A script to analyze LD iteration data
-10. post_vle.py: A script to analyze IFT iteration data
+10. post_vle.py: A script to analyze ST iteration data
 11. get_CPU_hrs.py : A script to calculate the total CPU hours used by the workflow
 
 ### Opt_ES/
-This directory contains all data related to running the optimization workflow of *Carlozo et al., 2025, Digital Discovery* including:
+This directory contains all data related to running the optimization workflow of Carlozo et al., 2025, Digital Discovery including:
 1. analysis/: Data from analyzing the results of the optimization workflow
 2. utilsOpt/: Functions for running the optimization workflow
 3. gemc_val_opt/: The signac project directory for running the gemc validation for GP-optimized FF including project.py, templates/, and workspace/
@@ -75,7 +75,7 @@ This directory contains all data related to running the optimization workflow of
 13. init_ift_val.py: A script to initialize the interfacial tension validation workflow
 14. init_opt_at.py: A script to initialize the optimization workflow
 15. post_analysis_opt.py: A script to analyze the results of the optimization workflow
-16. post_analysis_val.py: A script to analyze the results of the validation workflows
+16. post_analysis_val.py: A script to analyze the results of the validation workflows. Generates Figures 3-8 and the data in Tables 4-5 of the main text
 
 #### Opt_ES/analysis/
 This directory contains data from analyzing the results of the optimization workflow for each molecule "mol".:
@@ -100,7 +100,7 @@ This directory contains data from analyzing the results of the optimization work
 19. lit_Hvap_est_w_opt.csv: Data comparing the heat of vaporization of the literature FFs and GP-optimized FFs
 
 #### Opt_ES/utilsOpt/
-This directory contains all functions related to running the optimization workflow of *Carlozo et al., 2025, Digital Discovery* including:
+This directory contains all functions related to running the optimization workflow of Carlozo et al., 2025, Digital Discovery including:
 1. utilsOpt/atom_type.py: Class definitions for atom typing schemes
 2. utilsOpt/opt_atom_types.py: Other functions necessary for optimizing FF parameters and analyzing workflow results
 3. utilsOpt/plot.py: Plotting functions for analyzing optimization results
@@ -122,7 +122,7 @@ This can be installed separately (see installation instructions
 <!-- Usage: Provide instructions on how to use the project, including any configuration or customization options. Examples of usage scenarios can also be added. -->
 ## Usage
 
-### Liquid Density Optimization
+### Liquid Density Optimization (LD Iterations)
 To run liquid density iterations, follow the following steps:
 1. Initialize Signac workflow
    ```
@@ -159,16 +159,16 @@ Note: Step 2 operation LD runs multiple operations in series. Alternatively, the
      qsub -N postLD submit_job post_ld.py
    ```       
 
-### IFT Optimization
+### Surface Tension Optimization (ST Iterations)
 
-To run interfacial tension iterations, follow the following steps:
+To run surface tension iterations, follow the following steps:
 1. Initialize Signac workflow
    ```
      conda activate hfcs-fffit
      cd Build_GPs/
      python init_IFT.py
    ```    
-2. Run LD iterations
+2. Run ST iterations
    - **Note: rm -r workspace/ signac_project_document.json signac.rc will remove everything and allow you to start fresh if you mess up**
   ```
      cd Build_GPs/vle_iters/
@@ -199,7 +199,7 @@ Note: Step 2 operation IFT runs multiple operations in series. Alternatively, th
      qsub -N postVLE submit_job post_vle.py
    ```  
 
-### Distinct Atom Type and FF Optimization
+### Distinct Atom Type Optimization
 To run generalized FF calibration, follow the following steps:
 1. Initialize Signac workflow
    ```
@@ -316,7 +316,7 @@ ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.29' not found
 ```
 If you observe this, please try the following in the terminal
 ```
-export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$CONDA_PREFIX/lib:$LIBRARY_PATH
 ```
 which should fix the problem. This is not an optimal solution and is something we would like to address. We found that related projects [1](https://github.com/openmm/openmm/issues/3943), [2](https://github.com/conda/conda/issues/12410) have similar issues.
 If you are aware of a robust solution to this issue, please let us know by raising an issue or sending an email!
