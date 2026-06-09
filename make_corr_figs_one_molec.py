@@ -632,9 +632,7 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
         return fig2, fig3, fig4
     
 
-mode = "vle"
 err_met = "mpd" # or mapd
-mode2 = "all"  # or "pareto"
 mode3 = "scl"
 threshold = 10
 mol_names = ["EG", "MeOH", "Gly", "DMSO", "DMF", "DEC"] #Change me as needed
@@ -646,18 +644,20 @@ matplotlib.rc("font", family="sans-serif")
 matplotlib.rc("font", serif="Arial")
 #Make pdf 
 modes = ["ld", "vle"]
+modes2 = ["all", "pareto"]
 for mode in modes:
-    for molec_name in mol_names:   
-        full_at_dir = os.path.join(f"Build_GPs/analysis/{molec_name}/{mode}_iters")
-        os.makedirs(full_at_dir, exist_ok=True)
-        pdf_hpvap = PdfPages(os.path.join(full_at_dir ,f"{mode}_corr_{mode2}.pdf"))
-        df_analyze, data, bounds, data_class, col_names, n_axis, x_vals, x_min_sig, x_max_sig, x_min_eps, x_max_eps = get_corr_one_molec(molec_name, mode, mode2, "real", err_met, threshold) 
-        fig_par = plot_corr_one_molec(data, bounds, data_class, col_names, n_axis, x_vals, mode, molec_name)
-        pdf_hpvap.savefig(fig_par, bbox_inches='tight')
-        plt.close()
-        df_analyze, data, bounds, data_class, col_names, n_axis, x_vals, x_min_sig, x_max_sig, x_min_eps, x_max_eps = get_corr_one_molec(molec_name, mode, mode2, mode3, err_met, threshold) 
-        figs = plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_min_eps, x_max_eps, mode, mol_name = molec_name) 
-        for fig in figs:
-            pdf_hpvap.savefig(fig, bbox_inches='tight')
-            plt.close()   
-        pdf_hpvap.close()
+    for mode2 in modes2:
+        for molec_name in mol_names:   
+            full_at_dir = os.path.join(f"Build_GPs/analysis/{molec_name}/{mode}_iters")
+            os.makedirs(full_at_dir, exist_ok=True)
+            pdf_hpvap = PdfPages(os.path.join(full_at_dir ,f"{mode}_corr_{mode2}.pdf"))
+            df_analyze, data, bounds, data_class, col_names, n_axis, x_vals, x_min_sig, x_max_sig, x_min_eps, x_max_eps = get_corr_one_molec(molec_name, mode, mode2, "real", err_met, threshold) 
+            fig_par = plot_corr_one_molec(data, bounds, data_class, col_names, n_axis, x_vals, mode, molec_name)
+            pdf_hpvap.savefig(fig_par, bbox_inches='tight')
+            plt.close()
+            df_analyze, data, bounds, data_class, col_names, n_axis, x_vals, x_min_sig, x_max_sig, x_min_eps, x_max_eps = get_corr_one_molec(molec_name, mode, mode2, mode3, err_met, threshold) 
+            figs = plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_min_eps, x_max_eps, mode, mol_name = molec_name) 
+            for fig in figs:
+                pdf_hpvap.savefig(fig, bbox_inches='tight')
+                plt.close()   
+            pdf_hpvap.close()
