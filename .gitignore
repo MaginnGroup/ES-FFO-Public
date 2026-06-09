@@ -33,13 +33,22 @@ analysis_old*
 *MAPD.pdf
 *parallel_plot_*.pdf
 *ms_val/*.csv
-
-
-# C extensions
-*.so
+*ACN*
+*DCM*
 density_iters/old/*
 *DEC_old*
 *old2*
+*THF*
+*old_output_files*
+*Opt_ES/gemc_val/*
+*Opt_ES/ift_val/*
+*Opt_ES/opt_at_params/*
+*Opt_ES/analysis/AT-0/ms_val/*
+*Opt_ES/analysis/at_00/ExpVal/ms_val/*
+
+# C extensions
+*.so
+
 .vscode
 *atom_type_all.py
 *.o*

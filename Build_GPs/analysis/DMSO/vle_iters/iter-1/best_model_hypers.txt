@@ -1,0 +1,17 @@
+Property: sim_surf_tens, Kernel: Matern52
+.mean_function.linear_mean.A: [[ 0.        ]
+ [ 0.        ]
+ [ 0.        ]
+ [ 0.        ]
+ [ 5.99618517]
+ [ 2.77023317]
+ [ 1.33833337]
+ [ 4.48649436]
+ [-1.42216749]]
+.mean_function.linear_mean.b: [-12.33758221]
+.kernel.kernels[0].variance: 35.51526139635102
+.kernel.kernels[0].lengthscales: [8.42124797e-01 7.00945265e-01 9.56790113e+03 1.14062657e+00
+ 2.81915107e+00 5.83763993e+03 5.63634301e+03 7.56492226e+03
+ 1.76601271e+04]
+.kernel.kernels[1].variance: 0.0863982901091183
+.likelihood.variance: 1.0000000000000004e-05
