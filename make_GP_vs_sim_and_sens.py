@@ -63,11 +63,10 @@ mol_names = ["DEC", "DMF", "DMSO", "EG", "Gly", "MeOH"]
 molec_dict = esolvs.make_dict(mol_names)
 
 os.chdir("/groups/ed/group_members/Montana_Carlozo/ES-FFO/Opt_ES")
-from utilsOpt import opt_atom_types
 #For each of the 6 solvents
 data_dict = []
 max_mapd = 0
-mode = "w_temp" #w_temp or wo_temp
+mode = "wo_temp" #w_temp or wo_temp
 for mol_name in mol_names:
     at_num = 0 
     setup = opt_atom_types.Problem_Setup([mol_name], at_num, "ExpVal")
@@ -150,14 +149,14 @@ for mol_name in mol_names:
         rightvec_df.to_csv(os.path.join(sens_dir, f"basis_vec_{prop_name}.csv"), index=False)
         rank_df = pd.DataFrame({"param_rank": param_ranks,"sensitivity_score": sorted_q})        
         rank_df.to_csv(os.path.join(sens_dir, f"param_rank_{prop_name}.csv"), index=False)
-        print(np.linalg.norm(right_vecs, axis=0))
+        # print(np.linalg.norm(right_vecs, axis=0))
 
     #Create a table which shows the parameter ranks for each property and save to csv
     dir = f"../Build_GPs/analysis/{mol_name}/"
     rank_table = pd.DataFrame({"Rank": list(range(1, len(param_ranks) + 1)), 
                                r"\rho_l - LD Data": ranks["liq_density"],
                                "q_j (rho_l)": q_vals["liq_density"],
-                                r"\gamma - IFT Data": ranks["surf_tens"],
+                                r"\gamma - ST Data": ranks["surf_tens"],
                                 "q_j (gamma)": q_vals["surf_tens"]})
     rank_table.to_csv(os.path.join(dir, f"param_rank_table{name_dir}.csv"), index=False)
 
@@ -331,7 +330,7 @@ for mode in ["sing", "all"]:
         for key in list(molec_gps_dict.keys()):
             key_nosim = key.replace("sim_", "")
             if mode == "all":
-                data_labels = [ "GP-Opt (Sim)", "Base (Sim)", "All IFT Sets (Sim)",]
+                data_labels = [ "GP-Opt (Sim)", "Base (Sim)", "All ST Sets (Sim)",]
                 data = [best_ms_data, best_ift_data, all_ms_data]
             elif mode == "sing":
                 data_labels = [ "GP-Opt (Sim)", "Base (Sim)",]
@@ -341,7 +340,7 @@ for mode in ["sing", "all"]:
             for d_label, df in zip(data_labels, data):
                 other_data[d_label] = df[["temperature", f"{key_nosim}", f"{key_nosim}_unc"]]
 
-            # other_data = {f"IFT (Sim)": best_ift_data[["temperature", f"{key_nosim}", f"{key_nosim}_unc"]], f"Optimized (Sim)": best_ms_data[["temperature", f"{key_nosim}", f"{key_nosim}_unc"]]}
+            # other_data = {f"ST (Sim)": best_ift_data[["temperature", f"{key_nosim}", f"{key_nosim}_unc"]], f"Optimized (Sim)": best_ms_data[["temperature", f"{key_nosim}", f"{key_nosim}_unc"]]}
             # Set label
             # Get GP associated with property
             gp_model = molec_gps_dict[key]

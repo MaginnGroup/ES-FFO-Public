@@ -14,6 +14,8 @@ from Build_GPs.utils.id_new_samples import new_samples_vle, find_pareto, new_sam
 from Build_GPs.utils.models import get_best_models
 from Build_GPs.utils.plot import plot_gp_examples
 import pickle
+from Opt_ES.utilsOpt import opt_atom_types
+
 
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, values_scaled_to_real_tf, values_real_to_scaled_tf
 import matplotlib
@@ -39,7 +41,6 @@ def set_ticks_for_axis(ax, param_bounds, nticks):
     ax.tick_params("x", pad=15)
 
 os.chdir("/groups/ed/group_members/Montana_Carlozo/ES-FFO/Opt_ES")
-from utilsOpt import opt_atom_types
 
 
 molec_names = ["EG", "MeOH", "Gly", "DMSO", "DMF", "DEC"] #Change me as needed
@@ -158,12 +159,12 @@ for str in molec_names:
                     
             elif j ==min_obj_idx2+1:
                 if i ==len(axes)-1:
-                    ax.plot(x_vals, line, alpha=1, label="IFT FF with Lowest MAPD " + r"$\rho_l$", color="dodgerblue", linestyle = "--", linewidth=2.5, zorder=501)
+                    ax.plot(x_vals, line, alpha=1, label="ST FF with Lowest MAPD " + r"$\rho_l$", color="dodgerblue", linestyle = "--", linewidth=2.5, zorder=501)
                 else:
                     ax.plot(x_vals, line, alpha=1, color="dodgerblue", linestyle = "--", linewidth=2.5, zorder=501)
 
             elif j == len(data)-1 and i == len(axes)-1:
-                ax.plot(x_vals, line, alpha=0.25, label="Other IFT FFs", color="gray")
+                ax.plot(x_vals, line, alpha=0.25, label="Other ST FFs", color="gray")
             #For the last line, add labels
             else:
                 ax.plot(x_vals, line, alpha=0.25)
@@ -215,7 +216,7 @@ for str in molec_names:
     # The true horizontal center of your DATA area
     data_center = 100*(fig_bbox.x0 + fig_bbox.x1) / 2
 
-    fig.suptitle(f"{str} - Comparison of GP-Optimized FF and Unoptimized IFT Iter FFs", fontsize=24, y=1.10)
+    fig.suptitle(f"{str} - Comparison of GP-Optimized FF and Unoptimized ST Iter FFs", fontsize=24, y=1.10)
     leg = fig.legend(loc='upper center', bbox_to_anchor=(data_center, 1.03), ncol=4, fontsize=16, bbox_transform=fig.transFigure)
     pdf.savefig(fig, bbox_inches='tight')   # save one figure at a time
 

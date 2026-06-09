@@ -274,7 +274,7 @@ def get_corr_all_molecs(mol_names, mode, mode2 = "all", mode3 ="scl", err_met = 
         use_df = all_df_analysis.drop(columns="Molecule") #df_new
     else:
         use_df = all_df_analysis.drop(columns=["Molecule", "mpd_liq_density"])
-    print(use_df)
+
     meth_corr = "spearman"
 
     corr_matrix = use_df.corr(method=meth_corr)  # or "spearman"    
@@ -474,7 +474,7 @@ def plot_corr_one_molec(data, bounds, data_class, col_names, n_axis, x_vals, mod
     if mode == "ld":
         title_end = "LD Iters"
     elif mode == "vle":
-        title_end = "IFT Iter"
+        title_end = "ST Iter"
     plt.suptitle(f"LJ Parameter Sets for {mol_name} {title_end}", fontsize=20)
     return fig
 
@@ -568,7 +568,6 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
         ignore_index=True
     ).drop_duplicates()
 
-    print(len(lhs_param_df), " LHS points before removing duplicates with df_analyze")
     mode3_corr = "from_scl" if mode3 == "scl" else "to_real"
     mol_names = mol_name.split("-")
     lhs_param_df, param_counts, param_names = calc_param_sums(lhs_param_df, data_class, mol_names, mode3 = mode3_corr)
@@ -590,8 +589,6 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
     failure_points = failure_points.loc[:, lhs_param_df.columns.str.contains("sum")]
     lhs_param_df = lhs_param_df.loc[:, lhs_param_df.columns.str.contains("sum")]
     corr_mat_df = lhs_param_df
-    print(len(lhs_param_df), " LHS points remain after removing duplicates with df_analyze")
-    print(len(df_analyze), " points in df_analyze")
     corr_matrix2 = corr_mat_df.corr(method=meth)  # or "spearman"
     fig5 = plt.figure(figsize=(8,8))
     size = np.maximum(10,48/(len(corr_matrix2)))
@@ -616,8 +613,8 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
     ax.set_ylabel(ax.get_ylabel(), fontsize=size)
     ax.tick_params(axis='x', labelsize=size)
     ax.tick_params(axis='y', labelsize=size)
-    plt.title("Correlation Matrix (LHS Samples)", fontsize=size)
-    plt.show()
+    ax.set_title("Correlation Matrix (LHS Samples)", fontsize=size)
+    # plt.show()
 
     fig3, ax3 = plt.subplots(1, 1, figsize=(5,5))
     ax3.plot(df_analyze["sigma_sum"], df_analyze["epsilon_sum"], 'o', label="Successful Points", alpha = 0.5)

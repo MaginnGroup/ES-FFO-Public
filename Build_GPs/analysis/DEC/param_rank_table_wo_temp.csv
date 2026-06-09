@@ -1,4 +1,4 @@
-Rank,\rho_l - LD Data,q_j (rho_l),\gamma - IFT Data,q_j (gamma)
+Rank,\rho_l - LD Data,q_j (rho_l),\gamma - ST Data,q_j (gamma)
 1,epsilon_C2,167.80156140578586,sigma_C1,21.98533326280064
 2,sigma_O1,142.28448161270606,sigma_O1,10.821359686306751
 3,epsilon_C1,128.3194769042921,sigma_O2,8.2773108367844

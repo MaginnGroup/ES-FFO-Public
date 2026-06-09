@@ -1,4 +1,4 @@
-Rank,\rho_l - LD Data,q_j (rho_l),\gamma - IFT Data,q_j (gamma)
+Rank,\rho_l - LD Data,q_j (rho_l),\gamma - ST Data,q_j (gamma)
 1,temperature,133.7981157781672,temperature,16.251016625179673
 2,sigma_O1,129.65727229373084,epsilon_C1,8.813077573212379
 3,sigma_C1,75.70590006679781,epsilon_H1,3.9875372177042148
