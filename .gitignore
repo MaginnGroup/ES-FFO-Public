@@ -185,7 +185,7 @@ dmypy.json
 *Opt_ES/ift_val/workspace/*
 *Opt_ES/ift_val_no_opt/workspace/*
 *Opt_ES/ift_val_opt/workspace/*
-*Opt_ES/opt_at_params/workspace/*
+# *Opt_ES/opt_at_params/workspace/*
 *Opt_ES/opt_at_params_new/workspace/*
 
 # Re-include parent dirs so negation works
