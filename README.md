@@ -1,5 +1,5 @@
 # Transferable Force Fields for Six Common Solvents from Liquid Density and Surface Tension Data: A Gaussian Process Optimization Framework
-Authors: Montana Carlozo, Alexander W. Dowling, and Edward J. Maginn
+Authors: Montana N. Carlozo, Alexander W. Dowling, and Edward J. Maginn
 <!-- Introduction: Provide a brief introduction to the project, including its purpose, goals, and any key features or benefits. -->
 ## Introduction
 **ES-FFO** is a repository used to rapidly calibrate the LJ parameters of electrolyte solvent forcefields given experimental data. The key feature of this work is using machine learning tools in the form of Gaussian processes (GPs) which allow us to cheaply estimate the results of a molecular simulation given temperature state points and thermophysical property data. This workflow combines the approaches of Wang et al., 2023, J. Chem. Theory Comput. and Carlozo et al., 2025, Digital Discovery to create one repository to build GP models and optimize parameters for electrolyte solvent FFs.
