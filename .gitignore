@@ -25,6 +25,7 @@ density_iters/old/*
 *old2*
 .vscode
 *atom_type_all.py
+*.o*
 
 # Distribution / packaging
 .Python

@@ -9,13 +9,17 @@ from pathlib import Path
 import shlex
 import fnmatch
 
-mode = "compress" #compress or decompress or check
+mode = "check" #compress or decompress or check
 
 # Load the project
-project = signac.get_project("ift_val_opt")
+project = signac.get_project("ift_val_no_opt")
 #Loop over all jobs in the project
+count = 0
 for job in project.find_jobs():
-# for job in project.find_jobs({"mol_name": "DEC", "T":313.19, "sigma_C1": 0.3551913859767767}):
+# for job in project.find_jobs({"mol_name": "Gly", "T":313.15, "param_set": 1, "restart": 1}):
+    if count == 0:
+        print(job.id)
+        count += 1
     #If gemc failed or vap_density and liq_density in job.doc
     job_init_doc = job.fn("signac_job_document.json")
     # Check if the file exists
@@ -36,9 +40,17 @@ for job in project.find_jobs():
                 safe_tar_name = shlex.quote(tar_name)
 
                 keep_files = ["em/em.log", "nvt_eq/nvt_eq.log", "init_inter_eq/init_inter_eq.gro", "ff.xml", "system.gro", 
-                              "unedited.top", "system.top", "*.json",
+                              "unedited.top", "system.top", "*.json", "*.mdp",
                               "calc_props", "*.png", tar_name]
 
+                #For check, decompress and then compress since all files have since been compressed
+                if mode == "decompress" or mode == "check":
+                    #To uncompress and delete tar file
+                    cmd2 = f"pigz -dc {tar_name} | tar -xf - -C {source_dir}"
+                    if os.path.exists(tar_name):
+                        subprocess.run(cmd2, shell=True, check=True)
+                        os.remove(tar_name)
+                        # print(f"Decompressed and removed {tar_name} for {job.id}")
 
                 if mode == "compress" or mode == "check":
                     #Compress in place
@@ -72,11 +84,6 @@ for job in project.find_jobs():
                                         os.remove(file_path)
                                     except:
                                         pass
+                    # print(f"Archived {job.id}")
 
-                if mode == "decompress" or mode == "check":
-                    #To uncompress and delete tar file
-                    cmd2 = f"pigz -dc {tar_name} | tar -xf - -C {source_dir}"
-                    if os.path.exists(tar_name):
-                        subprocess.run(cmd2, shell=True, check=True)
-                        os.remove(tar_name)
-        
+                

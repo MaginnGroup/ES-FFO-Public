@@ -6,14 +6,14 @@ import shutil
 import tarfile
 import subprocess
 
-mode = "decompress" #compress or decompress or check
+mode = "compress" #compress or decompress or check
 
 # Load the project
 project = signac.get_project("gemc_val_opt")
 count = 0
 #Loop over all jobs in the project
-for job in project.find_jobs():
-# for job in project.find_jobs({"mol_name": "EG", "T":378.15, "restart": 2}):
+# for job in project.find_jobs():
+for job in project.find_jobs({"mol_name": "EG", "T":378.15, "restart": 2}):
     if count == 0:
         print(job.id)
         count += 1
