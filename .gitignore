@@ -32,6 +32,7 @@ analysis_old*
 *MAE.pdf
 *MAPD.pdf
 *parallel_plot_*.pdf
+*ms_val/*.csv
 
 
 # C extensions
