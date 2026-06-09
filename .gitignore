@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 files_for_tests/*
 *$py.class
-*example_output_files
 *Project*-*.o*
 *Project*-bundle*
 *iter-1_old*
@@ -14,12 +13,29 @@ files_for_tests/*
 *Eot_*
 *LHS_5*
 analysis_old*
-*.pdf
-R125_29*_ex*
+*Build_GPs/analysis/MeOH/ld_iters/old/*
+*Build_GPs/analysis/Gly/vle_iters/iter-1/close_st_data_gps/*
 *bndl_out*
+
+
+#Specific PDF Files
+*diff_coeff.pdf
+*Build_GPs/analysis/*/*/iter-*/fig_gp_examples*.pdf
+*Build_GPs/analysis/*/*_iters/iter-*/*_mse_below625.pdf
+*classifier.pdf
+*prop_preds_best*.pdf
+*prop_preds_worst*.pdf
+*prop_preds.pdf
+*m*pd_obj*.pdf
+*A.pdf
+*_corr.pdf
+*MAE.pdf
+*MAPD.pdf
+*parallel_plot_*.pdf
+
+
 # C extensions
 *.so
-Build_GPs/analysis/R125/*
 density_iters/old/*
 *DEC_old*
 *old2*
@@ -47,7 +63,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-*r41/analysis/r41-vle-iter*/figs/*.png
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -151,14 +166,25 @@ dmypy.json
 .pyre/
 
 #Signac workspaces
-*workspace*
-!*Build_GPs/ld_iters/workspace/0a1f55b1bd4000f7b65d8da83ec500a9*
-!*Build_GPs/vle_iters/workspace/0ade3504e9ac2226e515b931ed49fbec*
-!*Opt_ES/gemc_val_no_opt/workspace/0b6a289cb7b8f0c44f4d79d5b388097c*
-!*Opt_ES/gemc_val_opt/workspace/00ad476c7aa5d3e37d3297d989576bd8*
-!*Opt_ES/ift_val_no_opt/workspace/0b60b08441c96234bd55e463a107bcfb*
-!*Opt_ES/ift_val_opt/workspace/0db3c29cb39c91388bf8246b23419048*
-!*Opt_ES/opt_at_params_new/workspace/2b189e6ebd576f7c0bf1e67b265f3e3e*
+*Build_GPs/ld_iters/workspace/*
+!*Build_GPs/ld_iters/workspace/0a1f55b1bd4000f7b65d8da83ec500a9/*
+*Build_GPs/vle_iters/workspace/*
+!*Build_GPs/vle_iters/workspace/0ade3504e9ac2226e515b931ed49fbec/*
+*Opt_ES/gemc_val/workspace/*
+*Opt_ES/gemc_val_no_opt/workspace/*
+!*Opt_ES/gemc_val_no_opt/workspace/0b6a289cb7b8f0c44f4d79d5b388097c/*
+*Opt_ES/gemc_val_opt/workspace/*
+!*Opt_ES/gemc_val_opt/workspace/00ad476c7aa5d3e37d3297d989576bd8/*
+*Opt_ES/ift_val/workspace/*
+*Opt_ES/ift_val_no_opt/workspace/*
+!*Opt_ES/ift_val_no_opt/workspace/0b60b08441c96234bd55e463a107bcfb/*
+*Opt_ES/ift_val_opt/workspace/*
+!*Opt_ES/ift_val_opt/workspace/0db3c29cb39c91388bf8246b23419048/*
+*Opt_ES/opt_at_params/workspace/*
+*Opt_ES/opt_at_params_new/workspace/*
+!*Opt_ES/opt_at_params_new/workspace/2b189e6ebd576f7c0bf1e67b265f3e3e/*
+*archive_res_tar.gz
+
 *.signac*
 *signac_project_document*
 *Project-bundle*
