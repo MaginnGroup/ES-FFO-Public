@@ -152,13 +152,13 @@ dmypy.json
 
 #Signac workspaces
 *workspace*
-!Build_GPs/ld_iters/workspace/0a1f55b1bd4000f7b65d8da83ec500a9*
-!Build_GPs/vle_iters/workspace/0ade3504e9ac2226e515b931ed49fbec*
-!Opt_ES/gemc_val_no_opt/workspace/0b6a289cb7b8f0c44f4d79d5b388097c*
-!Opt_ES/gemc_val_opt/workspace/00ad476c7aa5d3e37d3297d989576bd8*
-!Opt_ES/ift_val_no_opt/workspace/0b60b08441c96234bd55e463a107bcfb*
-!Opt_ES/ift_val_opt/workspace/0db3c29cb39c91388bf8246b23419048*
-!Opt_ES/opt_at_params_new/workspace/2b189e6ebd576f7c0bf1e67b265f3e3e*
+!*Build_GPs/ld_iters/workspace/0a1f55b1bd4000f7b65d8da83ec500a9*
+!*Build_GPs/vle_iters/workspace/0ade3504e9ac2226e515b931ed49fbec*
+!*Opt_ES/gemc_val_no_opt/workspace/0b6a289cb7b8f0c44f4d79d5b388097c*
+!*Opt_ES/gemc_val_opt/workspace/00ad476c7aa5d3e37d3297d989576bd8*
+!*Opt_ES/ift_val_no_opt/workspace/0b60b08441c96234bd55e463a107bcfb*
+!*Opt_ES/ift_val_opt/workspace/0db3c29cb39c91388bf8246b23419048*
+!*Opt_ES/opt_at_params_new/workspace/2b189e6ebd576f7c0bf1e67b265f3e3e*
 *.signac*
 *signac_project_document*
 *Project-bundle*
