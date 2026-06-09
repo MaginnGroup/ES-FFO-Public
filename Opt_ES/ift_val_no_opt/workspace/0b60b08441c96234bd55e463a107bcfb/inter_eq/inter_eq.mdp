@@ -1,0 +1,51 @@
+
+; MDP file for NVT simulation
+
+; Run parameters
+integrator	            = md		    ; leap-frog integrator
+nsteps		            = 40000000	    ;
+dt		                = 0.001		    ; 1 fs
+
+; Output control
+nstenergy                = 10000
+nstvout                  = 10000
+nstlog                   = 10000
+nstxout-compressed       = 10000
+
+; Neighborsearching
+cutoff-scheme           = Verlet
+ns-type		            = grid		    ; search neighboring grid cells
+nstlist		            = 10		    ; 10 fs, largely irrelevant with Verlet
+verlet-buffer-tolerance = 1e-5          ; kJ/mol/ps
+
+; VDW
+vdwtype                 = Cut-off
+rvdw		            = 2.4		    ; short-range van der Waals cutoff (in nm)
+vdw-modifier            = None
+
+; Electrostatics
+rcoulomb	            = 2.4		    ; short-range electrostatic cutoff (in nm)
+coulombtype	            = PME	        ; Particle Mesh Ewald for long-range electrostatics
+pme-order	            = 4		        ; cubic interpolation
+fourierspacing          = 0.16          ; effects accuracy of pme
+ewald-rtol              = 1e-5
+
+; Temperature coupling is on
+tcoupl		            = v-rescale     ; modified Berendsen thermostat
+tc-grps		            = System 	    ; Single coupling group
+tau-t		            = 0.5	  		; time constant, in ps
+ref-t		            = 353.19        ; reference temperature, one for each group, in K
+
+; Pressure coupling is off
+pcoupl		            = no
+
+; Periodic boundary conditions
+pbc		                = xyz		    ; 3-D PBC
+
+; Dispersion correction
+DispCorr	            = no	    ; account for cut-off vdW scheme
+
+; Velocity generation
+gen-vel		            = yes		    ; assign velocities from Maxwell distribution
+gen-temp	            = 353.19        ; temperature for Maxwell distribution
+gen-seed	            = -1		    ; generate a random seed

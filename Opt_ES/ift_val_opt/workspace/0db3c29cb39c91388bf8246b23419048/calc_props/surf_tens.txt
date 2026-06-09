@@ -1,0 +1,56 @@
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        5.4    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        6.1    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        6.7    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        8.9    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        6.9    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316         11    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        6.8    7752.45    12.3559  (bar nm)
+
+Statistics over 40000001 steps [ 0.0000 through 40000.0000 ps ], 1 data sets
+All statistics are over 400001 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+#Surf*SurfTen               892.316        7.3    7752.45    12.3559  (bar nm)

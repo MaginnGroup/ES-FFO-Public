@@ -1,0 +1,4 @@
+       > Success! Found 4484 production cycles.
+       > Success! Found 4485 production cycles.
+Job 00ad476c7aa5d3e37d3297d989576bd8 production has a low number of insertions or deletions
+Insert: 0, Delete: 0, N_mols: 800

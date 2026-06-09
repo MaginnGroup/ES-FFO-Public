@@ -1,0 +1,25 @@
+
+; MDP file for energy minimization
+
+integrator	    = steep		    ; Algorithm (steep = steepest descent minimization)
+emtol		    = 100.0  	    ; Stop minimization when the maximum force < 100.0 kJ/mol/nm
+emstep          = 0.001          ; Energy step size
+nstcgsteep      = 1000          ; Number of steps for the cg algorithm
+nsteps		    = 200000	  	    ; Maximum number of (minimization) steps to perform
+
+nstenergy                = 1000
+nstlog                   = 1000
+nstxout-compressed       = 1000
+
+cutoff-scheme   	 = Verlet     ; Buffered neighbor searching
+verlet-buffer-tolerance  = 1e-5
+ns_type         	 = grid       ; Method to determine neighbor list (simple, grid)
+
+rvdw            	 = 1.2       ; Short-range Van der Waals cut-off
+vdwtype         	 = Cut-off
+DispCorr        	 = EnerPres
+
+coulombtype     	 = PME       ; Treatment of long range electrostatic interactions
+rcoulomb        	 = 1.2       ; Short-range electrostatic cut-off
+
+pbc             	 = xyz       ; Periodic Boundary Conditions in all 3 dimensions

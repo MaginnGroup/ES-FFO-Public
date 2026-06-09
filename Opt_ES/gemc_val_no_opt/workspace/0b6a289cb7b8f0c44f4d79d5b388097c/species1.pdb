@@ -1,0 +1,14 @@
+REMARK 1   Created by mosdef_cassandra
+CRYST1    7.594    6.732    6.561  90.00  90.00  90.00 P 1        1
+ATOM      1 C    RES A   0      -0.374  -0.025  -0.015  1.00  0.00           C  
+ATOM      2 O    RES A   0       0.970  -0.434  -0.260  1.00  0.00           O  
+ATOM      3 H    RES A   0      -0.542   0.026   1.064  1.00  0.00           H  
+ATOM      4 H    RES A   0      -1.047  -0.764  -0.457  1.00  0.00           H  
+ATOM      5 H    RES A   0      -0.543   0.949  -0.480  1.00  0.00           H  
+ATOM      6 H    RES A   0       1.535   0.248   0.147  1.00  0.00           H  
+CONECT    1    2    3    4    5
+CONECT    2    1    6
+CONECT    3    1
+CONECT    4    1
+CONECT    5    1
+CONECT    6    2

@@ -1,0 +1,1 @@
+{"system": true, "em_fin": true, "nvt_eq_fin": true, "max_eq_steps_npt_eq": 2500, "nsteps_npt_eq": 125, "eq_ext_npt_eq": false, "npt_eq_fin": true, "eq_liq_dens": 1217.5370597718254, "npt_prod_fin": true, "liq_density": 1240.9960923345507, "liq_density_unc": 2.581095702980406}

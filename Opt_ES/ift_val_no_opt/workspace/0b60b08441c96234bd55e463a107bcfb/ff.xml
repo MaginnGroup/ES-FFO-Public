@@ -1,0 +1,52 @@
+<ForceField>
+ <AtomTypes>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4](C)(H)(H)H" desc="Sp3 C"/>
+   <Type name="H1" class="hc" element="H" mass="1.008" def="[H][C;%C1]" desc="H bonded to aliphatic carbon without d. group"/>
+   <Type name="C2" class="c3" element="C" mass="12.01" def="[C;X4](C)(O)(H)H" desc="Sp3 C"/>
+   <Type name="H2" class="h1" element="H" mass="1.008" def="[H][C;%C2]" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="O1" class="os" element="O" mass="16.0" def="[O;X2]([!H])[!H]" desc="Ether and ester oxygen"/>
+   <Type name="C3" class="c" element="C" mass="12.01" def="[C;X3][O&X1,S&X1]" desc="Sp2 C carbonyl group"/>
+   <Type name="O2" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="hc" length="0.1092" k="282252.709"/>
+  <Bond class1="c3" class2="c3" length="0.1535" k="253634.331"/>
+  <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
+  <Bond class1="c3" class2="os" length="0.1439" k="252295.702"/>
+  <Bond class1="c" class2="os" length="0.1343" k="344175.498"/>
+  <Bond class1="c" class2="o" length="0.1214" k="542245.941"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="os" angle="1.892" k="567.179"/>
+  <Angle class1="hc" class2="c3" class3="hc" angle="1.891" k="329.951"/>
+  <Angle class1="c3" class2="c3" class3="hc" angle="1.921" k="388.019"/>
+  <Angle class1="c3" class2="os" class3="c" angle="2.010" k="532.458"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="os" angle="1.899" k="425.434"/>
+  <Angle class1="os" class2="c" class3="o" angle="2.153" k="635.375"/>
+  <Angle class1="os" class2="c" class3="os" angle="1.944" k="639.731"/>
+  <Angle class1="c" class2="os" class3="c3" angle="2.010" k="532.458"/>
+  <Angle class1="o" class2="c" class3="os" angle="2.153" k="635.375"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="c3" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.602" periodicity2="1" phase2="3.1" k2="3.347"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.653"/>
+  <Proper class1="h1" class2="c3" class3="os" class4="c" periodicity1="3" phase1="0.0" k1="1.602"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
+  <Proper class1="hc" class2="c3" class3="c3" class4="os" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="o" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.1" k1="11.297" periodicity2="1" phase2="3.1" k2="5.858"/>
+  <Proper class1="o" class2="os" class3="c" class4="os" periodicity1="2" phase1="180.0" k1="43.932"/>
+  <Proper class1="os" class2="c" class3="os" class4="c3" periodicity1="2" phase1="3.1" k1="11.297"/>
+  <Proper class1="os" class2="c3" class3="c3" class4="hc" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+  <Atom type="C1" charge="-0.453302" sigma="0.276576" epsilon="0.607714"/>
+  <Atom type="H1" charge="0.119642" sigma="0.268368" epsilon="0.036156"/>
+  <Atom type="C2" charge="0.496179" sigma="0.381585" epsilon="0.414249"/>
+  <Atom type="H2" charge="-0.031568" sigma="0.247770" epsilon="0.077850"/>
+  <Atom type="O1" charge="-0.541363" sigma="0.234281" epsilon="0.830657"/>
+  <Atom type="C3" charge="1.055585" sigma="0.379221" epsilon="0.379130"/>
+  <Atom type="O2" charge="-0.650193" sigma="0.312484" epsilon="0.659265"/>
+ </NonbondedForce>
+</ForceField>

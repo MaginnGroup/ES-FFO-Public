@@ -1,0 +1,35 @@
+<ForceField>
+ <AtomTypes>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+   <Type name="O1" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="Oxygen in hydroxyl group"/>
+   <Type name="H2" class="ho" element="H" mass="1.008" def="HO" desc="Hydroxyl group"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
+  <Bond class1="c3" class2="c3" length="0.1535" k="253634.331"/>
+  <Bond class1="c3" class2="oh" length="0.1426" k="262838.440"/>
+  <Bond class1="ho" class2="oh" length="0.0974" k="309281.363"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="c3" class2="c3" class3="h1" angle="1.921" k="387.936"/>
+  <Angle class1="c3" class2="c3" class3="oh" angle="1.910" k="566.680"/>
+  <Angle class1="c3" class2="oh" class3="ho" angle="1.888" k="394.056"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
+  <Angle class1="h1" class2="c3" class3="oh" angle="1.918" k="426.515"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="c3" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.669" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.653"/>
+  <Proper class1="h1" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="h1" class2="c3" class3="oh" class4="ho" periodicity1="3" phase1="0.0" k1="0.699"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="h1" periodicity1="3" phase1="0.0" k1="0.000" periodicity2="1" phase2="0.0" k2="1.046"/>
+  <Proper class1="oh" class2="c3" class3="c3" class4="oh" periodicity1="3" phase1="0.0" k1="0.602" periodicity2="2" phase2="0.0" k2="4.916"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.8333" lj14scale="0.5">
+  <Atom type="C1" charge="0.299206" sigma="0.376877" epsilon="0.262626"/>
+  <Atom type="H1" charge="0.002766" sigma="0.180063" epsilon="0.055366"/>
+  <Atom type="O1" charge="-0.731599" sigma="0.315079" epsilon="0.808959"/>
+  <Atom type="H2" charge="0.426861" sigma="0.000000" epsilon="0.000000"/>
+ </NonbondedForce>
+</ForceField>
