@@ -7,6 +7,9 @@ Authors: Montana Carlozo, Alexander W. Dowling, and Edward J. Maginn
 **NOTE**: We use Signac and signac flow (`<https://signac.io/>`) to manage the setup and execution of each workflow. These instructions assume a working knowledge of that software.
 
 ## Citation
+This work is currently in preparation and has not yet been published. Please cite the following when referring to this work:
+
+Carlozo, M. N., Dowling, A. W., \& Maginn, E. J.. Transferable Force Fields for Six Common Solvents from Liquid Density and Surface Tension Data: A Gaussian Process Optimization Framework. In preparation.
    
 ## Available Data
 
@@ -17,8 +20,8 @@ ES-FFO/ is the top level directory. It contains: <br />
 2. utils/ contains functions used by all pieces of this workflow including molecule experimental data and reference parameters <br />
 3. block_averages/ contains a code for block averaging via the methods in H. Flyvbjerg and H.G. Peterson. Error estimates on averages of correlated data. J. Chem. Phys. 91:461-466, 1989.<br />
 4. fffit/ contains another set of utility functions used by multiple aspects of this workflow. <br />
-5. Build_GPs/ contains the workflow runs and analyzed results from applying the methods in Wang et al. 2023 and create Base FFs <br />
-6. Opt_ES/ contains the workflow runs and analyzed results from applying the methods in Carlozo et al. 2025. to create GP-optimized FFs <br />
+5. Build_GPs/ contains the workflow runs and analyzes results from applying the methods modified from those in Wang et al. 2023 to create Base FFs <br />
+6. Opt_ES/ contains the workflow runs and analyzes results from applying the methods in Carlozo et al. 2025. to create GP-optimized FFs <br />
 7. Opt_ES/ Also contains the molecular simulation results and analysis of the FF(s) developed in steps 5 and 6.  <br />
 8. hfcs-fffit.yml is the environment for running this workflow. <br />
 9. submit_jobs is a shell script for submitting jobs to the cluster. <br />
@@ -29,6 +32,8 @@ ES-FFO/ is the top level directory. It contains: <br />
 14. make_ift_val_figs.py is a python script for creating visualizations of the interfactial tension boxes for all ST simulations. <br />
 15. make_param_comp_figs.py is a python script for creating parameter comparison figures. Figures 10-11 and SI Figures S7-S10 in the main text. <br />
 16. make_pareto_comp_figs.py is a python script for visualizing differences between pareto-optimal LJ parameter sets in ST (and LD) iterations. Figure 13 in the main text. <br />
+Note that all workspace/ subdirectories below include one example signac workspace with some example input data and key simulation validation figures where appropriate.
+
 
 ### utils/
 This directory contains:
@@ -45,11 +50,11 @@ This directory contains functions used by both workflows:
 5. utils.py: Functions for scaling and unscaling data and shuffling/splitting GP data
 
 ### Build_GPs/
-This directory contains all data related to running the workflow of Wang et al. including:
+This directory contains all data related to running the GP building workflow, including:
 1. analysis/mol/ld_iters: Results for liquid density (LD) iterations for each molecule "mol"
 2. analysis/mol/vle_iters: Results for surface tension (ST) iterations
 3. utils/*.py: Functions for analyzing the results of LD and ST iterations
-4. ld_iters/ : The signac project directory for running the LD iterations including project.py, templates/, and workspace/
+4. ld_iters/ : The signac project directory for running the LD iterations including project.py, templates/, and workspace/ 
 5. vle_iters/ : The signac project directory for running the ST iterations including project.py, templates/, and workspace/
 6. gen_lhs_samples.py: A script for generating the LHS data necessary for LD and ST iterations
 7. init_LD.py: A script to generate the signac project for LD iterations
@@ -62,7 +67,7 @@ This directory contains all data related to running the workflow of Wang et al. 
 This directory contains all data related to running the optimization workflow of Carlozo et al., 2025, Digital Discovery including:
 1. analysis/: Data from analyzing the results of the optimization workflow
 2. utilsOpt/: Functions for running the optimization workflow
-3. gemc_val_opt/: The signac project directory for running the gemc validation for GP-optimized FF including project.py, templates/, and workspace/
+3. gemc_val_opt/: The signac project directory for running the gemc validation for GP-optimized FF including project.py, templates/, and workspace/ 
 4. gemc_val_no_opt/: The signac project directory for running the gemc validation for the Base FF including project.py, templates/, and workspace/
 5. ift_val_opt/: The signac project directory for running the interfacial tension validation for GP-optimized FF including project.py, templates/, and workspace/
 6. ift_val_no_opt/: The signac project directory for running the interfacial tension validation for the Base FF including project.py, templates/, and workspace/
