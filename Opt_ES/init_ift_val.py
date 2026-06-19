@@ -45,7 +45,7 @@ def calc_nmols(sp):
         new_V = sp["aspect_ratio"] * xy_len**3
         # Calculate the number of molecules from the new volume and the given density
         nmols = int(
-            np.floor(density * 1000 * 6.022 * 1e23 * new_V / (sp["mol_wt"] * 1e27))
+            np.ceil(density * 1000 * 6.022 * 1e23 * new_V / (sp["mol_wt"] * 1e27))
         )
 
     return sp, nmols
