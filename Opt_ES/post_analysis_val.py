@@ -28,6 +28,7 @@ print(f"Script location: {Path(__file__).parent}")
 #After jobs are finished
 #save signac results for each atom for a given atom typing scheme and number of training parameters
 opt_status = "opt"
+show_both = True  # Show both GP_Optimized and Base FF in plots
 
 #Change me as needed
 obj_choice = "ExpVal"
@@ -100,14 +101,6 @@ for file, df_molec in all_df_data.items():
         df_paramsets.to_csv(os.path.join(file_save, "error_data.csv"))
         error_dict[file_save] = df_paramsets
 
-#Plot VLE, Hvap/Pvap, and ST
-full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), f"ms_val_{opt_status}")
-os.makedirs(full_at_dir, exist_ok=True)
-pdf_vle = PdfPages(os.path.join(full_at_dir ,"vle.pdf"))
-pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
-pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
-pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
-
 #### Add literature FF data to prop_dict
 # file_save_lit = "analysis/lit_ff_data.csv"
 # lit_data = pd.read_csv(file_save_lit, header=0)
@@ -160,27 +153,31 @@ file_save_lit = "analysis/lit_ff_data.csv"
 
 lit_data = pd.read_csv(file_save_lit, header=0)
 
-##ADD otherr FF data to lit data
-# for molec_name in mol_names:
-#     other_opt = "no_opt" if opt_status == "opt" else "opt"
-#     ref_name = "IFT FF" if opt_status == "opt" else "Opt FF"
-#     df_old_FF = pd.read_csv(f"analysis/at_00/{molec_name}/ExpVal/opt_res/ms_val_{other_opt}/ms_data.csv", header = 0, index_col = 0)
-#     #Drop all column without sim_ in the name or "temperature" or "molecule"
-#     cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
-#     df_old_FF = df_old_FF[cols_to_keep]
-#     df_old_FF['ref_name'] = ref_name
-#     df_old_FF['short_name'] = ref_name
-#     df_old_FF_lit_data = df_old_FF.reindex(columns=lit_data.columns)
-#     lit_data = pd.concat([lit_data, df_old_FF_lit_data], ignore_index=True)
-# lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
-for molec_name in mol_names:
-    pass
+##ADD other FF data to lit data
+if show_both:
+    for molec_name in mol_names:
+        other_opt = "no_opt" if opt_status == "opt" else "opt"
+        ref_name = "IFT FF" if opt_status == "opt" else "Opt FF"
+        df_old_FF = pd.read_csv(f"analysis/at_00/{molec_name}/ExpVal/opt_res/ms_val_{other_opt}/ms_data.csv", header = 0, index_col = 0)
+        #Drop all column without sim_ in the name or "temperature" or "molecule"
+        cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
+        df_old_FF = df_old_FF[cols_to_keep]
+        df_old_FF['ref_name'] = ref_name
+        df_old_FF['short_name'] = ref_name
+        df_old_FF_lit_data = df_old_FF.reindex(columns=lit_data.columns)
+        lit_data = pd.concat([lit_data, df_old_FF_lit_data], ignore_index=True)
+    lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
+    vle_save_name = "opt_comp"
+else:
+    vle_save_name = opt_status
+    for molec_name in mol_names:
+        pass
 lit_data_error = prepare_df_errors(lit_data, molec_dict, molec_name)
 lit_data_error.to_csv("analysis/lit_error_data.csv")
 
  #Save df for Hvap estimates
 h_est_lit_data = estimate_hvaps(lit_data, molec_dict, molec)
-# h_est_lit_data.to_csv(f"analysis/lit_Hvap_est_w_{other_opt}.csv", index=False)
+h_est_lit_data.to_csv(f"analysis/lit_Hvap_est_w_{vle_save_name}.csv", index=False)
 
 #For each file in error dict, add the data to the lit data if it is not already there (if it is not already in prop dict)
 new_lit_data = copy.copy(lit_data_error)
@@ -197,7 +194,15 @@ new_lit_data["ref_name"] = pd.Categorical(
 new_lit_data = new_lit_data.sort_values(["molecule", "ref_name"])
 new_lit_data = new_lit_data.dropna(subset=[col for col in new_lit_data.columns if col not in ["ref_name", "molecule"]], how='all').reset_index(drop=True)
 new_lit_data.to_csv("analysis/comp_err_data.csv")
-    
+     
+#Plot VLE, Hvap/Pvap, and ST
+full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), f"ms_val_{vle_save_name}")
+os.makedirs(full_at_dir, exist_ok=True)
+pdf_vle = PdfPages(os.path.join(full_at_dir ,"vle.pdf"))
+pdf_hpvap = PdfPages(os.path.join(full_at_dir ,"h_p_vap.pdf"))
+pdf_st = PdfPages(os.path.join(full_at_dir ,"surf_tens.pdf"))
+pdf_diff = PdfPages(os.path.join(full_at_dir ,"diff_coeff.pdf"))
+
 #For each molecule
 molecules = mol_names #df_paramsets['molecule'].unique().tolist()
 for molec in molecules:
@@ -259,9 +264,9 @@ for error_obj in error_objs:
     #Make error Plots
     if len(at_numbers) == 1:
         at_class = atom_type.make_atom_type_class(at_numbers[0])
-        full_at_dir = os.path.join("analysis", at_class.scheme_name, obj_choice, f"ms_val_{opt_status}")
+        full_at_dir = os.path.join("analysis", at_class.scheme_name, obj_choice, f"ms_val_{vle_save_name}")
     else:
-        full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), obj_choice, f"ms_val_{opt_status}")
+        full_at_dir = os.path.join("analysis", "AT-" + "".join(map(str, at_numbers)), obj_choice, f"ms_val_{vle_save_name}")
     os.makedirs(full_at_dir, exist_ok=True)
     pdf_MAPD = PdfPages(os.path.join(full_at_dir , error_obj.upper() + ".pdf"))
     #For each molecule

@@ -379,8 +379,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         df_color, df_marker, df_z_order, show_df = key_map.get(df_label, ('black', 'o', 2, True))
         
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
-        
-        if df_ff is not None and "Vahid" not in df_label: #and show_df:
+        if df_ff is not None: #and show_df:
+        # if df_ff is not None and "Vahid" not in df_label: #and show_df:
             min_temp, max_temp = get_min_max(min_temp, max_temp, df_ff["temperature"].values)
             all_props = ["sim_" + prop_name]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
@@ -555,8 +555,8 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
 
         df_color, df_marker, df_z_order = key_map[df_label]
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
-        
-        if df_ff is not None and "Vahid" not in df_label:
+        if df_ff is not None:        
+        # if df_ff is not None and "Vahid" not in df_label:
             #Check that there are data points for vapor density
             all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
             x_props = []
@@ -768,17 +768,17 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
-
         #Convert from bar to kPa for plotting
-        if df_ff is not None and "Vahid" not in df_label:
+        if df_ff is not None:
+        # if df_ff is not None and "Vahid" not in df_label:
             df_ff["sim_Pvap"] = df_ff["sim_Pvap"]*100
 
 
         df_color, df_marker, df_z_order = key_map[df_label]
         
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
-
-        if df_ff is not None and "Vahid" not in df_label:
+        if df_ff is not None:
+        # if df_ff is not None and "Vahid" not in df_label:
             #Check if there are data points for Pvap and Hvap
             # x_props = ["sim_Pvap", "sim_Hvap"]
             df_ff.replace("", np.nan, inplace=True)
