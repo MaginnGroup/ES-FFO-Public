@@ -45,6 +45,7 @@ density_iters/old/*
 *Opt_ES/opt_at_params/*
 *Opt_ES/analysis/AT-0/ms_val/*
 *Opt_ES/analysis/at_00/ExpVal/ms_val/*
+*_bckp.ipynb
 
 # C extensions
 *.so
