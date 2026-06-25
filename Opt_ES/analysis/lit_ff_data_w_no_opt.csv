@@ -43,11 +43,11 @@ Gly,350.0,1214.0,,,,,4.06e-08,,,Jahn et al.,Jahn
 Gly,380.0,1191.0,,,,,2.67e-07,,,Jahn et al.,Jahn
 Gly,400.0,1173.0,,,,,7.02e-07,,,Jahn et al.,Jahn
 DMF,298.15,984.2,,,46.08,36.1,,,,Caleman et al.,Caleman
-DMF,308.0,960.0,,0.010022,,,,,,Vahid & Maginn,VE
-DMF,311.0,955.0,,0.0157,,,,,,Vahid & Maginn,VE
-DMF,313.0,935.0,,0.019419,,,,,,Vahid & Maginn,VE
-DMF,324.0,944.0,,0.021853,,,,,,Vahid & Maginn,VE
-DMF,328.0,943.0,,0.025181,,,,,,Vahid & Maginn,VE
+DMF,308.0,960.0,,0.010022,,,,649.85,266.79,Vahid & Maginn,VE
+DMF,311.0,955.0,,0.0157,,,,649.85,266.79,Vahid & Maginn,VE
+DMF,313.0,935.0,,0.019419,,,,649.85,266.79,Vahid & Maginn,VE
+DMF,324.0,944.0,,0.021853,,,,649.85,266.79,Vahid & Maginn,VE
+DMF,328.0,943.0,,0.025181,,,,649.85,266.79,Vahid & Maginn,VE
 DMF,298.0,,,,,,1.25e-09,,,Chalaris & Samios,CS
 DMSO,298.0,1080.0,,,,33.9,1.05e-09,,,Senapati,Senapati
 DMSO,323.0,1050.0,,,,29.6,1.7e-09,,,Senapati,Senapati
