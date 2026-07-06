@@ -32,7 +32,7 @@ def estimate_hvaps(df_data, data_dict, mol_name):
     if not all(col in df_data.columns for col in ["temperature", "sim_Pvap"]):
         raise ValueError("Dataframe must contain columns 'temperature' and 'sim_Pvap' to estimate Hvap values")
     
-    #Calculate Hvap using the Clausius-Clapeyron relation: Hvap = -R * T * ln(Pvap/P0), where P0 is 1 atm in Pa
+    #Calculate Hvap using the Clausius-Clapeyron relation: Hvap = -R * T * ln(Pvap/P0), where P0 is in Pa
     R = 8.314*(10**-3) # kJ/(mol*K)
 
     def get_hvap_est(df_grp, molecule, noisy = False):
