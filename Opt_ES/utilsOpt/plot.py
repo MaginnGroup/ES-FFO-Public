@@ -324,7 +324,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "Stubbs et al.": ('purple', 'd', 1, False),
                "Huang et al.": ('gray', 's', 1, False),
                "Jahn et al.": ('gray', 's', 1, False),
-               "Caleman et al.": ('gray', 's', 1, False),
+               "Caleman et al. (GAFF)": ('deeppink', 's', 1, False),
+               "Caleman et al. (OPLS/AA)": ('deeppink', 'h', 1, False),
+               "Caleman et al. (CGenFF)": ('deeppink', '1', 1, False),
                "Vahid & Maginn": ('tab:orange', '>', 1, False),
                "Chalaris & Samios": ('tab:green', 'p', 1, False),
                "Senapati": ('gray', 's', 1, False),
@@ -504,7 +506,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "Stubbs et al.": ('purple', 'd', 1),
                "Huang et al.": ('gray', 's', 1),
                "Jahn et al.": ('gray', 's', 1),
-               "Caleman et al.": ('gray', 's', 1),
+               "Caleman et al. (GAFF)": ('deeppink', 's', 1),
+               "Caleman et al. (OPLS/AA)": ('deeppink', 'h', 1),
+               "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
                "Senapati": ('gray', 's', 1),
@@ -555,10 +559,9 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
 
         df_color, df_marker, df_z_order = key_map[df_label]
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
-        if df_ff is not None:        
+        if df_ff is not None:
         # if df_ff is not None and "Vahid" not in df_label:
             #Check that there are data points for vapor density
-            all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
             x_props = []
             has_vap = True
             has_liq = True
@@ -579,7 +582,12 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                 x_props.append("sim_vap_density")
                 vap_data_present = True
     
-            grouped = df_ff.groupby(["temperature"])[all_props]
+            try:
+                all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc", "sim_Tc_unc", "sim_rhoc_unc"]
+                grouped = df_ff.groupby(["temperature"])[all_props]
+            except:
+                all_props = ["sim_liq_density", "sim_vap_density", "sim_Tc", "sim_rhoc"]
+                grouped = df_ff.groupby(["temperature"])[all_props]
 
             # Calculate mean and standard deviation for each group
             means = grouped.mean().reset_index()
@@ -605,12 +613,19 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                     df_label = "GP-Opt"
                 elif df_label == "IFT FF":
                     df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
-                min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, stds["sim_rhoc"].values)
-                min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, stds["sim_Tc"].values)
+                if "sim_rhoc_unc" not in means.columns or "sim_Tc_unc" not in means.columns:
+                    std_rhoc = stds["sim_rhoc"].values
+                    std_Tc = stds["sim_Tc"].values
+                else:
+                    std_rhoc = means["sim_rhoc_unc"].values
+                    std_Tc = means["sim_Tc_unc"].values
+                min_rho, max_rho = get_min_max(min_rho, max_rho, means["sim_rhoc"].values, std_rhoc)
+                min_temp, max_temp = get_min_max(min_temp, max_temp, means["sim_Tc"].values, std_Tc)
                 try:
-                    ax2.errorbar(means["sim_rhoc"].dropna().iloc[0],means["sim_Tc"].dropna().iloc[0], xerr=1.96*stds["sim_rhoc"].dropna().iloc[0],
-                            color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
-                            zorder = df_z_order, label = df_label)
+                    ax2.errorbar(means["sim_rhoc"].dropna().iloc[0],means["sim_Tc"].dropna().iloc[0], 
+                                 xerr=1.96*std_rhoc[0], yerr=1.96*std_Tc[0],
+                                color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
+                                zorder = df_z_order, label = df_label)
                 except:
                     pass
 
@@ -707,7 +722,9 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "Stubbs et al.": ('purple', 'd', 1),
                "Huang et al.": ('gray', 's', 1),
                "Jahn et al.": ('gray', 's', 1),
-               "Caleman et al.": ('gray', 's', 1),
+               "Caleman et al. (GAFF)": ('deeppink', 's', 1),
+               "Caleman et al. (OPLS/AA)": ('deeppink', 'h', 1),
+               "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
                "Senapati": ('gray', 's', 1),

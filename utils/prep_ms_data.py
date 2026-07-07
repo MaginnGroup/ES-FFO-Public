@@ -7,6 +7,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 import pickle
 from scipy.stats import linregress
 import copy
+from uncertainties import ufloat
+
 
 from fffit.fffit.utils import values_real_to_scaled
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
@@ -231,9 +233,11 @@ def prepare_df_props(df_csv, molecule, liquid_density_threshold, scale=True):
 
     #Calculate ciritcal points if sim liq density and vap density exist
     if "sim_liq_density" in df_all.columns and "sim_vap_density" in df_all.columns:
-        Tc, rhoc = calc_critical(df_all)
+        Tc, rhoc, Tc_unc, rhoc_unc = calc_critical(df_all)
         df_all["sim_Tc"] = Tc
         df_all["sim_rhoc"] = rhoc
+        df_all["sim_Tc_unc"] = Tc_unc
+        df_all["sim_rhoc_unc"] = rhoc_unc
         df_all["expt_Tc"] = molecule.expt_Tc
         df_all["expt_rhoc"] = molecule.expt_rhoc
 
@@ -275,6 +279,8 @@ def calc_critical(df):
     """
     Tc = []
     rhoc = []
+    Tc_unc = []
+    rhoc_unc = []
 
     #Drop rows where either liq or vap density is nan
     df_valid = df.dropna(subset=["sim_liq_density", "sim_vap_density"])
@@ -294,26 +300,41 @@ def calc_critical(df):
     if all(x == temps[0] for x in temps):
         Tc += [np.nan]*len(df)
         rhoc += [np.nan]*len(df)
+        Tc_unc += [np.nan]*len(df)
+        rhoc_unc += [np.nan]*len(df)
     else:
         # Critical Point (Law of rectilinear diameters)
-        slope1, intercept1, r_value1, p_value1, std_err1 = linregress(
-            temps,(liq_density + vap_density) / 2.0,)
-
+        result1 = linregress(temps,(liq_density + vap_density) / 2.0,)
+        slope1 = result1.slope
+        intercept1 = result1.intercept
+        std_err1 = result1.stderr
+        int_err1 = result1.intercept_stderr
         try:
-            slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                temps,(liq_density - vap_density)**(1/0.32),)
+            result2 = linregress(temps,(liq_density - vap_density)**(1/0.32),)
         except:
-            slope2, intercept2, r_value2, p_value2, std_err2 = linregress(
-                temps,abs((liq_density - vap_density))**(1/0.32),)
+            result2 = linregress(temps,abs((liq_density - vap_density))**(1/0.32),)
+        slope2 = result2.slope
+        intercept2 = result2.intercept
+        std_err2 = result2.stderr
+        int_err2 = result2.intercept_stderr
 
-        Tc_mol = np.abs(intercept2 / slope2)
-        rhoc_mol = intercept1 + slope1 * Tc_mol
+        #Calculate Tc with uncertainty
+        int2_w_unc = ufloat(intercept2, int_err2*(np.sqrt(len(temps))))
+        slope2_w_unc = ufloat(slope2, std_err2*(np.sqrt(len(temps))))
+        Tc_mol = np.abs(int2_w_unc / slope2_w_unc)
+
+        int1_w_unc = ufloat(intercept1, int_err1*(np.sqrt(len(temps))))
+        slope1_w_unc = ufloat(slope1, std_err1*(np.sqrt(len(temps))))
+        rhoc_mol = int1_w_unc + slope1_w_unc * Tc_mol
 
         # Add correct number of entries for each molecule (even for nan value Temps)
-        Tc += list([Tc_mol])*len(df)
-        rhoc += list([rhoc_mol])*len(df)
-        
-    return Tc, rhoc
+        Tc += list([Tc_mol.nominal_value])*len(df)
+        rhoc += list([rhoc_mol.nominal_value])*len(df)
+        #Get uncertainties for Tc and rhoc using error propagation
+        Tc_unc += list([Tc_mol.std_dev])*len(df)
+        rhoc_unc += list([rhoc_mol.std_dev])*len(df)
+
+    return Tc, rhoc, Tc_unc, rhoc_unc
 
 def prepare_df_errors(df_data, data_dict, mol_name):
     """Create a dataframe with mean square error (mse) and mean absolute

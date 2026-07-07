@@ -542,15 +542,15 @@ expt_surf_tens = {
     333.15: 60.5,
 }
 
-# https://doi.org/10.1016/j.jct.2017.11.008 (from correlation)
-# P (Pa)= 10^5*EXP((-23263/388.7 + 82273*(1/388.7 - 1/T(K)) - 83*((388.7/T(K)) - 1 + LN(T(K)/388.7)))/8.314)
+# 10.1016/j.fluid.2015.03.038 (from correlation)
+# P (Pa)= 10^5*EXP((-23263/388.7 + 82273*(1/388.7 - 1/T(K)) - 83*((388.7/T(K)) - 1 + LN(T(K)/388.7)))/R)
 
 expt_Pvap = {
-    293.15: (1.2022 * 10**-2 * u.Pa).to_value(u.bar),
-    303.15: (4.053 * 10**-2 * u.Pa).to_value(u.bar),
-    313.15: (1.251 * 10**-1 * u.Pa).to_value(u.bar),
-    323.15: (3.567 * 10**-1 * u.Pa).to_value(u.bar),
-    333.15: (9.459 * 10**-1 * u.Pa).to_value(u.bar),
+    293.15: (1.2033 * 10**-2 * u.Pa).to_value(u.bar),
+    303.15: (4.0563 * 10**-2 * u.Pa).to_value(u.bar),
+    313.15: (1.2521 * 10**-1 * u.Pa).to_value(u.bar),
+    323.15: (3.5690 * 10**-1 * u.Pa).to_value(u.bar),
+    333.15: (9.4652 * 10**-1 * u.Pa).to_value(u.bar),
 }
 
 # From https://doi.org/10.1016/j.fluid.2015.03.038
@@ -868,7 +868,7 @@ expt_Hvap = {
     350.0: 1075.936,
     400.0: 944.57,
     450.0: 739.19,
-    500.0: 547.03,
+    500.0: 391.06,
 }
 
 #From DOI: 10.1039/F19858100769 (m^2/s)
@@ -1008,7 +1008,7 @@ expt_Pvap = {
     328.15: (3.1753 * u.kPa).to_value(u.bar),
 }
 
-# https://doi.org/10.3390/molecules29051110
+# https://doi.org/10.3390/molecules29051110, Barone Calorimetry
 expt_Hvap = {
     298.15: 641.538,
 }
@@ -1069,7 +1069,7 @@ param_names = (
 )
 
 rho_c = 366  # kg/m^3 (https://doi.org/10.1139/v79-114)
-Tc = 693  # K (https://doi.org/10.1016/j.fluid.2018.05.029)
+Tc = 718  # K (https://doi.org/10.1016/j.fluid.2018.05.029)
 
 
 gaff_params = {
@@ -1126,13 +1126,13 @@ expt_vap_density = None
 # }
 
 # Correlation from https://doi.org/10.1016/0021-9614(72)90007-9
-# EXP(-7820.48/T(K)-5.03613*LN(T(K)) + 54.4129)
+# (101.325/760)*EXP((17.4922)-(4517.79)/(T/K-(47.2583)) #Check ME
 expt_Pvap = {
-    313.15: (0.219431 * u.kPa).to_value(u.bar),
-    318.15: (0.299989 * u.kPa).to_value(u.bar),
-    323.15: (0.405674 * u.kPa).to_value(u.bar),
-    328.15: (0.542924 * u.kPa).to_value(u.bar),
-    333.15: (0.719452 * u.kPa).to_value(u.bar),
+    313.15: (0.220055 * u.kPa).to_value(u.bar),
+    318.15: (0.301115 * u.kPa).to_value(u.bar),
+    323.15: (0.407377 * u.kPa).to_value(u.bar),
+    328.15: (0.545240 * u.kPa).to_value(u.bar),
+    333.15: (0.722356 * u.kPa).to_value(u.bar),
 }
 
 # mN/m (equal to dyn/cm)
@@ -1521,7 +1521,7 @@ bnds_eps = [
     [75.0, 135.0],  # O2 #Check with EM what is reasonable here
 ]
 
-rho_c = 245.46  # kg/m^3 (DOI: 10.1021/je100494z)
+rho_c = 341.42  # kg/m^3 (DOI: 10.1021/je100494z)
 Tc = 576  # K (DOI: 10.1021/je100494z)
 
 # https://doi.org/10.1016/j.fluid.2010.03.040
@@ -1563,11 +1563,14 @@ expt_surf_tens = {
 
 # https://doi.org/10.1016/j.jct.2008.02.012
 expt_Hvap = {
-    294.15: 527.022,
-    298.15: 522.195,
-    330.95: 494.054,
-    338.35: 481.809,
-    384.10: 451.584,
+    273.1: 389.66,
+    273.3: 389.49,
+    293.2: 378.31,
+    298.1: 375.48,
+    298.2: 375.43,
+    310.9: 368.24,
+    313.3: 366.88,
+    315.2: 365.87,
 }
 
 # DOI: 10.1021/acs.jced.1c00101 (m^2/s) (Estimations from plot)

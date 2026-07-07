@@ -27,7 +27,7 @@ print(f"Script location: {Path(__file__).parent}")
 
 #After jobs are finished
 #save signac results for each atom for a given atom typing scheme and number of training parameters
-opt_status = "opt"
+opt_status = "opt" # opt or no_opt
 show_both = True  # Show both GP_Optimized and Base FF in plots
 
 #Change me as needed
