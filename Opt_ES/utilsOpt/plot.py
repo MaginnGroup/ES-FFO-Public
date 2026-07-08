@@ -560,7 +560,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         df_color, df_marker, df_z_order = key_map[df_label]
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         if df_ff is not None:
-        # if df_ff is not None and "Vahid" not in df_label:
+        # if df_ff is not None and "Caleman" not in df_label: #and show_df:
             #Check that there are data points for vapor density
             x_props = []
             has_vap = True
