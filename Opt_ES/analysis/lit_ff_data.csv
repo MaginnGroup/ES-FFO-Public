@@ -1,83 +1,610 @@
-molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,sim_Tc,sim_Tc_unc,sim_rhoc,sim_rhoc_unc,ref_name,short_name
-MeOH,250,831.338,0,0.003,,27.75,,521.9,,255,,Martinez-Jimenez et al.,MJ
-MeOH,298,781.716,0.04,0.051,,23.15,2.00E-09,521.9,,255,,Martinez-Jimenez et al.,MJ
-MeOH,400,672.232,3.45,2.9,,14.05,,521.9,,255,,Martinez-Jimenez et al.,MJ
-MeOH,450,605.457,13.8,11.302,,9.15,,521.9,,255,,Martinez-Jimenez et al.,MJ
-MeOH,475,556.825,26.28,20.183,,6.6,,521.9,,255,,Martinez-Jimenez et al.,MJ
-MeOH,500,462.739,49.44,33.114,,3.65,,521.9,,255,,Martinez-Jimenez et al.,MJ
-MeOH,270,,,0.041613,,,,,,,,Jorgensen,Jorgensen
-MeOH,280,780.8753805,0.11,0.078079,,,,489.9727,12.2493175,268.39,6.70975,Jorgensen,Jorgensen
-MeOH,300,761.1030286,0.319,0.239138,,,,489.9727,12.2493175,268.39,6.70975,Jorgensen,Jorgensen
-MeOH,350,706.6616835,2.6,2.09765,,,,489.9727,12.2493175,268.39,6.70975,Jorgensen,Jorgensen
-MeOH,400,641.0370952,12.5,10.1483,,,,489.9727,12.2493175,268.39,6.70975,Jorgensen,Jorgensen
-MeOH,450,546.6542126,45.9,32.7799,,,,489.9727,12.2493175,268.39,6.70975,Jorgensen,Jorgensen
-MeOH,270,,,0.018467,,,,,,,,Gonzalez-Salgado & Vega,GSV
-MeOH,280,803.8807,0.049,0.035394,,,,521.4528,13.03632,265.23,6.63075,Gonzalez-Salgado & Vega,GSV
-MeOH,300,783.1706,0.15,0.112876,,,,521.4528,13.03632,265.23,6.63075,Gonzalez-Salgado & Vega,GSV
-MeOH,350,732.087,1.295,1.09259,,,,521.4528,13.03632,265.23,6.63075,Gonzalez-Salgado & Vega,GSV
-MeOH,400,674.2341,6.738,5.70621,,15.3,,521.4528,13.03632,265.23,6.63075,Gonzalez-Salgado & Vega,GSV
-MeOH,450,599.0456,24.431,19.58,,10.8,,521.4528,13.03632,265.23,6.63075,Gonzalez-Salgado & Vega,GSV
-MeOH,275,807,0.054,0.038,1279.650437,,,502,2,285,4,Chen et al.,Chen
-MeOH,300,782,0.23,0.17,1232.833958,,,502,2,285,4,Chen et al.,Chen
-MeOH,325,753,0.65,0.52,1170.411985,,,502,2,285,4,Chen et al.,Chen
-MeOH,375,692,4.2,3.54,1023.72035,,,502,2,285,4,Chen et al.,Chen
-MeOH,425,628,21,15.7,786.5168539,,,502,2,285,4,Chen et al.,Chen
-MeOH,475,518,110,49.6,396.3795256,,,502,2,285,4,Chen et al.,Chen
-MeOH,250,,,,,29.15,,,,,,Gonzalez-Salgado & Vega,GSV
-MeOH,298,,,,,24.7,,,,,,Gonzalez-Salgado & Vega,GSV
-MeOH,500,,,,,5.8,,,,,,Gonzalez-Salgado & Vega,GSV
-MeOH,293.15,813,,,1245.942572,,,,,,,Caleman et al. (GAFF),Caleman
-MeOH,298.15,807.5,,,1236.579276,20.6,,,,,,Caleman et al. (GAFF),Caleman
-MeOH,293.15,782.9,,,1151.373283,,,,,,,Caleman et al. (OPLS/AA),Caleman
-MeOH,298.15,776.8,,,1137.32834,20.1,,,,,,Caleman et al. (OPLS/AA),Caleman
-MeOH,298.15,782.5,,,1150.436954,,,,,,,Caleman et al. (CGenFF),Caleman
-EG,350,1066.42467,0.006908391,0.0051,1123.183502,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,400,1032.013062,0.13667814,0.07226,1063.573385,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,450,991.481352,1.3854024,0.5144,985.564685,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,500,944.618502,2.8440474,2.2459,905.7999033,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,550,891.871416,11.4289491,7.251,807.0404382,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,600,826.83447,26.268024,17.81,699.9194458,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,650,746.88831,57.631995,37.32,568.9705172,,,722,7.22,366.213,10.98639,Huang et al.,Huang
-EG,450,983.7,0.95,0.55,,,,718,3,340,4,Stubbs et al.,Stubbs
-EG,500,932,4.3,2.72,,,,718,3,340,4,Stubbs et al.,Stubbs
-EG,550,855,10,6.6,,,,718,3,340,4,Stubbs et al.,Stubbs
-EG,600,785,29.7,19,,,,718,3,340,4,Stubbs et al.,Stubbs
-EG,650,670,62,39,,,,718,3,340,4,Stubbs et al.,Stubbs
-Gly,320,1240,,,,,2.20E-09,,,,,Jahn et al.,Jahn
-Gly,350,1214,,,,,4.06E-08,,,,,Jahn et al.,Jahn
-Gly,380,1191,,,,,2.67E-07,,,,,Jahn et al.,Jahn
-Gly,400,1173,,,,,7.02E-07,,,,,Jahn et al.,Jahn
-Gly,293.15,1310.2,,,1081.550657,,,,,,,Caleman et al. (GAFF),Caleman
-Gly,298.15,,,,,74.9,,,,,,Caleman et al. (GAFF),Caleman
-Gly,320,1289.5,,,,,,,,,,Caleman et al. (GAFF),Caleman
-Gly,293.15,1259.7,,,1036.377457,,,,,,,Caleman et al. (OPLS/AA),Caleman
-Gly,298.15,,,,,63.1,,,,,,Caleman et al. (OPLS/AA),Caleman
-Gly,320,1232.3,,,,,,,,,,Caleman et al. (OPLS/AA),Caleman
-DMF,298.15,984.2,,,719.2502394,36.1,,,,,,Caleman et al. (GAFF),Caleman
-DMF,298.15,922.2,,,630.4556027,31.5,,,,,,Caleman et al. (OPLS/AA),Caleman
-DMF,308,960,,0.010022,,,,649.85,,266.79,,Vahid & Maginn,VE
-DMF,311,955,,0.0157,,,,649.85,,266.79,,Vahid & Maginn,VE
-DMF,313,935,,0.019419,,,,649.85,,266.79,,Vahid & Maginn,VE
-DMF,324,944,,0.021853,,,,649.85,,266.79,,Vahid & Maginn,VE
-DMF,328,943,,0.025181,,,,649.85,,266.79,,Vahid & Maginn,VE
-DMF,298,,,,,,1.25E-09,,,,,Chalaris & Samios,CS
-DMSO,298,1080,,,,33.9,1.05E-09,,,,,Senapati,Senapati
-DMSO,323,1050,,,,29.6,1.70E-09,,,,,Senapati,Senapati
-DMSO,348,1010,,,,24.9,2.00E-09,,,,,Senapati,Senapati
-DMSO,373,980,,,,22.3,2.50E-09,,,,,Senapati,Senapati
-DMSO,298,,,,670.9330603,,,,,,,Borin & Skaf,BS
-DMSO,355,,,0.01674,,,,,,,,Vahid & Maginn,VE
-DMSO,367,,,0.030729,,,,,,,,Vahid & Maginn,VE
-DMSO,380,,,0.07643,,,,,,,,Vahid & Maginn,VE
-DMSO,309,1035,,,,,,,,,,Vahid & Maginn,VE
-DMSO,314,1030,,,,,,,,,,Vahid & Maginn,VE
-DMSO,319,1024,,,,,,,,,,Vahid & Maginn,VE
-DMSO,327,1019,,,,,,,,,,Vahid & Maginn,VE
-DMSO,339,1001,,,,,,,,,,Vahid & Maginn,VE
-DMSO,298.15,1136.2,,,735.952899,41.6,,,,,,Caleman et al. (GAFF),Caleman
-DMSO,298.15,1101.3,,,711.890439,42.4,,,,,,Caleman et al. (OPLS/AA),Caleman
-DMSO,298.15,1118.5,,,,,,,,,,Caleman et al. (CGenFF),Caleman
-DEC,298.15,969.85,,,396.0044019,26.1,,,,,,Garcia-Melgarejo et al.,GM
-DEC,298,,,,,,2.34E-09,,,,,Luo et al.,Luo
-DEC,298.15,1020.9,,,514.6025565,29.2,,,,,,Caleman et al. (GAFF),Caleman
-DEC,298.15,998.6,,,445.7800728,25,,,,,,Caleman et al. (OPLS/AA),Caleman
+molecule,temperature,sim_liq_density,sim_vap_density,sim_Pvap,sim_Hvap,sim_surf_tens,sim_diff_coeff,sim_Tc,sim_Tc_unc,sim_rhoc,sim_rhoc_unc,reliability,ref_name,short_name
+MeOH,250,831.338,0,0.003,,27.75,,521.9,,255,,OK,Martinez-Jimenez et al. (MeOH-4P),MJ
+MeOH,298,781.716,0.04,0.051,,23.15,2.00E-09,521.9,,255,,OK,Martinez-Jimenez et al. (MeOH-4P),MJ
+MeOH,400,672.232,3.45,2.9,,14.05,,521.9,,255,,OK,Martinez-Jimenez et al. (MeOH-4P),MJ
+MeOH,450,605.457,13.8,11.302,,9.15,,521.9,,255,,OK,Martinez-Jimenez et al. (MeOH-4P),MJ
+MeOH,475,556.825,26.28,20.183,,6.6,,521.9,,255,,OK,Martinez-Jimenez et al. (MeOH-4P),MJ
+MeOH,500,462.739,49.44,33.114,,3.65,,521.9,,255,,OK,Martinez-Jimenez et al. (MeOH-4P),MJ
+MeOH,281.09589,746.55,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,290.9589,736.21,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,299.72603,724.14,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,309.58904,713.79,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,320.54795,703.45,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,329.31507,693.1,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,340.27397,679.31,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,350.13699,668.97,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,361.09589,655.17,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,370.9589,641.38,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,379.72603,627.59,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,390.68493,612.07,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,400.54795,596.55,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,410.41096,579.31,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,420.27397,556.9,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,431.23288,534.48,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,440,508.62,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,450.9589,479.31,,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,449.86301,,51.72,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,441.09589,,43.1,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,430.13699,,34.48,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,420.27397,,25.86,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,411.50685,,22.41,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,401.64384,,17.24,,,,,477.26027,,225.86,,OK,Haughney et al. (H1),GSV
+MeOH,390.68493,,13.79,,,,,477.26027,,225.86,,APPROX,Haughney et al. (H1),GSV
+MeOH,380.82192,,10.34,,,,,477.26027,,225.86,,APPROX,Haughney et al. (H1),GSV
+MeOH,370.9589,,6.9,,,,,477.26027,,225.86,,APPROX,Haughney et al. (H1),GSV
+MeOH,361.09589,,5.17,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,351.23288,,5.17,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,340.27397,,3.45,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,330.41096,,1.72,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,320.54795,,1.72,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,310.68493,,1.72,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,300.82192,,1.72,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,289.86301,,1.72,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,280,,1.72,,,,,477.26027,,225.86,,UNRELIABLE,Haughney et al. (H1),GSV
+MeOH,281.09589,806.9,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,290.9589,796.55,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,300.82192,787.93,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,309.58904,775.86,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,330.41096,755.17,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,321.64384,767.24,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,341.36986,744.83,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,350.13699,734.48,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,360,720.69,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,370.9589,708.62,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,379.72603,698.28,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,390.68493,684.48,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,400.54795,670.69,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,410.41096,655.17,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,420.27397,641.38,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,431.23288,622.41,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,441.09589,605.17,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,469.58904,539.66,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,460.82192,563.79,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,450.9589,584.48,,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,469.58904,,56.9,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,459.72603,,44.83,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,449.86301,,37.93,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,440,,27.59,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,431.23288,,20.69,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,421.36986,,15.52,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,411.50685,,12.07,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,400.54795,,8.62,,,,,505.75342,,274.14,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,390.68493,,5.17,,,,,505.75342,,274.14,,APPROX,van Leeuwen & Smit (L1),GSV
+MeOH,280,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,289.86301,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,299.72603,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,310.68493,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,320.54795,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,330.41096,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,340.27397,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,350.13699,,1.72,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,360,,3.45,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,369.86301,,3.45,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,380.82192,,5.17,,,,,505.75342,,274.14,,UNRELIABLE,van Leeuwen & Smit (L1),GSV
+MeOH,280,806.9,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,289.86301,796.55,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,311.78082,777.59,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,320.54795,767.24,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,330.41096,756.9,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,340.27397,746.55,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,351.23288,736.21,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,361.09589,724.14,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,370.9589,713.79,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,380.82192,701.72,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,390.68493,689.66,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,401.64384,675.86,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,411.50685,660.34,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,421.36986,648.28,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,431.23288,632.76,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,440,615.52,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,449.86301,600,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,459.72603,575.86,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,470.68493,553.45,,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,471.78082,,53.45,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,461.91781,,43.1,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,452.05479,,32.76,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,441.09589,,24.14,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,432.32877,,20.69,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,421.36986,,15.52,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,410.41096,,12.07,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,400.54795,,10.34,,,,,511.23288,,277.59,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,390.68493,,6.9,,,,,511.23288,,277.59,,APPROX,Guevara-Carrion et al. (L2),GSV
+MeOH,379.72603,,5.17,,,,,511.23288,,277.59,,UNRELIABLE,Guevara-Carrion et al. (L2),GSV
+MeOH,369.86301,,5.17,,,,,511.23288,,277.59,,UNRELIABLE,Guevara-Carrion et al. (L2),GSV
+MeOH,360,,3.45,,,,,511.23288,,277.59,,UNRELIABLE,Guevara-Carrion et al. (L2),GSV
+MeOH,351.23288,,3.45,,,,,511.23288,,277.59,,UNRELIABLE,Guevara-Carrion et al. (L2),GSV
+MeOH,341.36986,,1.72,,,,,511.23288,,277.59,,UNRELIABLE,Guevara-Carrion et al. (L2),GSV
+MeOH,280,,1.72,,,,,511.23288,,277.59,,UNRELIABLE,Guevara-Carrion et al. (L2),GSV
+MeOH,280,781.03,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,289.86301,770.69,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,299.72603,762.07,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,310.68493,751.72,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,320.54795,741.38,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,330.41096,729.31,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,340.27397,718.97,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,350.13699,706.9,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,360,694.83,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,370.9589,682.76,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,380.82192,670.69,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,390.68493,655.17,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,400.54795,641.38,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,410.41096,625.86,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,420.27397,606.9,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,430.13699,589.66,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,440,570.69,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,450.9589,548.28,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,460.82192,518.97,,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,460.82192,,62.07,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,450.9589,,46.55,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,441.09589,,37.93,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,431.23288,,29.31,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,421.36986,,22.41,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,410.41096,,17.24,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,400.54795,,12.07,,,,,490.41096,,268.97,,OK,Jorgensen (OPLS),GSV
+MeOH,391.78082,,8.62,,,,,490.41096,,268.97,,APPROX,Jorgensen (OPLS),GSV
+MeOH,381.91781,,6.9,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,369.86301,,6.9,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,361.09589,,5.17,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,351.23288,,3.45,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,340.27397,,3.45,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,330.41096,,3.45,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,320.54795,,1.72,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,310.68493,,1.72,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,299.72603,,1.72,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,290.9589,,1.72,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,280,,1.72,,,,,490.41096,,268.97,,UNRELIABLE,Jorgensen (OPLS),GSV
+MeOH,281.09589,805.17,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,290.9589,796.55,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,301.91781,784.48,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,310.68493,774.14,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,320.54795,763.79,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,330.41096,753.45,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,340.27397,743.1,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,350.13699,732.76,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,361.09589,720.69,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,369.86301,710.34,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,380.82192,698.28,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,390.68493,686.21,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,400.54795,674.14,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,410.41096,662.07,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,421.36986,646.55,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,430.13699,632.76,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,440,618.97,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,461.91781,582.76,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,449.86301,600,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,470.68493,562.07,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,480.54795,541.38,,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,480.54795,,55.17,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,470.68493,,41.38,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,460.82192,,32.76,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,450.9589,,24.14,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,441.09589,,18.97,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,431.23288,,13.79,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,421.36986,,12.07,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,411.50685,,6.9,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,401.64384,,10.34,,,,,522.19178,,265.52,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,390.68493,,5.17,,,,,522.19178,,265.52,,APPROX,Gonzalez-Salgado & Vega,GSV
+MeOH,380.82192,,5.17,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,369.86301,,3.45,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,361.09589,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,351.23288,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,340.27397,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,330.41096,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,320.54795,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,310.68493,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,300.82192,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,289.86301,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,280,,1.72,,,,,522.19178,,265.52,,UNRELIABLE,Gonzalez-Salgado & Vega,GSV
+MeOH,472.32824,,,36.02092429,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,469.46565,,,32.66290401,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,466.12595,,,29.61793233,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,462.78626,,,26.85682557,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,459.44656,,,24.35312066,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,456.10687,,,22.08282153,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,452.29008,,,19.54031955,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,448.95038,,,17.2903752,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,445.13359,,,15.29965073,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,441.31679,,,13.8733537,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,437.5,,,12.27604743,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,433.20611,,,10.60006359,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,429.38931,,,9.379533235,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,420.80153,,,6.993282182,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,412.21374,,,5.21417042,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,402.67176,,,3.793655249,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,387.40458,,,2.269523732,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,392.65267,,,2.693469124,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,382.15649,,,1.866098709,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,376.9084,,,1.572395103,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,371.18321,,,1.292889971,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,365.45802,,,1.03738176,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,359.25573,,,0.852979299,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,353.05344,,,0.684408717,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,346.85115,,,0.549146513,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,340.17176,,,0.440621081,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,333.49237,,,0.344996847,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,330.62977,,,0.312834807,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,327.76718,,,0.283671046,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,324.90458,,,0.257226052,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,322.04198,,,0.227610374,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,318.70229,,,0.206391588,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,316.31679,,,0.187150907,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,312.9771,,,0.165601662,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,309.6374,,,0.150165089,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,306.77481,,,0.132874527,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,303.43511,,,0.117576041,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,300.09542,,,0.104037902,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,296.75573,,,0.094339057,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,293.89313,,,0.083477345,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,290.07634,,,0.073866195,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,286.73664,,,0.063781634,,,,,,,,OK,Haughney et al. (H1),GSV
+MeOH,489.02672,,,46.00499603,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,486.64122,,,42.74917941,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,484.25573,,,37.82725975,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,480.91603,,,35.15018917,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,478.53053,,,31.10317799,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,475.19084,,,28.20361045,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,472.32824,,,25.57435266,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,465.64885,,,20.02416912,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,459.44656,,,15.29965073,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,452.76718,,,11.97929808,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,445.13359,,,9.379533235,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,437.5,,,7.166518702,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,429.86641,,,5.21417042,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,412.21374,,,2.760163729,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,402.67176,,,1.866098709,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,392.65267,,,1.324917244,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,387.40458,,,1.089403175,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,382.15649,,,0.895753514,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,376.9084,,,0.718722463,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,371.18321,,,0.576684474,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,365.45802,,,0.462716835,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,353.05344,,,0.290698102,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,359.25573,,,0.37126841,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,346.85115,,,0.227610374,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,340.17176,,,0.178214036,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,333.01527,,,0.139537765,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,330.15267,,,0.123472107,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,327.76718,,,0.111961524,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,324.90458,,,0.099069862,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,321.56489,,,0.089834158,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,318.70229,,,0.079491117,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,315.83969,,,0.07033892,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,312.9771,,,0.063781634,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,309.6374,,,0.056437582,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,306.77481,,,0.04993965,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,303.43511,,,0.043121654,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,300.09542,,,0.038156468,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,296.75573,,,0.033763329,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,293.41603,,,0.029875994,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,290.55344,,,0.025797182,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,286.73664,,,0.0228268,,,,,,,,OK,van Leeuwen & Smit (L1),GSV
+MeOH,489.50382,,,46.00499603,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,486.64122,,,42.74917941,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,483.77863,,,36.91286001,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,480.91603,,,34.30084536,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,478.53053,,,31.10317799,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,475.19084,,,28.20361045,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,471.85115,,,25.57435266,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,466.12595,,,20.52020478,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,459.44656,,,16.06687983,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,452.29008,,,12.89152347,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,445.13359,,,9.849887167,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,437.5,,,7.712250202,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,429.38931,,,5.750230839,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,420.80153,,,4.082583505,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,412.21374,,,3.043931693,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,402.67176,,,2.161148947,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,392.65267,,,1.497309753,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,387.40458,,,1.26164951,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,382.15649,,,1.012305092,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,376.9084,,,0.832360199,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,371.18321,,,0.66786448,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,365.45802,,,0.535877333,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,359.25573,,,0.440621081,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,353.53053,,,0.344996847,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,346.85115,,,0.270125125,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,340.17176,,,0.211502174,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,333.01527,,,0.161600183,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,330.15267,,,0.146535142,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,327.29008,,,0.129663843,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,324.42748,,,0.117576041,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,322.04198,,,0.104037902,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,315.83969,,,0.083477345,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,312.9771,,,0.073866195,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,309.6374,,,0.065360969,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,318.70229,,,0.092059516,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,306.77481,,,0.057835645,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,303.43511,,,0.051176236,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,300.09542,,,0.045284068,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,296.75573,,,0.040069894,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,290.55344,,,0.030615771,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,286.73664,,,0.02709083,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,293.41603,,,0.034599709,,,,,,,,OK,Guevara-Carrion et al. (L2),GSV
+MeOH,489.50382,,,60.21129745,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,487.11832,,,53.27887973,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,484.25573,,,48.31200111,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,481.39313,,,43.80815556,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,478.53053,,,39.72417721,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,475.66794,,,36.02092429,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,472.32824,,,31.87334243,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,466.12595,,,26.20787662,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,459.44656,,,21.02831788,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,452.29008,,,16.46472148,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,445.13359,,,12.89152347,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,437.5,,,10.09388707,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,429.38931,,,7.525896953,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,420.80153,,,5.611230298,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,412.21374,,,4.082583505,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,402.67176,,,2.898577212,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,392.65267,,,2.057949297,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,387.40458,,,1.734050498,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,382.15649,,,1.425809896,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,376.9084,,,1.172361394,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,371.18321,,,0.963965282,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,365.45802,,,0.773461024,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,359.25573,,,0.620605292,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,353.05344,,,0.497952793,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,346.85115,,,0.389886347,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,340.17176,,,0.305275693,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,333.49237,,,0.239024314,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,330.62977,,,0.216741474,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,327.76718,,,0.191785063,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,324.90458,,,0.173906062,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,322.04198,,,0.153883416,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,319.17939,,,0.139537765,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,315.83969,,,0.123472107,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,312.9771,,,0.111961524,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,310.1145,,,0.099069862,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,306.29771,,,0.08766347,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,303.43511,,,0.077570351,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,300.09542,,,0.068638615,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,296.75573,,,0.06073592,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,293.41603,,,0.053742562,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,290.07634,,,0.047554921,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,286.73664,,,0.041062499,,,,,,,,OK,Jorgensen (OPLS),GSV
+MeOH,489.50382,,,36.91286001,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,486.64122,,,32.66290401,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,483.77863,,,28.90197697,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,481.39313,,,26.20787662,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,478.05344,,,23.76466943,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,475.19084,,,21.02831788,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,471.85115,,,19.06797069,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,466.12595,,,15.29965073,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,459.44656,,,11.97929808,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,452.76718,,,9.379533235,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,445.13359,,,7.34397317,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,437.5,,,5.611230298,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,429.38931,,,4.183674804,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,420.80153,,,3.043931693,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,412.21374,,,2.214684599,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,402.67176,,,1.572395103,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,392.65267,,,1.089403175,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,387.88168,,,0.895753514,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,382.15649,,,0.736526546,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,376.9084,,,0.590970014,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,371.18321,,,0.474174444,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,365.45802,,,0.380465415,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,359.25573,,,0.305275693,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,353.05344,,,0.239024314,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,346.85115,,,0.187150907,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,339.69466,,,0.146535142,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,333.49237,,,0.111961524,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,330.62977,,,0.101524006,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,327.76718,,,0.089834158,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,324.42748,,,0.081459444,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,321.56489,,,0.072080625,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,318.70229,,,0.063781634,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,315.83969,,,0.057835645,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,312.9771,,,0.051176236,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,309.6374,,,0.045284068,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,306.77481,,,0.040069894,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,303.43511,,,0.035456453,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,300.09542,,,0.030615771,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,297.23282,,,0.02709083,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,293.41603,,,0.023971492,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,290.55344,,,0.021211538,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,286.73664,,,0.018315639,,,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,400,,,,,15.3,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,450,,,,,10.8,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,250,,,,,29.15,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,298,,,,,24.7,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,500,,,,,5.8,,,,,,OK,Gonzalez-Salgado & Vega,GSV
+MeOH,275,807,0.054,0.038,1279.650437,,,502,2,285,4,OK,Chen et al.,Chen
+MeOH,300,782,0.23,0.17,1232.833958,,,502,2,285,4,OK,Chen et al.,Chen
+MeOH,325,753,0.65,0.52,1170.411985,,,502,2,285,4,OK,Chen et al.,Chen
+MeOH,375,692,4.2,3.54,1023.72035,,,502,2,285,4,OK,Chen et al.,Chen
+MeOH,425,628,21,15.7,786.5168539,,,502,2,285,4,OK,Chen et al.,Chen
+MeOH,475,518,110,49.6,396.3795256,,,502,2,285,4,OK,Chen et al.,Chen
+MeOH,293.15,813,,,1245.942572,,,,,,,OK,Caleman et al. (GAFF),Caleman
+MeOH,298.15,807.5,,,1236.579276,20.6,,,,,,OK,Caleman et al. (GAFF),Caleman
+MeOH,293.15,782.9,,,1151.373283,,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+MeOH,298.15,776.8,,,1137.32834,20.1,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+EG,350,1066.42467,0.006908391,0.0051,1123.183502,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,400,1032.013062,0.13667814,0.07226,1063.573385,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,450,991.481352,1.3854024,0.5144,985.564685,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,500,944.618502,2.8440474,2.2459,905.7999033,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,550,891.871416,11.4289491,7.251,807.0404382,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,600,826.83447,26.268024,17.81,699.9194458,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,650,746.88831,57.631995,37.32,568.9705172,,,722,7.22,366.213,10.98639,OK,Huang et al.,Huang
+EG,450,983.7,0.95,0.55,,,,718,3,340,4,OK,Stubbs et al.,Stubbs
+EG,500,932,4.3,2.72,,,,718,3,340,4,OK,Stubbs et al.,Stubbs
+EG,550,855,10,6.6,,,,718,3,340,4,OK,Stubbs et al.,Stubbs
+EG,600,785,29.7,19,,,,718,3,340,4,OK,Stubbs et al.,Stubbs
+EG,650,670,62,39,,,,718,3,340,4,OK,Stubbs et al.,Stubbs
+Gly,299.4898,1198.37,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,319.38776,1176.87,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,349.4898,1145.6,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,379.59184,1105.54,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,399.4898,1085.99,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,419.38776,1061.56,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,439.79592,1039.09,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,459.69388,1015.64,,,,,,,,,,OK,Jahn et al. (R-FF),Jahn
+Gly,300,1213.03,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,319.89796,1198.37,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,349.4898,1176.87,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,379.59184,1153.42,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,399.4898,1137.79,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,419.89796,1123.13,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,439.28571,1108.47,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,459.69388,1091.86,,,,,,,,,,OK,Jahn et al. (BC-FF),Jahn
+Gly,319.89796,1221.82,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,350,1201.3,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,379.59184,1180.78,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,400,1165.15,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,419.38776,1151.47,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,439.79592,1135.83,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,459.69388,1122.15,,,,,,,,,,OK,Jahn et al. (OPLS1),Jahn
+Gly,319.89796,1239.41,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,349.4898,1214.98,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,379.59184,1190.55,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,399.4898,1172.96,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,419.89796,1157.33,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,439.28571,1141.69,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,459.69388,1124.1,,,,,,,,,,OK,Jahn et al. (OPLS2),Jahn
+Gly,300,1239.41,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,319.89796,1216.94,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,349.4898,1189.58,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,379.59184,1162.21,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,400,1144.63,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,419.89796,1126.06,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,439.79592,1108.47,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,459.18367,1091.86,,,,,,,,,,OK,Jahn et al. (OPLS3),Jahn
+Gly,293.15,1310.2,,,1081.550657,,,,,,,OK,Caleman et al. (GAFF),Caleman
+Gly,298.15,,,,,74.9,,,,,,OK,Caleman et al. (GAFF),Caleman
+Gly,320,1289.5,,,,,,,,,,OK,Caleman et al. (GAFF),Caleman
+Gly,293.15,1259.7,,,1036.377457,,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+Gly,298.15,,,,,63.1,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+Gly,320,1232.3,,,,,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+DMF,298.15,984.2,,,719.2502394,36.1,,,,,,OK,Caleman et al. (GAFF),Caleman
+DMF,298.15,922.2,,,630.4556027,31.5,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+DMF,598.8023952,,,51.0015025,,,,,,,,OK,Vahid & Maginn,VE
+DMF,546.4480874,,,21.19584333,,,,,,,,OK,Vahid & Maginn,VE
+DMF,531.9148936,,,15.21215977,,,,,,,,OK,Vahid & Maginn,VE
+DMF,518.134715,,,11.80396029,,,,,,,,OK,Vahid & Maginn,VE
+DMF,505.0505051,,,9.711542174,,,,,,,,OK,Vahid & Maginn,VE
+DMF,490.1960784,,,7.107318963,,,,,,,,OK,Vahid & Maginn,VE
+DMF,473.9336493,,,5.408409695,,,,,,,,OK,Vahid & Maginn,VE
+DMF,460.8294931,,,3.806595016,,,,,,,,OK,Vahid & Maginn,VE
+DMF,446.4285714,,,2.627400864,,,,,,,,OK,Vahid & Maginn,VE
+DMF,431.0344828,,,1.710413395,,,,,,,,OK,Vahid & Maginn,VE
+DMF,416.6666667,,,1.180567309,,,,,,,,OK,Vahid & Maginn,VE
+DMF,401.6064257,,,0.724839588,,,,,,,,OK,Vahid & Maginn,VE
+DMF,386.1003861,,,0.403663,,,,,,,,OK,Vahid & Maginn,VE
+DMF,371.7472119,,,0.203906259,,,,,,,,OK,Vahid & Maginn,VE
+DMF,355.8718861,,,0.089849888,,,,,,,,OK,Vahid & Maginn,VE
+DMF,340.1360544,,,0.045386757,,,,,,,,OK,Vahid & Maginn,VE
+DMF,325.732899,,,0.025275875,,,,,,,,OK,Vahid & Maginn,VE
+DMF,320.5128205,,,0.022049069,,,,,,,,OK,Vahid & Maginn,VE
+DMF,311.5264798,,,0.019234016,,,,,,,,OK,Vahid & Maginn,VE
+DMF,309.5975232,,,0.016136284,,,,,,,,OK,Vahid & Maginn,VE
+DMF,277.7777778,,,0.0010303,,,,,,,,OK,Vahid & Maginn,VE
+DMF,293.255132,,,0.004198513,,,,,,,,OK,Vahid & Maginn,VE
+DMF,306.7484663,,,0.010102474,,,,,,,,OK,Vahid & Maginn,VE
+DMF,293.40206,970.25,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,307.42268,958.92,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,309.89691,956.09,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,328.04124,943.34,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,322.26804,944.76,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,313.19588,934.84,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,345.36082,919.26,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,361.85567,905.1,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,379.17526,889.52,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,395.6701,871.1,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,412.98969,848.44,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,430.30928,831.44,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,447.62887,815.86,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,464.94845,796.03,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,499.58763,740.79,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,516.08247,732.29,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,533.40206,703.97,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,550.72165,682.72,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,567.21649,631.73,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,584.53608,601.98,,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,584.53608,,41.08,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,568.04124,,28.33,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,550.72165,,21.25,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,533.40206,,18.41,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,516.90722,,14.16,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,500.41237,,11.33,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,483.09278,,5.67,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,464.94845,,7.08,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,447.62887,,4.25,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,430.30928,,2.83,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,412.98969,,1.42,,,,,648.86598,,279.04,,OK,Vahid & Maginn,VE
+DMF,396.49485,,1.42,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,379.17526,,1.42,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,362.68041,,1.42,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,346.18557,,0,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,329.69072,,1.42,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,322.26804,,1.42,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,309.89691,,1.42,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,294.2268,,0,,,,,648.86598,,279.04,,UNRELIABLE,Vahid & Maginn,VE
+DMF,298,,,,,,1.25E-09,,,,,OK,Chalaris & Samios,CS
+DMSO,298,1080,,,,33.9,1.05E-09,,,,,OK,Senapati,Senapati
+DMSO,323,1050,,,,29.6,1.70E-09,,,,,OK,Senapati,Senapati
+DMSO,348,1010,,,,24.9,2.00E-09,,,,,OK,Senapati,Senapati
+DMSO,373,980,,,,22.3,2.50E-09,,,,,OK,Senapati,Senapati
+DMSO,298,,,,670.9330603,,,,,,,OK,Borin & Skaf,BS
+DMSO,526.3157895,,,4.410310491,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,515.4639175,,,3.278333103,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,502.5125628,,,2.495390158,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,490.1960784,,,2.113499476,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,478.4688995,,,1.428785943,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,465.1162791,,,1.062064965,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,452.4886878,,,0.857833798,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,440.5286344,,,0.533698126,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,429.1845494,,,0.382845063,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,416.6666667,,,0.252742295,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,403.2258065,,,0.161020288,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,392.1568627,,,0.131608338,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,378.7878788,,,0.076254038,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,367.6470588,,,0.030585021,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,354.6099291,,,0.016899607,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,290.95607,1048.63,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,329.19897,1015.81,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,341.60207,1004.86,,,,,,,,,,APPROX,Vahid & Maginn,VE
+DMSO,305.42636,1043.16,,,,,,,,,,APPROX,Vahid & Maginn,VE
+DMSO,320.93023,1024.92,,,,,,,,,,APPROX,Vahid & Maginn,VE
+DMSO,310.59432,1034.04,,,,,,,,,,APPROX,Vahid & Maginn,VE
+DMSO,314.72868,1028.57,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,354.00517,995.74,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,365.37468,979.33,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,379.84496,972.04,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,391.21447,957.45,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,403.61757,944.68,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,416.02067,933.74,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,427.39018,922.8,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,440.82687,911.85,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,452.19638,895.44,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,464.59948,882.67,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,477.00258,869.91,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,490.43928,858.97,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,502.84238,842.55,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,513.17829,829.79,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,526.61499,820.67,,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,527.64858,,9.12,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,514.21189,,7.29,,,,,,,,,OK,Vahid & Maginn,VE
+DMSO,502.84238,,7.29,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,490.43928,,7.29,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,478.03618,,3.65,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,464.59948,,3.65,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,453.22997,,3.65,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,440.82687,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,429.45736,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,417.05426,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,403.61757,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,392.24806,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,379.84496,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,367.44186,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,354.00517,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,342.63566,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,330.23256,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,306.45995,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,293.02326,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,315.76227,,1.82,,,,,,,,,UNRELIABLE,Vahid & Maginn,VE
+DMSO,298.15,1136.2,,,735.952899,41.6,,,,,,OK,Caleman et al. (GAFF),Caleman
+DMSO,298.15,1101.3,,,711.890439,42.4,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
+DEC,298.15,969.85,,,396.0044019,26.1,,,,,,OK,Garcia-Melgarejo et al.,GM
+DEC,298,,,,,,2.34E-09,,,,,OK,Luo et al.,Luo
+DEC,298.15,1020.9,,,514.6025565,29.2,,,,,,OK,Caleman et al. (GAFF),Caleman
+DEC,298.15,998.6,,,445.7800728,25,,,,,,OK,Caleman et al. (OPLS/AA),Caleman
