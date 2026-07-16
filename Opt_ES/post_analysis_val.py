@@ -157,13 +157,15 @@ lit_data = pd.read_csv(file_save_lit, header=0)
 if show_both:
     for molec_name in mol_names:
         other_opt = "no_opt" if opt_status == "opt" else "opt"
-        ref_name = "IFT FF" if opt_status == "opt" else "Opt FF"
+        ref_name = "Base FF" if opt_status == "opt" else "GP-Opt FF"
+        ff_name = "Base" if opt_status == "opt" else "GP-Opt"
         df_old_FF = pd.read_csv(f"analysis/at_00/{molec_name}/ExpVal/opt_res/ms_val_{other_opt}/ms_data.csv", header = 0, index_col = 0)
         #Drop all column without sim_ in the name or "temperature" or "molecule"
         cols_to_keep = [col for col in df_old_FF.columns if "sim_" in col or col in ["temperature", "molecule"]]
         df_old_FF = df_old_FF[cols_to_keep]
         df_old_FF['ref_name'] = ref_name
-        df_old_FF['short_name'] = ref_name
+        df_old_FF['ff_name'] = ff_name
+        df_old_FF['paper_short_name'] = ref_name
         df_old_FF_lit_data = df_old_FF.reindex(columns=lit_data.columns)
         lit_data = pd.concat([lit_data, df_old_FF_lit_data], ignore_index=True)
     lit_data.to_csv(f"analysis/lit_ff_data_w_{other_opt}.csv", index=False)
@@ -182,17 +184,23 @@ h_est_lit_data.to_csv(f"analysis/lit_Hvap_est_w_{vle_save_name}.csv", index=Fals
 #For each file in error dict, add the data to the lit data if it is not already there (if it is not already in prop dict)
 new_lit_data = copy.copy(lit_data_error)
 for file_err, df_err in error_dict.items():
-    df_err["ref_name"] = "IFT FF" if opt_status == "no_opt" else "Opt FF"
+    df_err["ref_name"] = "Base FF" if opt_status == "no_opt" else "GP-Opt FF"
+    df_err["ff_name"] = "Base" if opt_status == "no_opt" else "GP-Opt"
     #Add the data to the lit data if it is not already there (if it is not already in prop dict)
     new_lit_data = pd.concat([new_lit_data, df_err], join="inner", ignore_index=True)
 #Sort by molecule and remove rows where columns other than ref_name and molecule are NaN
-ref_order = ["Opt FF", "IFT FF"]
+ref_order = ["GP-Opt FF", "Base FF"]
+ff_name_order = ["GP-Opt", "Base"]
 new_lit_data["ref_name"] = pd.Categorical(
     new_lit_data["ref_name"],
     categories=ref_order + sorted(set(new_lit_data["ref_name"]) - set(ref_order)),
     ordered=True,)
-new_lit_data = new_lit_data.sort_values(["molecule", "ref_name"])
-new_lit_data = new_lit_data.dropna(subset=[col for col in new_lit_data.columns if col not in ["ref_name", "molecule"]], how='all').reset_index(drop=True)
+new_lit_data["ff_name"] = pd.Categorical(
+    new_lit_data["ff_name"],
+    categories=ff_name_order + sorted(set(new_lit_data["ff_name"]) - set(ff_name_order)),
+    ordered=True,)
+new_lit_data = new_lit_data.sort_values(["molecule", "ref_name", "ff_name"])
+new_lit_data = new_lit_data.dropna(subset=[col for col in new_lit_data.columns if col not in ["ref_name", "molecule", "ff_name"]], how='all').reset_index(drop=True)
 new_lit_data.to_csv("analysis/comp_err_data.csv")
      
 #Plot VLE, Hvap/Pvap, and ST
@@ -217,12 +225,13 @@ for molec in molecules:
             if opt_status == "opt":
                 label = get_label_from_fn(file_name) #+ "_" + molec
             else:
-                label = "IFT FF"
+                label = "Base"
             ff_molec_dict[label] = df_molec
 
     lit_data_molec = copy.copy(lit_data[lit_data['molecule'] == molec])
-    groups = lit_data_molec.groupby('ref_name')
+    groups = lit_data_molec.groupby('ff_name')
     for name, group in groups:
+        # print(molec, name)
         ff_molec_dict[name] = group
     
     #Plot Vle, Hvap, and Pvap and save to different pdfs
@@ -232,8 +241,8 @@ for molec in molecules:
     plt.close()
     pdf_st.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="surf_tens"), bbox_inches='tight')
     plt.close() 
-    pdf_diff.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="diff_coeff"), bbox_inches='tight')
-    plt.close()
+    # pdf_diff.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="diff_coeff"), bbox_inches='tight')
+    # plt.close()
     pdf_vle.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="liq_density"), bbox_inches='tight')
     plt.close()
     pdf_vle.savefig(plot_misc_prop(one_molec_dict, copy.deepcopy(ff_molec_dict), prop_name="vap_density"), bbox_inches='tight')

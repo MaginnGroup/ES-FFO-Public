@@ -117,10 +117,10 @@ def estimate_hvaps(df_data, data_dict, mol_name):
             if param in df.columns:
                 df_est[param] = df[param].iloc[0] #Assume all rows with the same temperature have the same parameter values
     else:
-        df = df_data.sort_values(by=["molecule", "ref_name", "temperature"])
+        df = df_data.sort_values(by=["molecule", "ref_name", "ff_name", "temperature"])
         #For each reference in the dataframe, get the H_est for that reference and add it to a new dataframe with the reference name, temperature, estimated Hvap, and experimental Hvap
         df_est_list = []
-        for (mol_name, ref_name), df_ref in df.groupby(["molecule", "ref_name"]):
+        for (mol_name, ref_name, ff_name), df_ref in df.groupby(["molecule", "ref_name", "ff_name"]):
             # print(mol_name, ref_name)
             molecule = data_dict[mol_name]
             # if "Melgarejo" in ref_name:
@@ -131,6 +131,7 @@ def estimate_hvaps(df_data, data_dict, mol_name):
             df_est_ref = pd.DataFrame({
                 "molecule": molecule.name,
                 "ref_name": ref_name,
+                "ff_name": ff_name,
                 "t_exp": list(H_est.keys()),
                 "est_Hvap": list(H_est.values()),
                 "H_method": list(H_method.values())
@@ -372,8 +373,8 @@ def prepare_df_errors(df_data, data_dict, mol_name):
         group_keys = list(molecule.param_names)
     else:
         #For literature csv data files
-        groupby_data = df.groupby(["molecule", "ref_name"])
-        group_keys = ["molecule", "ref_name"]
+        groupby_data = df.groupby(["molecule", "ref_name", "ff_name"])
+        group_keys = ["molecule", "ref_name", "ff_name"]
         all_molec = True
     #Sort by param names to be able to save these values
     for group, values in groupby_data:

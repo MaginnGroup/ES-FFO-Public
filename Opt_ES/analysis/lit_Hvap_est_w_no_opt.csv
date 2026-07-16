@@ -1,141 +1,154 @@
-molecule,ref_name,t_exp,est_Hvap,H_method,expt_Hvap,apd_Hvap,mapd_Hvap
-DEC,Caleman et al. (GAFF),273.1,,skipped,389.66,,
-DEC,Caleman et al. (GAFF),273.3,,skipped,389.49,,
-DEC,Caleman et al. (GAFF),293.2,,skipped,378.31,,
-DEC,Caleman et al. (GAFF),298.1,,skipped,375.48,,
-DEC,Caleman et al. (GAFF),298.2,,skipped,375.43,,
-DEC,Caleman et al. (GAFF),310.9,,skipped,368.24,,
-DEC,Caleman et al. (GAFF),313.3,,skipped,366.88,,
-DEC,Caleman et al. (GAFF),315.2,,skipped,365.87,,
-DEC,Caleman et al. (OPLS/AA),273.1,,skipped,389.66,,
-DEC,Caleman et al. (OPLS/AA),273.3,,skipped,389.49,,
-DEC,Caleman et al. (OPLS/AA),293.2,,skipped,378.31,,
-DEC,Caleman et al. (OPLS/AA),298.1,,skipped,375.48,,
-DEC,Caleman et al. (OPLS/AA),298.2,,skipped,375.43,,
-DEC,Caleman et al. (OPLS/AA),310.9,,skipped,368.24,,
-DEC,Caleman et al. (OPLS/AA),313.3,,skipped,366.88,,
-DEC,Caleman et al. (OPLS/AA),315.2,,skipped,365.87,,
-DEC,Garcia-Melgarejo et al.,273.1,,skipped,389.66,,
-DEC,Garcia-Melgarejo et al.,273.3,,skipped,389.49,,
-DEC,Garcia-Melgarejo et al.,293.2,,skipped,378.31,,
-DEC,Garcia-Melgarejo et al.,298.1,,skipped,375.48,,
-DEC,Garcia-Melgarejo et al.,298.2,,skipped,375.43,,
-DEC,Garcia-Melgarejo et al.,310.9,,skipped,368.24,,
-DEC,Garcia-Melgarejo et al.,313.3,,skipped,366.88,,
-DEC,Garcia-Melgarejo et al.,315.2,,skipped,365.87,,
-DEC,Luo et al.,273.1,,skipped,389.66,,
-DEC,Luo et al.,273.3,,skipped,389.49,,
-DEC,Luo et al.,293.2,,skipped,378.31,,
-DEC,Luo et al.,298.1,,skipped,375.48,,
-DEC,Luo et al.,298.2,,skipped,375.43,,
-DEC,Luo et al.,310.9,,skipped,368.24,,
-DEC,Luo et al.,313.3,,skipped,366.88,,
-DEC,Luo et al.,315.2,,skipped,365.87,,
-DMF,Caleman et al. (GAFF),298.15,719.2502394,direct,641.538,12.113427326206716,12.113427326206716
-DMF,Caleman et al. (OPLS/AA),298.15,630.4556027,direct,641.538,1.7274732439855511,1.7274732439855511
-DMF,Chalaris & Samios,298.15,,skipped,641.538,,
-DMF,Vahid & Maginn,298.15,,skipped,641.538,,
-DMSO,Borin & Skaf,308.0,,skipped,669.397,,
-DMSO,Borin & Skaf,318.0,,skipped,666.837,,
-DMSO,Borin & Skaf,320.0,,skipped,661.718,,
-DMSO,Borin & Skaf,340.0,,skipped,647.639,,
-DMSO,Borin & Skaf,368.0,,skipped,615.641,,
-DMSO,Caleman et al. (CGenFF),308.0,,skipped,669.397,,
-DMSO,Caleman et al. (CGenFF),318.0,,skipped,666.837,,
-DMSO,Caleman et al. (CGenFF),320.0,,skipped,661.718,,
-DMSO,Caleman et al. (CGenFF),340.0,,skipped,647.639,,
-DMSO,Caleman et al. (CGenFF),368.0,,skipped,615.641,,
-DMSO,Caleman et al. (GAFF),308.0,,skipped,669.397,,
-DMSO,Caleman et al. (GAFF),318.0,,skipped,666.837,,
-DMSO,Caleman et al. (GAFF),320.0,,skipped,661.718,,
-DMSO,Caleman et al. (GAFF),340.0,,skipped,647.639,,
-DMSO,Caleman et al. (GAFF),368.0,,skipped,615.641,,
-DMSO,Caleman et al. (OPLS/AA),308.0,,skipped,669.397,,
-DMSO,Caleman et al. (OPLS/AA),318.0,,skipped,666.837,,
-DMSO,Caleman et al. (OPLS/AA),320.0,,skipped,661.718,,
-DMSO,Caleman et al. (OPLS/AA),340.0,,skipped,647.639,,
-DMSO,Caleman et al. (OPLS/AA),368.0,,skipped,615.641,,
-DMSO,Senapati,308.0,,skipped,669.397,,
-DMSO,Senapati,318.0,,skipped,666.837,,
-DMSO,Senapati,320.0,,skipped,661.718,,
-DMSO,Senapati,340.0,,skipped,647.639,,
-DMSO,Senapati,368.0,,skipped,615.641,,
-DMSO,Vahid & Maginn,308.0,,skipped,669.397,,68.95445409431564
-DMSO,Vahid & Maginn,318.0,,skipped,666.837,,68.95445409431564
-DMSO,Vahid & Maginn,320.0,,skipped,661.718,,68.95445409431564
-DMSO,Vahid & Maginn,340.0,,skipped,647.639,,68.95445409431564
-DMSO,Vahid & Maginn,368.0,1040.1528907307857,estimated,615.641,68.95445409431564,68.95445409431564
-EG,Huang et al.,378.15,994.2623152195929,estimated,977.45,1.7200179261949815,3.1848173295757682
-EG,Huang et al.,383.15,994.2623152195929,estimated,972.15,2.27457853413495,3.1848173295757682
-EG,Huang et al.,393.15,994.2623152195929,estimated,961.57,3.3998892664697156,3.1848173295757682
-EG,Huang et al.,403.15,946.4364004670865,estimated,951.01,0.4809202356351118,3.1848173295757682
-EG,Huang et al.,413.15,946.4364004670865,estimated,940.46,0.6354763059658547,3.1848173295757682
-EG,Huang et al.,450.0,985.564685,direct,901.26,9.354091494130447,3.1848173295757682
-EG,Huang et al.,500.0,905.7999033,direct,845.255,7.162915723657356,3.1848173295757682
-EG,Huang et al.,550.0,807.0404382,direct,781.37,3.285311465758864,3.1848173295757682
-EG,Huang et al.,600.0,699.9194458,direct,701.38,0.20824006957712607,3.1848173295757682
-EG,Huang et al.,650.0,568.9705172,direct,588.55,3.3267322742332746,3.1848173295757682
-EG,Huang et al.,700.0,,skipped,376.95,,3.1848173295757682
-EG,Stubbs et al.,378.15,,skipped,977.45,,7.954193863196815
-EG,Stubbs et al.,383.15,,skipped,972.15,,7.954193863196815
-EG,Stubbs et al.,393.15,,skipped,961.57,,7.954193863196815
-EG,Stubbs et al.,403.15,,skipped,951.01,,7.954193863196815
-EG,Stubbs et al.,413.15,,skipped,940.46,,7.954193863196815
-EG,Stubbs et al.,450.0,,skipped,901.26,,7.954193863196815
-EG,Stubbs et al.,500.0,823.7843864779306,estimated,845.255,2.5401344590767705,7.954193863196815
-EG,Stubbs et al.,550.0,781.092905747214,estimated,781.37,0.03546261729859276,7.954193863196815
-EG,Stubbs et al.,600.0,850.6826519787879,estimated,701.38,21.28698451321508,7.954193863196815
-EG,Stubbs et al.,650.0,,skipped,588.55,,7.954193863196815
-EG,Stubbs et al.,700.0,,skipped,376.95,,7.954193863196815
-Glycerol,Caleman et al. (GAFF),298.15,,skipped,982.734,,
-Glycerol,Caleman et al. (OPLS/AA),298.15,,skipped,982.734,,
-Glycerol,Jahn et al.,298.15,,skipped,982.734,,
-MeOH,Caleman et al. (CGenFF),200.0,,skipped,1289.99,,
-MeOH,Caleman et al. (CGenFF),250.0,,skipped,1234.79,,
-MeOH,Caleman et al. (CGenFF),300.0,,skipped,1166.17,,
-MeOH,Caleman et al. (CGenFF),350.0,,skipped,1075.936,,
-MeOH,Caleman et al. (CGenFF),400.0,,skipped,944.57,,
-MeOH,Caleman et al. (CGenFF),450.0,,skipped,739.19,,
-MeOH,Caleman et al. (CGenFF),500.0,,skipped,391.06,,
-MeOH,Caleman et al. (GAFF),200.0,,skipped,1289.99,,
-MeOH,Caleman et al. (GAFF),250.0,,skipped,1234.79,,
-MeOH,Caleman et al. (GAFF),300.0,,skipped,1166.17,,
-MeOH,Caleman et al. (GAFF),350.0,,skipped,1075.936,,
-MeOH,Caleman et al. (GAFF),400.0,,skipped,944.57,,
-MeOH,Caleman et al. (GAFF),450.0,,skipped,739.19,,
-MeOH,Caleman et al. (GAFF),500.0,,skipped,391.06,,
-MeOH,Caleman et al. (OPLS/AA),200.0,,skipped,1289.99,,
-MeOH,Caleman et al. (OPLS/AA),250.0,,skipped,1234.79,,
-MeOH,Caleman et al. (OPLS/AA),300.0,,skipped,1166.17,,
-MeOH,Caleman et al. (OPLS/AA),350.0,,skipped,1075.936,,
-MeOH,Caleman et al. (OPLS/AA),400.0,,skipped,944.57,,
-MeOH,Caleman et al. (OPLS/AA),450.0,,skipped,739.19,,
-MeOH,Caleman et al. (OPLS/AA),500.0,,skipped,391.06,,
-MeOH,Chen et al.,200.0,,skipped,1289.99,,27.986108126711095
-MeOH,Chen et al.,250.0,,skipped,1234.79,,27.986108126711095
-MeOH,Chen et al.,300.0,1232.833958,direct,1166.17,5.716487133093791,27.986108126711095
-MeOH,Chen et al.,350.0,1213.173135379253,estimated,1075.936,12.755139281449177,27.986108126711095
-MeOH,Chen et al.,400.0,1232.0210346524466,estimated,944.57,30.431946245640507,27.986108126711095
-MeOH,Chen et al.,450.0,1205.181731900533,estimated,739.19,63.040859846660915,27.986108126711095
-MeOH,Chen et al.,500.0,,skipped,391.06,,27.986108126711095
-MeOH,Gonzalez-Salgado & Vega,200.0,,skipped,1289.99,,19.202299356464003
-MeOH,Gonzalez-Salgado & Vega,250.0,,skipped,1234.79,,19.202299356464003
-MeOH,Gonzalez-Salgado & Vega,300.0,,skipped,1166.17,,19.202299356464003
-MeOH,Gonzalez-Salgado & Vega,350.0,1221.57273905443,estimated,1075.936,13.535818027692178,19.202299356464003
-MeOH,Gonzalez-Salgado & Vega,400.0,1179.4730417185322,estimated,944.57,24.86878068523583,19.202299356464003
-MeOH,Gonzalez-Salgado & Vega,450.0,,skipped,739.19,,19.202299356464003
-MeOH,Gonzalez-Salgado & Vega,500.0,,skipped,391.06,,19.202299356464003
-MeOH,Jorgensen,200.0,,skipped,1289.99,,9.976697854427057
-MeOH,Jorgensen,250.0,,skipped,1234.79,,9.976697854427057
-MeOH,Jorgensen,300.0,1195.511822224548,estimated,1166.17,2.516084466634193,9.976697854427057
-MeOH,Jorgensen,350.0,1167.0803007485729,estimated,1075.936,8.471163781913884,9.976697854427057
-MeOH,Jorgensen,400.0,1123.4984339893745,estimated,944.57,18.942845314733095,9.976697854427057
-MeOH,Jorgensen,450.0,,skipped,739.19,,9.976697854427057
-MeOH,Jorgensen,500.0,,skipped,391.06,,9.976697854427057
-MeOH,Martinez-Jimenez et al.,200.0,,skipped,1289.99,,30.597508070948155
-MeOH,Martinez-Jimenez et al.,250.0,,skipped,1234.79,,30.597508070948155
-MeOH,Martinez-Jimenez et al.,300.0,1225.3038451457815,estimated,1166.17,5.070773999140895,30.597508070948155
-MeOH,Martinez-Jimenez et al.,350.0,1225.3038451457815,estimated,1075.936,13.882595725561886,30.597508070948155
-MeOH,Martinez-Jimenez et al.,400.0,1236.4301609456963,estimated,944.57,30.898732856823347,30.597508070948155
-MeOH,Martinez-Jimenez et al.,450.0,1275.3831225661838,estimated,739.19,72.5379297022665,30.597508070948155
-MeOH,Martinez-Jimenez et al.,500.0,,skipped,391.06,,30.597508070948155
+molecule,ref_name,ff_name,t_exp,est_Hvap,H_method,expt_Hvap,apd_Hvap,mapd_Hvap
+DEC,Caleman et al.,GAFF,273.1,,skipped,389.66,,
+DEC,Caleman et al.,GAFF,273.3,,skipped,389.49,,
+DEC,Caleman et al.,GAFF,293.2,,skipped,378.31,,
+DEC,Caleman et al.,GAFF,298.1,,skipped,375.48,,
+DEC,Caleman et al.,GAFF,298.2,,skipped,375.43,,
+DEC,Caleman et al.,GAFF,310.9,,skipped,368.24,,
+DEC,Caleman et al.,GAFF,313.3,,skipped,366.88,,
+DEC,Caleman et al.,GAFF,315.2,,skipped,365.87,,
+DEC,Caleman et al.,OPLS/AA,273.1,,skipped,389.66,,
+DEC,Caleman et al.,OPLS/AA,273.3,,skipped,389.49,,
+DEC,Caleman et al.,OPLS/AA,293.2,,skipped,378.31,,
+DEC,Caleman et al.,OPLS/AA,298.1,,skipped,375.48,,
+DEC,Caleman et al.,OPLS/AA,298.2,,skipped,375.43,,
+DEC,Caleman et al.,OPLS/AA,310.9,,skipped,368.24,,
+DEC,Caleman et al.,OPLS/AA,313.3,,skipped,366.88,,
+DEC,Caleman et al.,OPLS/AA,315.2,,skipped,365.87,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,273.1,,skipped,389.66,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,273.3,,skipped,389.49,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,293.2,,skipped,378.31,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,298.1,,skipped,375.48,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,298.2,,skipped,375.43,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,310.9,,skipped,368.24,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,313.3,,skipped,366.88,,
+DEC,Garcia-Melgarejo et al.,Modified OPLSAA-LPG,315.2,,skipped,365.87,,
+DEC,Luo et al.,Luo et al.,273.1,,skipped,389.66,,
+DEC,Luo et al.,Luo et al.,273.3,,skipped,389.49,,
+DEC,Luo et al.,Luo et al.,293.2,,skipped,378.31,,
+DEC,Luo et al.,Luo et al.,298.1,,skipped,375.48,,
+DEC,Luo et al.,Luo et al.,298.2,,skipped,375.43,,
+DEC,Luo et al.,Luo et al.,310.9,,skipped,368.24,,
+DEC,Luo et al.,Luo et al.,313.3,,skipped,366.88,,
+DEC,Luo et al.,Luo et al.,315.2,,skipped,365.87,,
+DMF,Caleman et al.,GAFF,298.15,719.2502394,direct,641.538,12.113427326206716,12.113427326206716
+DMF,Caleman et al.,OPLS/AA,298.15,630.4556027,direct,641.538,1.7274732439855511,1.7274732439855511
+DMF,Chalaris & Samios,Chalaris & Samios,298.15,,skipped,641.538,,
+DMF,Vahid & Maginn,Vahid & Maginn,298.15,,skipped,641.538,,
+DMSO,Borin & Skaf,Borin & Skaf,308.0,,skipped,669.397,,
+DMSO,Borin & Skaf,Borin & Skaf,318.0,,skipped,666.837,,
+DMSO,Borin & Skaf,Borin & Skaf,320.0,,skipped,661.718,,
+DMSO,Borin & Skaf,Borin & Skaf,340.0,,skipped,647.639,,
+DMSO,Borin & Skaf,Borin & Skaf,368.0,,skipped,615.641,,
+DMSO,Caleman et al.,GAFF,308.0,,skipped,669.397,,
+DMSO,Caleman et al.,GAFF,318.0,,skipped,666.837,,
+DMSO,Caleman et al.,GAFF,320.0,,skipped,661.718,,
+DMSO,Caleman et al.,GAFF,340.0,,skipped,647.639,,
+DMSO,Caleman et al.,GAFF,368.0,,skipped,615.641,,
+DMSO,Caleman et al.,OPLS/AA,308.0,,skipped,669.397,,
+DMSO,Caleman et al.,OPLS/AA,318.0,,skipped,666.837,,
+DMSO,Caleman et al.,OPLS/AA,320.0,,skipped,661.718,,
+DMSO,Caleman et al.,OPLS/AA,340.0,,skipped,647.639,,
+DMSO,Caleman et al.,OPLS/AA,368.0,,skipped,615.641,,
+DMSO,Senapati,Modified P2,308.0,,skipped,669.397,,
+DMSO,Senapati,Modified P2,318.0,,skipped,666.837,,
+DMSO,Senapati,Modified P2,320.0,,skipped,661.718,,
+DMSO,Senapati,Modified P2,340.0,,skipped,647.639,,
+DMSO,Senapati,Modified P2,368.0,,skipped,615.641,,
+DMSO,Vahid & Maginn,Vahid & Maginn,308.0,,skipped,669.397,,97.38390860225952
+DMSO,Vahid & Maginn,Vahid & Maginn,318.0,,skipped,666.837,,97.38390860225952
+DMSO,Vahid & Maginn,Vahid & Maginn,320.0,,skipped,661.718,,97.38390860225952
+DMSO,Vahid & Maginn,Vahid & Maginn,340.0,,skipped,647.639,,97.38390860225952
+DMSO,Vahid & Maginn,Vahid & Maginn,368.0,1215.1762687580365,estimated,615.641,97.38390860225952,97.38390860225952
+EG,Huang et al.,Huang et al.,378.15,994.2623152195929,estimated,977.45,1.7200179261949815,3.1848173295757682
+EG,Huang et al.,Huang et al.,383.15,994.2623152195929,estimated,972.15,2.27457853413495,3.1848173295757682
+EG,Huang et al.,Huang et al.,393.15,994.2623152195929,estimated,961.57,3.3998892664697156,3.1848173295757682
+EG,Huang et al.,Huang et al.,403.15,946.4364004670865,estimated,951.01,0.4809202356351118,3.1848173295757682
+EG,Huang et al.,Huang et al.,413.15,946.4364004670865,estimated,940.46,0.6354763059658547,3.1848173295757682
+EG,Huang et al.,Huang et al.,450.0,985.564685,direct,901.26,9.354091494130447,3.1848173295757682
+EG,Huang et al.,Huang et al.,500.0,905.7999033,direct,845.255,7.162915723657356,3.1848173295757682
+EG,Huang et al.,Huang et al.,550.0,807.0404382,direct,781.37,3.285311465758864,3.1848173295757682
+EG,Huang et al.,Huang et al.,600.0,699.9194458,direct,701.38,0.20824006957712607,3.1848173295757682
+EG,Huang et al.,Huang et al.,650.0,568.9705172,direct,588.55,3.3267322742332746,3.1848173295757682
+EG,Huang et al.,Huang et al.,700.0,,skipped,376.95,,3.1848173295757682
+EG,Stubbs et al.,TraPPE-UA,378.15,,skipped,977.45,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,383.15,,skipped,972.15,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,393.15,,skipped,961.57,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,403.15,,skipped,951.01,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,413.15,,skipped,940.46,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,450.0,,skipped,901.26,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,500.0,823.7843864779306,estimated,845.255,2.5401344590767705,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,550.0,781.092905747214,estimated,781.37,0.03546261729859276,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,600.0,850.6826519787879,estimated,701.38,21.28698451321508,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,650.0,,skipped,588.55,,7.954193863196815
+EG,Stubbs et al.,TraPPE-UA,700.0,,skipped,376.95,,7.954193863196815
+Glycerol,Caleman et al.,GAFF,298.15,,skipped,982.734,,
+Glycerol,Caleman et al.,OPLS/AA,298.15,,skipped,982.734,,
+Glycerol,Jahn et al.,BC-FF,298.15,,skipped,982.734,,
+Glycerol,Jahn et al.,OPLS1-FF,298.15,,skipped,982.734,,
+Glycerol,Jahn et al.,OPLS2-FF,298.15,,skipped,982.734,,
+Glycerol,Jahn et al.,OPLS3-FF,298.15,,skipped,982.734,,
+Glycerol,Jahn et al.,R-FF,298.15,,skipped,982.734,,
+MeOH,Caleman et al.,GAFF,200.0,,skipped,1289.99,,
+MeOH,Caleman et al.,GAFF,250.0,,skipped,1234.79,,
+MeOH,Caleman et al.,GAFF,300.0,,skipped,1166.17,,
+MeOH,Caleman et al.,GAFF,350.0,,skipped,1075.936,,
+MeOH,Caleman et al.,GAFF,400.0,,skipped,944.57,,
+MeOH,Caleman et al.,GAFF,450.0,,skipped,739.19,,
+MeOH,Caleman et al.,GAFF,500.0,,skipped,391.06,,
+MeOH,Caleman et al.,OPLS/AA,200.0,,skipped,1289.99,,
+MeOH,Caleman et al.,OPLS/AA,250.0,,skipped,1234.79,,
+MeOH,Caleman et al.,OPLS/AA,300.0,,skipped,1166.17,,
+MeOH,Caleman et al.,OPLS/AA,350.0,,skipped,1075.936,,
+MeOH,Caleman et al.,OPLS/AA,400.0,,skipped,944.57,,
+MeOH,Caleman et al.,OPLS/AA,450.0,,skipped,739.19,,
+MeOH,Caleman et al.,OPLS/AA,500.0,,skipped,391.06,,
+MeOH,Chen et al.,TraPPE-UA,200.0,,skipped,1289.99,,27.986108126711095
+MeOH,Chen et al.,TraPPE-UA,250.0,,skipped,1234.79,,27.986108126711095
+MeOH,Chen et al.,TraPPE-UA,300.0,1232.833958,direct,1166.17,5.716487133093791,27.986108126711095
+MeOH,Chen et al.,TraPPE-UA,350.0,1213.173135379253,estimated,1075.936,12.755139281449177,27.986108126711095
+MeOH,Chen et al.,TraPPE-UA,400.0,1232.0210346524466,estimated,944.57,30.431946245640507,27.986108126711095
+MeOH,Chen et al.,TraPPE-UA,450.0,1205.181731900533,estimated,739.19,63.040859846660915,27.986108126711095
+MeOH,Chen et al.,TraPPE-UA,500.0,,skipped,391.06,,27.986108126711095
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,200.0,,skipped,1289.99,,
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,250.0,,skipped,1234.79,,
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,300.0,,skipped,1166.17,,
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,350.0,,skipped,1075.936,,
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,400.0,,skipped,944.57,,
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,450.0,,skipped,739.19,,
+MeOH,Gonzalez-Salgado & Vega,OPLS/2016,500.0,,skipped,391.06,,
+MeOH,Guevara-Carrion et al.,L2,200.0,,skipped,1289.99,,27.415996588475167
+MeOH,Guevara-Carrion et al.,L2,250.0,,skipped,1234.79,,27.415996588475167
+MeOH,Guevara-Carrion et al.,L2,300.0,846.4528725841792,estimated,1166.17,27.415996588475167,27.415996588475167
+MeOH,Guevara-Carrion et al.,L2,350.0,,skipped,1075.936,,27.415996588475167
+MeOH,Guevara-Carrion et al.,L2,400.0,,skipped,944.57,,27.415996588475167
+MeOH,Guevara-Carrion et al.,L2,450.0,,skipped,739.19,,27.415996588475167
+MeOH,Guevara-Carrion et al.,L2,500.0,,skipped,391.06,,27.415996588475167
+MeOH,Haughney et al.,H1,200.0,,skipped,1289.99,,
+MeOH,Haughney et al.,H1,250.0,,skipped,1234.79,,
+MeOH,Haughney et al.,H1,300.0,,skipped,1166.17,,
+MeOH,Haughney et al.,H1,350.0,,skipped,1075.936,,
+MeOH,Haughney et al.,H1,400.0,,skipped,944.57,,
+MeOH,Haughney et al.,H1,450.0,,skipped,739.19,,
+MeOH,Haughney et al.,H1,500.0,,skipped,391.06,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),200.0,,skipped,1289.99,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),250.0,,skipped,1234.79,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),300.0,,skipped,1166.17,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),350.0,,skipped,1075.936,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),400.0,,skipped,944.57,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),450.0,,skipped,739.19,,
+MeOH,Jorgensen,OPLS (Gonzalez-Salgado & Vega),500.0,,skipped,391.06,,
+MeOH,Martinez-Jimenez et al.,MeOH-4P,200.0,,skipped,1289.99,,30.597508070948155
+MeOH,Martinez-Jimenez et al.,MeOH-4P,250.0,,skipped,1234.79,,30.597508070948155
+MeOH,Martinez-Jimenez et al.,MeOH-4P,300.0,1225.3038451457815,estimated,1166.17,5.070773999140895,30.597508070948155
+MeOH,Martinez-Jimenez et al.,MeOH-4P,350.0,1225.3038451457815,estimated,1075.936,13.882595725561886,30.597508070948155
+MeOH,Martinez-Jimenez et al.,MeOH-4P,400.0,1236.4301609456963,estimated,944.57,30.898732856823347,30.597508070948155
+MeOH,Martinez-Jimenez et al.,MeOH-4P,450.0,1275.3831225661838,estimated,739.19,72.5379297022665,30.597508070948155
+MeOH,Martinez-Jimenez et al.,MeOH-4P,500.0,,skipped,391.06,,30.597508070948155
+MeOH,van Leeuwen & Smit,L1,200.0,,skipped,1289.99,,
+MeOH,van Leeuwen & Smit,L1,250.0,,skipped,1234.79,,
+MeOH,van Leeuwen & Smit,L1,300.0,,skipped,1166.17,,
+MeOH,van Leeuwen & Smit,L1,350.0,,skipped,1075.936,,
+MeOH,van Leeuwen & Smit,L1,400.0,,skipped,944.57,,
+MeOH,van Leeuwen & Smit,L1,450.0,,skipped,739.19,,
+MeOH,van Leeuwen & Smit,L1,500.0,,skipped,391.06,,

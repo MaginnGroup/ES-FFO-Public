@@ -46,6 +46,8 @@ density_iters/old/*
 *Opt_ES/analysis/AT-0/ms_val/*
 *Opt_ES/analysis/at_00/ExpVal/ms_val/*
 *_bckp.ipynb
+*Opt_ES/analysis/lit_ff_data_wo_digitization.csv
+*Opt_ES/analysis/lit_ff_data_wo_ff_names.csv
 
 # C extensions
 *.so

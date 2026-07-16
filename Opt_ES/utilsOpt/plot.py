@@ -317,26 +317,26 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
-    key_map = {"Martinez-Jimenez et al.": ('gray', 's', 1, False),
-               "Jorgensen": ('tab:orange', '>', 1, False),
-               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1, False),
-               "Chen et al.": ('purple', 'd', 1, False),
-               "Stubbs et al.": ('purple', 'd', 1, False),
+    key_map = {"MeOH-4P": ('gray', 's', 1, False),
+               "OPLS (Gonzalez-Salgado & Vega)": ('tab:orange', '>', 1, False),
+               "OPLS/2016": ('tab:green', 'p', 1, False),
+               "TraPPE-UA": ('purple', 'd', 1, False),
+               "TraPPE-UA": ('purple', 'd', 1, False),
                "Huang et al.": ('gray', 's', 1, False),
-               "Jahn et al.": ('gray', 's', 1, False),
-               "Caleman et al. (GAFF)": ('deeppink', 's', 1, False),
-               "Caleman et al. (OPLS/AA)": ('deeppink', 'h', 1, False),
-               "Caleman et al. (CGenFF)": ('deeppink', '1', 1, False),
+               "OPLS2-FF": ('gray', 's', 1, False),
+               "GAFF": ('deeppink', 's', 1, False),
+               "OPLS/AA": ('blue', 'h', 1, False),
+            #    "Caleman et al. (CGenFF)": ('deeppink', '1', 1, False),
                "Vahid & Maginn": ('tab:orange', '>', 1, False),
                "Chalaris & Samios": ('tab:green', 'p', 1, False),
-               "Senapati": ('gray', 's', 1, False),
+               "Modified P2": ('gray', 's', 1, False),
                "Borin & Skaf": ('tab:green', 'p', 1, False),
-               "Garcia-Melgarejo et al.": ('gray', 's', 1, False),
+               "Modified OPLSAA-LPG": ('gray', 's', 1, False),
                "Luo et al.": ('tab:orange', '>', 1, False),
                "Wang et al.": ('tab:magenta', 'D', 1, False),
                "Old Opt FF": ('tab:blue', '+', 1, False),
-               "IFT FF": ('tab:red', '^', 1, False),
-               "Opt FF": ('tab:red', '^', 1, False),
+               "Base": ('tab:red', '^', 1, False),
+               "GP-Opt": ('tab:red', '^', 1, False),
                }
 
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -378,12 +378,15 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
-        df_color, df_marker, df_z_order, show_df = key_map.get(df_label, ('black', 'o', 2, True))
-        
+        #continue if df_ff is not in key_map and df_label is not in key_map
+        if df_label not in key_map.keys():
+            continue
+        else:
+            df_color, df_marker, df_z_order, show_df = key_map.get(df_label, ('black', 'o', 2, True))
+
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         if df_ff is not None: #and show_df:
         # if df_ff is not None and "Vahid" not in df_label: #and show_df:
-            min_temp, max_temp = get_min_max(min_temp, max_temp, df_ff["temperature"].values)
             all_props = ["sim_" + prop_name]
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
             grouped = df_ff.groupby(["temperature"])[all_props]
@@ -395,6 +398,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
             stds = grouped.std(ddof=0).reset_index()
 
             for x_prop in x_props:
+                #Get the data for just x_prop
+                df_prop_data = df_ff[["temperature", x_prop]].dropna()
+                min_temp, max_temp = get_min_max(min_temp, max_temp, df_prop_data["temperature"].values)
                 #Set new max and mins
                 if prop_name == "Pvap": #Convert from bar to kPa for plotting -- multiply by 100
                     #multiply by 10**9 
@@ -405,8 +411,13 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 # #Plot opt_scheme_ms vle curve
                 if df_label == "AT-Dis":
                     df_label = "GP-Opt"
-                elif df_label == "IFT FF":
+                elif df_label == "Base":
                     df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
+
+                if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)") and prop_name != "surf_tens":
+                    means = means[::5]
+                    stds = stds[::5]
+
                 ax2.errorbar(means["temperature"], means[x_prop],yerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label = df_label)
@@ -440,7 +451,24 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
     # if molec in ["MeOH", "EG"]:
     #     max_temp =430
+    if "density" in prop_name:
+        if molec == "DMF":
+            max_temp = max(prop_data.keys())
+        elif molec == "DMSO":
+            max_temp = 380
     ax2.set_xlim(min_temp*0.95, max_temp*1.05)
+
+    if molec == "DMF":
+        if prop_name == "liq_density":
+            ax2.set_ylim(bottom=880)
+        if prop_name == "vap_density":
+            ax2.set_ylim(top = 3)
+
+    if molec == "DMSO":
+        if prop_name == "liq_density":
+            ax2.set_ylim(bottom=900)
+        if prop_name == "vap_density":
+            ax2.set_ylim(top = 3)
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=22, pad=10)
     ax2.tick_params("both", which="major", length=8)
@@ -499,26 +527,26 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
-    key_map = {"Martinez-Jimenez et al.": ('gray', 's', 1),
-               "Jorgensen": ('tab:orange', '>', 1),
-               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
-               "Chen et al.": ('purple', 'd', 1),
-               "Stubbs et al.": ('purple', 'd', 1),
+    key_map = {"MeOH-4P": ('gray', 's', 1),
+               "OPLS (Gonzalez-Salgado & Vega)": ('tab:orange', '>', 1),
+               "OPLS/2016": ('tab:green', 'p', 1),
+               "TraPPE-UA": ('purple', 'd', 1),
+               "TraPPE-UA": ('purple', 'd', 1),
                "Huang et al.": ('gray', 's', 1),
-               "Jahn et al.": ('gray', 's', 1),
-               "Caleman et al. (GAFF)": ('deeppink', 's', 1),
-               "Caleman et al. (OPLS/AA)": ('deeppink', 'h', 1),
-               "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
+               "OPLS2-FF": ('gray', 's', 1),
+               "GAFF": ('deeppink', 's', 1),
+               "OPLS/AA": ('blue', 'h', 1),
+            #    "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
-               "Senapati": ('gray', 's', 1),
+               "Modified P2": ('gray', 's', 1),
                "Borin & Skaf": ('tab:green', 'p', 1),
-               "Garcia-Melgarejo et al.": ('gray', 's', 1),
+               "Modified OPLSAA-LPG": ('gray', 's', 1),
                "Luo et al.": ('tab:orange', '>', 1),
-               "Wang et al.": ('magenta', 'D', 1),
+               "Wang et al.": ('tab:magenta', 'D', 1),
                "Old Opt FF": ('tab:blue', '+', 1),
-               "IFT FF": ('tab:red', '^', 1),
-               "Opt FF": ('tab:red', '^', 1),
+               "Base": ('tab:red', '^', 1),
+               "GP-Opt": ('tab:red', '^', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -557,7 +585,11 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
 
-        df_color, df_marker, df_z_order = key_map[df_label]
+        #continue if df_ff is not in key_map and df_label is not in key_map
+        if df_label not in key_map.keys():
+            continue
+        else:
+            df_color, df_marker, df_z_order = key_map[df_label]
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         if df_ff is not None:
         # if df_ff is not None and "Caleman" not in df_label: #and show_df:
@@ -601,8 +633,13 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                 # #Plot opt_scheme_ms vle curve
                 if label_prop == "AT-Dis":
                     label_prop = "GP-Opt"
-                elif label_prop == "IFT FF":
+                elif label_prop == "Base":
                     label_prop = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
+
+                if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)"):
+                        means = means[::5]
+                        stds = stds[::5]
+
                 ax2.errorbar(means[x_prop], means["temperature"], xerr=1.96*stds[x_prop],
                             color=df_color,markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order, label=label_prop)
@@ -611,7 +648,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             if has_vap and has_liq and molec != "DMSO":
                 if df_label == "AT-Dis":
                     df_label = "GP-Opt"
-                elif df_label == "IFT FF":
+                elif df_label == "Base":
                     df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
                 if "sim_rhoc_unc" not in means.columns or "sim_Tc_unc" not in means.columns:
                     std_rhoc = stds["sim_rhoc"].values
@@ -715,26 +752,26 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_labels = list(df_keys)
     df_ff_list = list(df_ffs)
 
-    key_map = {"Martinez-Jimenez et al.": ('gray', 's', 1),
-               "Jorgensen": ('tab:orange', '>', 1),
-               "Gonzalez-Salgado & Vega": ('tab:green', 'p', 1),
-               "Chen et al.": ('purple', 'd', 1),
-               "Stubbs et al.": ('purple', 'd', 1),
+    key_map = {"MeOH-4P": ('gray', 's', 1),
+               "OPLS (Gonzalez-Salgado & Vega)": ('tab:orange', '>', 1),
+               "OPLS/2016": ('tab:green', 'p', 1),
+               "TraPPE-UA": ('purple', 'd', 1),
+               "TraPPE-UA": ('purple', 'd', 1),
                "Huang et al.": ('gray', 's', 1),
-               "Jahn et al.": ('gray', 's', 1),
-               "Caleman et al. (GAFF)": ('deeppink', 's', 1),
-               "Caleman et al. (OPLS/AA)": ('deeppink', 'h', 1),
-               "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
+               "OPLS2-FF": ('gray', 's', 1),
+               "GAFF": ('deeppink', 's', 1),
+               "OPLS/AA": ('blue', 'h', 1),
+            #    "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
                "Vahid & Maginn": ('tab:orange', '>', 1),
                "Chalaris & Samios": ('tab:green', 'p', 1),
-               "Senapati": ('gray', 's', 1),
+               "Modified P2": ('gray', 's', 1),
                "Borin & Skaf": ('tab:green', 'p', 1),
-               "Garcia-Melgarejo et al.": ('gray', 's', 1),
+               "Modified OPLSAA-LPG": ('gray', 's', 1),
                "Luo et al.": ('tab:orange', '>', 1),
-               "Wang et al.": ('magenta', 'D', 1),
+               "Wang et al.": ('tab:magenta', 'D', 1),
                "Old Opt FF": ('tab:blue', '+', 1),
-               "IFT FF": ('tab:red', '^', 1),
-               "Opt FF": ('tab:red', '^', 1),
+               "Base": ('tab:red', '^', 1),
+               "GP-Opt": ('tab:red', '^', 1),
                }
     
     cmap = plt.get_cmap("cool")  # Get the rainbow colormap
@@ -785,13 +822,17 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
-        #Convert from bar to kPa for plotting
+
         if df_ff is not None:
         # if df_ff is not None and "Vahid" not in df_label:
+            #Convert from bar to kPa for plotting
             df_ff["sim_Pvap"] = df_ff["sim_Pvap"]*100
 
-
-        df_color, df_marker, df_z_order = key_map[df_label]
+        #continue if df_ff is not in key_map and df_label is not in key_map
+        if df_label not in key_map.keys():
+            continue
+        else:
+            df_color, df_marker, df_z_order = key_map[df_label]
         
         # df_label = df_labels[i] if df_labels[i] != "" else "Previous Work"
         if df_ff is not None:
@@ -846,8 +887,14 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     min_pvap, max_pvap = get_min_max(min_pvap, max_pvap, log_Pvap_finite, std_log_pvap)
                     if df_label == "AT-Dis":
                         df_label = "GP-Opt"
-                    elif df_label == "IFT FF":
+                    elif df_label == "Base":
                         df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
+
+                    if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)"):
+                        temps_finite = temps_finite[::6]
+                        log_Pvap_finite = log_Pvap_finite[::6]
+                        std_log_pvap = std_log_pvap[::6]
+
                     axs[0].errorbar(1000/temps_finite, log_Pvap_finite, yerr = 1.96*std_log_pvap,
                                 color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                                 zorder = df_z_order,label = df_label)
@@ -862,6 +909,12 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                 std_hvap = stds["sim_Hvap"].values[finite_indices]
                 temps_finite = means["temperature"].values[finite_indices]
                 min_hvap, max_hvap = get_min_max(min_hvap, max_hvap, Hvap_finite, std_hvap)
+
+                if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)"):
+                        temps_finite = temps_finite[::5]
+                        Hvap_finite = Hvap_finite[::5]
+                        std_hvap = std_hvap[::5]
+
                 axs[1].errorbar(temps_finite, Hvap_finite, yerr=1.96*std_hvap,
                             color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order,label = df_label)
