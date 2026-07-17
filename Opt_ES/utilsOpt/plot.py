@@ -451,11 +451,14 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
     # if molec in ["MeOH", "EG"]:
     #     max_temp =430
-    if "density" in prop_name:
+    if "density" in prop_name or "surf_tens" in prop_name:
         if molec == "DMF":
-            max_temp = max(prop_data.keys())
+            max_temp = 330
+            min_temp = 298.15
         elif molec == "DMSO":
             max_temp = 380
+        elif molec == "Gly":
+            max_temp = 400
     ax2.set_xlim(min_temp*0.95, max_temp*1.05)
 
     if molec == "DMF":
