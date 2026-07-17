@@ -63,6 +63,11 @@ def get_signac_results(project_dict, data_dict, proj_name = "no_opt"):
                     for row in range(len(group_df)):
                         new_job = group_df.sort_values(by=["T"]).iloc[row]
                         job = project.open_job(id=new_job["job"])
+
+                        #Skip bad methanol job
+                        if job.id == "2151a7a94c8251f40cbbdfac0b281c92":
+                            continue
+
                         #Round all param vals to 14 decimal places to avoid floating point issues
                         param_vals = tuple([round(val, 14) for val in param_vals])
                         # Extract the parameters into a dict
