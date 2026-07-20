@@ -1,0 +1,39 @@
+molecule,property,canonical_unit,unit_in_esolvs,unit_in_recomputed,conversion_ok,esolvs_value_sample,independent_value,pct_diff,sanity,flag_notes
+MeOH,rho_l,kg/m3,kg/m3,kg/m3,Y,784.51,784.506955,0.0,OK,REFPROP block
+MeOH,Pvap,kPa (audit convention; esolvs.py native = bar),bar,kPa,Y,18.682,18.682399,0.002,OK,"REFPROP block, bar->kPa"
+MeOH,Hvap,kJ/kg,kJ/kg,kJ/kg,Y,1166.17,1166.151521,0.002,OK,REFPROP block
+MeOH,gamma,mN/m,mN/m,mN/m,Y,21.993,21.993042,0.0,OK,REFPROP block
+EG,rho_l,kg/m3,kg/m3,kg/m3,Y,993.42,993.46613,0.005,OK,REFPROP block
+EG,Pvap,kPa (audit convention; esolvs.py native = bar),bar,kPa,Y,53.184,53.183863,0.0,OK,"REFPROP block, bar->kPa"
+EG,Hvap,kJ/kg,kJ/kg,kJ/kg,Y,901.26,901.259112,0.0,OK,REFPROP block
+EG,gamma,mN/m,mN/m,mN/m,Y,34.062,34.062061,0.0,OK,REFPROP block
+Gly,rho_l,kg/m3,kg/m3,kg/m3,Y,1249.5,1248.450961,0.084,OK,doi:10.1016/j.jct.2017.11.008
+Gly,Pvap,kPa (audit convention; esolvs.py native = bar),bar,kPa,Y,0.000125,0.000129,2.82,OK,"doi:10.1016/j.jct.2017.11.008 correlation, Pa->kPa"
+Gly,Hvap,kJ/kg,kJ/kg,kJ/kg,Y,982.734,927.568144,5.947,OK,doi:10.1016/j.fluid.2015.03.038
+Gly,gamma,mN/m,mN/m,mN/m,Y,62.0,59.29365,4.564,OK,doi:10.1016/j.jct.2019.03.014
+DMF,rho_l,kg/m3,kg/m3,kg/m3,Y,931.94,925.943206,0.648,OK,doi:10.1016/j.molliq.2019.02.097
+DMF,Pvap,kPa (audit convention; esolvs.py native = bar),bar,kPa,Y,1.85,1.726556,7.15,OK,doi:10.1021/je060224i correlation
+DMF,Hvap,kJ/kg,kJ/kg,kJ/kg,Y,641.538,641.503918,0.005,OK,doi:10.3390/molecules29051110
+DMF,gamma,mN/m,mN/m,mN/m,Y,33.309,33.142556,0.502,OK,doi:10.1021/je0201323 correlation
+DMSO,rho_l,kg/m3,kg/m3,kg/m3,Y,1070.21,1071.677823,0.137,OK,doi:10.1016/j.molliq.2016.10.115
+DMSO,Pvap,kPa (audit convention; esolvs.py native = bar),bar,kPa,Y,0.405674,0.401808,0.962,OK,"doi:10.1016/0021-9614(72)90007-9 correlation, native kPa"
+DMSO,Hvap,kJ/kg,kJ/kg,kJ/kg,Y,661.718,670.040339,1.242,OK,NIST webbook
+DMSO,gamma,mN/m,mN/m,mN/m,Y,40.055,40.004843,0.125,OK,doi:10.1021/j100798a501 correlation
+DEC,rho_l,kg/m3,kg/m3,kg/m3,Y,952.5,958.396734,0.615,OK,doi:10.1016/j.fluid.2010.03.040
+DEC,Pvap,kPa (audit convention; esolvs.py native = bar),bar,kPa,Y,3.5244,3.310899,6.448,OK,"doi:10.1016/j.jct.2008.02.012 correlation, native kPa"
+DEC,Hvap,kJ/kg,kJ/kg,kJ/kg,Y,522.195,371.924106,40.404,SUSPECT,"ME-11 CONFIRMED (this task): all 5 esolvs.py DEC Hvap points (294-384K) are 39-42% high vs thermo/CoolProp AND vs García-Melgarejo's own cited Mansson-1972 value (43.60 kJ/mol = 369.1 kJ/kg at 313.15K, from litexp_gm.csv) -- consistent whole-curve overwrite, not a single-point error."
+DEC,gamma,mN/m,mN/m,mN/m,Y,24.5,24.135341,1.511,OK,doi:10.1016/j.fluid.2010.03.040
+MeOH,Tc,K,K,K,Y,512.5,513.38,0.171,OK,informational only -- see provenance_map.csv for esolvs.py's own primary-source chain
+MeOH,rho_c,kg/m3,kg/m3,kg/m3,Y,273.846,281.493,2.717,OK,informational only -- see provenance_map.csv
+EG,Tc,K,K,K,Y,719.6,719.0,0.083,OK,informational only -- see provenance_map.csv for esolvs.py's own primary-source chain
+EG,rho_c,kg/m3,kg/m3,kg/m3,Y,391.9405,364.959,7.393,OK,"reference provenance SECONDARY/CORRELATION per F6/provenance_map.csv (EG=shared PEG-series Rackett fit; DMSO=Campbell's own extrapolation; DEC=DECHEMA/DIPPR compilation only) -- large R1/R2 divergence expected, not an error"
+Gly,Tc,K,K,K,Y,850.0,850.0,0.0,OK,informational only -- see provenance_map.csv for esolvs.py's own primary-source chain
+DMF,Tc,K,K,K,Y,649.6,649.6,0.0,OK,informational only -- see provenance_map.csv for esolvs.py's own primary-source chain
+DMF,rho_c,kg/m3,kg/m3,kg/m3,Y,279.204,278.984,0.079,OK,informational only -- see provenance_map.csv
+DMSO,Tc,K,K,K,Y,718.0,707.0,1.556,OK,informational only -- see provenance_map.csv for esolvs.py's own primary-source chain
+DMSO,rho_c,kg/m3,kg/m3,kg/m3,Y,366.0,366.824,0.225,OK,"reference provenance SECONDARY/CORRELATION per F6/provenance_map.csv (EG=shared PEG-series Rackett fit; DMSO=Campbell's own extrapolation; DEC=DECHEMA/DIPPR compilation only) -- large R1/R2 divergence expected, not an error"
+DEC,Tc,K,K,K,Y,576.0,576.33,0.057,OK,informational only -- see provenance_map.csv for esolvs.py's own primary-source chain
+DEC,rho_c,kg/m3,kg/m3,kg/m3,Y,341.42,328.142,4.046,OK,"reference provenance SECONDARY/CORRELATION per F6/provenance_map.csv (EG=shared PEG-series Rackett fit; DMSO=Campbell's own extrapolation; DEC=DECHEMA/DIPPR compilation only) -- large R1/R2 divergence expected, not an error"
+DEC,rho_l/Hvap/gamma (litexp_gm.csv R2 override),n/a (pipeline bug),n/a,n/a,N,,,,SUSPECT,"NEW BUG: scripts/recompute_metrics_all.py's LITEXP_PROP_MAP expects the literal keys 'rho_l'/'Hvap'/'gamma', but litexp_gm.csv (Garcia-Melgarejo, DEC) uses 'liquid_density'/'heat_of_vaporization'/'surface_tension' -- all three rows are silently skipped (LITEXP_PROP_MAP.get() returns None) and the paper-specific R2 silently falls back to the generic esolvs.py reference. For Hvap this compounds with ME-11: GM's own cited value (43.60 kJ/mol @313.15K, Mansson 1972) = 369.1 kJ/kg -- close to thermo's 371.9 -- was available and correct, but was never used."
+MeOH/DMSO/DMF,gamma (litexp_caleman.csv R2 override),n/a (pipeline bug),n/a,n/a,N,,,,SUSPECT,"NEW BUG (same root cause as above): litexp_caleman.csv uses 'surface_tension', not 'gamma' -- Caleman's own cited gamma values (e.g. MeOH 22.07 mN/m from CRC Handbook) are silently dropped as an R2 override; falls back to generic reference."
+EG,"rho_l/rho_c (litexp_eg.csv, Huang, mol/L rows)",kg/m3,n/a,"mol/L (UNCONVERTED, dropped)",N,5.92 mol/L (rho_c); 17.888 mol/L (rho_l@298K),"367.45 kg/m3 (rho_c); 1110.5 kg/m3 (rho_l@298K), converted by hand via MW=62.07",,SUSPECT,"NEW BUG: scripts/recompute_metrics_all.py's _UNIT_CONV_DENSITY dict has no 'mol/L' entry (unlike scripts/build_master_ff_predictions.py's to_si(), which does handle mol/L). Huang et al.'s own cited EG rho_c (5.92 mol/L) and rho_l@298K (17.888 mol/L) are silently dropped from the R2-override lookup. Impact: (a) 4 of 5 Huang-family literature FFs (OPLS-AA, modified OPLS-AA, Gubskaya&Kusalik, Szefczyk&Cordeiro, all evaluated only at 298K) get NO R2 comparison at all for rho_l, though a valid paper-specific value exists; (b) Huang's 'present model' rho_c R2 MAPD is reported as 6.56% (vs the generic esolvs rho_c=391.94) when it should be ~0.34% vs Huang's own cited 367.45 kg/m3 -- a material change to a cell that is a bolding candidate."

@@ -1,0 +1,116 @@
+molecule,property,table_total_exp_data,table_used_count,table_used_key,table_starred,bib_key_resolves,bib_title,esolvs_count,provenance_source_type,star_expected,flag
+EG,rho_l,97,11,REFPROP,True,Y,,11,EOS-AUTH,True,OK
+Gly,rho_l,84,5,Ghaedi2018DensityCapture,False,Y,Density and Refractive Index Measurements of Transition-Temperature Mixture (Deep Eutectic,5,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)",False,OK
+MeOH,rho_l,315,7,REFPROP,True,Y,,7,EOS-AUTH,True,OK
+DMF,rho_l,33,5,Alam2019TheProperties,False,Y,"The Density, Dynamic Viscosity and Kinematic Viscosity of Protic and Aprotic Polar Solvent",5,PRIMARY,False,OK
+DMSO,rho_l,68,5,Harifi-Mood2017,False,Y,"Density, Viscosity, and Conductivity of Choline Chloride + Ethylene Glycol as a Deep Eutec",5,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)",False,OK
+DEC,rho_l,49,5,Zhao2010,False,Y,"Surface Tension of Diethyl Carbonate, 1,2-Dimethoxyethane and Diethyl Adipate",5,SECONDARY,False,OK
+EG,Pvap,34,11,REFPROP,True,Y,,11,EOS-AUTH,True,OK
+Gly,Pvap,175,5,Verevkin2015,True,Y,Thermodynamic Properties of Glycerol: Experimental and Theoretical Study,5,CORRELATION,True,OK
+MeOH,Pvap,987,7,REFPROP,True,Y,,7,EOS-AUTH,True,OK
+DMF,Pvap,83,5,Cui2006,True,Y,"Experimental Vapor Pressure Data and a Vapor Pressure Equation for N,N-Dimethylformamide",5,CORRELATION,True,OK
+DMSO,Pvap,97,5,Jakli1972,True,Y,The Vapor Pressures of Dimethyl Sulfoxide and Hexadeuterodimethyl Sulfoxide from 313 to 45,5,CORRELATION,True,OK
+DEC,Pvap,132,5,Kozlova2008,True,Y,Vapour Pressure and Enthalpy of Vaporization of Aliphatic Dialkyl Carbonates,5,CORRELATION,True,OK
+EG,Hvap,19,11,REFPROP,True,Y,,11,EOS-AUTH,True,OK
+Gly,Hvap,11,5,Verevkin2015,False,Y,Thermodynamic Properties of Glycerol: Experimental and Theoretical Study,1,PRIMARY,False,"COUNT MISMATCH: table says 5, esolvs.py has 1 temperature(s)"
+MeOH,Hvap,83,11,REFPROP,True,Y,,7,EOS-AUTH,True,"COUNT MISMATCH: table says 11, esolvs.py has 7 temperature(s)"
+DMF,Hvap,1,7,Rika2024,False,Y,"Thermodynamic Study of N-Methylformamide and N,N-Dimethyl-Formamide",1,PRIMARY,False,"COUNT MISMATCH: table says 7, esolvs.py has 1 temperature(s); INTERNAL INCONSISTENCY: 'Ref. Data in This Work' (7) exceeds 'Total Exp. Data' (1) for a non-starred (raw-data) cell"
+DMSO,Hvap,11,5,Lemmon2023,False,Y,Thermophysical Properties of Fluid Systems,5,EOS-AUTH (judgment call -- see note),True,STAR FLAG MISSING (provenance_map source_type='EOS-AUTH (judgment call -- see note)')
+DEC,Hvap,6,5,Kozlova2008,False,Y,Vapour Pressure and Enthalpy of Vaporization of Aliphatic Dialkyl Carbonates,8,PRIMARY,False,"COUNT MISMATCH: table says 5, esolvs.py has 8 temperature(s)"
+EG,rho_v,0,11,REFPROP,True,Y,,11,EOS-AUTH,True,OK
+Gly,rho_v,0,5,Peng1976AState,True,Y,A New Two-Constant Equation of State,5,EOS-AUTH,True,OK
+MeOH,rho_v,75,7,REFPROP,True,Y,,7,EOS-AUTH,True,OK
+DMF,rho_v,0,5,Peng1976AState,True,Y,A New Two-Constant Equation of State,5,EOS-AUTH,True,OK
+DMSO,rho_v,0,5,Peng1976AState,True,Y,A New Two-Constant Equation of State,5,EOS-AUTH,True,OK
+DEC,rho_v,31,5,Zhao2010,False,Y,"Surface Tension of Diethyl Carbonate, 1,2-Dimethoxyethane and Diethyl Adipate",5,SECONDARY,False,OK
+EG,Tc,2,1,REFPROP,True,Y,,1,EOS-AUTH,True,OK
+Gly,Tc,3,1,Nikitin1993MeasurementMethod,False,Y,Measurement of the Critical Properties of Thermally Unstable Substances and Mixtures by th,1,PRIMARY,False,OK
+MeOH,Tc,5,1,REFPROP,True,Y,,1,EOS-AUTH,True,OK
+DMF,Tc,2,1,Teja1990TheResults,False,Y,The Critical Properties of Thermally Stable and Unstable Fluids. I. 1985 Results,1,PRIMARY (source not yet obtained),False,OK
+DMSO,Tc,3,1,Nikitin2018Critical26-Dimethylpiperazine,False,Y,"Critical Temperatures and Pressures of Caprolactam, Dimethyl Sulfoxide, 1,4-Dimethylpipera",1,PRIMARY,False,OK
+DEC,Tc,3,1,Zhang2010ExperimentalKPa,False,Y,Experimental Isobaric Vapor-Liquid Equilibrium for Binary Systems of Ethyl Methyl Carbonat,1,"SECONDARY (chain leads to a data compilation, not a primary measurement)",False,OK
+EG,rho_c,2,1,Tawfik1989TheGlycols,True,Y,The Densities of Polyethylene Glycols,1,CORRELATION,True,OK
+Gly,rho_c,1,1,Peng1976AState,True,Y,A New Two-Constant Equation of State,1,EOS-AUTH,True,OK
+MeOH,rho_c,4,1,Benson1948CriticalLiquids,False,Y,Critical Densities and Related Properties of Liquids,1,PRIMARY,False,OK
+DMF,rho_c,2,1,Teja1990TheResults,False,Y,The Critical Properties of Thermally Stable and Unstable Fluids. I. 1985 Results,1,PRIMARY (source not yet obtained),False,OK
+DMSO,rho_c,2,1,Campbell1979TheDensity,False,Y,The Density and Vapour Pressure of Dimethylsulfoxide at Various Temperatures and the (Hypo,1,PRIMARY (estimated/extrapolated value),False,OK
+DEC,rho_c,2,1,Zhang2010ExperimentalKPa,False,Y,Experimental Isobaric Vapor-Liquid Equilibrium for Binary Systems of Ethyl Methyl Carbonat,1,"SECONDARY (chain leads to a data compilation, not a primary measurement)",False,OK
+EG,gamma,11,11,REFPROP,True,Y,,11,EOS-AUTH,True,OK
+Gly,gamma,12,5,Erfani2019,False,Y,Surface Tension and Interfacial Compositions of Binary Glycerol/Alcohol Mixtures,5,PRIMARY,False,OK
+MeOH,gamma,40,7,REFPROP,True,Y,,7,EOS-AUTH,True,OK
+DMF,gamma,21,5,Kahl2003,True,Y,Surface Tension of Pure Liquids and Binary Liquid Mixtures,5,CORRELATION,True,OK
+DMSO,gamma,16,5,LawrenceClever1963,True,Y,Thermodynamics of Liquid Surfaces: The Surface Tension of Dimethyl Sulfoxide and Some Dime,5,CORRELATION,True,OK
+DEC,gamma,31,5,Zhao2010,False,Y,"Surface Tension of Diethyl Carbonate, 1,2-Dimethoxyethane and Diethyl Adipate",5,PRIMARY,False,OK
+EG,REFERENCES_ROW,,,Taylor1926,,Y,Ethylene Glycol An Evaluation of Available Information on the Physical Properties of This ,,,,OK
+EG,REFERENCES_ROW,,,Carvalho2015,,Y,Thermophysical Properties of Glycols and Glymes,,,,OK
+EG,REFERENCES_ROW,,,Tsierkezos1998,,Y,"Thermodynamic Properties of Water + Ethylene Glycol at 283.15, 293.15, 303.15, and 313.15 ",,,,OK
+EG,REFERENCES_ROW,,,Nikitin2018,,Y,Critical Temperatures and Pressures of Ethylene Glycols,,,,OK
+EG,REFERENCES_ROW,,,Shcherbina1975,,Y,Study of Vapor-Liquid Equilibrium for Glycols of Various Molecular Weights,,,,OK
+EG,REFERENCES_ROW,,,Verevkin2004,,Y,"Determination of Vapor Pressures and Enthalpies of Vaporization of 1,2-Alkanediols",,,,OK
+EG,REFERENCES_ROW,,,yaws-thermophysical-properties,,Y,Yaws' Thermophysical Properties of Chemicals and Hydrocarbons (Electronic Edition),,,,OK
+EG,REFERENCES_ROW,,,Tawfik1989TheGlycols,,Y,The Densities of Polyethylene Glycols,,,,OK
+Gly,REFERENCES_ROW,,,Verevkin2015,,Y,Thermodynamic Properties of Glycerol: Experimental and Theoretical Study,,,,OK
+Gly,REFERENCES_ROW,,,Ahmadi2023,,Y,An Investigation on the Thermophysical Properties of Glycerol,,,,OK
+Gly,REFERENCES_ROW,,,Prieto2016,,Y,"Liquid Glycerol: Experimental Densities at Pressures of Up to 25 MPa, and Some Derived The",,,,OK
+Gly,REFERENCES_ROW,,,Erfani2019,,Y,Surface Tension and Interfacial Compositions of Binary Glycerol/Alcohol Mixtures,,,,OK
+Gly,REFERENCES_ROW,,,Alkindi2008,,Y,"Physical Properties (Density, Excess Molar Volume, Viscosity, Surface Tension, and Refract",,,,OK
+Gly,REFERENCES_ROW,,,Spittle2022EvolutionSolvents,,Y,Evolution of Microscopic Heterogeneity and Dynamics in Choline Chloride-Based Deep Eutecti,,,,OK
+Gly,REFERENCES_ROW,,,surface-tension-data,,Y,"International Critical Tables of Numerical Data, Physics, Chemistry and Technology (1st El",,,,OK
+Gly,REFERENCES_ROW,,,Ghaedi2018DensityCapture,,Y,Density and Refractive Index Measurements of Transition-Temperature Mixture (Deep Eutectic,,,,OK
+Gly,REFERENCES_ROW,,,Nikitin1993MeasurementMethod,,Y,Measurement of the Critical Properties of Thermally Unstable Substances and Mixtures by th,,,,OK
+MeOH,REFERENCES_ROW,,,Goodwin1987,,Y,Methanol Thermodynamic Properties From 176 to 673 K at Pressures to 700 Bar,,,,OK
+MeOH,REFERENCES_ROW,,,Aliev2003,,Y,Volumetric (PVT ) and Calorimetric (C V VT ) Measurements for Pure Methanol in the Liquid ,,,,OK
+MeOH,REFERENCES_ROW,,,Safarov2019,,Y,New Vapor Pressure Measurements of Methanol Over Wide Range of Temperatures,,,,OK
+MeOH,REFERENCES_ROW,,,Soukov2008,,Y,Measurement and Correlation of the Surface Tension-Temperature Relation for Methanol,,,,OK
+MeOH,REFERENCES_ROW,,,Abdulagatov2005,,Y,Thermodynamic Properties of Methanol in the Critical and Supercritical Regions,,,,OK
+MeOH,REFERENCES_ROW,,,Stairs1970,,Y,Surface Tension of Some Non-Aqueous Salt Solutions,,,,OK
+MeOH,REFERENCES_ROW,,,Zhang2010ExperimentalKPa,,Y,Experimental Isobaric Vapor-Liquid Equilibrium for Binary Systems of Ethyl Methyl Carbonat,,,,OK
+MeOH,REFERENCES_ROW,,,Kuroki2001,,Y,"Specific Heat Capacity at Constant Volume for Water, Methanol,and Their Mixtures at Temper",,,,OK
+MeOH,REFERENCES_ROW,,,table-2-7aa-thermophysical,,Y,Heat Transfer Handbook,,,,OK
+MeOH,REFERENCES_ROW,,,Machado1983,,Y,"Equation of State and Thermodynamic Properties of Liquid Methanol
+from 298 to 489 K and Pr",,,,OK
+MeOH,REFERENCES_ROW,,,table-4-8-thermophysical,,Y,Biofuels Handbook,,,,OK
+MeOH,REFERENCES_ROW,,,yaws-thermophysical-properties,,Y,Yaws' Thermophysical Properties of Chemicals and Hydrocarbons (Electronic Edition),,,,OK
+MeOH,REFERENCES_ROW,,,Benson1948CriticalLiquids,,Y,Critical Densities and Related Properties of Liquids,,,,OK
+DMF,REFERENCES_ROW,,,Mohammad2013,,Y,"Viscosity and Surface Tension of Binary Systems of N,N-Dimethylformamide with Alkan-1-Ols ",,,,OK
+DMF,REFERENCES_ROW,,,Komudziska2020,,Y,"Volumetric, Acoustic and Thermal Properties of Aqueous N,N-Dimethylformamide System: Effec",,,,OK
+DMF,REFERENCES_ROW,,,Cui2006,,Y,"Experimental Vapor Pressure Data and a Vapor Pressure Equation for N,N-Dimethylformamide",,,,OK
+DMF,REFERENCES_ROW,,,Bernal-Garca2008,,Y,"Densities and Viscosities of N,N-Dimethylformamide + Water at Atmospheric Pressure From 28",,,,OK
+DMF,REFERENCES_ROW,,,Alam2019TheProperties,,Y,"The Density, Dynamic Viscosity and Kinematic Viscosity of Protic and Aprotic Polar Solvent",,,,OK
+DMF,REFERENCES_ROW,,,Stairs1970,,Y,Surface Tension of Some Non-Aqueous Salt Solutions,,,,OK
+DMF,REFERENCES_ROW,,,Teja1990TheResults,,Y,The Critical Properties of Thermally Stable and Unstable Fluids. I. 1985 Results,,,,OK
+DMF,REFERENCES_ROW,,,Kahl2003,,Y,Surface Tension of Pure Liquids and Binary Liquid Mixtures,,,,OK
+DMF,REFERENCES_ROW,,,AlTuwaim2018,,Y,"Viscosities and Surface Tensions of Phenetole with N-Methyl-2-pyrrolidone, N,N-Dimethylfor",,,,OK
+DMF,REFERENCES_ROW,,,Rika2024,,Y,"Thermodynamic Study of N-Methylformamide and N,N-Dimethyl-Formamide",,,,OK
+DMF,REFERENCES_ROW,,,Boyle1958,,Y,Spectrophotometric Studies of Chelates of 8-Quinolinol in Some Water-Miscible Organic Solv,,,,OK
+DMF,REFERENCES_ROW,,,yaws-thermophysical-properties,,Y,Yaws' Thermophysical Properties of Chemicals and Hydrocarbons (Electronic Edition),,,,OK
+DMSO,REFERENCES_ROW,,,Alam2019TheProperties,,Y,"The Density, Dynamic Viscosity and Kinematic Viscosity of Protic and Aprotic Polar Solvent",,,,OK
+DMSO,REFERENCES_ROW,,,Nishimura1972,,Y,Vapor Pressure of Pure DMSO and Vapor-Liquid Equilibria in DMSO-H$_2$O System Under Isobar,,,,OK
+DMSO,REFERENCES_ROW,,,Campbell1979TheDensity,,Y,The Density and Vapour Pressure of Dimethylsulfoxide at Various Temperatures and the (Hypo,,,,OK
+DMSO,REFERENCES_ROW,,,Pruett1985,,Y,"Densities and Apparent Molar Volumes in the Binary System Dimethyl Sulfoxide–Water at 25, ",,,,OK
+DMSO,REFERENCES_ROW,,,Jakli1972,,Y,The Vapor Pressures of Dimethyl Sulfoxide and Hexadeuterodimethyl Sulfoxide from 313 to 45,,,,OK
+DMSO,REFERENCES_ROW,,,Zhao2015,,Y,"Density, Viscosity and Spectroscopic Studies of the Binary System of Ethylene Glycol + Dim",,,,OK
+DMSO,REFERENCES_ROW,,,LawrenceClever1963,,Y,Thermodynamics of Liquid Surfaces: The Surface Tension of Dimethyl Sulfoxide and Some Dime,,,,OK
+DMSO,REFERENCES_ROW,,,Harifi-Mood2017,,Y,"Density, Viscosity, and Conductivity of Choline Chloride + Ethylene Glycol as a Deep Eutec",,,,OK
+DMSO,REFERENCES_ROW,,,Geppert-Rybczyska2013,,Y,Thermodynamic Surface Properties of [BMIm][NTf$_2$] or [EMIm][NTf$_2$] Binary Mixtures wit,,,,OK
+DMSO,REFERENCES_ROW,,,Saleh2001,,Y,"Viscosities of Aqueous Solutions of Dimethylsulfoxide, 1,4-Dioxane and Tetrahydrofuran",,,,OK
+DMSO,REFERENCES_ROW,,,Stairs1970,,Y,Surface Tension of Some Non-Aqueous Salt Solutions,,,,OK
+DMSO,REFERENCES_ROW,,,NIST_DMSO,,Y,Dimethyl Sulfoxide -- Phase Change Data,,,,OK
+DMSO,REFERENCES_ROW,,,Nikitin2018Critical26-Dimethylpiperazine,,Y,"Critical Temperatures and Pressures of Caprolactam, Dimethyl Sulfoxide, 1,4-Dimethylpipera",,,,OK
+DMSO,REFERENCES_ROW,,,ThomasDouglas1946,,Y,Vapor Pressure of Methyl Sulfoxide from 20 to 50{$^{\circ}$}. Calculation of the Heat of V,,,,OK
+DMSO,REFERENCES_ROW,,,Casteel1974,,Y,"Dielectric Constants, Viscosities, and Related Physical Properties of 10 Liquid Sulfoxides",,,,OK
+DMSO,REFERENCES_ROW,,,Qian1995,,Y,Vapor Pressure of Dimethyl Sulfoxide and Water Binary System,,,,OK
+DMSO,REFERENCES_ROW,,,yaws-thermophysical-properties,,Y,Yaws' Thermophysical Properties of Chemicals and Hydrocarbons (Electronic Edition),,,,OK
+DMSO,REFERENCES_ROW,,,Lemmon2023,,Y,Thermophysical Properties of Fluid Systems,,,,OK
+DEC,REFERENCES_ROW,,,Pokorn2017,,Y,"Vapor Pressures and Thermophysical Properties of Dimethyl Carbonate, Diethyl Carbonate, an",,,,OK
+DEC,REFERENCES_ROW,,,Mansson1972,,Y,Enthalpies of Combustion and Formation of Ethyl Propionate and Diethyl Carbonate,,,,OK
+DEC,REFERENCES_ROW,,,Marrufo2011,,Y,Phase Equilibria Involved in the Extractive Distillation of Cyclohexane + Cyclohexene Usin,,,,OK
+DEC,REFERENCES_ROW,,,McKelvey1969,,Y,"Heats of Combustion, Heats of Formation and Vapor Pressures of Some Organic Carbonates: Es",,,,OK
+DEC,REFERENCES_ROW,,,Zhao2010,,Y,"Surface Tension of Diethyl Carbonate, 1,2-Dimethoxyethane and Diethyl Adipate",,,,OK
+DEC,REFERENCES_ROW,,,Yang2006,,Y,Density and Viscosity of Binary Mixtures of Diethyl Carbonate With Alcohols at (293.15 to ,,,,OK
+DEC,REFERENCES_ROW,,,Kozlova2008,,Y,Vapour Pressure and Enthalpy of Vaporization of Aliphatic Dialkyl Carbonates,,,,OK
+DEC,REFERENCES_ROW,,,Sun2017,,Y,Exploring the High-Temperature Kinetics of Diethyl Carbonate (DEC) Under Pyrolysis and Fla,,,,OK
+DEC,REFERENCES_ROW,,,Zhang2010ExperimentalKPa,,Y,Experimental Isobaric Vapor-Liquid Equilibrium for Binary Systems of Ethyl Methyl Carbonat,,,,OK
+DEC,REFERENCES_ROW,,,Song2017,,Y,"Intermolecular Interaction for Binary Mixtures of Propylene Carbonate With Acetonitrile, D",,,,OK
+DEC,REFERENCES_ROW,,,Terrado2005,,Y,Solubilities of Nonpolar Gases in Dimethyl Carbonate and Diethyl Carbonate,,,,OK
+DEC,REFERENCES_ROW,,,yaws-thermophysical-properties,,Y,Yaws' Thermophysical Properties of Chemicals and Hydrocarbons (Electronic Edition),,,,OK
