@@ -34,10 +34,13 @@ EG,Hvap,esolvs.py (manuscript reference),11,1.0,1.0,0.0,0.0,Y
 EG,Hvap,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
 EG,gamma,esolvs.py (manuscript reference),11,1.0,1.0,0.0,0.0,Y
 EG,gamma,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+Gly,rho_l,caleman paper's cited exp,2,1.0,1.0,0.03,0.02,N
 Gly,rho_l,esolvs.py (manuscript reference),5,1.0,1.0,0.08,0.06,N
 Gly,rho_v,esolvs.py (manuscript reference),5,0.0,1.0,4.41,2.93,N
 Gly,Pvap,esolvs.py (manuscript reference),5,0.0,1.0,4.32,2.86,N
+Gly,Hvap,caleman paper's cited exp,1,0.0,0.0,5.55,5.55,N
 Gly,Hvap,esolvs.py (manuscript reference),1,0.0,0.0,5.95,5.95,N
+Gly,gamma,caleman paper's cited exp,2,0.5,0.5,17.96,9.17,N
 Gly,gamma,jahn paper's cited exp,1,0.0,1.0,3.3,3.3,N
 Gly,gamma,esolvs.py (manuscript reference),5,0.0,0.6,5.99,4.2,N
 DMF,rho_l,caleman paper's cited exp,1,1.0,1.0,0.13,0.13,N

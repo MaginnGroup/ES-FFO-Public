@@ -1,0 +1,13 @@
+1: Ethylene glycol: Saturation points (at equilibrium)
+
+                                Liquid       Vapor                     
+      Temperature  Pressure     Density      Density      Heat of Vapor. Surf. Tension
+      (K)          (MPa)        (kg/m^3)     (kg/m^3)     (kJ/kg)      (mN/m)
+1     450.00       0.053184     993.42       0.88837      901.26       34.062
+2     500.00       0.23208      947.11       3.5446       845.26       29.033
+3     550.00       0.73787      893.68       10.606       781.34       23.738
+4     600.00       1.8810       829.28       26.462       701.36       18.076
+5     650.00       4.1118       745.05       60.398       588.52       11.837
+6     700.00       8.1557       602.22       150.11       376.95       4.3463
+
+

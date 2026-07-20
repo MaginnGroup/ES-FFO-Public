@@ -47,7 +47,7 @@ NON_LITERATURE = {"REFPROP", "Peng1976AState"}
 
 
 def load_bib():
-    text = open(f"../refs.bib", encoding="utf-8", errors="replace").read()
+    text = open(f"/groups/ed/group_members/Montana_Carlozo/ES-FFO/Claude_Audit/refs.bib", encoding="utf-8", errors="replace").read()
     entries = {}
     for chunk in re.split(r'\n(?=@\w+\{)', text):
         m = re.match(r'@(\w+)\{([^,]+),', chunk)
