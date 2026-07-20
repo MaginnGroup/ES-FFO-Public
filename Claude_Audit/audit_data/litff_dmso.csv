@@ -1,0 +1,21 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_l,298,K,1.08,g/cc,False,Table III (p1813),Bulk liquid density from density-profile plateau; vapor density stated =0 (not tabulated)
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_l,323,K,1.05,g/cc,False,Table III (p1813),
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_l,348,K,1.01,g/cc,False,Table III (p1813),
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_l,373,K,0.98,g/cc,False,Table III (p1813),
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_v,298,K,0,g/cc,False,text p1813,"Text: bulk vapor density calculated to be zero for all systems; not included in Table III"
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_v,323,K,0,g/cc,False,text p1813,Vapor density stated zero for all four systems
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_v,348,K,0,g/cc,False,text p1813,Vapor density stated zero for all four systems
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,rho_v,373,K,0,g/cc,False,text p1813,Vapor density stated zero for all four systems
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,gamma,298,K,33.9,mN/m,False,Table III (p1813),Reported as 33.9 +/- 3.5 mN/m; also plotted in Fig 2
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,gamma,323,K,29.6,mN/m,False,Table III (p1813),Reported as 29.6 +/- 3.5 mN/m
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,gamma,348,K,24.9,mN/m,False,Table III (p1813),Reported as 24.9 +/- 2.0 mN/m
+senapati,DMSO,P2 (Luzar-Chandler) + Benjamin flexible intramolecular,gamma,373,K,22.3,mN/m,False,Table III (p1813),Reported as 22.3 +/- 3.0 mN/m
+luzar,DMSO,P1,pressure,298,K,0.34,kbar,False,Table V (p6841),"Simulation pressure P (NOT vapor pressure); reported 0.34 +/- 0.19 kbar; not a target property but recorded for completeness"
+luzar,DMSO,P2,pressure,298,K,-0.07,kbar,False,Table V (p6841),Simulation pressure P; reported -0.07 +/- 0.26 kbar
+luzar,DMSO,RS,pressure,298,K,0.08,kbar,False,Table V (p6841),Simulation pressure P; reported 0.08 +/- 0.21 kbar
+luzar,DMSO,P1,mean_potential_energy_U,298,K,-53.96,kJ/mol,False,Table V (p6841),"Mean potential energy per mole <U>; reported -53.96 +/- 0.22; related to Hvap but not equal; NOT a direct target property"
+luzar,DMSO,P2,mean_potential_energy_U,298,K,-49.00,kJ/mol,False,Table V (p6841),<U> reported -49.00 +/- 0.29
+luzar,DMSO,RS,mean_potential_energy_U,298,K,-36.22,kJ/mol,False,Table V (p6841),<U> reported -36.22 +/- 0.26
+borin,DMSO,P2 (Luzar-Chandler),mean_potential_energy_U,298,K,-49.1,kJ/mol,False,Table I (p6414) row xD=1.00,"Pure DMSO (xD=1.00); table lists -U=49.1 so U=-49.1 kJ/mol; error +/-0.15 kJ/mol (footnote a); NOT a direct target property"
+borin,DMSO,P2 (Luzar-Chandler),pressure,298,K,-0.18,kbar,False,Table I (p6414) row xD=1.00,"Pure DMSO simulation pressure p = -0.18 +/- 0.5 kbar (NOT vapor pressure)"

@@ -1,0 +1,1103 @@
+ff,is_student,molecule,property,temperature_K,value,unit,is_digitized,qc_flag,source
+caleman:GAFF,False,MeOH,rho_l,293.15,813.0,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p17))
+caleman:OPLS/AA,False,MeOH,rho_l,293.15,782.9,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p17))
+caleman:GAFF,False,MeOH,rho_l,298.15,807.5,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p17))
+caleman:OPLS/AA,False,MeOH,rho_l,298.15,776.8,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p17))
+caleman:GAFF,False,DMSO,rho_l,298.15,1136.2,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p18))
+caleman:OPLS/AA,False,DMSO,rho_l,298.15,1101.3,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p18))
+caleman:GAFF,False,DMF,rho_l,298.15,984.2,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p19))
+caleman:OPLS/AA,False,DMF,rho_l,298.15,922.2,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p19))
+caleman:GAFF,False,DEC,rho_l,298.15,1020.9,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p21))
+caleman:OPLS/AA,False,DEC,rho_l,298.15,998.6,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p21))
+caleman:GAFF,False,Gly,rho_l,293.15,1310.2,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p19))
+caleman:OPLS/AA,False,Gly,rho_l,293.15,1259.7,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p19))
+caleman:GAFF,False,Gly,rho_l,320.0,1289.5,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p19))
+caleman:OPLS/AA,False,Gly,rho_l,320.0,1232.3,kg/m3,False,OK,litff_caleman.csv (Table S2 (SI p19))
+caleman:GAFF,False,MeOH,Hvap,293.15,1245.942572,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p25))
+caleman:OPLS/AA,False,MeOH,Hvap,293.15,1151.373283,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p25))
+caleman:GAFF,False,MeOH,Hvap,298.15,1236.579276,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p25))
+caleman:OPLS/AA,False,MeOH,Hvap,298.15,1137.32834,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p25))
+caleman:GAFF,False,DMSO,Hvap,298.15,735.952899,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p26))
+caleman:OPLS/AA,False,DMSO,Hvap,298.15,711.890439,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p26))
+caleman:GAFF,False,DMF,Hvap,298.15,719.250239,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p27))
+caleman:OPLS/AA,False,DMF,Hvap,298.15,630.455603,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p27))
+caleman:GAFF,False,Gly,Hvap,293.15,1081.550657,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p27))
+caleman:OPLS/AA,False,Gly,Hvap,293.15,1036.377457,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p27))
+caleman:GAFF,False,DEC,Hvap,298.15,514.602557,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p29))
+caleman:OPLS/AA,False,DEC,Hvap,298.15,445.780073,kJ/kg,False,OK,litff_caleman.csv (Table S3 (SI p29))
+caleman:GAFF,False,MeOH,gamma,298.15,20.6,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p33))
+caleman:OPLS/AA,False,MeOH,gamma,298.15,20.1,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p33))
+caleman:GAFF,False,DMSO,gamma,298.15,41.6,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:OPLS/AA,False,DMSO,gamma,298.15,42.4,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:GAFF,False,DMF,gamma,298.15,36.1,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:OPLS/AA,False,DMF,gamma,298.15,31.5,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:GAFF,False,Gly,gamma,293.15,74.9,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:OPLS/AA,False,Gly,gamma,293.15,63.1,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:GAFF,False,Gly,gamma,298.15,70.5,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:OPLS/AA,False,Gly,gamma,298.15,51.8,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p34))
+caleman:GAFF,False,DEC,gamma,298.15,29.2,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p36))
+caleman:OPLS/AA,False,DEC,gamma,298.15,25.0,mN/m,False,OK,litff_caleman.csv (Table S4 (SI p36))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_l,298.0,1080.0,kg/m3,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_l,323.0,1050.0,kg/m3,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_l,348.0,1010.0,kg/m3,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_l,373.0,980.0,kg/m3,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_v,298.0,0.0,kg/m3,False,OK,litff_dmso.csv (text p1813)
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_v,323.0,0.0,kg/m3,False,OK,litff_dmso.csv (text p1813)
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_v,348.0,0.0,kg/m3,False,OK,litff_dmso.csv (text p1813)
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,rho_v,373.0,0.0,kg/m3,False,OK,litff_dmso.csv (text p1813)
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,gamma,298.0,33.9,mN/m,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,gamma,323.0,29.6,mN/m,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,gamma,348.0,24.9,mN/m,False,OK,litff_dmso.csv (Table III (p1813))
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,False,DMSO,gamma,373.0,22.3,mN/m,False,OK,litff_dmso.csv (Table III (p1813))
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,325.0,0.092,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,325.0,1083.1215,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,325.0,0.001428,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,325.0,1131.625584,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,350.0,0.51,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,350.0,1066.3626,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,350.0,0.00689,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,350.0,1123.086837,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,400.0,7.22,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,400.0,1031.97582,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,400.0,0.136554,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,400.0,1063.47672,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,450.0,51.4,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,450.0,991.44411,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,450.0,1.384161,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,450.0,985.500242,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,500.0,224.5,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,500.0,944.58126,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,500.0,2.842806,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,500.0,905.751571,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,550.0,725.0,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,550.0,891.82176,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,550.0,11.427087,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,550.0,806.992106,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,600.0,1780.0,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,600.0,826.7724,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,600.0,26.25561,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,600.0,699.855002,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,650.0,3730.0,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,650.0,746.7021,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,650.0,57.60096,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,650.0,568.873852,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pvap,700.0,6780.0,kPa,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,700.0,620.7,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_v,700.0,117.933,kg/m3,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,700.0,341.549863,kJ/kg,False,OK,litff_eg.csv (Table 2 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Tc,,722.0,K,False,OK,litff_eg.csv (Table 3 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_c,,366.213,kg/m3,False,OK,litff_eg.csv (Table 3 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Pc,,8300.0,kPa,False,OK,litff_eg.csv (Table 3 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,rho_l,298.0,1076.23173,kg/m3,False,OK,litff_eg.csv (Table 4 p7431)
+huang:present model (Huang/Vrabec 2012),False,EG,Hvap,298.0,1142.25874,kJ/kg,False,OK,litff_eg.csv (Table 4 p7431)
+huang:OPLS-AA (Jorgensen),False,EG,rho_l,298.0,1048.17609,kg/m3,False,OK,litff_eg.csv (Table 4 p7431)
+huang:OPLS-AA (Jorgensen),False,EG,Hvap,298.0,953.761882,kJ/kg,False,OK,litff_eg.csv (Table 4 p7431)
+huang:modified OPLS-AA (Kony et al ref 17),False,EG,rho_l,298.0,1069.21782,kg/m3,False,OK,litff_eg.csv (Table 4 p7431)
+huang:modified OPLS-AA (Kony et al ref 17),False,EG,Hvap,298.0,1035.927179,kJ/kg,False,OK,litff_eg.csv (Table 4 p7431)
+huang:Gubskaya and Kusalik (ref 15),False,EG,rho_l,298.0,1084.23876,kg/m3,False,OK,litff_eg.csv (Table 4 p7431)
+huang:Gubskaya and Kusalik (ref 15),False,EG,Hvap,298.0,1163.202836,kJ/kg,False,OK,litff_eg.csv (Table 4 p7431)
+huang:Szefczyk and Cordeiro (ref 19),False,EG,rho_l,298.0,1111.23921,kg/m3,False,OK,litff_eg.csv (Table 4 p7431)
+huang:Szefczyk and Cordeiro (ref 19),False,EG,Hvap,298.0,1217.9797,kJ/kg,False,OK,litff_eg.csv (Table 4 p7431)
+stubbs:TraPPE-UA,False,EG,rho_v,450.0,0.95,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_l,450.0,983.7,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,Pvap,450.0,55.3,kPa,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_v,500.0,4.32,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_l,500.0,931.8,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,Pvap,500.0,272.0,kPa,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_v,550.0,9.99,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_l,550.0,854.5,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,Pvap,550.0,656.0,kPa,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_v,600.0,29.7,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_l,600.0,784.5,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,Pvap,600.0,1903.0,kPa,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_v,650.0,62.4,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,rho_l,650.0,669.6,kg/m3,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,Pvap,650.0,3899.0,kPa,False,OK,litff_eg.csv (SI Table V p45)
+stubbs:TraPPE-UA,False,EG,Tc,,718.0,K,False,OK,litff_eg.csv (Table 3 p7600)
+stubbs:TraPPE-UA,False,EG,rho_c,,340.0,kg/m3,False,OK,litff_eg.csv (Table 3 p7600)
+gm:OPLSAA-LPG,False,DEC,gamma,298.15,33.86,mN/m,False,OK,litff_gm.csv (Table 1 p4744)
+gm:CHARMM-Gui,False,DEC,gamma,298.15,36.75,mN/m,False,OK,litff_gm.csv (Table 1 p4744)
+gm:GROMOS,False,DEC,gamma,298.15,48.84,mN/m,False,OK,litff_gm.csv (Table 1 p4744)
+gm:OPLSAA-LPG,False,DEC,rho_l,298.15,998.3,kg/m3,False,OK,litff_gm.csv (Table 1 p4744)
+gm:CHARMM-Gui,False,DEC,rho_l,298.15,987.99,kg/m3,False,OK,litff_gm.csv (Table 1 p4744)
+gm:GROMOS,False,DEC,rho_l,298.15,1097.3,kg/m3,False,OK,litff_gm.csv (Table 1 p4744)
+gm:OPLSAA-LPG,False,DEC,Hvap,298.15,473.038178,kJ/kg,False,OK,litff_gm.csv (Table 1 p4744)
+gm:CHARMM-Gui,False,DEC,Hvap,298.15,517.565394,kJ/kg,False,OK,litff_gm.csv (Table 1 p4744)
+gm:GROMOS,False,DEC,Hvap,298.15,536.019639,kJ/kg,False,OK,litff_gm.csv (Table 1 p4744)
+gm:New parameters (this work; OPLSAA-LPG functional form),False,DEC,gamma,298.15,26.1,mN/m,False,OK,litff_gm.csv (Table 4 p4746)
+gm:New parameters (this work; OPLSAA-LPG functional form),False,DEC,rho_l,298.15,969.85,kg/m3,False,OK,litff_gm.csv (Table 4 p4746)
+gm:New parameters (this work; OPLSAA-LPG functional form),False,DEC,Hvap,298.15,396.004402,kJ/kg,False,OK,litff_gm.csv (Table 4 p4746)
+chen:TraPPE-UA,False,MeOH,Pvap,275.0,3.8,kPa,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_v,275.0,0.054,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_l,275.0,807.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Hvap,275.0,1279.650437,kJ/kg,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Pvap,300.0,17.0,kPa,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_v,300.0,0.23,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_l,300.0,782.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Hvap,300.0,1232.833958,kJ/kg,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Pvap,325.0,52.0,kPa,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_v,325.0,0.65,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_l,325.0,753.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Hvap,325.0,1170.411985,kJ/kg,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Pvap,375.0,354.0,kPa,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_v,375.0,4.2,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_l,375.0,692.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Hvap,375.0,1023.72035,kJ/kg,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Pvap,425.0,1570.0,kPa,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_v,425.0,21.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_l,425.0,628.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Hvap,425.0,786.516854,kJ/kg,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Pvap,475.0,4960.0,kPa,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_v,475.0,110.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,rho_l,475.0,518.0,kg/m3,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Hvap,475.0,396.379526,kJ/kg,False,OK,litff_meohA.csv (Table 2 p3097)
+chen:TraPPE-UA,False,MeOH,Tc,,502.0,K,False,OK,litff_meohA.csv (Table 3 p3098)
+chen:TraPPE-UA,False,MeOH,rho_c,,285.0,kg/m3,False,OK,litff_meohA.csv (Table 3 p3098)
+jorg:OPLS (OPLS-UA),False,MeOH,Hvap,298.15,1181.810237,kJ/kg,False,OK,litff_meohA.csv (Table V p1279)
+jorg:OPLS (OPLS-UA),False,MeOH,rho_l,298.15,759.0,kg/m3,False,OK,litff_meohA.csv (Table VI p1279)
+gsv:H1,False,MeOH,Hvap,298.0,1114.54432,kJ/kg,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,Hvap,298.0,1238.764045,kJ/kg,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,Hvap,298.0,1221.285893,kJ/kg,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,Hvap,298.0,1167.290886,kJ/kg,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,Hvap,298.0,1237.515605,kJ/kg,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,Tc,,476.8,K,False,OK,litff_meohB.csv (Table V p8)
+gsv:L1,False,MeOH,Tc,,505.0,K,False,OK,litff_meohB.csv (Table V p8)
+gsv:L2,False,MeOH,Tc,,510.4,K,False,OK,litff_meohB.csv (Table V p8)
+gsv:OPLS,False,MeOH,Tc,,490.0,K,False,OK,litff_meohB.csv (Table V p8)
+gsv:OPLS/2016,False,MeOH,Tc,,521.5,K,False,OK,litff_meohB.csv (Table V p8)
+gsv:H1,False,MeOH,Pc,,6100.0,kPa,False,OK,litff_meohB.csv (Table V p8)
+gsv:L1,False,MeOH,Pc,,7700.0,kPa,False,OK,litff_meohB.csv (Table V p8)
+gsv:L2,False,MeOH,Pc,,8000.0,kPa,False,OK,litff_meohB.csv (Table V p8)
+gsv:OPLS,False,MeOH,Pc,,7000.0,kPa,False,OK,litff_meohB.csv (Table V p8)
+gsv:OPLS/2016,False,MeOH,Pc,,7500.0,kPa,False,OK,litff_meohB.csv (Table V p8)
+gsv:H1,False,MeOH,rho_c,,225.0,kg/m3,False,OK,litff_meohB.csv (Table V p8)
+gsv:L1,False,MeOH,rho_c,,269.0,kg/m3,False,OK,litff_meohB.csv (Table V p8)
+gsv:L2,False,MeOH,rho_c,,273.0,kg/m3,False,OK,litff_meohB.csv (Table V p8)
+gsv:OPLS,False,MeOH,rho_c,,265.0,kg/m3,False,OK,litff_meohB.csv (Table V p8)
+gsv:OPLS/2016,False,MeOH,rho_c,,272.0,kg/m3,False,OK,litff_meohB.csv (Table V p8)
+gsv:H1,False,MeOH,gamma,298.0,20.1,mN/m,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,gamma,298.0,24.2,mN/m,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,gamma,298.0,26.9,mN/m,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,gamma,298.0,22.7,mN/m,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,gamma,298.0,24.7,mN/m,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,rho_l,298.0,724.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,rho_l,250.0,772.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,rho_l,200.0,821.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,rho_l,298.0,787.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,rho_l,250.0,834.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,rho_l,200.0,884.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,rho_l,298.0,787.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,rho_l,250.0,831.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,rho_l,200.0,878.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,rho_l,298.0,762.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,rho_l,250.0,810.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,rho_l,200.0,859.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,rho_l,298.0,785.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,rho_l,250.0,833.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,rho_l,200.0,884.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,rho_l,298.0,766.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,rho_l,298.0,839.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,rho_l,298.0,825.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,rho_l,298.0,895.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,rho_l,298.0,821.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,rho_l,298.0,886.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,rho_l,298.0,802.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,rho_l,298.0,873.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,rho_l,298.0,823.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,rho_l,298.0,894.0,kg/m3,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,Pvap,350.0,273.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,Pvap,450.0,3668.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,Pvap,350.0,132.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L1,False,MeOH,Pvap,450.0,2586.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,Pvap,350.0,153.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:L2,False,MeOH,Pvap,450.0,2580.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,Pvap,350.0,210.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS,False,MeOH,Pvap,450.0,3278.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,Pvap,350.0,109.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:OPLS/2016,False,MeOH,Pvap,450.0,1958.0,kPa,False,OK,litff_meohB.csv (Table VIII p10)
+gsv:H1,False,MeOH,Pvap,410.0,944.0,kPa,False,OK,litff_meohB.csv (Table IV p7)
+gsv:L2,False,MeOH,Pvap,450.0,2580.0,kPa,False,OK,litff_meohB.csv (Table IV p7)
+gsv:OPLS,False,MeOH,Pvap,410.0,1319.0,kPa,False,OK,litff_meohB.csv (Table IV p7)
+gsv:OPLS/2016,False,MeOH,Pvap,450.0,1958.0,kPa,False,OK,litff_meohB.csv (Table IV p7)
+meoh4p:OPLS-UA,False,MeOH,rho_l,298.15,762.0,kg/m3,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:OPLS-UA,False,MeOH,Hvap,298.15,1089.575531,kJ/kg,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:OPLS-UA,False,MeOH,gamma,298.15,22.7,mN/m,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:OPLS/2016,False,MeOH,rho_l,298.15,785.0,kg/m3,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:OPLS/2016,False,MeOH,Hvap,298.15,1171.972534,kJ/kg,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:OPLS/2016,False,MeOH,gamma,298.15,24.7,mN/m,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:OPLS-UA,False,MeOH,Tc,,490.0,K,False,OK,litff_meohB.csv (Table 4 p2531)
+meoh4p:OPLS/2016,False,MeOH,Tc,,521.5,K,False,OK,litff_meohB.csv (Table 4 p2531)
+meoh4p:OPLS-UA,False,MeOH,Pc,,7000.0,kPa,False,OK,litff_meohB.csv (Table 4 p2531)
+meoh4p:OPLS/2016,False,MeOH,Pc,,7500.0,kPa,False,OK,litff_meohB.csv (Table 4 p2531)
+meoh4p:OPLS-UA,False,MeOH,rho_c,,265.0,kg/m3,False,OK,litff_meohB.csv (Table 4 p2531)
+meoh4p:OPLS/2016,False,MeOH,rho_c,,272.0,kg/m3,False,OK,litff_meohB.csv (Table 4 p2531)
+meoh4p:OPLS-UA,False,MeOH,gamma,250.0,26.8,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS-UA,False,MeOH,gamma,298.0,22.7,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS-UA,False,MeOH,gamma,400.0,13.2,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS-UA,False,MeOH,gamma,450.0,8.62,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS-UA,False,MeOH,gamma,500.0,3.92,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS/2016,False,MeOH,gamma,250.0,29.15,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS/2016,False,MeOH,gamma,298.0,24.7,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS/2016,False,MeOH,gamma,400.0,15.3,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS/2016,False,MeOH,gamma,450.0,10.8,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:OPLS/2016,False,MeOH,gamma,500.0,5.8,mN/m,False,OK,litff_meohB.csv (Requested From Author)
+meoh4p:MD1,False,MeOH,gamma,250.0,28.6,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD1))"
+meoh4p:MD1,False,MeOH,gamma,298.0,23.45,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD1))"
+meoh4p:MD1,False,MeOH,gamma,400.0,14.77,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD1))"
+meoh4p:MD1,False,MeOH,gamma,450.0,9.68,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD1))"
+meoh4p:MD1,False,MeOH,gamma,475.0,7.16,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD1))"
+meoh4p:MD1,False,MeOH,gamma,500.0,4.33,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD1))"
+meoh4p:MD2,False,MeOH,gamma,250.0,27.38,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD2))"
+meoh4p:MD2,False,MeOH,gamma,298.0,22.55,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD2))"
+meoh4p:MD2,False,MeOH,gamma,400.0,13.87,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD2))"
+meoh4p:MD2,False,MeOH,gamma,450.0,9.29,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD2))"
+meoh4p:MD2,False,MeOH,gamma,475.0,6.56,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD2))"
+meoh4p:MD2,False,MeOH,gamma,500.0,3.99,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MD2))"
+meoh4p:MeOH-4P,False,MeOH,gamma,250.0,27.75,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,gamma,298.0,23.15,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,gamma,400.0,14.05,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,gamma,450.0,9.15,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,gamma,475.0,6.6,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,gamma,500.0,3.65,mN/m,False,OK,"exp_values_new.csv (SI, SI p.4 (model=MeOH-4P))"
+meoh4p:MD1,False,MeOH,Pvap,250.0,0.2,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD1))"
+meoh4p:MD1,False,MeOH,Pvap,298.0,4.6,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD1))"
+meoh4p:MD1,False,MeOH,Pvap,400.0,259.1,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD1))"
+meoh4p:MD1,False,MeOH,Pvap,450.0,1034.5,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD1))"
+meoh4p:MD1,False,MeOH,Pvap,475.0,1826.3,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD1))"
+meoh4p:MD1,False,MeOH,Pvap,500.0,3050.2,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD1))"
+meoh4p:MD2,False,MeOH,Pvap,250.0,0.3,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD2))"
+meoh4p:MD2,False,MeOH,Pvap,298.0,7.5,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD2))"
+meoh4p:MD2,False,MeOH,Pvap,400.0,195.9,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD2))"
+meoh4p:MD2,False,MeOH,Pvap,450.0,882.2,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD2))"
+meoh4p:MD2,False,MeOH,Pvap,475.0,1595.8,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD2))"
+meoh4p:MD2,False,MeOH,Pvap,500.0,2789.0,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MD2))"
+meoh4p:MeOH-4P,False,MeOH,Pvap,250.0,0.3,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,Pvap,298.0,5.1,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,Pvap,400.0,290.0,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,Pvap,450.0,1130.2,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,Pvap,475.0,2018.3,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,Pvap,500.0,3311.4,kPa,False,OK,"exp_values_new.csv (SI, SI p.5 (model=MeOH-4P))"
+meoh4p:MD1,False,MeOH,rho_l,250.0,831.1,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_v,250.0,0.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_l,298.0,781.7,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_v,298.0,0.03,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_l,400.0,675.1,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_v,400.0,3.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_l,450.0,609.6,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_v,450.0,12.5,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_l,475.0,565.1,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_v,475.0,23.5,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_l,500.0,497.1,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD1,False,MeOH,rho_v,500.0,46.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD1))"
+meoh4p:MD2,False,MeOH,rho_l,250.0,835.7,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_v,250.0,0.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_l,298.0,787.4,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_v,298.0,0.02,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_l,400.0,681.8,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_v,400.0,2.53,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_l,450.0,616.9,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_v,450.0,11.49,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_l,475.0,573.2,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_v,475.0,22.1,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_l,500.0,508.7,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MD2,False,MeOH,rho_v,500.0,41.31,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MD2))"
+meoh4p:MeOH-4P,False,MeOH,rho_l,250.0,831.338,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_v,250.0,0.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_l,298.0,781.716,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_v,298.0,0.04,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_l,400.0,672.232,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_v,400.0,3.45,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_l,450.0,605.457,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_v,450.0,13.8,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_l,475.0,556.825,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_v,475.0,26.28,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_l,500.0,462.739,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MeOH-4P,False,MeOH,rho_v,500.0,49.44,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.6 (model=MeOH-4P))"
+meoh4p:MD1,False,MeOH,Tc,,533.0,K,False,OK,"exp_values_new.csv (SI, SI p.7 (model=MD1, fit result))"
+meoh4p:MD1,False,MeOH,rho_c,,251.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.7 (model=MD1, fit result))"
+meoh4p:MD1,False,MeOH,Pc,,7600.0,kPa,False,OK,"exp_values_new.csv (SI, SI p.8 (model=MD1, fit result))"
+meoh4p:MD2,False,MeOH,Tc,,525.458,K,False,OK,"exp_values_new.csv (SI, SI p.7 (model=MD2, fit result))"
+meoh4p:MD2,False,MeOH,rho_c,,252.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.7 (model=MD2, fit result))"
+meoh4p:MD2,False,MeOH,Pc,,7479.4,kPa,False,OK,"exp_values_new.csv (SI, SI p.8 (model=MD2, fit result))"
+meoh4p:MeOH-4P,False,MeOH,Tc,,521.9,K,False,OK,"exp_values_new.csv (SI, SI p.7 (model=MeOH-4P, fit result))"
+meoh4p:MeOH-4P,False,MeOH,rho_c,,255.0,kg/m3,False,OK,"exp_values_new.csv (SI, SI p.7 (model=MeOH-4P, fit result))"
+meoh4p:MeOH-4P,False,MeOH,Pc,,8820.0,kPa,False,OK,"exp_values_new.csv (SI, SI p.8 (model=MeOH-4P, fit result))"
+meoh4p:MeOH-4P,False,MeOH,Hvap,298.15,1240.012484,kJ/kg,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:MD1,False,MeOH,Hvap,298.15,1239.700375,kJ/kg,False,OK,litff_meohB.csv (Table 3 p2530)
+meoh4p:MD2,False,MeOH,Hvap,298.15,1239.700375,kJ/kg,False,OK,litff_meohB.csv (Table 3 p2530)
+gsv:H1,False,MeOH,rho_l,281.09589,746.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,290.9589,736.21,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,299.72603,724.14,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,309.58904,713.79,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,320.54795,703.45,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,329.31507,693.1,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,340.27397,679.31,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,350.13699,668.97,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,361.09589,655.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,370.9589,641.38,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,379.72603,627.59,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,390.68493,612.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,400.54795,596.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,410.41096,579.31,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,420.27397,556.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,431.23288,534.48,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,440.0,508.62,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_l,450.9589,479.31,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,449.86301,51.72,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,441.09589,43.1,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,430.13699,34.48,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,420.27397,25.86,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,411.50685,22.41,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,401.64384,17.24,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,390.68493,13.79,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,380.82192,10.34,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,rho_v,370.9589,6.9,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,281.09589,806.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,290.9589,796.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,300.82192,787.93,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,309.58904,775.86,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,330.41096,755.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,321.64384,767.24,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,341.36986,744.83,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,350.13699,734.48,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,360.0,720.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,370.9589,708.62,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,379.72603,698.28,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,390.68493,684.48,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,400.54795,670.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,410.41096,655.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,420.27397,641.38,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,431.23288,622.41,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,441.09589,605.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,469.58904,539.66,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,460.82192,563.79,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_l,450.9589,584.48,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,469.58904,56.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,459.72603,44.83,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,449.86301,37.93,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,440.0,27.59,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,431.23288,20.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,421.36986,15.52,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,411.50685,12.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,400.54795,8.62,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L1,False,MeOH,rho_v,390.68493,5.17,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,280.0,806.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,289.86301,796.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,311.78082,777.59,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,320.54795,767.24,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,330.41096,756.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,340.27397,746.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,351.23288,736.21,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,361.09589,724.14,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,370.9589,713.79,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,380.82192,701.72,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,390.68493,689.66,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,401.64384,675.86,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,411.50685,660.34,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,421.36986,648.28,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,431.23288,632.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,440.0,615.52,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,449.86301,600.0,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,459.72603,575.86,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_l,470.68493,553.45,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,471.78082,53.45,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,461.91781,43.1,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,452.05479,32.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,441.09589,24.14,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,432.32877,20.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,421.36986,15.52,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,410.41096,12.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,400.54795,10.34,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:L2,False,MeOH,rho_v,390.68493,6.9,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,280.0,781.03,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,289.86301,770.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,299.72603,762.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,310.68493,751.72,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,320.54795,741.38,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,330.41096,729.31,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,340.27397,718.97,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,350.13699,706.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,360.0,694.83,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,370.9589,682.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,380.82192,670.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,390.68493,655.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,400.54795,641.38,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,410.41096,625.86,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,420.27397,606.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,430.13699,589.66,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,440.0,570.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,450.9589,548.28,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_l,460.82192,518.97,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,460.82192,62.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,450.9589,46.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,441.09589,37.93,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,431.23288,29.31,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,421.36986,22.41,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,410.41096,17.24,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,400.54795,12.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS,False,MeOH,rho_v,391.78082,8.62,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,281.09589,805.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,290.9589,796.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,301.91781,784.48,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,310.68493,774.14,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,320.54795,763.79,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,330.41096,753.45,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,340.27397,743.1,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,350.13699,732.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,361.09589,720.69,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,369.86301,710.34,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,380.82192,698.28,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,390.68493,686.21,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,400.54795,674.14,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,410.41096,662.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,421.36986,646.55,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,430.13699,632.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,440.0,618.97,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,461.91781,582.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,449.86301,600.0,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,470.68493,562.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_l,480.54795,541.38,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,480.54795,55.17,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,470.68493,41.38,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,460.82192,32.76,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,450.9589,24.14,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,441.09589,18.97,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,431.23288,13.79,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,421.36986,12.07,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,411.50685,6.9,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,401.64384,10.34,kg/m3,True,OK,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,rho_v,390.68493,5.17,kg/m3,True,APPROX,"digitized_litff.csv (Fig2, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,472.32824,3602.092429,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,469.46565,3266.290401,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,466.12595,2961.793233,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,462.78626,2685.682557,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,459.44656,2435.312066,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,456.10687,2208.282153,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,452.29008,1954.031955,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,448.95038,1729.03752,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,445.13359,1529.965073,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,441.31679,1387.33537,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,437.5,1227.604743,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,433.20611,1060.006359,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,429.38931,937.953324,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,420.80153,699.328218,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,412.21374,521.417042,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,402.67176,379.365525,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,387.40458,226.952373,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,392.65267,269.346912,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,382.15649,186.609871,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,376.9084,157.23951,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,371.18321,129.288997,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,365.45802,103.738176,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,359.25573,85.29793,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,353.05344,68.440872,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,346.85115,54.914651,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,340.17176,44.062108,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,333.49237,34.499685,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,330.62977,31.283481,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,327.76718,28.367105,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,324.90458,25.722605,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,322.04198,22.761037,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,318.70229,20.639159,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,316.31679,18.715091,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,312.9771,16.560166,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,309.6374,15.016509,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,306.77481,13.287453,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,303.43511,11.757604,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,300.09542,10.40379,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,296.75573,9.433906,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,293.89313,8.347734,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,290.07634,7.386619,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:H1,False,MeOH,Pvap,286.73664,6.378163,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,489.02672,4600.499603,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,486.64122,4274.917941,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,484.25573,3782.725975,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,480.91603,3515.018917,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,478.53053,3110.317799,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,475.19084,2820.361045,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,472.32824,2557.435266,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,465.64885,2002.416912,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,459.44656,1529.965073,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,452.76718,1197.929808,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,445.13359,937.953324,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,437.5,716.65187,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,429.86641,521.417042,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,412.21374,276.016373,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,402.67176,186.609871,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,392.65267,132.491724,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,387.40458,108.940317,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,382.15649,89.575351,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,376.9084,71.872246,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,371.18321,57.668447,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,365.45802,46.271684,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,353.05344,29.06981,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,359.25573,37.126841,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,346.85115,22.761037,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,340.17176,17.821404,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,333.01527,13.953777,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,330.15267,12.347211,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,327.76718,11.196152,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,324.90458,9.906986,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,321.56489,8.983416,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,318.70229,7.949112,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,315.83969,7.033892,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,312.9771,6.378163,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,309.6374,5.643758,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,306.77481,4.993965,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,303.43511,4.312165,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,300.09542,3.815647,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,296.75573,3.376333,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,293.41603,2.987599,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,290.55344,2.579718,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L1,False,MeOH,Pvap,286.73664,2.28268,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,489.50382,4600.499603,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,486.64122,4274.917941,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,483.77863,3691.286001,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,480.91603,3430.084536,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,478.53053,3110.317799,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,475.19084,2820.361045,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,471.85115,2557.435266,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,466.12595,2052.020478,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,459.44656,1606.687983,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,452.29008,1289.152347,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,445.13359,984.988717,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,437.5,771.22502,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,429.38931,575.023084,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,420.80153,408.25835,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,412.21374,304.393169,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,402.67176,216.114895,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,392.65267,149.730975,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,387.40458,126.164951,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,382.15649,101.230509,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,376.9084,83.23602,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,371.18321,66.786448,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,365.45802,53.587733,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,359.25573,44.062108,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,353.53053,34.499685,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,346.85115,27.012513,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,340.17176,21.150217,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,333.01527,16.160018,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,330.15267,14.653514,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,327.29008,12.966384,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,324.42748,11.757604,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,322.04198,10.40379,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,315.83969,8.347734,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,312.9771,7.386619,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,309.6374,6.536097,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,318.70229,9.205952,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,306.77481,5.783564,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,303.43511,5.117624,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,300.09542,4.528407,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,296.75573,4.006989,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,290.55344,3.061577,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,286.73664,2.709083,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:L2,False,MeOH,Pvap,293.41603,3.459971,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,489.50382,6021.129745,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,487.11832,5327.887973,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,484.25573,4831.200111,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,481.39313,4380.815556,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,478.53053,3972.417721,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,475.66794,3602.092429,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,472.32824,3187.334243,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,466.12595,2620.787662,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,459.44656,2102.831788,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,452.29008,1646.472148,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,445.13359,1289.152347,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,437.5,1009.388707,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,429.38931,752.589695,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,420.80153,561.12303,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,412.21374,408.25835,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,402.67176,289.857721,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,392.65267,205.79493,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,387.40458,173.40505,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,382.15649,142.58099,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,376.9084,117.236139,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,371.18321,96.396528,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,365.45802,77.346102,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,359.25573,62.060529,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,353.05344,49.795279,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,346.85115,38.988635,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,340.17176,30.527569,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,333.49237,23.902431,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,330.62977,21.674147,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,327.76718,19.178506,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,324.90458,17.390606,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,322.04198,15.388342,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,319.17939,13.953777,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,315.83969,12.347211,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,312.9771,11.196152,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,310.1145,9.906986,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,306.29771,8.766347,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,303.43511,7.757035,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,300.09542,6.863861,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,296.75573,6.073592,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,293.41603,5.374256,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,290.07634,4.755492,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS,False,MeOH,Pvap,286.73664,4.10625,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,489.50382,3691.286001,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,486.64122,3266.290401,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,483.77863,2890.197697,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,481.39313,2620.787662,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,478.05344,2376.466943,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,475.19084,2102.831788,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,471.85115,1906.797069,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,466.12595,1529.965073,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,459.44656,1197.929808,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,452.76718,937.953324,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,445.13359,734.397317,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,437.5,561.12303,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,429.38931,418.36748,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,420.80153,304.393169,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,412.21374,221.46846,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,402.67176,157.23951,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,392.65267,108.940317,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,387.88168,89.575351,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,382.15649,73.652655,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,376.9084,59.097001,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,371.18321,47.417444,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,365.45802,38.046541,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,359.25573,30.527569,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,353.05344,23.902431,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,346.85115,18.715091,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,339.69466,14.653514,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,333.49237,11.196152,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,330.62977,10.152401,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,327.76718,8.983416,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,324.42748,8.145944,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,321.56489,7.208062,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,318.70229,6.378163,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,315.83969,5.783564,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,312.9771,5.117624,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,309.6374,4.528407,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,306.77481,4.006989,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,303.43511,3.545645,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,300.09542,3.061577,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,297.23282,2.709083,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,293.41603,2.397149,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,290.55344,2.121154,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+gsv:OPLS/2016,False,MeOH,Pvap,286.73664,1.831564,kPa,True,OK,"digitized_litff.csv (Fig3, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,598.8023952,5100.15025,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,546.4480874,2119.584333,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,531.9148936,1521.215977,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,518.134715,1180.396029,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,505.0505051,971.154217,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,490.1960784,710.731896,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,473.9336493,540.840969,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,460.8294931,380.659502,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,446.4285714,262.740086,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,431.0344828,171.041339,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,416.6666667,118.056731,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,401.6064257,72.483959,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,386.1003861,40.3663,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,371.7472119,20.390626,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,355.8718861,8.984989,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,340.1360544,4.538676,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,325.732899,2.527588,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,320.5128205,2.204907,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,311.5264798,1.923402,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,309.5975232,1.613628,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,277.7777778,0.10303,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,293.255132,0.419851,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Pvap,306.7484663,1.010247,kPa,True,OK,"digitized_litff.csv (Fig4a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,Tc,,648.86598,K,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_c,,279.04,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,293.40206,970.25,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,307.42268,958.92,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,309.89691,956.09,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,328.04124,943.34,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,322.26804,944.76,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,313.19588,934.84,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,345.36082,919.26,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,361.85567,905.1,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,379.17526,889.52,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,395.6701,871.1,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,412.98969,848.44,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,430.30928,831.44,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,447.62887,815.86,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,464.94845,796.03,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,499.58763,740.79,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,516.08247,732.29,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,533.40206,703.97,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,550.72165,682.72,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,567.21649,631.73,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_l,584.53608,601.98,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,584.53608,41.08,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,568.04124,28.33,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,550.72165,21.25,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,533.40206,18.41,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,516.90722,14.16,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,500.41237,11.33,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,483.09278,5.67,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,464.94845,7.08,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,447.62887,4.25,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,430.30928,2.83,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMF,rho_v,412.98969,1.42,kg/m3,True,OK,"digitized_litff.csv (Fig4b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,526.3157895,441.031049,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,515.4639175,327.83331,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,502.5125628,249.539016,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,490.1960784,211.349948,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,478.4688995,142.878594,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,465.1162791,106.206497,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,452.4886878,85.78338,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,440.5286344,53.369813,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,429.1845494,38.284506,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,416.6666667,25.27423,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,403.2258065,16.102029,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,392.1568627,13.160834,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,378.7878788,7.625404,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,367.6470588,3.058502,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,Pvap,354.6099291,1.689961,kPa,True,OK,"digitized_litff.csv (Fig5a, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,290.95607,1048.63,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,329.19897,1015.81,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,341.60207,1004.86,kg/m3,True,APPROX,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,305.42636,1043.16,kg/m3,True,APPROX,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,320.93023,1024.92,kg/m3,True,APPROX,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,310.59432,1034.04,kg/m3,True,APPROX,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,314.72868,1028.57,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,354.00517,995.74,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,365.37468,979.33,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,379.84496,972.04,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,391.21447,957.45,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,403.61757,944.68,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,416.02067,933.74,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,427.39018,922.8,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,440.82687,911.85,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,452.19638,895.44,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,464.59948,882.67,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,477.00258,869.91,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,490.43928,858.97,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,502.84238,842.55,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,513.17829,829.79,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_l,526.61499,820.67,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_v,527.64858,9.12,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),False,DMSO,rho_v,514.21189,7.29,kg/m3,True,OK,"digitized_litff.csv (Fig5b, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,300.0,1213.03,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,319.89796,1198.37,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,349.4898,1176.87,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,379.59184,1153.42,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,399.4898,1137.79,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,419.89796,1123.13,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,439.28571,1108.47,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:BC-FF,False,Gly,rho_l,459.69388,1091.86,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,299.4898,1198.37,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,319.38776,1176.87,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,349.4898,1145.6,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,379.59184,1105.54,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,399.4898,1085.99,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,419.38776,1061.56,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,439.79592,1039.09,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:R-FF,False,Gly,rho_l,459.69388,1015.64,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,319.89796,1221.82,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,350.0,1201.3,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,379.59184,1180.78,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,400.0,1165.15,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,419.38776,1151.47,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,439.79592,1135.83,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS1-FF,False,Gly,rho_l,459.69388,1122.15,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,319.89796,1239.41,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,349.4898,1214.98,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,379.59184,1190.55,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,399.4898,1172.96,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,419.89796,1157.33,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,439.28571,1141.69,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS2-FF,False,Gly,rho_l,459.69388,1124.1,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,300.0,1239.41,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,319.89796,1216.94,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,349.4898,1189.58,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,379.59184,1162.21,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,400.0,1144.63,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,419.89796,1126.06,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,439.79592,1108.47,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+jahn:OPLS3-FF,False,Gly,rho_l,459.18367,1091.86,kg/m3,True,OK,"digitized_litff.csv (Figure 2a, manual_digitization)"
+student:GP-Optimized,True,MeOH,rho_l,200.0,889.693702,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_l,250.0,840.103732,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_l,300.0,791.751356,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_l,350.0,742.838402,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_l,400.0,688.227681,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_l,450.0,621.7305,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_l,500.0,533.242708,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_v,200.0,3e-05,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_v,250.0,0.004182,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_v,300.0,0.125938,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_v,350.0,1.246481,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_v,400.0,7.010627,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_v,450.0,27.286491,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Pvap,200.0,0.00155,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Pvap,250.0,0.264255,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Pvap,300.0,9.187636,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Pvap,350.0,91.56162,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Pvap,400.0,569.782801,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Pvap,450.0,2112.01664,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,200.0,33.33195,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,250.0,28.755617,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,300.0,24.433833,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,350.0,18.978267,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,400.0,13.762917,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,450.0,8.936117,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,gamma,500.0,2.406738,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Tc,,551.315348,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,rho_c,,275.162831,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,MeOH,Hvap,200.0,1457.789286,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,MeOH,Hvap,250.0,1396.633966,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,MeOH,Hvap,300.0,1299.724826,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,MeOH,Hvap,350.0,1155.648496,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,MeOH,Hvap,400.0,962.666785,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,MeOH,Hvap,450.0,763.883576,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:Base,True,MeOH,rho_l,200.0,892.524003,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_l,250.0,840.277238,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_l,300.0,791.15372,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_l,350.0,741.580269,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_l,400.0,690.826482,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_l,450.0,634.327362,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_l,500.0,567.007311,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_v,200.0,7.6e-05,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_v,250.0,0.001272,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_v,300.0,0.042566,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_v,350.0,0.582296,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_v,400.0,3.919658,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_v,450.0,21.34352,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Pvap,200.0,0.003925,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Pvap,250.0,0.083129,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Pvap,300.0,3.747046,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Pvap,350.0,23.115276,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Pvap,400.0,288.018081,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Pvap,450.0,1374.837207,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,200.0,32.60155,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,250.0,24.890267,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,300.0,20.575417,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,350.0,16.6418,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,400.0,12.49805,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,450.0,8.0542,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,gamma,500.0,3.599722,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Tc,,560.154188,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,rho_c,,272.519663,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,MeOH,Hvap,200.0,1571.649532,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,MeOH,Hvap,250.0,1529.567358,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,MeOH,Hvap,300.0,1401.973564,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,MeOH,Hvap,350.0,1169.870495,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,MeOH,Hvap,400.0,1007.940126,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,MeOH,Hvap,450.0,720.506524,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,rho_l,378.15,1066.494599,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,383.15,1061.633352,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,393.15,1052.001388,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,403.15,1042.135201,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,413.15,1032.041626,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,450.0,994.25011,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,500.0,938.91063,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,550.0,878.263274,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,600.0,808.198753,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,650.0,723.292332,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_l,700.0,614.896448,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,378.15,0.085324,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,383.15,0.109871,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,393.15,0.144416,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,403.15,0.282766,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,413.15,0.341115,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,450.0,1.127457,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,500.0,4.31364,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,550.0,13.113782,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,600.0,31.878442,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_v,650.0,71.841668,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,378.15,4.309509,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,383.15,5.607607,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,393.15,7.549318,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,403.15,15.121323,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,413.15,18.66245,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,450.0,66.348972,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,500.0,271.960798,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,550.0,844.833859,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,600.0,2006.948883,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Pvap,650.0,4089.087466,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,378.15,46.607817,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,383.15,46.15345,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,393.15,44.386067,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,403.15,43.875383,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,413.15,41.159183,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,450.0,36.324067,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,500.0,30.040233,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,550.0,21.490133,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,600.0,14.602467,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,650.0,8.025683,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,gamma,700.0,1.991655,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Tc,,728.856382,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,rho_c,,356.141078,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,EG,Hvap,378.15,913.194892,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,383.15,905.720963,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,393.15,893.249988,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,403.15,879.480035,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,413.15,868.486727,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,450.0,820.910441,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,500.0,751.126318,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,550.0,669.435612,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,600.0,571.639946,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,EG,Hvap,650.0,443.676841,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:Base,True,EG,rho_l,378.15,1060.159209,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,383.15,1055.020677,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,393.15,1044.998909,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,403.15,1034.95208,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,413.15,1024.502509,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,450.0,985.163853,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,500.0,927.39478,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,550.0,862.341839,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,600.0,786.496572,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,650.0,689.46796,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_l,700.0,544.629417,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,378.15,0.112918,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,383.15,0.136963,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,393.15,0.217302,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,403.15,0.297899,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,413.15,0.437333,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,450.0,1.478294,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,500.0,5.474068,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,550.0,15.369168,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,600.0,39.408755,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_v,650.0,97.646742,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,378.15,5.676848,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,383.15,6.975815,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,393.15,11.317243,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,403.15,15.88502,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,413.15,23.88257,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,450.0,86.207028,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,500.0,337.885169,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,550.0,967.825384,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,600.0,2365.038391,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Pvap,650.0,4884.661073,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,378.15,40.974067,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,383.15,41.024267,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,393.15,39.974917,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,403.15,38.411467,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,413.15,36.194683,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,450.0,32.421483,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,500.0,26.277617,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,550.0,19.262783,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,600.0,12.559283,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,650.0,5.806917,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,gamma,700.0,0.43993,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Tc,,709.022398,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,rho_c,,359.317504,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,EG,Hvap,378.15,901.440271,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,383.15,894.854369,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,393.15,882.885446,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,403.15,867.119064,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,413.15,856.408029,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,450.0,805.331434,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,500.0,728.954781,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,550.0,641.210245,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,600.0,529.656812,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,EG,Hvap,650.0,372.939114,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,Gly,rho_l,293.15,1268.999522,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,rho_l,303.15,1259.973634,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,rho_l,313.15,1249.981898,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,rho_l,323.15,1240.651628,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,rho_l,333.15,1231.089006,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,gamma,293.15,67.184333,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,gamma,303.15,62.782333,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,gamma,313.15,62.802,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,gamma,323.15,60.597,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,Gly,gamma,333.15,59.289167,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:Base,True,Gly,rho_l,293.15,1266.41007,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,rho_l,303.15,1257.050314,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,rho_l,313.15,1247.312313,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,rho_l,323.15,1237.897262,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,rho_l,333.15,1228.191762,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,gamma,293.15,64.974333,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,gamma,303.15,62.899667,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,gamma,313.15,61.695833,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,gamma,323.15,59.978333,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,Gly,gamma,333.15,59.111667,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,rho_l,308.15,942.633203,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,rho_l,313.15,937.403138,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,rho_l,318.15,932.0581,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,rho_l,323.15,926.618835,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,rho_l,328.15,921.721766,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,gamma,308.15,35.54055,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,gamma,313.15,34.808683,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,gamma,318.15,35.442317,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,gamma,323.15,33.279783,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMF,gamma,328.15,33.499733,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:Base,True,DMF,rho_l,308.15,936.493992,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,rho_l,313.15,931.332807,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,rho_l,318.15,925.912002,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,rho_l,323.15,920.744653,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,rho_l,328.15,914.989402,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,gamma,308.15,34.085067,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,gamma,313.15,33.5409,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,gamma,318.15,33.17645,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,gamma,323.15,31.472583,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMF,gamma,328.15,31.255683,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_l,313.15,1081.885117,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_l,318.15,1076.354758,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_l,323.15,1070.515968,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_l,328.15,1064.65188,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_l,333.15,1058.972894,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_v,313.15,0.024995,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_v,318.15,0.03559,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_v,323.15,0.045637,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_v,328.15,0.060117,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_v,333.15,0.081731,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Pvap,313.15,0.830557,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Pvap,318.15,1.199456,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Pvap,323.15,1.56411,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Pvap,328.15,2.090492,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Pvap,333.15,2.884992,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,gamma,313.15,41.938617,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,gamma,318.15,41.236417,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,gamma,323.15,40.275883,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,gamma,328.15,40.248217,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,gamma,333.15,39.50425,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Tc,,620.341699,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,rho_c,,364.809764,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DMSO,Hvap,318.0,779.28529,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,DMSO,Hvap,320.0,580.816267,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv)
+student:Base,True,DMSO,rho_l,313.15,1075.781587,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_l,318.15,1070.106115,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_l,323.15,1064.521917,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_l,328.15,1058.988507,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_l,333.15,1053.331636,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_v,313.15,0.013038,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_v,318.15,0.018916,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_v,323.15,0.024247,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_v,328.15,0.029226,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_v,333.15,0.040257,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Pvap,313.15,0.433795,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Pvap,318.15,0.638492,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Pvap,323.15,0.831099,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Pvap,328.15,1.017116,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Pvap,333.15,1.425641,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,gamma,313.15,42.2517,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,gamma,318.15,40.668867,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,gamma,323.15,39.39175,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,gamma,328.15,39.076167,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,gamma,333.15,38.743083,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Tc,,626.892691,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,rho_c,,362.333125,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DMSO,Hvap,318.0,819.588906,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:Base,True,DMSO,Hvap,320.0,576.858723,kJ/kg,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv)
+student:GP-Optimized,True,DEC,rho_l,273.18,1003.046432,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_l,293.16,978.24655,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_l,313.19,953.842385,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_l,333.18,928.395599,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_l,353.19,902.627607,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_v,333.18,0.378023,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_v,353.19,1.13052,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,Pvap,333.18,8.798952,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,Pvap,353.19,27.594396,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,gamma,273.18,30.178517,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,gamma,293.16,27.8927,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,gamma,313.19,24.7858,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,gamma,333.18,22.32385,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,gamma,353.19,19.392983,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,Tc,,563.374156,K,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:GP-Optimized,True,DEC,rho_c,,319.94544,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv)
+student:Base,True,DEC,rho_l,273.18,995.881383,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,rho_l,293.16,971.62604,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,rho_l,313.19,946.622273,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,rho_l,333.18,921.379749,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,rho_l,353.19,895.129884,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,rho_v,353.19,1.021039,kg/m3,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,Pvap,353.19,24.901686,kPa,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,gamma,273.18,29.717633,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,gamma,293.16,26.93065,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,gamma,313.19,23.641567,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,gamma,333.18,21.8795,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)
+student:Base,True,DEC,gamma,353.19,18.813583,mN/m,False,OK,student_ff_values.csv (Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv)

@@ -1,0 +1,68 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,325.00,K,0.000092,MPa,False,Table 2 p7431,uncertainty (5) in last digit
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,325.00,K,17.45,mol/L,False,Table 2 p7431,uncertainty (1) in last digit
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,325.00,K,0.000023,mol/L,False,Table 2 p7431,uncertainty (1) in last digit
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,325.00,K,70.24,kJ/mol,False,Table 2 p7431,uncertainty (7) in last digit
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,350.00,K,0.00051,MPa,False,Table 2 p7431,uncertainty (1)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,350.00,K,17.18,mol/L,False,Table 2 p7431,uncertainty (1)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,350.00,K,0.000111,mol/L,False,Table 2 p7431,uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,350.00,K,69.71,kJ/mol,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,400.00,K,0.00722,MPa,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,400.00,K,16.626,mol/L,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,400.00,K,0.00220,mol/L,False,Table 2 p7431,uncertainty (2)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,400.00,K,66.01,kJ/mol,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,450.00,K,0.0514,MPa,False,Table 2 p7431,uncertainty (4)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,450.00,K,15.973,mol/L,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,450.00,K,0.0223,mol/L,False,Table 2 p7431,uncertainty (2)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,450.00,K,61.17,kJ/mol,False,Table 2 p7431,uncertainty (4)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,500.00,K,0.2245,MPa,False,Table 2 p7431,uncertainty (9)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,500.00,K,15.218,mol/L,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,500.00,K,0.0458,mol/L,False,Table 2 p7431,uncertainty (2)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,500.00,K,56.22,kJ/mol,False,Table 2 p7431,uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,550.00,K,0.725,MPa,False,Table 2 p7431,uncertainty (1)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,550.00,K,14.368,mol/L,False,Table 2 p7431,uncertainty (8)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,550.00,K,0.1841,mol/L,False,Table 2 p7431,uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,550.00,K,50.09,kJ/mol,False,Table 2 p7431,uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,600.00,K,1.78,MPa,False,Table 2 p7431,uncertainty (1)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,600.00,K,13.32,mol/L,False,Table 2 p7431,uncertainty (1)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,600.00,K,0.423,mol/L,False,Table 2 p7431,uncertainty (2)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,600.00,K,43.44,kJ/mol,False,Table 2 p7431,uncertainty (4)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,650.00,K,3.73,MPa,False,Table 2 p7431,uncertainty (2)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,650.00,K,12.03,mol/L,False,Table 2 p7431,uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,650.00,K,0.928,mol/L,False,Table 2 p7431,uncertainty (5)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,650.00,K,35.31,kJ/mol,False,Table 2 p7431,uncertainty (6)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pvap,700.00,K,6.78,MPa,False,Table 2 p7431,uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,700.00,K,10.0,mol/L,False,Table 2 p7431,uncertainty (1)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_v,700.00,K,1.900,mol/L,False,Table 2 p7431,uncertainty (8)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,700.00,K,21.2,kJ/mol,False,Table 2 p7431,uncertainty (2)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Tc,,,722.0,K,False,Table 3 p7431,T_c^sim; exp value 720.00 recorded in litexp
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_c,,,5.9,mol/L,False,Table 3 p7431,rho_c^sim; exp value 5.92 recorded in litexp
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Pc,,,8.3,MPa,False,Table 3 p7431,p_c^sim; exp value 8.257 recorded in litexp
+huang,ethylene glycol,present model (Huang/Vrabec 2012),rho_l,298,K,17.339,mol/L,False,Table 4 p7431,298 K and 1 bar; uncertainty (3)
+huang,ethylene glycol,present model (Huang/Vrabec 2012),Hvap,298,K,70.90,kJ/mol,False,Table 4 p7431,298 K and 1 bar; uncertainty (2)
+huang,ethylene glycol,OPLS-AA (Jorgensen),rho_l,298,K,16.887,mol/L,False,Table 4 p7431,298 K and 1 bar; from lit refs 38 39
+huang,ethylene glycol,OPLS-AA (Jorgensen),Hvap,298,K,59.2,kJ/mol,False,Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,modified OPLS-AA (Kony et al ref 17),rho_l,298,K,17.226,mol/L,False,Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,modified OPLS-AA (Kony et al ref 17),Hvap,298,K,64.3,kJ/mol,False,Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,Gubskaya and Kusalik (ref 15),rho_l,298,K,17.468,mol/L,False,Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,Gubskaya and Kusalik (ref 15),Hvap,298,K,72.2,kJ/mol,False,Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,Szefczyk and Cordeiro (ref 19),rho_l,298,K,17.903,mol/L,False,Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,Szefczyk and Cordeiro (ref 19),Hvap,298,K,75.6,kJ/mol,False,Table 4 p7431,298 K and 1 bar
+stubbs,ethylene glycol,TraPPE-UA,rho_l,450,K,0.00095,g cm-3,False,SI Table V p45,"reads 0.00095_4 subscript uncertainty 4; likely typo, other diols same magnitude ~0.0005-0.001; transcribed exactly as printed"
+stubbs,ethylene glycol,TraPPE-UA,rho_v,450,K,0.9837,g cm-3,False,SI Table V p45,uncertainty subscript 14
+stubbs,ethylene glycol,TraPPE-UA,Pvap,450,K,55.3,kPa,False,SI Table V p45,uncertainty subscript 27
+stubbs,ethylene glycol,TraPPE-UA,rho_l,500,K,0.00432,g cm-3,False,SI Table V p45,uncertainty subscript 16
+stubbs,ethylene glycol,TraPPE-UA,rho_v,500,K,0.9318,g cm-3,False,SI Table V p45,uncertainty subscript 16
+stubbs,ethylene glycol,TraPPE-UA,Pvap,500,K,272,kPa,False,SI Table V p45,uncertainty subscript 11
+stubbs,ethylene glycol,TraPPE-UA,rho_l,550,K,0.00999,g cm-3,False,SI Table V p45,uncertainty subscript 63
+stubbs,ethylene glycol,TraPPE-UA,rho_v,550,K,0.8545,g cm-3,False,SI Table V p45,uncertainty subscript 31
+stubbs,ethylene glycol,TraPPE-UA,Pvap,550,K,656,kPa,False,SI Table V p45,uncertainty subscript 36
+stubbs,ethylene glycol,TraPPE-UA,rho_l,600,K,0.0297,g cm-3,False,SI Table V p45,uncertainty subscript 5
+stubbs,ethylene glycol,TraPPE-UA,rho_v,600,K,0.7845,g cm-3,False,SI Table V p45,uncertainty subscript 44
+stubbs,ethylene glycol,TraPPE-UA,Pvap,600,K,1903,kPa,False,SI Table V p45,uncertainty subscript 32
+stubbs,ethylene glycol,TraPPE-UA,rho_l,650,K,0.0624,g cm-3,False,SI Table V p45,uncertainty subscript 39
+stubbs,ethylene glycol,TraPPE-UA,rho_v,650,K,0.6696,g cm-3,False,SI Table V p45,uncertainty subscript 91
+stubbs,ethylene glycol,TraPPE-UA,Pvap,650,K,3899,kPa,False,SI Table V p45,uncertainty subscript 162
+stubbs,ethylene glycol,TraPPE-UA,Tc,,,718,K,False,Table 3 p7600,uncertainty subscript 3; exp 720 recorded in litexp
+stubbs,ethylene glycol,TraPPE-UA,rho_c,,,0.340,g cm-3,False,Table 3 p7600,uncertainty subscript 4; no exp rho_c reported
+stubbs,ethylene glycol,TraPPE-UA,Tb,,,468,K,False,Table 3 p7600,normal boiling point; uncertainty subscript 3; exp 470.5 in litexp

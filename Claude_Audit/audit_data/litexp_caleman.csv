@@ -1,0 +1,20 @@
+paper_tag,molecule,property,temperature,temp_unit,exp_value,value_unit,exp_source_citation,table_or_page,notes,
+caleman,MeOH,rho_l,293.15,K,791.4,g/L,"[11] Lide, D. R. CRC Handbook of Chemistry and Physics 90th edition; CRC Press: Cleveland, Ohio, 2009.",Table S2 (SI p17),molecule 10 methanol,
+caleman,MeOH,rho_l,298.15,K,787.2,g/L,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S2 (SI p17),molecule 10 methanol,
+caleman,DMSO,rho_l,298.15,K,1095.8,g/L,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S2 (SI p18),molecule 30 methylsulfinylmethane,
+caleman,DMF,rho_l,298.15,K,943.3,g/L,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S2 (SI p19),molecule 45 N,N-dimethylformamide
+caleman,Gly,rho_l,293.15,K,1261.3,g/L,"[11] Lide, D. R. CRC Handbook of Chemistry and Physics 90th edition; CRC Press: Cleveland, Ohio, 2009.",Table S2 (SI p19),molecule 50 glycerol,
+caleman,Gly,rho_l,320.00,K,1243.57,g/L,"[10] Frenkel, M.; Hong, X.; Dong, Q.; Yan, X.; Chirico, R. D. Landolt-Bornstein - Group IV Physical Chemistry, Densities of Halohydrocarbons; Springer: Berlin / Heidelberg, 2000.",Table S2 (SI p19),molecule 50 glycerol,
+caleman,DEC,rho_l,298.15,K,969.1,g/L,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S2 (SI p21),molecule 89,diethyl carbonate
+caleman,MeOH,Hvap,293.15,K,37.94,kJ/mol,"[13] Design institute for physical properties, project 801. American Institute for Chemical Engineering. http://www.knovel.com, 2010.",Table S3 (SI p25),molecule 10 methanol,
+caleman,MeOH,Hvap,298.15,K,37.43,kJ/mol,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S3 (SI p25),molecule 10 methanol,
+caleman,DMSO,Hvap,298.15,K,52.89,kJ/mol,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S3 (SI p26),molecule 30 methylsulfinylmethane,
+caleman,DMF,Hvap,298.15,K,47.57,kJ/mol,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S3 (SI p27),molecule 45 N,N-dimethylformamide
+caleman,Gly,Hvap,293.15,K,90.21,kJ/mol,"[13] Design institute for physical properties, project 801. American Institute for Chemical Engineering. http://www.knovel.com, 2010.",Table S3 (SI p27),molecule 50 glycerol,
+caleman,DEC,Hvap,298.15,K,41.1,kJ/mol,"[9] Marcus, Y. The Properties of Solvents; Wiley, 1998.",Table S3 (SI p29),molecule 89,diethyl carbonate
+caleman,MeOH,surface_tension,298.15,K,22.07,mN/m,"[11] Lide, D. R. CRC Handbook of Chemistry and Physics 90th edition; CRC Press: Cleveland, Ohio, 2009.",Table S4 (SI p33),molecule 10 methanol,
+caleman,DMSO,surface_tension,298.15,K,42.92,mN/m,"[11] Lide, D. R. CRC Handbook of Chemistry and Physics 90th edition; CRC Press: Cleveland, Ohio, 2009.",Table S4 (SI p34),molecule 30 methylsulfinylmethane,
+caleman,DMF,surface_tension,298.15,K,35.74,mN/m,"[11] Lide, D. R. CRC Handbook of Chemistry and Physics 90th edition; CRC Press: Cleveland, Ohio, 2009.",Table S4 (SI p34),molecule 45 N,N-dimethylformamide
+caleman,Gly,surface_tension,293.15,K,77.25,mN/m,"[12] Yaws, C. L. Thermophysical Properties of Chemicals and Hydrocarbons; William Andrew Inc.: Beaumont, Texas, 2008.",Table S4 (SI p34),molecule 50 glycerol,
+caleman,Gly,surface_tension,298.15,K,63.00,mN/m,"[14] Wohlfahrt, C. Surface Tension of Pure Liquids and Binary Liquid Mix; Springer Verlag, 2008",Table S4 (SI p34),molecule 50 glycerol,
+caleman,DEC,surface_tension,298.15,K,25.92,mN/m,"[14] Wohlfahrt, C. Surface Tension of Pure Liquids and Binary Liquid Mix; Springer Verlag, 2008",Table S4 (SI p36),molecule 89,diethyl carbonate

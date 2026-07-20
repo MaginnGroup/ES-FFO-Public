@@ -1,0 +1,11 @@
+paper_tag,molecule,property,temperature,temp_unit,exp_value,value_unit,exp_source_citation,table_or_page,notes
+huang,ethylene glycol,Tc,,,720.00,K,"refs 31-34 (Marchetti 1991; Ambrose & Hall 1981; Salvi & Van Hook 1990; Curme 1952)",Table 3 p7431,T_c^exp
+huang,ethylene glycol,rho_c,,,5.92,mol/L,"refs 31-34",Table 3 p7431,rho_c^exp
+huang,ethylene glycol,Pc,,,8.257,MPa,"refs 31-34",Table 3 p7431,p_c^exp
+huang,ethylene glycol,rho_l,298,K,17.888,mol/L,"DIPPR (Rowley et al 2006, ref 28)",Table 4 p7431,298 K and 1 bar; uncertainty (not given as subscript)
+huang,ethylene glycol,Hvap,298,K,66.5,kJ/mol,"DIPPR (Rowley et al 2006, ref 28)",Table 4 p7431,298 K and 1 bar
+huang,ethylene glycol,isothermal compressibility beta_T,298,K,3.41,1e-4/MPa,"Rodnikova et al 2006 (ref 40)",Table 4 p7431,298 K and 1 bar; not a target property but recorded
+huang,ethylene glycol,volume expansivity alpha_p,298,K,6.36,1e-4/K,"Huo et al 1988 (ref 41)",Table 4 p7431,298 K and 1 bar; not a target property but recorded
+huang,ethylene glycol,Pvap/rho_l/Hvap correlation,300-700,K,,,"DIPPR (Rowley et al 2006, ref 28)",text p7430,"reference correlations used for model fitting/evaluation; only figure/correlation, no tabulated exp point values per T"
+stubbs,ethylene glycol,Tc,,,720,K,"NIST WebBook (ref 59) and Kudchadker/Ambrose/Tsonopoulos 2001 (ref 60)",Table 3 p7600,uncertainty subscript 10 (i.e. 720_10)
+stubbs,ethylene glycol,Tb,,,470.5,K,"NIST WebBook (ref 59) and Kudchadker/Ambrose/Tsonopoulos 2001 (ref 60)",Table 3 p7600,normal boiling point; uncertainty subscript 5 (470.5_5)

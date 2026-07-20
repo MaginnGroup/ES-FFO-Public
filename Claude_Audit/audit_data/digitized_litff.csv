@@ -1,0 +1,559 @@
+paper,ff_model,molecule,property,temperature_K,value,unit,source_figure,method,qc_status
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,281.09589,746.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,290.9589,736.21,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,299.72603,724.14,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,309.58904,713.79,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,320.54795,703.45,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,329.31507,693.1,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,340.27397,679.31,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,350.13699,668.97,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,361.09589,655.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,370.9589,641.38,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,379.72603,627.59,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,390.68493,612.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,400.54795,596.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,410.41096,579.31,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,420.27397,556.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,431.23288,534.48,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,440,508.62,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_l,450.9589,479.31,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,449.86301,51.72,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,441.09589,43.1,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,430.13699,34.48,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,420.27397,25.86,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,411.50685,22.41,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,401.64384,17.24,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,390.68493,13.79,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,380.82192,10.34,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,370.9589,6.9,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,361.09589,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,351.23288,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,340.27397,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,330.41096,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,320.54795,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,310.68493,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,300.82192,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,289.86301,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,rho_v,280,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,281.09589,806.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,290.9589,796.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,300.82192,787.93,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,309.58904,775.86,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,330.41096,755.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,321.64384,767.24,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,341.36986,744.83,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,350.13699,734.48,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,360,720.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,370.9589,708.62,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,379.72603,698.28,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,390.68493,684.48,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,400.54795,670.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,410.41096,655.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,420.27397,641.38,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,431.23288,622.41,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,441.09589,605.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,469.58904,539.66,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,460.82192,563.79,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_l,450.9589,584.48,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,469.58904,56.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,459.72603,44.83,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,449.86301,37.93,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,440,27.59,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,431.23288,20.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,421.36986,15.52,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,411.50685,12.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,400.54795,8.62,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,390.68493,5.17,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,280,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,289.86301,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,299.72603,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,310.68493,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,320.54795,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,330.41096,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,340.27397,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,350.13699,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,360,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,369.86301,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,rho_v,380.82192,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,280,806.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,289.86301,796.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,311.78082,777.59,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,320.54795,767.24,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,330.41096,756.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,340.27397,746.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,351.23288,736.21,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,361.09589,724.14,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,370.9589,713.79,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,380.82192,701.72,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,390.68493,689.66,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,401.64384,675.86,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,411.50685,660.34,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,421.36986,648.28,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,431.23288,632.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,440,615.52,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,449.86301,600,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,459.72603,575.86,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_l,470.68493,553.45,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,471.78082,53.45,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,461.91781,43.1,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,452.05479,32.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,441.09589,24.14,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,432.32877,20.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,421.36986,15.52,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,410.41096,12.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,400.54795,10.34,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,390.68493,6.9,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,379.72603,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,369.86301,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,360,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,351.23288,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,341.36986,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,rho_v,280,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,280,781.03,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,289.86301,770.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,299.72603,762.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,310.68493,751.72,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,320.54795,741.38,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,330.41096,729.31,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,340.27397,718.97,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,350.13699,706.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,360,694.83,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,370.9589,682.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,380.82192,670.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,390.68493,655.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,400.54795,641.38,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,410.41096,625.86,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,420.27397,606.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,430.13699,589.66,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,440,570.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,450.9589,548.28,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_l,460.82192,518.97,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,460.82192,62.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,450.9589,46.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,441.09589,37.93,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,431.23288,29.31,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,421.36986,22.41,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,410.41096,17.24,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,400.54795,12.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,391.78082,8.62,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,381.91781,6.9,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,369.86301,6.9,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,361.09589,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,351.23288,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,340.27397,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,330.41096,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,320.54795,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,310.68493,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,299.72603,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,290.9589,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,rho_v,280,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,281.09589,805.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,290.9589,796.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,301.91781,784.48,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,310.68493,774.14,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,320.54795,763.79,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,330.41096,753.45,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,340.27397,743.1,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,350.13699,732.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,361.09589,720.69,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,369.86301,710.34,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,380.82192,698.28,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,390.68493,686.21,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,400.54795,674.14,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,410.41096,662.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,421.36986,646.55,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,430.13699,632.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,440,618.97,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,461.91781,582.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,449.86301,600,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,470.68493,562.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_l,480.54795,541.38,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,480.54795,55.17,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,470.68493,41.38,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,460.82192,32.76,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,450.9589,24.14,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,441.09589,18.97,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,431.23288,13.79,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,421.36986,12.07,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,411.50685,6.9,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,401.64384,10.34,kg/m3,Fig2,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,390.68493,5.17,kg/m3,Fig2,manual_digitization,APPROX
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,380.82192,5.17,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,369.86301,3.45,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,361.09589,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,351.23288,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,340.27397,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,330.41096,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,320.54795,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,310.68493,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,300.82192,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,289.86301,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,rho_v,280,1.72,kg/m3,Fig2,manual_digitization,UNRELIABLE
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,472.32824,36.02092429,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,469.46565,32.66290401,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,466.12595,29.61793233,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,462.78626,26.85682557,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,459.44656,24.35312066,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,456.10687,22.08282153,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,452.29008,19.54031955,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,448.95038,17.2903752,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,445.13359,15.29965073,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,441.31679,13.8733537,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,437.5,12.27604743,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,433.20611,10.60006359,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,429.38931,9.379533235,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,420.80153,6.993282182,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,412.21374,5.21417042,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,402.67176,3.793655249,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,387.40458,2.269523732,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,392.65267,2.693469124,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,382.15649,1.866098709,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,376.9084,1.572395103,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,371.18321,1.292889971,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,365.45802,1.03738176,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,359.25573,0.852979299,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,353.05344,0.684408717,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,346.85115,0.549146513,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,340.17176,0.440621081,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,333.49237,0.344996847,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,330.62977,0.312834807,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,327.76718,0.283671046,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,324.90458,0.257226052,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,322.04198,0.227610374,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,318.70229,0.206391588,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,316.31679,0.187150907,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,312.9771,0.165601662,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,309.6374,0.150165089,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,306.77481,0.132874527,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,303.43511,0.117576041,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,300.09542,0.104037902,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,296.75573,0.094339057,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,293.89313,0.083477345,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,290.07634,0.073866195,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,H1,MeOH,Pvap,286.73664,0.063781634,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,489.02672,46.00499603,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,486.64122,42.74917941,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,484.25573,37.82725975,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,480.91603,35.15018917,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,478.53053,31.10317799,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,475.19084,28.20361045,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,472.32824,25.57435266,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,465.64885,20.02416912,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,459.44656,15.29965073,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,452.76718,11.97929808,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,445.13359,9.379533235,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,437.5,7.166518702,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,429.86641,5.21417042,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,412.21374,2.760163729,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,402.67176,1.866098709,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,392.65267,1.324917244,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,387.40458,1.089403175,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,382.15649,0.895753514,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,376.9084,0.718722463,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,371.18321,0.576684474,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,365.45802,0.462716835,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,353.05344,0.290698102,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,359.25573,0.37126841,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,346.85115,0.227610374,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,340.17176,0.178214036,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,333.01527,0.139537765,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,330.15267,0.123472107,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,327.76718,0.111961524,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,324.90458,0.099069862,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,321.56489,0.089834158,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,318.70229,0.079491117,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,315.83969,0.07033892,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,312.9771,0.063781634,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,309.6374,0.056437582,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,306.77481,0.04993965,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,303.43511,0.043121654,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,300.09542,0.038156468,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,296.75573,0.033763329,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,293.41603,0.029875994,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,290.55344,0.025797182,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L1,MeOH,Pvap,286.73664,0.0228268,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,489.50382,46.00499603,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,486.64122,42.74917941,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,483.77863,36.91286001,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,480.91603,34.30084536,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,478.53053,31.10317799,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,475.19084,28.20361045,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,471.85115,25.57435266,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,466.12595,20.52020478,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,459.44656,16.06687983,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,452.29008,12.89152347,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,445.13359,9.849887167,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,437.5,7.712250202,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,429.38931,5.750230839,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,420.80153,4.082583505,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,412.21374,3.043931693,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,402.67176,2.161148947,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,392.65267,1.497309753,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,387.40458,1.26164951,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,382.15649,1.012305092,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,376.9084,0.832360199,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,371.18321,0.66786448,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,365.45802,0.535877333,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,359.25573,0.440621081,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,353.53053,0.344996847,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,346.85115,0.270125125,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,340.17176,0.211502174,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,333.01527,0.161600183,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,330.15267,0.146535142,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,327.29008,0.129663843,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,324.42748,0.117576041,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,322.04198,0.104037902,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,315.83969,0.083477345,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,312.9771,0.073866195,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,309.6374,0.065360969,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,318.70229,0.092059516,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,306.77481,0.057835645,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,303.43511,0.051176236,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,300.09542,0.045284068,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,296.75573,0.040069894,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,290.55344,0.030615771,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,286.73664,0.02709083,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,L2,MeOH,Pvap,293.41603,0.034599709,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,489.50382,60.21129745,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,487.11832,53.27887973,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,484.25573,48.31200111,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,481.39313,43.80815556,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,478.53053,39.72417721,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,475.66794,36.02092429,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,472.32824,31.87334243,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,466.12595,26.20787662,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,459.44656,21.02831788,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,452.29008,16.46472148,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,445.13359,12.89152347,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,437.5,10.09388707,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,429.38931,7.525896953,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,420.80153,5.611230298,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,412.21374,4.082583505,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,402.67176,2.898577212,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,392.65267,2.057949297,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,387.40458,1.734050498,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,382.15649,1.425809896,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,376.9084,1.172361394,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,371.18321,0.963965282,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,365.45802,0.773461024,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,359.25573,0.620605292,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,353.05344,0.497952793,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,346.85115,0.389886347,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,340.17176,0.305275693,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,333.49237,0.239024314,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,330.62977,0.216741474,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,327.76718,0.191785063,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,324.90458,0.173906062,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,322.04198,0.153883416,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,319.17939,0.139537765,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,315.83969,0.123472107,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,312.9771,0.111961524,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,310.1145,0.099069862,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,306.29771,0.08766347,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,303.43511,0.077570351,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,300.09542,0.068638615,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,296.75573,0.06073592,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,293.41603,0.053742562,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,290.07634,0.047554921,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS,MeOH,Pvap,286.73664,0.041062499,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,489.50382,36.91286001,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,486.64122,32.66290401,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,483.77863,28.90197697,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,481.39313,26.20787662,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,478.05344,23.76466943,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,475.19084,21.02831788,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,471.85115,19.06797069,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,466.12595,15.29965073,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,459.44656,11.97929808,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,452.76718,9.379533235,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,445.13359,7.34397317,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,437.5,5.611230298,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,429.38931,4.183674804,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,420.80153,3.043931693,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,412.21374,2.214684599,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,402.67176,1.572395103,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,392.65267,1.089403175,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,387.88168,0.895753514,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,382.15649,0.736526546,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,376.9084,0.590970014,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,371.18321,0.474174444,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,365.45802,0.380465415,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,359.25573,0.305275693,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,353.05344,0.239024314,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,346.85115,0.187150907,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,339.69466,0.146535142,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,333.49237,0.111961524,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,330.62977,0.101524006,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,327.76718,0.089834158,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,324.42748,0.081459444,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,321.56489,0.072080625,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,318.70229,0.063781634,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,315.83969,0.057835645,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,312.9771,0.051176236,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,309.6374,0.045284068,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,306.77481,0.040069894,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,303.43511,0.035456453,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,300.09542,0.030615771,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,297.23282,0.02709083,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,293.41603,0.023971492,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,290.55344,0.021211538,bar,Fig3,manual_digitization,OK
+Gonzalez-Salgado & Vega 2016 J. Chem. Phys.,OPLS/2016,MeOH,Pvap,286.73664,0.018315639,bar,Fig3,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,598.8023952,51.0015025,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,546.4480874,21.19584333,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,531.9148936,15.21215977,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,518.134715,11.80396029,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,505.0505051,9.711542174,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,490.1960784,7.107318963,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,473.9336493,5.408409695,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,460.8294931,3.806595016,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,446.4285714,2.627400864,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,431.0344828,1.710413395,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,416.6666667,1.180567309,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,401.6064257,0.724839588,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,386.1003861,0.403663,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,371.7472119,0.203906259,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,355.8718861,0.089849888,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,340.1360544,0.045386757,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,325.732899,0.025275875,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,320.5128205,0.022049069,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,311.5264798,0.019234016,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,309.5975232,0.016136284,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,277.7777778,0.0010303,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,293.255132,0.004198513,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,306.7484663,0.010102474,bar,Fig4a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Tc,648.86598,648.86598,K,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_c,648.86598,279.04,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,293.40206,970.25,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,307.42268,958.92,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,309.89691,956.09,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,328.04124,943.34,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,322.26804,944.76,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,313.19588,934.84,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,345.36082,919.26,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,361.85567,905.1,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,379.17526,889.52,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,395.6701,871.1,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,412.98969,848.44,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,430.30928,831.44,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,447.62887,815.86,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,464.94845,796.03,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,499.58763,740.79,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,516.08247,732.29,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,533.40206,703.97,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,550.72165,682.72,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,567.21649,631.73,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,584.53608,601.98,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,584.53608,41.08,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,568.04124,28.33,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,550.72165,21.25,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,533.40206,18.41,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,516.90722,14.16,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,500.41237,11.33,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,483.09278,5.67,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,464.94845,7.08,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,447.62887,4.25,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,430.30928,2.83,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,412.98969,1.42,kg/m3,Fig4b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,396.49485,1.42,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,379.17526,1.42,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,362.68041,1.42,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,346.18557,0,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,329.69072,1.42,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,322.26804,1.42,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,309.89691,1.42,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,294.2268,0,kg/m3,Fig4b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,526.3157895,4.410310491,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,515.4639175,3.278333103,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,502.5125628,2.495390158,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,490.1960784,2.113499476,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,478.4688995,1.428785943,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,465.1162791,1.062064965,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,452.4886878,0.857833798,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,440.5286344,0.533698126,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,429.1845494,0.382845063,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,416.6666667,0.252742295,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,403.2258065,0.161020288,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,392.1568627,0.131608338,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,378.7878788,0.076254038,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,367.6470588,0.030585021,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,354.6099291,0.016899607,bar,Fig5a,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,290.95607,1048.63,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,329.19897,1015.81,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,341.60207,1004.86,kg/m3,Fig5b,manual_digitization,APPROX
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,305.42636,1043.16,kg/m3,Fig5b,manual_digitization,APPROX
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,320.93023,1024.92,kg/m3,Fig5b,manual_digitization,APPROX
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,310.59432,1034.04,kg/m3,Fig5b,manual_digitization,APPROX
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,314.72868,1028.57,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,354.00517,995.74,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,365.37468,979.33,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,379.84496,972.04,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,391.21447,957.45,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,403.61757,944.68,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,416.02067,933.74,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,427.39018,922.8,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,440.82687,911.85,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,452.19638,895.44,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,464.59948,882.67,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,477.00258,869.91,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,490.43928,858.97,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,502.84238,842.55,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,513.17829,829.79,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,526.61499,820.67,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,527.64858,9.12,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,514.21189,7.29,kg/m3,Fig5b,manual_digitization,OK
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,502.84238,7.29,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,490.43928,7.29,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,478.03618,3.65,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,464.59948,3.65,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,453.22997,3.65,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,440.82687,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,429.45736,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,417.05426,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,403.61757,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,392.24806,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,379.84496,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,367.44186,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,354.00517,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,342.63566,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,330.23256,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,306.45995,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,293.02326,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+Vahid & Maginn 2015 Phys. Chem. Chem. Phys.,Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,315.76227,1.82,kg/m3,Fig5b,manual_digitization,UNRELIABLE
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,300,1213.03,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,319.89796,1198.37,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,349.4898,1176.87,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,379.59184,1153.42,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,399.4898,1137.79,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,419.89796,1123.13,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,439.28571,1108.47,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",BC-FF,Gly,rho_l,459.69388,1091.86,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,299.4898,1198.37,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,319.38776,1176.87,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,349.4898,1145.6,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,379.59184,1105.54,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,399.4898,1085.99,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,419.38776,1061.56,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,439.79592,1039.09,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",R-FF,Gly,rho_l,459.69388,1015.64,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,319.89796,1221.82,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,350,1201.3,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,379.59184,1180.78,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,400,1165.15,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,419.38776,1151.47,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,439.79592,1135.83,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS1-FF,Gly,rho_l,459.69388,1122.15,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,319.89796,1239.41,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,349.4898,1214.98,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,379.59184,1190.55,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,399.4898,1172.96,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,419.89796,1157.33,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,439.28571,1141.69,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS2-FF,Gly,rho_l,459.69388,1124.1,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,300,1239.41,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,319.89796,1216.94,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,349.4898,1189.58,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,379.59184,1162.21,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,400,1144.63,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,419.89796,1126.06,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,439.79592,1108.47,kg/m3,Figure 2a,manual_digitization,OK
+"Jahn, Akinkunmi & Giovambattista 2014 J. Phys. Chem. B",OPLS3-FF,Gly,rho_l,459.18367,1091.86,kg/m3,Figure 2a,manual_digitization,OK

@@ -1,0 +1,161 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+gsv,methanol,H1,Hvap,298,K,35.71,kJ/mol,FALSE,Table VIII p10,Delta h_u-l 298 K; no polarization correction; Table VI value 35.71 consistent
+gsv,methanol,L1,Hvap,298,K,39.69,kJ/mol,FALSE,Table VIII p10,Delta h_u-l 298 K no polarization correction
+gsv,methanol,L2,Hvap,298,K,39.13,kJ/mol,FALSE,Table VIII p10,Delta h_u-l 298 K no polarization correction
+gsv,methanol,OPLS,Hvap,298,K,37.4,kJ/mol,FALSE,Table VIII p10,Delta h_u-l 298 K no polarization correction
+gsv,methanol,OPLS/2016,Hvap,298,K,39.65,kJ/mol,FALSE,Table VIII p10,Delta h_u-l 298 K no polarization correction
+gsv,methanol,H1,Tc,,,476.8,K,FALSE,Table V p8,also Table VIII
+gsv,methanol,L1,Tc,,,505,K,FALSE,Table V p8,also Table VIII
+gsv,methanol,L2,Tc,,,510.4,K,FALSE,Table V p8,also Table VIII
+gsv,methanol,OPLS,Tc,,,490,K,FALSE,Table V p8,also Table VIII
+gsv,methanol,OPLS/2016,Tc,,,521.5,K,FALSE,Table V p8,also Table VIII
+gsv,methanol,H1,pc,,,61,bar,FALSE,Table V p8,critical pressure
+gsv,methanol,L1,pc,,,77,bar,FALSE,Table V p8,critical pressure
+gsv,methanol,L2,pc,,,80,bar,FALSE,Table V p8,critical pressure
+gsv,methanol,OPLS,pc,,,70,bar,FALSE,Table V p8,critical pressure
+gsv,methanol,OPLS/2016,pc,,,75,bar,FALSE,Table V p8,critical pressure
+gsv,methanol,H1,rho_c,,,0.225,g/cm^3,FALSE,Table V p8,critical density
+gsv,methanol,L1,rho_c,,,0.269,g/cm^3,FALSE,Table V p8,critical density
+gsv,methanol,L2,rho_c,,,0.273,g/cm^3,FALSE,Table V p8,critical density
+gsv,methanol,OPLS,rho_c,,,0.265,g/cm^3,FALSE,Table V p8,critical density
+gsv,methanol,OPLS/2016,rho_c,,,0.272,g/cm^3,FALSE,Table V p8,critical density
+gsv,methanol,H1,gamma,298,K,20.1,mN/m,FALSE,Table VIII p10,surface tension gamma_s; Table VI value 20.1
+gsv,methanol,L1,gamma,298,K,24.2,mN/m,FALSE,Table VIII p10,surface tension gamma_s
+gsv,methanol,L2,gamma,298,K,26.9,mN/m,FALSE,Table VIII p10,surface tension gamma_s
+gsv,methanol,OPLS,gamma,298,K,22.7,mN/m,FALSE,Table VIII p10,surface tension gamma_s
+gsv,methanol,OPLS/2016,gamma,298,K,24.7,mN/m,FALSE,Table VIII p10,surface tension gamma_s
+gsv,methanol,H1,rho_l,298,K,0.724,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 298K 1bar
+gsv,methanol,H1,rho_l,250,K,0.772,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 250K 1bar
+gsv,methanol,H1,rho_l,200,K,0.821,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 200K 1bar
+gsv,methanol,L1,rho_l,298,K,0.787,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 298K 1bar
+gsv,methanol,L1,rho_l,250,K,0.834,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 250K 1bar
+gsv,methanol,L1,rho_l,200,K,0.884,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 200K 1bar
+gsv,methanol,L2,rho_l,298,K,0.787,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 298K 1bar
+gsv,methanol,L2,rho_l,250,K,0.831,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 250K 1bar
+gsv,methanol,L2,rho_l,200,K,0.878,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 200K 1bar
+gsv,methanol,OPLS,rho_l,298,K,0.762,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 298K 1bar
+gsv,methanol,OPLS,rho_l,250,K,0.81,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 250K 1bar
+gsv,methanol,OPLS,rho_l,200,K,0.859,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 200K 1bar
+gsv,methanol,OPLS/2016,rho_l,298,K,0.785,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 298K 1bar
+gsv,methanol,OPLS/2016,rho_l,250,K,0.833,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 250K 1bar
+gsv,methanol,OPLS/2016,rho_l,200,K,0.884,g/cm^3,FALSE,Table VIII p10,EOS 1 bar isobar rho 200K 1bar
+gsv,methanol,H1,rho_l,298,K,0.766,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 5000 bars
+gsv,methanol,H1,rho_l,298,K,0.839,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 20000 bars
+gsv,methanol,L1,rho_l,298,K,0.825,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 5000 bars
+gsv,methanol,L1,rho_l,298,K,0.895,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 20000 bars
+gsv,methanol,L2,rho_l,298,K,0.821,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 5000 bars
+gsv,methanol,L2,rho_l,298,K,0.886,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 20000 bars
+gsv,methanol,OPLS,rho_l,298,K,0.802,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 5000 bars
+gsv,methanol,OPLS,rho_l,298,K,0.873,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 20000 bars
+gsv,methanol,OPLS/2016,rho_l,298,K,0.823,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 5000 bars
+gsv,methanol,OPLS/2016,rho_l,298,K,0.894,g/cm^3,FALSE,Table VIII p10,EOS high pressure rho 298K 20000 bars
+gsv,methanol,H1,Pvap,350,K,2.73,bar,FALSE,Table VIII p10,vapour pressure p_v 350K
+gsv,methanol,H1,Pvap,450,K,36.68,bar,FALSE,Table VIII p10,vapour pressure p_v 450K
+gsv,methanol,L1,Pvap,350,K,1.32,bar,FALSE,Table VIII p10,vapour pressure p_v 350K
+gsv,methanol,L1,Pvap,450,K,25.86,bar,FALSE,Table VIII p10,vapour pressure p_v 450K; Table IV literature 25.8 ref39
+gsv,methanol,L2,Pvap,350,K,1.53,bar,FALSE,Table VIII p10,vapour pressure p_v 350K
+gsv,methanol,L2,Pvap,450,K,25.8,bar,FALSE,Table VIII p10,vapour pressure p_v 450K; Table IV literature 25.2 ref40
+gsv,methanol,OPLS,Pvap,350,K,2.1,bar,FALSE,Table VIII p10,vapour pressure p_v 350K
+gsv,methanol,OPLS,Pvap,450,K,32.78,bar,FALSE,Table VIII p10,vapour pressure p_v 450K
+gsv,methanol,OPLS/2016,Pvap,350,K,1.09,bar,FALSE,Table VIII p10,vapour pressure p_v 350K
+gsv,methanol,OPLS/2016,Pvap,450,K,19.58,bar,FALSE,Table VIII p10,vapour pressure p_v 450K
+gsv,methanol,H1,Pvap,410,K,9.44,bar,FALSE,Table IV p7,direct coexistence this work; H1 computed at 410 K per table caption
+gsv,methanol,L2,Pvap,450,K,25.8,bar,FALSE,Table IV p7,direct coexistence this work at 450 K; literature 25.2 ref40
+gsv,methanol,OPLS,Pvap,410,K,13.19,bar,FALSE,Table IV p7,direct coexistence this work; OPLS at 410 K per caption; literature 12.86 ref72
+gsv,methanol,OPLS/2016,Pvap,450,K,19.58,bar,FALSE,Table IV p7,direct coexistence this work at 450 K
+gsv,methanol,H1,rho_l,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric liquid density vs T - figure only
+gsv,methanol,H1,rho_v,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric vapor density vs T - figure only
+gsv,methanol,L1,rho_l,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric liquid density vs T - figure only
+gsv,methanol,L1,rho_v,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric vapor density vs T - figure only
+gsv,methanol,L2,rho_l,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric liquid density vs T - figure only
+gsv,methanol,L2,rho_v,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric vapor density vs T - figure only
+gsv,methanol,OPLS,rho_l,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric liquid density vs T - figure only
+gsv,methanol,OPLS,rho_v,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric vapor density vs T - figure only
+gsv,methanol,OPLS/2016,rho_l,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric liquid density vs T - figure only
+gsv,methanol,OPLS/2016,rho_v,,,,g/cm^3,TRUE,Fig 2 p8,orthobaric vapor density vs T - figure only
+gsv,methanol,H1,Pvap,,,,bar,TRUE,Fig 3 p8,ln(p) vs 1000/T VLE curve - figure only (discrete Pvap values not tabulated except Table IV/VIII points)
+gsv,methanol,L1,Pvap,,,,bar,TRUE,Fig 3 p8,ln(p) vs 1000/T VLE curve - figure only
+gsv,methanol,L2,Pvap,,,,bar,TRUE,Fig 3 p8,ln(p) vs 1000/T VLE curve - figure only
+gsv,methanol,OPLS,Pvap,,,,bar,TRUE,Fig 3 p8,ln(p) vs 1000/T VLE curve - figure only
+gsv,methanol,OPLS/2016,Pvap,,,,bar,TRUE,Fig 3 p8,ln(p) vs 1000/T VLE curve - figure only
+gsv,methanol,H1,rho_l,,,,g/cm^3,TRUE,Fig 4 p8,density at p=1 bar vs T (175-300 K) - figure only
+gsv,methanol,L1,rho_l,,,,g/cm^3,TRUE,Fig 4 p8,density at p=1 bar vs T - figure only
+gsv,methanol,L2,rho_l,,,,g/cm^3,TRUE,Fig 4 p8,density at p=1 bar vs T - figure only
+gsv,methanol,OPLS,rho_l,,,,g/cm^3,TRUE,Fig 4 p8,density at p=1 bar vs T - figure only
+gsv,methanol,OPLS/2016,rho_l,,,,g/cm^3,TRUE,Fig 4 p8,density at p=1 bar vs T - figure only
+meoh4p,methanol,MeOH-4P,rho_l,298.15,K,786,kg/m^3,FALSE,Table 3 p2530,liquid density p=1 bar; target property
+meoh4p,methanol,MeOH-4P,Hvap,298.15,K,39.73,kJ/mol,FALSE,Table 3 p2530,Delta H_v-l includes polarization correction E_pol=3.06 kJ/mol; text p2531 gives 39.73
+meoh4p,methanol,MeOH-4P,gamma,298.15,K,23.3,mN/m,FALSE,Table 3 p2530,surface tension gamma_s
+meoh4p,methanol,MD1,rho_l,298.15,K,786,kg/m^3,FALSE,Table 3 p2530,liquid density p=1 bar
+meoh4p,methanol,MD1,Hvap,298.15,K,39.72,kJ/mol,FALSE,Table 3 p2530,Delta H_v-l includes polarization correction
+meoh4p,methanol,MD1,gamma,298.15,K,22.5,mN/m,FALSE,Table 3 p2530,surface tension
+meoh4p,methanol,MD2,rho_l,298.15,K,786,kg/m^3,FALSE,Table 3 p2530,liquid density p=1 bar
+meoh4p,methanol,MD2,Hvap,298.15,K,39.72,kJ/mol,FALSE,Table 3 p2530,Delta H_v-l includes polarization correction
+meoh4p,methanol,MD2,gamma,298.15,K,22.5,mN/m,FALSE,Table 3 p2530,surface tension
+meoh4p,methanol,OPLS-UA,rho_l,298.15,K,762,kg/m^3,FALSE,Table 3 p2530,liquid density p=1 bar
+meoh4p,methanol,OPLS-UA,Hvap,298.15,K,34.91,kJ/mol,FALSE,Table 3 p2530,Delta H_v-l includes polarization correction
+meoh4p,methanol,OPLS-UA,gamma,298.15,K,22.7,mN/m,FALSE,Table 3 p2530,surface tension
+meoh4p,methanol,OPLS/2016,rho_l,298.15,K,785,kg/m^3,FALSE,Table 3 p2530,liquid density p=1 bar
+meoh4p,methanol,OPLS/2016,Hvap,298.15,K,37.55,kJ/mol,FALSE,Table 3 p2530,Delta H_v-l includes polarization correction
+meoh4p,methanol,OPLS/2016,gamma,298.15,K,24.7,mN/m,FALSE,Table 3 p2530,surface tension
+meoh4p,methanol,L1,Tc,,,505,K,FALSE,Table 4 p2531,critical temperature; L1 included for comparison
+meoh4p,methanol,L2,Tc,,,510.4,K,FALSE,Table 4 p2531,critical temperature; L2 included for comparison
+meoh4p,methanol,MD1,Tc,,,533,K,FALSE,Table 4 p2531,critical temperature
+meoh4p,methanol,MD2,Tc,,,525.5,K,FALSE,Table 4 p2531,critical temperature
+meoh4p,methanol,OPLS-UA,Tc,,,490,K,FALSE,Table 4 p2531,critical temperature
+meoh4p,methanol,OPLS/2016,Tc,,,521.5,K,FALSE,Table 4 p2531,critical temperature
+meoh4p,methanol,MeOH-4P,Tc,,,521.9,K,FALSE,Table 4 p2531,critical temperature; text also states 521.9 K
+meoh4p,methanol,L1,pc,,,77,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,L2,pc,,,80,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,MD1,pc,,,76,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,MD2,pc,,,74.8,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,OPLS-UA,pc,,,70,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,OPLS/2016,pc,,,75,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,MeOH-4P,pc,,,88.2,bar,FALSE,Table 4 p2531,critical pressure
+meoh4p,methanol,L1,rho_c,,,269,kg/m^3,FALSE,Table 4 p2531,critical density
+meoh4p,methanol,L2,rho_c,,,273,kg/m^3,FALSE,Table 4 p2531,critical density
+meoh4p,methanol,MD1,rho_c,,,251.2,kg/m^3,FALSE,Table 4 p2531,critical density
+meoh4p,methanol,MD2,rho_c,,,252,kg/m^3,FALSE,Table 4 p2531,critical density; text states 0.252 g/cm^3
+meoh4p,methanol,OPLS-UA,rho_c,,,265,kg/m^3,FALSE,Table 4 p2531,critical density
+meoh4p,methanol,OPLS/2016,rho_c,,,272,kg/m^3,FALSE,Table 4 p2531,critical density
+meoh4p,methanol,MeOH-4P,rho_c,,,255,kg/m^3,FALSE,Table 4 p2531,critical density; text states 0.255 g/cm^3
+meoh4p,methanol,MeOH-4P,rho_l,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric liquid density vs T - figure only
+meoh4p,methanol,MeOH-4P,rho_v,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric vapor density vs T - figure only
+meoh4p,methanol,MD1,rho_l,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric liquid density vs T - figure only
+meoh4p,methanol,MD1,rho_v,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric vapor density vs T - figure only
+meoh4p,methanol,MD2,rho_l,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric liquid density vs T - figure only
+meoh4p,methanol,MD2,rho_v,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric vapor density vs T - figure only
+meoh4p,methanol,OPLS-UA,rho_l,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric liquid density vs T - figure only
+meoh4p,methanol,OPLS-UA,rho_v,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric vapor density vs T - figure only
+meoh4p,methanol,OPLS/2016,rho_l,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric liquid density vs T - figure only
+meoh4p,methanol,OPLS/2016,rho_v,,,,kg/m^3,TRUE,Fig 3 p2531,orthobaric vapor density vs T - figure only
+meoh4p,methanol,MeOH-4P,Pvap,,,,bar,TRUE,Fig 5 p2532,vapor pressure log(P/P0) vs 1000/T - figure only
+meoh4p,methanol,MD1,Pvap,,,,bar,TRUE,Fig 5 p2532,vapor pressure vs T - figure only
+meoh4p,methanol,MD2,Pvap,,,,bar,TRUE,Fig 5 p2532,vapor pressure vs T - figure only
+meoh4p,methanol,OPLS-UA,Pvap,,,,bar,TRUE,Fig 5 p2532,vapor pressure vs T - figure only
+meoh4p,methanol,OPLS/2016,Pvap,,,,bar,TRUE,Fig 5 p2532,vapor pressure vs T - figure only
+meoh4p,methanol,OPLS-UA,gamma,250,K,26.8,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS-UA,gamma,298,K,22.7,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS-UA,gamma,400,K,13.2,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS-UA,gamma,450,K,8.62,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS-UA,gamma,500,K,3.92,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD1,gamma,249.097,K,26.846,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD1,gamma,299.533,K,21.9779,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD1,gamma,399.52,K,12.901,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD1,gamma,449.956,K,8.03296,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD1,gamma,499.956,K,3.03296,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD2,gamma,250,K,27.38,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD2,gamma,300,K,22.55,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD2,gamma,400,K,13.87,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD2,gamma,450,K,9.29,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MD2,gamma,500,K,3.99,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS/2016,gamma,250,K,29.15,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS/2016,gamma,298,K,24.7,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS/2016,gamma,400,K,15.3,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS/2016,gamma,450,K,10.8,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,OPLS/2016,gamma,500,K,5.8,mN/m,FALSE,Requested From Author,surface tension
+meoh4p,methanol,MeOH-4P,gamma,250,K,27.9,mN/m,FALSE,Requested From Author,
+meoh4p,methanol,MeOH-4P,gamma,298,K,23.2,mN/m,FALSE,Requested From Author,
+meoh4p,methanol,MeOH-4P,gamma,400,K,14.15,mN/m,FALSE,Requested From Author,
+meoh4p,methanol,MeOH-4P,gamma,450,K,9.6,mN/m,FALSE,Requested From Author,
+meoh4p,methanol,MeOH-4P,gamma,500,K,4.6,mN/m,FALSE,Requested From Author,

@@ -1,0 +1,169 @@
+molecule,ff,property,method,mapd,mae,mse,mpd,n_points,notes
+MeOH,GP-Optimized,rho_l,raw_replicates,3.1496735379586576,17.63857669822695,789.0193736805895,3.1496735379586576,20,n=20 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,GP-Optimized,rho_l,per_T_mean,3.8614438546208607,20.689725791324058,1069.24620524319,3.8614438546208603,7,n=7 temperature points (of 7 in student_ff_values.csv)
+MeOH,GP-Optimized,rho_v,raw_replicates,42.66034099309601,1.0092958555241753,2.9346256936103483,-42.660340993096,18,n=18 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,GP-Optimized,rho_v,per_T_mean,42.66034099309601,1.009295855524176,2.6638622647275034,-42.66034099309601,6,n=6 temperature points (of 7 in student_ff_values.csv)
+MeOH,GP-Optimized,Pvap,raw_replicates,46.57966024609908,1.1924064883200989,4.057445853506034,-46.57966024609908,18,n=18 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,GP-Optimized,Pvap,per_T_mean,46.579660246099166,1.192406488320099,3.8769419215548298,-46.579660246099166,6,n=6 temperature points (of 7 in student_ff_values.csv)
+MeOH,GP-Optimized,gamma,raw_replicates,18.4566848303393,1.641693750000001,3.2435617121412528,18.456684830339295,20,n=20 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,GP-Optimized,gamma,per_T_mean,22.00942052630849,1.6187625000000005,2.943176660161213,22.009420526308492,7,n=7 temperature points (of 7 in student_ff_values.csv)
+MeOH,GP-Optimized,Tc,single_value,7.573726405402873,38.81534782768972,1506.631226984537,7.573726405402873,1,single fitted critical-point value
+MeOH,GP-Optimized,rho_c,single_value,0.48086552615712197,1.3168310087602322,1.7340439056324908,0.48086552615712197,1,single fitted critical-point value
+MeOH,GP-Optimized,Hvap,direct_sim_grid_raw_replicates,8.3873880897018,97.76154449616729,13535.145916898486,8.372066616059634,18,n=18 raw rows where expt_Hvap dict key coincided with a simulated T
+MeOH,GP-Optimized,Hvap,direct_sim_grid_per_T_mean,8.37206661605963,97.61682245258542,13246.384928516736,8.372066616059628,6,n=6 simulated temperatures with a coinciding expt_Hvap key
+MeOH,GP-Optimized,Hvap,CC_expt_grid_reimplemented,8.37206661605963,97.61682245258542,13246.384928516736,8.372066616059628,6,"independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'direct': 6, 'skipped': 1}"
+MeOH,GP-Optimized,Hvap,CC_vs_repo_crosscheck,nan,4.547473508864641e-13,nan,nan,6,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 6 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+MeOH,Base,rho_l,raw_replicates,5.29769889601969,27.8480548901626,2133.4202010965128,5.29769889601969,21,n=21 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,Base,rho_l,per_T_mean,5.297698896019691,27.84805489016261,2133.343207298011,5.29769889601969,7,n=7 temperature points (of 7 in student_ff_values.csv)
+MeOH,Base,rho_v,raw_replicates,60.59371626217529,2.640022997574773,19.287183523444224,-60.59371626217527,18,n=18 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,Base,rho_v,per_T_mean,60.59371626217537,2.640022997574773,19.16416854628842,-60.59371626217537,6,n=6 temperature points (of 7 in student_ff_values.csv)
+MeOH,Base,Pvap,raw_replicates,66.61981630343901,3.0140895528403786,27.05106524069081,-66.619816303439,18,n=18 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,Base,Pvap,per_T_mean,66.61981630343908,3.0140895528403786,27.01109887146316,-66.61981630343907,6,n=6 temperature points (of 7 in student_ff_values.csv)
+MeOH,Base,gamma,raw_replicates,33.17117670876567,1.5354959523809524,3.43143652807262,25.746812390938057,21,n=21 raw replicate rows (of 21 total rows in ms_data.csv)
+MeOH,Base,gamma,per_T_mean,31.86741325681659,1.195119761904763,1.765631217789288,25.746812390938057,7,n=7 temperature points (of 7 in student_ff_values.csv)
+MeOH,Base,Tc,single_value,9.298378159554463,47.65418806771663,2270.921640393306,9.298378159554463,1,single fitted critical-point value
+MeOH,Base,rho_c,single_value,0.4843368759485234,1.3263371613099935,1.7591702654718515,-0.4843368759485234,1,single fitted critical-point value
+MeOH,Base,Hvap,direct_sim_grid_raw_replicates,14.111702121314778,166.0963382139703,41957.385800276235,13.139845230225939,18,n=18 raw rows where expt_Hvap dict key coincided with a simulated T
+MeOH,Base,Hvap,direct_sim_grid_per_T_mean,13.982365464022628,164.70475855696745,39169.60639175159,13.139845230225939,6,n=6 simulated temperatures with a coinciding expt_Hvap key
+MeOH,Base,Hvap,CC_expt_grid_reimplemented,13.982365464022628,164.70475855696745,39169.60639175159,13.139845230225939,6,"independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'direct': 6, 'skipped': 1}"
+MeOH,Base,Hvap,CC_vs_repo_crosscheck,nan,2.2737367544323206e-13,nan,nan,6,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 6 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+EG,GP-Optimized,rho_l,raw_replicates,1.4365544087795419,12.533430507383907,189.80103077423206,-0.02766732968639569,33,n=33 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,GP-Optimized,rho_l,per_T_mean,1.4365544087795423,12.533430507383907,189.77486090002677,-0.027667329686398047,11,n=11 temperature points (of 11 in student_ff_values.csv)
+EG,GP-Optimized,rho_v,raw_replicates,37.94920138190039,2.070227388010854,17.217210984326634,37.94920138190039,30,n=30 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,GP-Optimized,rho_v,per_T_mean,37.949201381900366,2.0702273880108537,16.726050195209154,37.949201381900366,10,n=10 temperature points (of 11 in student_ff_values.csv)
+EG,GP-Optimized,Pvap,raw_replicates,32.82834866840953,0.38870974482213966,0.3803034838221656,32.56472286071298,30,n=30 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,GP-Optimized,Pvap,per_T_mean,32.67519775522387,0.32573715233847284,0.29660709593643986,32.56472286071294,10,n=10 temperature points (of 11 in student_ff_values.csv)
+EG,GP-Optimized,gamma,raw_replicates,17.127572478365266,3.6521419696969706,15.93844631644319,-3.7924169776484593,33,n=33 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,GP-Optimized,gamma,per_T_mean,17.127572478365263,3.6521419696969697,15.60734719622954,-3.792416977648462,11,n=11 temperature points (of 11 in student_ff_values.csv)
+EG,GP-Optimized,Tc,single_value,1.2863232007714083,9.256381752751054,85.68060315266267,1.2863232007714083,1,single fitted critical-point value
+EG,GP-Optimized,rho_c,single_value,9.133892021997504,35.79942206047713,1281.5986198641765,-9.133892021997504,1,single fitted critical-point value
+EG,GP-Optimized,Hvap,direct_sim_grid_raw_replicates,11.317633637117165,90.35332367512778,8918.721659143672,-11.317633637117165,30,n=30 raw rows where expt_Hvap dict key coincided with a simulated T
+EG,GP-Optimized,Hvap,direct_sim_grid_per_T_mean,11.317633637117163,90.35332367512777,8917.212914531865,-11.317633637117163,10,n=10 simulated temperatures with a coinciding expt_Hvap key
+EG,GP-Optimized,Hvap,CC_expt_grid_reimplemented,11.317633637117163,90.35332367512777,8917.212914531865,-11.317633637117163,10,"independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'direct': 10, 'skipped': 1}"
+EG,GP-Optimized,Hvap,CC_vs_repo_crosscheck,nan,1.1368683772161603e-13,nan,nan,10,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 10 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+EG,Base,rho_l,raw_replicates,2.8021412070009704,21.681723953277935,894.5781937150055,-2.3981629096563126,33,n=33 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,Base,rho_l,per_T_mean,2.802141207000972,21.681723953277956,893.432789068138,-2.398162909656312,11,n=11 temperature points (of 11 in student_ff_values.csv)
+EG,Base,rho_v,raw_replicates,75.22148609746434,5.804323358214279,161.60536536799682,75.22148609746431,30,n=30 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,Base,rho_v,per_T_mean,75.22148609746431,5.804323358214279,158.19213217571598,75.2214860974643,10,n=10 temperature points (of 11 in student_ff_values.csv)
+EG,Base,Pvap,raw_replicates,65.03193207909436,1.6552364416809664,9.093037215399688,65.03193207909437,30,n=30 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,Base,Pvap,per_T_mean,65.03193207909433,1.6552364416809664,8.969825186251702,65.03193207909433,10,n=10 temperature points (of 11 in student_ff_values.csv)
+EG,Base,gamma,raw_replicates,19.436500061833016,2.541371484848485,10.735549832514806,-18.74645123430361,33,n=33 raw replicate rows (of 33 total rows in ms_data.csv)
+EG,Base,gamma,per_T_mean,19.213371811419595,2.451671484848487,10.451886465569512,-18.746451234303617,11,n=11 temperature points (of 11 in student_ff_values.csv)
+EG,Base,Tc,single_value,1.4699280647921769,10.577602354244505,111.88567156451889,-1.4699280647921769,1,single fitted critical-point value
+EG,Base,rho_c,single_value,8.323456282395387,32.62299617050189,1064.2598791405812,-8.323456282395387,1,single fitted critical-point value
+EG,Base,Hvap,direct_sim_grid_raw_replicates,14.512740141258812,113.96554366944852,15046.097106150986,-14.512740141258812,30,n=30 raw rows where expt_Hvap dict key coincided with a simulated T
+EG,Base,Hvap,direct_sim_grid_per_T_mean,14.512740141258812,113.96554366944846,15039.547096925253,-14.512740141258812,10,n=10 simulated temperatures with a coinciding expt_Hvap key
+EG,Base,Hvap,CC_expt_grid_reimplemented,14.512740141258812,113.96554366944846,15039.547096925253,-14.512740141258812,10,"independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'direct': 10, 'skipped': 1}"
+EG,Base,Hvap,CC_vs_repo_crosscheck,nan,2.2737367544323206e-13,nan,nan,10,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 10 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+Gly,GP-Optimized,rho_l,raw_replicates,0.318304721192726,3.9828838393029247,22.231203833518972,0.08701396254657003,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,GP-Optimized,rho_l,per_T_mean,0.3183047211927271,3.98288383930294,22.187275525587506,0.08701396254658095,5,n=5 temperature points (of 5 in student_ff_values.csv)
+Gly,GP-Optimized,rho_v,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,GP-Optimized,rho_v,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+Gly,GP-Optimized,Pvap,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,GP-Optimized,Pvap,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+Gly,GP-Optimized,gamma,raw_replicates,2.758666126255653,1.7183666666666673,6.109612116666669,1.110887713743826,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,GP-Optimized,gamma,per_T_mean,2.24073491361036,1.3964999999999974,3.8380575833333213,1.1108877137438171,5,n=5 temperature points (of 5 in student_ff_values.csv)
+Gly,GP-Optimized,Tc,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+Gly,GP-Optimized,rho_c,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+Gly,GP-Optimized,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+Gly,GP-Optimized,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+Gly,GP-Optimized,Hvap,CC_expt_grid_reimplemented,nan,nan,nan,nan,0,independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 1}
+Gly,GP-Optimized,Hvap,CC_vs_repo_crosscheck,nan,nan,nan,nan,0,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 0 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+Gly,Base,rho_l,raw_replicates,0.34917978230736746,4.351809416858335,24.23952084660215,-0.13455010940540554,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,Base,rho_l,per_T_mean,0.3491797823073686,4.35180941685835,24.216439315063678,-0.13455010940540188,5,n=5 temperature points (of 5 in student_ff_values.csv)
+Gly,Base,rho_v,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,Base,rho_v,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+Gly,Base,Pvap,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,Base,Pvap,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+Gly,Base,gamma,raw_replicates,2.333260838314121,1.4448333333333314,3.435843149999995,-0.16999607459556124,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+Gly,Base,gamma,per_T_mean,1.6784621506923816,1.0376333333333307,1.4081830277777747,-0.1699960745955587,5,n=5 temperature points (of 5 in student_ff_values.csv)
+Gly,Base,Tc,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+Gly,Base,rho_c,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+Gly,Base,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+Gly,Base,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+Gly,Base,Hvap,CC_expt_grid_reimplemented,nan,nan,nan,nan,0,independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 1}
+Gly,Base,Hvap,CC_vs_repo_crosscheck,nan,nan,nan,nan,0,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 0 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+DMF,GP-Optimized,rho_l,raw_replicates,0.0635001287343961,0.5930454056658846,0.4461660830665498,0.01744328630657271,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,GP-Optimized,rho_l,per_T_mean,0.06068045900309995,0.5667677755720433,0.41588476105804134,0.017443286306575198,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMF,GP-Optimized,rho_v,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,GP-Optimized,rho_v,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+DMF,GP-Optimized,Pvap,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,GP-Optimized,Pvap,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+DMF,GP-Optimized,gamma,raw_replicates,3.625021747150634,1.2050133333333355,2.0218844690000055,3.6250217471506336,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,GP-Optimized,gamma,per_T_mean,3.6250217471506363,1.2050133333333364,1.737711464222229,3.625021747150636,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMF,GP-Optimized,Tc,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+DMF,GP-Optimized,rho_c,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+DMF,GP-Optimized,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+DMF,GP-Optimized,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+DMF,GP-Optimized,Hvap,CC_expt_grid_reimplemented,nan,nan,nan,nan,0,independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 1}
+DMF,GP-Optimized,Hvap,CC_vs_repo_crosscheck,nan,nan,nan,nan,0,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 0 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+DMF,Base,rho_l,raw_replicates,0.6471854346332396,6.025429029560072,36.92666009341074,-0.6471854346332396,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,Base,rho_l,per_T_mean,0.6471854346332364,6.0254290295600414,36.883448306523334,-0.6471854346332364,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMF,Base,rho_v,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,Base,rho_v,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+DMF,Base,Pvap,raw_replicates,nan,nan,nan,nan,0,n=0 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,Base,Pvap,per_T_mean,nan,nan,nan,nan,0,n=0 temperature points (of 5 in student_ff_values.csv)
+DMF,Base,gamma,raw_replicates,2.1635976124026386,0.7143966666666667,0.7194602468333334,-1.8299294629048248,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMF,Base,gamma,per_T_mean,1.8299294629048188,0.6030633333333313,0.5128688781666648,-1.829929462904819,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMF,Base,Tc,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+DMF,Base,rho_c,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+DMF,Base,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+DMF,Base,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+DMF,Base,Hvap,CC_expt_grid_reimplemented,nan,nan,nan,nan,0,independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 1}
+DMF,Base,Hvap,CC_vs_repo_crosscheck,nan,nan,nan,nan,0,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 0 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+DMSO,GP-Optimized,rho_l,raw_replicates,0.09015617151153668,0.9662137853192386,1.1896319626391327,0.02478212483854841,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,GP-Optimized,rho_l,per_T_mean,0.09015617151153525,0.9662137853192234,1.1686683028710427,0.024782124838546984,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,GP-Optimized,rho_v,raw_replicates,289.1554051153257,0.03767479445791181,0.0016544200160368199,289.1554051153257,14,n=14 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,GP-Optimized,rho_v,per_T_mean,289.8826332497733,0.03694275720530518,0.0015871087270578766,289.88263324977333,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,GP-Optimized,Pvap,raw_replicates,287.79947733358847,0.01301574972493967,0.00020015824510314674,287.79947733358847,14,n=14 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,GP-Optimized,Pvap,per_T_mean,288.5020644718068,0.012746927293338178,0.00019165114491692228,288.5020644718068,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,GP-Optimized,gamma,raw_replicates,1.6487824010085348,0.6605233333333355,0.5043247298333364,1.4619226664768497,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,GP-Optimized,gamma,per_T_mean,1.4619226664768523,0.5856766666666701,0.3809157220555598,1.4619226664768523,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,GP-Optimized,Tc,single_value,13.601434703293386,97.6583011696465,9537.14378734138,-13.601434703293386,1,single fitted critical-point value
+DMSO,GP-Optimized,rho_c,single_value,0.3252009727261197,1.190235560177598,1.4166606887112805,-0.3252009727261197,1,single fitted critical-point value
+DMSO,GP-Optimized,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+DMSO,GP-Optimized,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+DMSO,GP-Optimized,Hvap,CC_expt_grid_reimplemented,14.544474359965815,96.67501166707001,9594.854189800844,2.3184606582571616,2,"independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 3, 'estimated': 2}"
+DMSO,GP-Optimized,Hvap,CC_vs_repo_crosscheck,nan,4.774847184307873e-12,nan,nan,2,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 2 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+DMSO,Base,rho_l,raw_replicates,0.5292257433329464,5.65804763550312,32.710600172833246,-0.5292257433329464,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,Base,rho_l,per_T_mean,0.5292257433329478,5.658047635503135,32.70324504958018,-0.5292257433329477,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,Base,rho_v,raw_replicates,99.84647717107627,0.012465590293081185,0.0001763841559209677,99.84647717107623,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,Base,rho_v,per_T_mean,99.8464771710758,0.012465590293081141,0.000175095976131111,99.84647717107582,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,Base,Pvap,raw_replicates,99.41792793269062,0.004299999825746586,2.1298902743846403e-05,99.41792793269062,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,Base,Pvap,per_T_mean,99.41792793268866,0.00429999982574652,2.1126498725045942e-05,99.41792793268867,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,Base,gamma,raw_replicates,1.4780434427573426,0.5950400000000002,0.5203270826666666,-0.09189765508262275,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DMSO,Base,gamma,per_T_mean,1.153693366334851,0.46591333333333296,0.34813052100000097,-0.0918976550826226,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DMSO,Base,Tc,single_value,12.689040302103601,91.10730936910386,8300.5418204776,-12.689040302103601,1,single fitted critical-point value
+DMSO,Base,rho_c,single_value,1.0018784800111422,3.666875236840781,13.445974002556133,-1.0018784800111422,1,single fitted critical-point value
+DMSO,Base,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+DMSO,Base,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+DMSO,Base,Hvap,CC_expt_grid_reimplemented,17.865508891731274,118.80559108151886,15267.120744486307,5.041424233195295,2,"independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 3, 'estimated': 2}"
+DMSO,Base,Hvap,CC_vs_repo_crosscheck,nan,8.753886504564434e-12,nan,nan,2,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 2 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+DEC,GP-Optimized,rho_l,raw_replicates,0.2736939521934044,2.6224321290363832,9.176111667523868,0.08128491501695422,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,GP-Optimized,rho_l,per_T_mean,0.27369395219339726,2.622432129036315,9.151494104560756,0.08128491501694875,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DEC,GP-Optimized,rho_v,raw_replicates,363.18606588615495,0.5408218280616,0.43203500695445846,363.186065886155,5,n=5 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,GP-Optimized,rho_v,per_T_mean,400.87859011768,0.6117714544665833,0.5001105496753266,400.87859011768,2,n=2 temperature points (of 5 in student_ff_values.csv)
+DEC,GP-Optimized,Pvap,raw_replicates,30.963772808043245,0.042045419928140024,0.0023164258026610015,6.26919228623033,5,n=5 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,GP-Optimized,Pvap,per_T_mean,16.14694602816071,0.031294723236041655,0.0016057725378963155,9.498581491862424,2,n=2 temperature points (of 5 in student_ff_values.csv)
+DEC,GP-Optimized,gamma,raw_replicates,3.1073897058445312,0.7669033333333329,0.7906890241666665,0.8519533045513508,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,GP-Optimized,gamma,per_T_mean,2.585988252689008,0.6480366666666655,0.5780489039444444,0.8519533045513479,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DEC,GP-Optimized,Tc,single_value,2.1919868573009933,12.625844298053721,159.41194423869567,-2.1919868573009933,1,single fitted critical-point value
+DEC,GP-Optimized,rho_c,single_value,6.2897779693187035,21.474559942847918,461.15672473896836,-6.2897779693187035,1,single fitted critical-point value
+DEC,GP-Optimized,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+DEC,GP-Optimized,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+DEC,GP-Optimized,Hvap,CC_expt_grid_reimplemented,nan,nan,nan,nan,0,independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 8}
+DEC,GP-Optimized,Hvap,CC_vs_repo_crosscheck,nan,nan,nan,nan,0,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 0 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"
+DEC,Base,rho_l,raw_replicates,0.6660682828479826,6.232134119984858,48.200584012918625,-0.6660682828479825,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,Base,rho_l,per_T_mean,0.6660682828479895,6.232134119984925,48.1789147688602,-0.6660682828479895,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DEC,Base,rho_v,raw_replicates,522.584588307622,0.8570387248245,0.8115112997015519,522.584588307622,2,n=2 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,Base,rho_v,per_T_mean,522.584588307622,0.8570387248245,0.7345153758488051,522.584588307622,1,n=1 temperature points (of 5 in student_ff_values.csv)
+DEC,Base,Pvap,raw_replicates,30.378791269732865,0.06671820517450001,0.0053154353052092705,13.384811520983874,2,n=2 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,Base,Pvap,per_T_mean,13.384811520983867,0.02939585691049998,0.0008641164035025894,13.384811520983867,1,n=1 temperature points (of 5 in student_ff_values.csv)
+DEC,Base,gamma,raw_replicates,3.934801835148691,0.9029066666666655,1.2842029509999975,-2.0861404376005015,15,n=15 raw replicate rows (of 15 total rows in ms_data.csv)
+DEC,Base,gamma,per_T_mean,2.990227195591378,0.6827266666666667,0.6429985803333331,-2.0861404376005077,5,n=5 temperature points (of 5 in student_ff_values.csv)
+DEC,Base,Tc,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+DEC,Base,rho_c,single_value,nan,nan,nan,nan,0,sim value is NaN (critical-point fit failed -- no vapor-phase sim data)
+DEC,Base,Hvap,direct_sim_grid_raw_replicates,nan,nan,nan,nan,0,n=0 raw rows where expt_Hvap dict key coincided with a simulated T
+DEC,Base,Hvap,direct_sim_grid_per_T_mean,nan,nan,nan,nan,0,n=0 simulated temperatures with a coinciding expt_Hvap key
+DEC,Base,Hvap,CC_expt_grid_reimplemented,nan,nan,nan,nan,0,independent reimpl. of Clausius-Clapeyron bracket search; method counts: {'skipped': 8}
+DEC,Base,Hvap,CC_vs_repo_crosscheck,nan,nan,nan,nan,0,"max abs diff (kJ/kg) between my reimplemented CC estimate and the repo's Hvap_estimates.csv value, over 0 overlapping points where both are finite -- should be ~0 if my reimplementation is faithful"

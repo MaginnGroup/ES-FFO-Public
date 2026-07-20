@@ -1,0 +1,198 @@
+molecule,property,temperature_K,value,unit,source_per_Table3
+MeOH,liq_density,200.0,880.28,kg/m3,REFPROP
+MeOH,liq_density,250.0,831.52,kg/m3,REFPROP
+MeOH,liq_density,300.0,784.51,kg/m3,REFPROP
+MeOH,liq_density,350.0,735.84,kg/m3,REFPROP
+MeOH,liq_density,400.0,678.59,kg/m3,REFPROP
+MeOH,liq_density,450.0,600.49,kg/m3,REFPROP
+MeOH,liq_density,500.0,451.53,kg/m3,REFPROP
+MeOH,vap_density,200.0,0.00011754,kg/m3,REFPROP
+MeOH,vap_density,250.0,0.012577,kg/m3,REFPROP
+MeOH,vap_density,300.0,0.24623,kg/m3,REFPROP
+MeOH,vap_density,350.0,1.9053,kg/m3,REFPROP
+MeOH,vap_density,400.0,8.7343,kg/m3,REFPROP
+MeOH,vap_density,450.0,30.831,kg/m3,REFPROP
+MeOH,vap_density,500.0,109.88,kg/m3,REFPROP
+MeOH,Pvap,200.0,6.0958e-05,bar,REFPROP
+MeOH,Pvap,250.0,0.008103,bar,REFPROP
+MeOH,Pvap,300.0,0.18681999999999999,bar,REFPROP
+MeOH,Pvap,350.0,1.6172,bar,REFPROP
+MeOH,Pvap,400.0,7.7374,bar,REFPROP
+MeOH,Pvap,450.0,25.433000000000003,bar,REFPROP
+MeOH,Pvap,500.0,65.25,bar,REFPROP
+MeOH,Hvap,200.0,1289.99,kJ/kg,REFPROP
+MeOH,Hvap,250.0,1234.79,kJ/kg,REFPROP
+MeOH,Hvap,300.0,1166.17,kJ/kg,REFPROP
+MeOH,Hvap,350.0,1075.936,kJ/kg,REFPROP
+MeOH,Hvap,400.0,944.57,kJ/kg,REFPROP
+MeOH,Hvap,450.0,739.19,kJ/kg,REFPROP
+MeOH,Hvap,500.0,392.06,kJ/kg,REFPROP
+MeOH,surf_tens,200.0,31.717,mN/m,REFPROP
+MeOH,surf_tens,250.0,26.347,mN/m,REFPROP
+MeOH,surf_tens,300.0,21.993,mN/m,REFPROP
+MeOH,surf_tens,350.0,17.727,mN/m,REFPROP
+MeOH,surf_tens,400.0,12.928,mN/m,REFPROP
+MeOH,surf_tens,450.0,7.3155,mN/m,REFPROP
+MeOH,surf_tens,500.0,1.2466,mN/m,REFPROP
+MeOH,Tc,,512.5,K,see Table 3
+MeOH,rhoc,,273.846,kg/m3,see Table 3
+EG,liq_density,378.15,1051.7,kg/m3,REFPROP
+EG,liq_density,383.15,1047.9,kg/m3,REFPROP
+EG,liq_density,393.15,1040.2,kg/m3,REFPROP
+EG,liq_density,403.15,1032.3,kg/m3,REFPROP
+EG,liq_density,413.15,1024.3,kg/m3,REFPROP
+EG,liq_density,450.0,993.42,kg/m3,REFPROP
+EG,liq_density,500.0,947.11,kg/m3,REFPROP
+EG,liq_density,550.0,893.68,kg/m3,REFPROP
+EG,liq_density,600.0,829.28,kg/m3,REFPROP
+EG,liq_density,650.0,745.05,kg/m3,REFPROP
+EG,liq_density,700.0,602.22,kg/m3,REFPROP
+EG,vap_density,378.15,0.053545,kg/m3,REFPROP
+EG,vap_density,383.15,0.067953,kg/m3,REFPROP
+EG,vap_density,393.15,0.10702,kg/m3,REFPROP
+EG,vap_density,403.15,0.16393,kg/m3,REFPROP
+EG,vap_density,413.15,0.24479,kg/m3,REFPROP
+EG,vap_density,450.0,0.88837,kg/m3,REFPROP
+EG,vap_density,500.0,3.5446,kg/m3,REFPROP
+EG,vap_density,550.0,10.606,kg/m3,REFPROP
+EG,vap_density,600.0,26.462,kg/m3,REFPROP
+EG,vap_density,650.0,60.398,kg/m3,REFPROP
+EG,vap_density,700.0,150.11,kg/m3,REFPROP
+EG,Pvap,378.15,0.027108,bar,REFPROP
+EG,Pvap,383.15,0.034853,bar,REFPROP
+EG,Pvap,393.15,0.056304,bar,REFPROP
+EG,Pvap,403.15,0.08839600000000002,bar,REFPROP
+EG,Pvap,413.15,0.13518000000000002,bar,REFPROP
+EG,Pvap,450.0,0.53184,bar,REFPROP
+EG,Pvap,500.0,2.3208,bar,REFPROP
+EG,Pvap,550.0,7.3787,bar,REFPROP
+EG,Pvap,600.0,18.81,bar,REFPROP
+EG,Pvap,650.0,41.118,bar,REFPROP
+EG,Pvap,700.0,81.557,bar,REFPROP
+EG,Hvap,378.15,977.45,kJ/kg,REFPROP
+EG,Hvap,383.15,972.15,kJ/kg,REFPROP
+EG,Hvap,393.15,961.57,kJ/kg,REFPROP
+EG,Hvap,403.15,951.01,kJ/kg,REFPROP
+EG,Hvap,413.15,940.46,kJ/kg,REFPROP
+EG,Hvap,450.0,901.26,kJ/kg,REFPROP
+EG,Hvap,500.0,845.255,kJ/kg,REFPROP
+EG,Hvap,550.0,781.37,kJ/kg,REFPROP
+EG,Hvap,600.0,701.38,kJ/kg,REFPROP
+EG,Hvap,650.0,588.55,kJ/kg,REFPROP
+EG,Hvap,700.0,376.95,kJ/kg,REFPROP
+EG,surf_tens,378.15,40.939,mN/m,REFPROP
+EG,surf_tens,383.15,40.472,mN/m,REFPROP
+EG,surf_tens,393.15,39.533,mN/m,REFPROP
+EG,surf_tens,403.15,38.587,mN/m,REFPROP
+EG,surf_tens,413.15,37.634,mN/m,REFPROP
+EG,surf_tens,450.0,34.062,mN/m,REFPROP
+EG,surf_tens,500.0,29.033,mN/m,REFPROP
+EG,surf_tens,550.0,23.738,mN/m,REFPROP
+EG,surf_tens,600.0,18.076,mN/m,REFPROP
+EG,surf_tens,650.0,11.837,mN/m,REFPROP
+EG,surf_tens,700.0,4.3463,mN/m,REFPROP
+EG,Tc,,719.6,K,see Table 3
+EG,rhoc,,391.9405,kg/m3,see Table 3
+Gly,liq_density,293.15,1261.1,kg/m3,Ghaedi2018
+Gly,liq_density,303.15,1255.6,kg/m3,Ghaedi2018
+Gly,liq_density,313.15,1249.5,kg/m3,Ghaedi2018
+Gly,liq_density,323.15,1242.9,kg/m3,Ghaedi2018
+Gly,liq_density,333.15,1236.0,kg/m3,Ghaedi2018
+Gly,vap_density,293.15,4.5423765503348336e-07,kg/m3,Peng-Robinson EOS
+Gly,vap_density,303.15,1.4808645976734578e-06,kg/m3,Peng-Robinson EOS
+Gly,vap_density,313.15,4.424877425329769e-06,kg/m3,Peng-Robinson EOS
+Gly,vap_density,323.15,1.2226309328190655e-05,kg/m3,Peng-Robinson EOS
+Gly,vap_density,333.15,3.1448651210169496e-05,kg/m3,Peng-Robinson EOS
+Gly,Pvap,293.15,1.2033e-07,bar,Verevkin2015
+Gly,Pvap,303.15,4.0563e-07,bar,Verevkin2015
+Gly,Pvap,313.15,1.2521e-06,bar,Verevkin2015
+Gly,Pvap,323.15,3.5690e-06,bar,Verevkin2015
+Gly,Pvap,333.15,9.4652e-06,bar,Verevkin2015
+Gly,Hvap,298.15,982.734,kJ/kg,Verevkin2015
+Gly,surf_tens,293.15,63.1,mN/m,Erfani2019
+Gly,surf_tens,303.15,62.4,mN/m,Erfani2019
+Gly,surf_tens,313.15,62.0,mN/m,Erfani2019
+Gly,surf_tens,323.15,61.1,mN/m,Erfani2019
+Gly,surf_tens,333.15,60.5,mN/m,Erfani2019
+Gly,Tc,,850.0,K,see Table 3
+Gly,rhoc,,366.90764940239046,kg/m3,see Table 3
+DMF,liq_density,308.15,941.56,kg/m3,Alam2019
+DMF,liq_density,313.15,936.76,kg/m3,Alam2019
+DMF,liq_density,318.15,931.94,kg/m3,Alam2019
+DMF,liq_density,323.15,927.1,kg/m3,Alam2019
+DMF,liq_density,328.15,922.24,kg/m3,Alam2019
+DMF,vap_density,308.15,0.028492606466029444,kg/m3,Peng-Robinson EOS
+DMF,vap_density,313.15,0.03861002955353985,kg/m3,Peng-Robinson EOS
+DMF,vap_density,318.15,0.05118332578847178,kg/m3,Peng-Robinson EOS
+DMF,vap_density,323.15,0.0665853077873307,kg/m3,Peng-Robinson EOS
+DMF,vap_density,328.15,0.08523511463754384,kg/m3,Peng-Robinson EOS
+DMF,Pvap,308.15,0.009980000000000001,bar,Cui2006
+DMF,Pvap,313.15,0.013740000000000002,bar,Cui2006
+DMF,Pvap,318.15,0.018500000000000003,bar,Cui2006
+DMF,Pvap,323.15,0.024437000000000004,bar,Cui2006
+DMF,Pvap,328.15,0.031753,bar,Cui2006
+DMF,Hvap,298.15,641.538,kJ/kg,Ruzicka2024
+DMF,surf_tens,308.15,34.525,mN/m,Kahl2003
+DMF,surf_tens,313.15,33.917,mN/m,Kahl2003
+DMF,surf_tens,318.15,33.309,mN/m,Kahl2003
+DMF,surf_tens,323.15,32.701,mN/m,Kahl2003
+DMF,surf_tens,328.15,32.094,mN/m,Kahl2003
+DMF,Tc,,649.6,K,see Table 3
+DMF,rhoc,,279.204,kg/m3,see Table 3
+DMSO,liq_density,313.15,1080.23,kg/m3,Harifi-Mood2017
+DMSO,liq_density,318.15,1075.22,kg/m3,Harifi-Mood2017
+DMSO,liq_density,323.15,1070.21,kg/m3,Harifi-Mood2017
+DMSO,liq_density,328.15,1065.19,kg/m3,Harifi-Mood2017
+DMSO,liq_density,333.15,1060.17,kg/m3,Harifi-Mood2017
+DMSO,vap_density,313.15,0.006586044009859765,kg/m3,Peng-Robinson EOS
+DMSO,vap_density,318.15,0.008862911438663317,kg/m3,Peng-Robinson EOS
+DMSO,vap_density,323.15,0.01180065519788574,kg/m3,Peng-Robinson EOS
+DMSO,vap_density,328.15,0.015553825141719194,kg/m3,Peng-Robinson EOS
+DMSO,vap_density,333.15,0.02030386957278731,kg/m3,Peng-Robinson EOS
+DMSO,Pvap,313.15,0.00220055,bar,Jakli1972
+DMSO,Pvap,318.15,0.00301115,bar,Jakli1972
+DMSO,Pvap,323.15,0.00407377,bar,Jakli1972
+DMSO,Pvap,328.15,0.00545240,bar,Jakli1972
+DMSO,Pvap,333.15,0.00722356,bar,Jakli1972
+DMSO,Hvap,308,669.397,kJ/kg,Lemmon2023(NIST)
+DMSO,Hvap,318,666.837,kJ/kg,Lemmon2023(NIST)
+DMSO,Hvap,320,661.718,kJ/kg,Lemmon2023(NIST)
+DMSO,Hvap,340,647.639,kJ/kg,Lemmon2023(NIST)
+DMSO,Hvap,368,615.641,kJ/kg,Lemmon2023(NIST)
+DMSO,surf_tens,313.15,41.2,mN/m,LawrenceClever1963
+DMSO,surf_tens,318.15,40.6275,mN/m,LawrenceClever1963
+DMSO,surf_tens,323.15,40.055,mN/m,LawrenceClever1963
+DMSO,surf_tens,328.15,39.4825,mN/m,LawrenceClever1963
+DMSO,surf_tens,333.15,38.91,mN/m,LawrenceClever1963
+DMSO,Tc,,718,K,see Table 3
+DMSO,rhoc,,366,kg/m3,see Table 3
+DEC,liq_density,273.18,998.2,kg/m3,Zhao2010
+DEC,liq_density,293.16,975.7,kg/m3,Zhao2010
+DEC,liq_density,313.19,952.5,kg/m3,Zhao2010
+DEC,liq_density,333.18,929.1,kg/m3,Zhao2010
+DEC,liq_density,353.19,906.3,kg/m3,Zhao2010
+DEC,vap_density,273.18,0.036,kg/m3,Zhao2010
+DEC,vap_density,293.16,0.057,kg/m3,Zhao2010
+DEC,vap_density,313.19,0.085,kg/m3,Zhao2010
+DEC,vap_density,333.18,0.121,kg/m3,Zhao2010
+DEC,vap_density,353.19,0.164,kg/m3,Zhao2010
+DEC,Pvap,273.18,0.002845,bar,Kozlova2008
+DEC,Pvap,293.16,0.011101000000000001,bar,Kozlova2008
+DEC,Pvap,313.19,0.035244,bar,Kozlova2008
+DEC,Pvap,333.18,0.09425599999999999,bar,Kozlova2008
+DEC,Pvap,353.19,0.219621,bar,Kozlova2008
+DEC,Hvap,273.1,389.66,kJ/kg,Kozlova2008
+DEC,Hvap,273.3,389.49,kJ/kg,Kozlova2008
+DEC,Hvap,293.2,378.32,kJ/kg,Kozlova2008
+DEC,Hvap,298.1,375.48,kJ/kg,Kozlova2008
+DEC,Hvap,298.2,375.43,kJ/kg,Kozlova2008
+DEC,Hvap,310.9,368.24,kJ/kg,Kozlova2008
+DEC,Hvap,313.3,366.88,kJ/kg,Kozlova2008
+DEC,Hvap,315.2,365.87,kJ/kg,Kozlova2008
+DEC,surf_tens,273.18,29.2,mN/m,Zhao2010
+DEC,surf_tens,293.16,26.8,mN/m,Zhao2010
+DEC,surf_tens,313.19,24.5,mN/m,Zhao2010
+DEC,surf_tens,333.18,22.4,mN/m,Zhao2010
+DEC,surf_tens,353.19,20.2,mN/m,Zhao2010
+DEC,Tc,,576,K,see Table 3
+DEC,rhoc,,341.42,kg/m3,see Table 3

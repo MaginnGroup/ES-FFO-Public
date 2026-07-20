@@ -1,0 +1,39 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+caleman,MeOH,GAFF,rho_l,293.15,K,813.0 ± 0.2,g/L,FALSE,Table S2 (SI p17),molecule 10 methanol; exp source ref [11] CRC Handbook
+caleman,MeOH,OPLS/AA,rho_l,293.15,K,782.9 ± 0.0,g/L,FALSE,Table S2 (SI p17),molecule 10 methanol; exp source ref [11] CRC Handbook
+caleman,MeOH,GAFF,rho_l,298.15,K,807.5 ± 0.2,g/L,FALSE,Table S2 (SI p17),molecule 10 methanol; exp source ref [9] Marcus; CGenFF 782.5 also listed
+caleman,MeOH,OPLS/AA,rho_l,298.15,K,776.8 ± 0.1,g/L,FALSE,Table S2 (SI p17),molecule 10 methanol; exp source ref [9] Marcus; CGenFF 782.5 also listed
+caleman,DMSO,GAFF,rho_l,298.15,K,1136.2 ± 0.1,g/L,FALSE,Table S2 (SI p18),molecule 30 methylsulfinylmethane; exp source ref [9] Marcus; CGenFF 1118.5 also listed
+caleman,DMSO,OPLS/AA,rho_l,298.15,K,1101.3 ± 0.1,g/L,FALSE,Table S2 (SI p18),molecule 30 methylsulfinylmethane; exp source ref [9] Marcus; CGenFF 1118.5 also listed
+caleman,DMF,GAFF,rho_l,298.15,K,984.2 ± 0.1,g/L,FALSE,Table S2 (SI p19),"molecule 45 N,N-dimethylformamide; exp source ref [9] Marcus"
+caleman,DMF,OPLS/AA,rho_l,298.15,K,922.2 ± 0.1,g/L,FALSE,Table S2 (SI p19),"molecule 45 N,N-dimethylformamide; exp source ref [9] Marcus"
+caleman,DEC,GAFF,rho_l,298.15,K,1020.9 ± 0.1,g/L,FALSE,Table S2 (SI p21),molecule 89 diethyl carbonate; exp source ref [9] Marcus
+caleman,DEC,OPLS/AA,rho_l,298.15,K,998.6 ± 0.1,g/L,FALSE,Table S2 (SI p21),molecule 89 diethyl carbonate; exp source ref [9] Marcus
+caleman,Gly,GAFF,rho_l,293.15,K,1310.2 ± 0.7,g/L,FALSE,Table S2 (SI p19),"molecule 50 propane-1,2,3-triol; exp source ref [11] Lide"
+caleman,Gly,OPLS/AA,rho_l,293.15,K,1259.7 ± 0.7,g/L,FALSE,Table S2 (SI p19),"molecule 50 propane-1,2,3-triol; exp source ref [11] Lide"
+caleman,Gly,GAFF,rho_l,320.00,K,1289.5 ± 0.1,g/L,FALSE,Table S2 (SI p19),"molecule 50 propane-1,2,3-triol; exp source ref [10] Frenkel"
+caleman,Gly,OPLS/AA,rho_l,320.00,K,1232.3 ± 0.5,g/L,FALSE,Table S2 (SI p19),"molecule 50 propane-1,2,3-triol; exp source ref [10] Frenkel"
+caleman,MeOH,GAFF,Hvap,293.15,K,39.92 ± 0.03,kJ/mol,FALSE,Table S3 (SI p25),molecule 10 methanol; exp source ref [13] DIPPR/AIChE 801
+caleman,MeOH,OPLS/AA,Hvap,293.15,K,36.89 ± 0.02,kJ/mol,FALSE,Table S3 (SI p25),molecule 10 methanol; exp source ref [13] DIPPR/AIChE 801
+caleman,MeOH,GAFF,Hvap,298.15,K,39.62 ± 0.02,kJ/mol,FALSE,Table S3 (SI p25),molecule 10 methanol; exp source ref [9] Marcus; CGenFF 36.86 also listed
+caleman,MeOH,OPLS/AA,Hvap,298.15,K,36.44 ± 0.01,kJ/mol,FALSE,Table S3 (SI p25),molecule 10 methanol; exp source ref [9] Marcus; CGenFF 36.86 also listed
+caleman,DMSO,GAFF,Hvap,298.15,K,57.50 ± 0.02,kJ/mol,FALSE,Table S3 (SI p26),molecule 30 methylsulfinylmethane; exp source ref [9] Marcus
+caleman,DMSO,OPLS/AA,Hvap,298.15,K,55.62 ± 0.02,kJ/mol,FALSE,Table S3 (SI p26),molecule 30 methylsulfinylmethane; exp source ref [9] Marcus
+caleman,DMF,GAFF,Hvap,298.15,K,52.57 ± 0.02,kJ/mol,FALSE,Table S3 (SI p27),"molecule 45 N,N-dimethylformamide; exp source ref [9] Marcus"
+caleman,DMF,OPLS/AA,Hvap,298.15,K,46.08 ± 0.02,kJ/mol,FALSE,Table S3 (SI p27),"molecule 45 N,N-dimethylformamide; exp source ref [9] Marcus"
+caleman,Gly,GAFF,Hvap,293.15,K,99.60 ± 0.06,kJ/mol,FALSE,Table S3 (SI p27),"molecule 50 propane-1,2,3-triol; exp source ref [13] Knovel"
+caleman,Gly,OPLS/AA,Hvap,293.15,K,95.44 ± 0.29,kJ/mol,FALSE,Table S3 (SI p27),"molecule 50 propane-1,2,3-triol; exp source ref [13] Knovel"
+caleman,DEC,GAFF,Hvap,298.15,K,60.79 ± 0.8,kJ/mol,FALSE,Table S3 (SI p29),molecule 89 diethyl carbonate; exp source ref [9] Marcus
+caleman,DEC,OPLS/AA,Hvap,298.15,K,52.66 ± 0.4,kJ/mol,FALSE,Table S3 (SI p29),molecule 89 diethyl carbonate; exp source ref [9] Marcus
+caleman,MeOH,GAFF,surface_tension,298.15,K,20.6 ± 0.7,mN/m,FALSE,Table S4 (SI p33),molecule 10 methanol; exp source ref [11] CRC Handbook
+caleman,MeOH,OPLS/AA,surface_tension,298.15,K,20.1 ± 0.4,mN/m,FALSE,Table S4 (SI p33),molecule 10 methanol; exp source ref [11] CRC Handbook
+caleman,DMSO,GAFF,surface_tension,298.15,K,41.6 ± 0.9,mN/m,FALSE,Table S4 (SI p34),molecule 30 methylsulfinylmethane; exp source ref [11] CRC Handbook
+caleman,DMSO,OPLS/AA,surface_tension,298.15,K,42.4 ± 0.9,mN/m,FALSE,Table S4 (SI p34),molecule 30 methylsulfinylmethane; exp source ref [11] CRC Handbook
+caleman,DMF,GAFF,surface_tension,298.15,K,36.1 ± 0.5,mN/m,FALSE,Table S4 (SI p34),"molecule 45 N,N-dimethylformamide; exp source ref [11] CRC Handbook"
+caleman,DMF,OPLS/AA,surface_tension,298.15,K,31.5 ± 0.8,mN/m,FALSE,Table S4 (SI p34),"molecule 45 N,N-dimethylformamide; exp source ref [11] CRC Handbook"
+caleman,Gly,GAFF,surface_tension,293.15,K,74.9 ± 17.0,mN/m,FALSE,Table S4 (SI p34),"molecule 50 propane-1,2,3-triol; exp source ref [13] Knovel"
+caleman,Gly,OPLS/AA,surface_tension,293.15,K,63.1 ± 15.0,mN/m,FALSE,Table S4 (SI p34),"molecule 50 propane-1,2,3-triol; exp source ref [13] Knovel"
+caleman,Gly,GAFF,surface_tension,298.15,K,70.5 ± 17.0,mN/m,FALSE,Table S4 (SI p34),"molecule 50 propane-1,2,3-triol; exp source ref [13] Knovel"
+caleman,Gly,OPLS/AA,surface_tension,298.15,K,51.8 ± 7.5,mN/m,FALSE,Table S4 (SI p34),"molecule 50 propane-1,2,3-triol; exp source ref [13] Knovel"
+caleman,DEC,GAFF,surface_tension,298.15,K,29.2 ± 1.4,mN/m,FALSE,Table S4 (SI p36),molecule 89 diethyl carbonate; exp source ref [14] Wohlfahrt
+caleman,DEC,OPLS/AA,surface_tension,298.15,K,25.0 ± 0.8,mN/m,FALSE,Table S4 (SI p36),molecule 89 diethyl carbonate; exp source ref [14] Wohlfahrt

@@ -1,0 +1,6 @@
+paper_tag,molecule,property,temperature,temp_unit,exp_value,value_unit,exp_source_citation,table_or_page,notes
+gm,DEC,dielectric_constant,298.15,K,2.84,dimensionless,"ref 37: Rivas, M. A.; Pereira, S. M.; et al. J. Chem. Thermodyn. 2004, 36, 183-191",Table 1 p4744 / Table 4 p4746,"Exp. column; DEC values at 313.15 K per table footnotes. Same value in Table 1 and Table 4"
+gm,DEC,surface_tension,298.15,K,25.92,mN/m,"ref 40: Deng, J.; Yang, Y.; He, Y.; Ouyang, G.; Huang, Z. J. Chem. Eng. Data 2006, 51, 1464-1468",Table 1 p4744 / Table 4 p4746,"Exp. column; same value in Table 1 and Table 4"
+gm,DEC,liquid_density,298.15,K,969.07,kg/m^3,"ref 43: Gurung, B. B.; Roy, M. N. J. Solution Chem. 2006, 35, 1587-1606",Table 1 p4744 / Table 4 p4746,"Exp. column; same value in Table 1 and Table 4"
+gm,DEC,heat_of_vaporization,298.15,K,43.60,kJ/mol,"ref 45: Mansson, M. J. Chem. Thermodyn. 1972, 4, 865-871",Table 1 p4744 / Table 4 p4746,"Exp. column; same value in Table 1 and Table 4"
+gm,DEC,shear_viscosity,298.15,K,0.749,mPa*s,"ref 47: Rodriguez, A.; Canosa, J.; Dominguez, A.; Tojo, J. J. Chem. Eng. Data 2003, 48, 146-151",Table 1 p4744 / Table 4 p4746,"Exp. column; same value in Table 1 and Table 4"

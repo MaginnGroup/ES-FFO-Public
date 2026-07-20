@@ -1,0 +1,10 @@
+paper_tag,molecule,property,temperature,temp_unit,exp_value,value_unit,exp_source_citation,table_or_page,notes
+senapati,DMSO,rho_l,298,K,1.1,g/cc,"CRC Handbook of Chemistry and Physics, D. R. Lide ed., 82nd ed. (CRC, Boca Raton, 2001-2002) [Ref. 45]",text p1813,Experimental liquid density quoted for comparison at 298 K
+senapati,DMSO,gamma,298.15,K,42.92,mN/m,"CRC Handbook of Chemistry and Physics, D. R. Lide ed., 82nd ed. (CRC, Boca Raton, 2001-2002) [Ref. 45]",text p6-135,
+senapati,DMSO,gamma,323.15,K,40.06,mN/m,"CRC Handbook of Chemistry and Physics, D. R. Lide ed., 82nd ed. (CRC, Boca Raton, 2001-2002) [Ref. 45]",text p6-135,
+senapati,DMSO,dgamma_dT,,,-0.114,mN/m/degC,"CRC Handbook of Chemistry and Physics, 82nd ed. [Ref. 45]",text p1814,Experimental surface excess entropy per unit area (d(gamma)/dT); simulation value was -0.158; no per-temperature exp gamma values tabulated (exp gamma shown figure-only in Fig 2)
+luzar,DMSO,rho_l,25,degC,1.0956,g/mL,"Cowie, J.M.G. and Toporowski, P.M. (1961) [Ref. 2]",,Data not compared to any values
+luzar,DMSO,rho_l,45,degC,1.0756,g/mL,"Cowie, J.M.G. and Toporowski, P.M. (1961) [Ref. 2]",,Data not compared to any values
+luzar,DMSO,rho_l,65,degC,1.0556,g/mL,"Cowie, J.M.G. and Toporowski, P.M. (1961) [Ref. 2]",,Data not compared to any values
+luzar,DMSO,mean_potential_energy_U,,,-50.49,kJ/mol,"T. B. Douglas, J. Am. Chem. Soc. 70, 2001 (1948) [Ref. 23]",text p6841 (Table V caption),"Experimental estimate of mean potential energy per mole <U>exp = -50.49 +/- 0.42 kJ/mol, obtained by subtracting PV~RT from measured enthalpy of vaporization; temperature not explicitly stated (near 298 K)"
+borin,DMSO,internal_energy_U,298,K,-50.4,kJ/mol,"Vaporization heat: T. B. Douglas, J. Am. Chem. Soc. 70, 2001 (1948) [Ref. 19]; heat of mixing: M. G. Cowie & P. M. Toporowski, Can. J. Chem. 39, 224 (1964) [Ref. 1] and F. Fox & K. P. Whittingham, J. Chem. Soc. Faraday Trans. 1 71, 1407 (1975) [Ref. 2]",Table I (p6414) row xD=1.00,Estimated experimental potential energy Uexp ~ -DHvap + RT; table lists -Uexp=50.4 so Uexp=-50.4 kJ/mol; for pure DMSO DHmix=0 so derives from Douglas DHvap

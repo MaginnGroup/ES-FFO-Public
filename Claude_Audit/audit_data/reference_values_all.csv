@@ -1,0 +1,475 @@
+molecule,property,temperature_K,R1_value,R1_source,R1_reliable,R2_value,R2_source,provenance_flag
+DEC,Hvap,298.15,371.924106,thermo,True,375.48,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,Pvap,333.18,8.781458,thermo,True,9.4256,montana_reference_values.csv (esolvs.py),CORRELATION
+DEC,Pvap,353.19,20.596986,thermo,True,21.9621,montana_reference_values.csv (esolvs.py),CORRELATION
+DEC,gamma,273.18,28.687807,thermo,True,29.2,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,gamma,293.16,26.396651,thermo,True,26.8,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,gamma,298.15,25.82989,thermo,True,,,PRIMARY
+DEC,gamma,313.19,24.135341,thermo,True,24.5,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,gamma,333.18,21.916154,thermo,True,22.4,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,gamma,353.19,19.73477,thermo,True,20.2,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,rho_l,273.18,995.010036,thermo,True,998.2,montana_reference_values.csv (esolvs.py),SECONDARY
+DEC,rho_l,293.16,977.290159,thermo,True,975.7,montana_reference_values.csv (esolvs.py),SECONDARY
+DEC,rho_l,298.15,972.691622,thermo,True,,,SECONDARY
+DEC,rho_l,313.19,958.396734,thermo,True,952.5,montana_reference_values.csv (esolvs.py),SECONDARY
+DEC,rho_l,333.18,938.342504,thermo,True,929.1,montana_reference_values.csv (esolvs.py),SECONDARY
+DEC,rho_l,353.19,916.981911,thermo,True,906.3,montana_reference_values.csv (esolvs.py),SECONDARY
+DEC,rho_v,333.18,0.374471,thermo,True,0.121,montana_reference_values.csv (esolvs.py),SECONDARY
+DEC,rho_v,353.19,0.828563,thermo,True,0.164,montana_reference_values.csv (esolvs.py),SECONDARY
+DMF,Hvap,298.15,641.503918,thermo,True,641.538,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,Pvap,277.78,0.135959,thermo,True,,,CORRELATION
+DMF,Pvap,293.26,0.397103,thermo,True,,,CORRELATION
+DMF,Pvap,306.75,0.911969,thermo,True,0.998,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,Pvap,309.6,1.07533,thermo,True,0.998,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,Pvap,311.53,1.199849,thermo,True,1.374,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,Pvap,320.51,1.95733,thermo,True,,,CORRELATION
+DMF,Pvap,325.73,2.563677,thermo,True,,,CORRELATION
+DMF,Pvap,340.14,5.133341,thermo,True,,,CORRELATION
+DMF,Pvap,355.87,10.155672,thermo,True,,,CORRELATION
+DMF,Pvap,371.75,18.87162,thermo,True,,,CORRELATION
+DMF,Pvap,386.1,31.366177,thermo,True,,,CORRELATION
+DMF,Pvap,401.61,51.757967,thermo,True,,,CORRELATION
+DMF,Pvap,416.67,80.700427,thermo,True,,,CORRELATION
+DMF,Pvap,431.03,119.126961,thermo,True,,,CORRELATION
+DMF,Pvap,446.43,175.065226,thermo,True,,,CORRELATION
+DMF,Pvap,460.83,244.190596,thermo,True,,,CORRELATION
+DMF,Pvap,473.93,323.861148,thermo,True,,,CORRELATION
+DMF,Pvap,490.2,448.925004,thermo,True,,,CORRELATION
+DMF,Pvap,505.05,592.29849,thermo,True,,,CORRELATION
+DMF,Pvap,518.13,744.971443,thermo,True,,,CORRELATION
+DMF,Pvap,531.91,935.831567,thermo,True,,,CORRELATION
+DMF,Pvap,546.45,1174.388381,thermo,True,,,CORRELATION
+DMF,Pvap,598.8,2416.93275,thermo,False,,,CORRELATION
+DMF,gamma,298.15,35.86147,thermo,True,,,CORRELATION
+DMF,gamma,308.15,34.49513,thermo,True,34.525,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,gamma,313.15,33.817106,thermo,True,33.917,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,gamma,318.15,33.142556,thermo,True,33.309,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,gamma,323.15,32.471514,thermo,True,32.701,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,gamma,328.15,31.804017,thermo,True,32.094,montana_reference_values.csv (esolvs.py),CORRELATION
+DMF,rho_l,293.4,948.914552,thermo,True,,,PRIMARY
+DMF,rho_l,298.15,944.553927,thermo,True,,,PRIMARY
+DMF,rho_l,307.42,935.979267,thermo,True,941.56,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,308.15,935.300312,thermo,True,941.56,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,309.9,933.670433,thermo,True,941.56,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,313.15,930.635014,thermo,True,936.76,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,313.2,930.588228,thermo,True,936.76,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,318.15,925.943206,thermo,True,931.94,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,322.27,922.05676,thermo,True,927.1,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,323.15,921.224217,thermo,True,927.1,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,328.04,916.582083,thermo,True,922.24,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,328.15,916.477347,thermo,True,922.24,montana_reference_values.csv (esolvs.py),PRIMARY
+DMF,rho_l,345.36,899.915028,thermo,True,,,PRIMARY
+DMF,rho_l,361.86,883.686633,thermo,True,,,PRIMARY
+DMF,rho_l,379.18,866.245562,thermo,True,,,PRIMARY
+DMF,rho_l,395.67,849.210904,thermo,True,,,PRIMARY
+DMF,rho_l,412.99,830.812695,thermo,True,,,PRIMARY
+DMF,rho_l,430.31,811.846213,thermo,True,,,PRIMARY
+DMF,rho_l,447.63,792.274374,thermo,True,,,PRIMARY
+DMF,rho_l,464.95,771.973107,thermo,True,,,PRIMARY
+DMF,rho_l,499.59,728.692673,thermo,True,,,PRIMARY
+DMF,rho_l,516.08,706.522378,thermo,True,,,PRIMARY
+DMF,rho_l,533.4,681.836133,thermo,True,,,PRIMARY
+DMF,rho_l,550.72,655.355886,thermo,True,,,PRIMARY
+DMF,rho_l,567.22,627.966638,thermo,False,,,PRIMARY
+DMF,rho_l,584.54,596.11891,thermo,False,,,PRIMARY
+DMF,rho_v,412.99,1.546635,thermo,True,,,EOS-AUTH
+DMF,rho_v,430.31,2.388428,thermo,True,,,EOS-AUTH
+DMF,rho_v,447.63,3.538243,thermo,False,,,EOS-AUTH
+DMF,rho_v,464.95,5.055943,thermo,False,,,EOS-AUTH
+DMF,rho_v,483.09,7.105074,thermo,False,,,EOS-AUTH
+DMF,rho_v,500.41,9.561384,thermo,False,,,EOS-AUTH
+DMF,rho_v,516.91,12.408494,thermo,False,,,EOS-AUTH
+DMF,rho_v,533.4,15.796656,thermo,False,,,EOS-AUTH
+DMF,rho_v,550.72,19.990451,thermo,False,,,EOS-AUTH
+DMF,rho_v,568.04,24.887214,thermo,False,,,EOS-AUTH
+DMF,rho_v,584.54,30.254968,thermo,False,,,EOS-AUTH
+DMSO,Hvap,298.15,684.434557,thermo,True,,,EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,318.0,671.376524,thermo,True,666.837,montana_reference_values.csv (esolvs.py),EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,320.0,670.040339,thermo,True,661.718,montana_reference_values.csv (esolvs.py),EOS-AUTH (judgment call -- see note)
+DMSO,Pvap,313.15,0.21824,thermo,True,0.220055,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,Pvap,318.15,0.29771,thermo,True,0.301115,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,Pvap,323.15,0.401808,thermo,True,0.407377,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,Pvap,328.15,0.536821,thermo,True,0.54524,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,Pvap,333.15,0.710285,thermo,True,0.722356,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,Pvap,354.61,2.137788,thermo,True,,,CORRELATION
+DMSO,Pvap,367.65,3.892275,thermo,True,,,CORRELATION
+DMSO,Pvap,378.79,6.259416,thermo,True,,,CORRELATION
+DMSO,Pvap,392.16,10.633059,thermo,True,,,CORRELATION
+DMSO,Pvap,403.23,15.998285,thermo,True,,,CORRELATION
+DMSO,Pvap,416.67,25.410717,thermo,True,,,CORRELATION
+DMSO,Pvap,429.18,37.940277,thermo,True,,,CORRELATION
+DMSO,Pvap,440.53,53.357711,thermo,True,,,CORRELATION
+DMSO,Pvap,452.49,74.81076,thermo,True,,,CORRELATION
+DMSO,Pvap,465.12,104.5801,thermo,True,,,CORRELATION
+DMSO,Pvap,478.47,145.715199,thermo,True,,,CORRELATION
+DMSO,Pvap,490.2,191.648535,thermo,True,,,CORRELATION
+DMSO,Pvap,502.51,251.404888,thermo,True,,,CORRELATION
+DMSO,Pvap,515.46,329.008373,thermo,True,,,CORRELATION
+DMSO,Pvap,526.32,407.321454,thermo,True,,,CORRELATION
+DMSO,gamma,298.0,42.967609,thermo,True,,,CORRELATION
+DMSO,gamma,298.15,42.949869,thermo,True,,,CORRELATION
+DMSO,gamma,313.15,41.180044,thermo,True,41.2,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,gamma,318.15,40.591968,thermo,True,40.6275,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,gamma,323.0,40.022443,thermo,True,40.055,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,gamma,323.15,40.004843,thermo,True,40.055,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,gamma,328.15,39.418679,thermo,True,39.4825,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,gamma,333.15,38.833487,thermo,True,38.91,montana_reference_values.csv (esolvs.py),CORRELATION
+DMSO,gamma,348.0,37.101313,thermo,True,,,CORRELATION
+DMSO,gamma,373.0,34.205677,thermo,True,,,CORRELATION
+DMSO,rho_l,290.96,1102.585539,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,298.0,1096.423474,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,298.15,1096.277138,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,305.43,1089.157326,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,310.59,1084.089593,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,313.15,1081.568683,thermo,True,1080.23,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,314.73,1080.010567,thermo,True,1080.23,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,318.15,1076.632015,thermo,True,1075.22,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,320.93,1073.879671,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,323.0,1071.826707,thermo,True,1070.21,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,323.15,1071.677823,thermo,True,1070.21,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,328.15,1066.705729,thermo,True,1065.19,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,329.2,1065.659279,thermo,True,1065.19,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,333.15,1061.715342,thermo,True,1060.17,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,341.6,1053.238862,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,348.0,1046.782,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,354.01,1040.688786,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,365.37,1029.089605,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,373.0,1021.23635,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,379.84,1014.151574,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,391.21,1002.277058,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,403.62,989.169379,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,416.02,975.908247,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,427.39,963.593887,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,440.83,948.831198,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,452.2,936.153036,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,464.6,922.11347,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,477.0,907.886164,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,490.44,892.187458,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,502.84,877.423889,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,513.18,864.889523,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_l,526.61,848.277468,thermo,True,,,"SECONDARY (primary alternative now in hand, not yet substituted -- PI decision #1: do not replace)"
+DMSO,rho_v,298.0,0.002502,thermo,True,,,EOS-AUTH
+DMSO,rho_v,313.15,0.006549,thermo,True,0.006586,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DMSO,rho_v,318.15,0.008794,thermo,True,0.008863,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DMSO,rho_v,323.0,0.011587,thermo,True,0.011801,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DMSO,rho_v,323.15,0.011685,thermo,True,0.011801,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DMSO,rho_v,328.15,0.015373,thermo,True,0.015554,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DMSO,rho_v,333.15,0.020035,thermo,True,0.020304,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DMSO,rho_v,348.0,0.041788,thermo,True,,,EOS-AUTH
+DMSO,rho_v,373.0,0.123689,thermo,True,,,EOS-AUTH
+DMSO,rho_v,514.21,5.862679,thermo,False,,,EOS-AUTH
+DMSO,rho_v,527.65,7.441121,thermo,False,,,EOS-AUTH
+EG,Hvap,298.0,1064.778958,thermo,True,,,EOS-AUTH
+EG,Hvap,325.0,1034.76105,thermo,True,,,EOS-AUTH
+EG,Hvap,350.0,1007.55375,thermo,True,,,EOS-AUTH
+EG,Hvap,378.15,977.452909,thermo,True,977.45,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,383.15,972.150198,thermo,True,972.15,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,393.15,961.570804,thermo,True,961.57,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,400.0,954.337557,thermo,True,,,EOS-AUTH
+EG,Hvap,403.15,951.013296,thermo,True,951.01,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,413.15,940.460287,thermo,True,940.46,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,450.0,901.259112,thermo,True,901.26,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,500.0,845.257143,thermo,True,845.255,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,550.0,781.344804,thermo,True,781.37,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,600.0,701.358185,thermo,True,701.38,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,650.0,588.521337,thermo,False,588.55,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Hvap,700.0,376.947421,thermo,False,376.95,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,325.0,0.104805,thermo,True,,,EOS-AUTH
+EG,Pvap,350.0,0.560091,thermo,True,,,EOS-AUTH
+EG,Pvap,378.15,2.710841,thermo,True,2.7108,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,383.15,3.485309,thermo,True,3.4853,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,393.15,5.630392,thermo,True,5.6304,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,400.0,7.691324,thermo,True,,,EOS-AUTH
+EG,Pvap,403.15,8.83955,thermo,True,8.8396,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,413.15,13.517615,thermo,True,13.518,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,450.0,53.183863,thermo,True,53.184,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,500.0,232.07514,thermo,True,232.08,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,550.0,737.869185,thermo,True,737.87,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,600.0,1880.999491,thermo,True,1881.0,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,650.0,4111.794775,thermo,False,4111.8,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,Pvap,700.0,8155.686966,thermo,False,8155.7,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,378.15,40.93922,thermo,True,40.939,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,383.15,40.471918,thermo,True,40.472,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,393.15,39.532621,thermo,True,39.533,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,403.15,38.586867,thermo,True,38.587,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,413.15,37.634407,thermo,True,37.634,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,450.0,34.062061,thermo,True,34.062,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,500.0,29.033004,thermo,True,29.033,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,550.0,23.738423,thermo,True,23.738,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,600.0,18.076189,thermo,True,18.076,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,650.0,11.836638,thermo,False,11.837,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,gamma,700.0,4.346291,thermo,False,4.3463,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,298.0,1109.984499,thermo,True,,,EOS-AUTH
+EG,rho_l,325.0,1090.877331,thermo,True,,,EOS-AUTH
+EG,rho_l,350.0,1072.80455,thermo,True,,,EOS-AUTH
+EG,rho_l,378.15,1051.797151,thermo,True,1051.7,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,383.15,1047.977015,thermo,True,1047.9,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,393.15,1040.244681,thermo,True,1040.2,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,400.0,1034.872799,thermo,True,,,EOS-AUTH
+EG,rho_l,403.15,1032.380969,thermo,True,1032.3,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,413.15,1024.37625,thermo,True,1024.3,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,450.0,993.46613,thermo,True,993.42,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,500.0,947.108462,thermo,True,947.11,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,550.0,893.67679,thermo,True,893.68,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,600.0,829.277449,thermo,True,829.28,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,650.0,750.814089,thermo,False,745.05,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_l,700.0,750.814089,thermo,False,602.22,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,325.0,0.002407,thermo,True,,,EOS-AUTH
+EG,rho_v,350.0,0.011946,thermo,True,,,EOS-AUTH
+EG,rho_v,378.15,0.053515,thermo,True,0.053545,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,383.15,0.067905,thermo,True,0.067953,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,393.15,0.106909,thermo,True,0.10702,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,400.0,0.14354,thermo,True,,,EOS-AUTH
+EG,rho_v,403.15,0.16368,thermo,True,0.16393,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,413.15,0.244244,thermo,True,0.24479,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,450.0,0.882267,thermo,True,0.88837,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,500.0,3.464903,thermo,False,3.5446,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,550.0,10.014958,thermo,False,10.606,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,600.0,23.402911,thermo,False,26.462,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,650.0,47.222668,thermo,False,60.398,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_v,700.0,86.975104,thermo,False,150.11,montana_reference_values.csv (esolvs.py),EOS-AUTH
+Gly,Hvap,293.15,928.092683,thermo,True,,,PRIMARY
+Gly,gamma,293.15,65.487841,thermo,True,63.1,montana_reference_values.csv (esolvs.py),PRIMARY
+Gly,gamma,298.15,63.243788,thermo,True,,,PRIMARY
+Gly,gamma,303.15,61.552136,thermo,True,62.4,montana_reference_values.csv (esolvs.py),PRIMARY
+Gly,gamma,313.15,59.29365,thermo,True,62.0,montana_reference_values.csv (esolvs.py),PRIMARY
+Gly,gamma,323.15,57.947149,thermo,True,61.1,montana_reference_values.csv (esolvs.py),PRIMARY
+Gly,gamma,333.15,57.079846,thermo,True,60.5,montana_reference_values.csv (esolvs.py),PRIMARY
+Gly,rho_l,293.15,1261.286996,thermo,True,1261.1,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,299.49,1257.246599,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,300.0,1256.920441,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,303.15,1254.902129,thermo,True,1255.6,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,313.15,1248.450961,thermo,True,1249.5,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,319.39,1244.391118,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,319.9,1244.058123,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,320.0,1243.992808,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,323.15,1241.93186,thermo,True,1242.9,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,333.15,1235.343115,thermo,True,1236.0,montana_reference_values.csv (esolvs.py),"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,349.49,1224.422499,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,350.0,1224.078487,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,379.59,1203.777389,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,399.49,1189.728137,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,400.0,1189.363683,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,419.39,1175.337403,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,419.9,1174.963914,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,439.29,1160.582727,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,439.8,1160.199589,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,459.18,1145.446232,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+Gly,rho_l,459.69,1145.052748,thermo,True,,,"SECONDARY (primary alternatives now in hand, not yet substituted -- PI decision #1: do not replace)"
+MeOH,Hvap,200.0,1289.99309,CoolProp,True,1289.99,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,250.0,1234.831202,CoolProp,True,1234.79,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,275.0,1202.531926,CoolProp,True,,,EOS-AUTH
+MeOH,Hvap,293.15,1176.575157,CoolProp,True,,,EOS-AUTH
+MeOH,Hvap,298.0,1169.233212,CoolProp,True,1166.17,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,298.15,1169.003201,CoolProp,True,1166.17,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,300.0,1166.151521,CoolProp,True,1166.17,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,325.0,1124.601564,CoolProp,True,,,EOS-AUTH
+MeOH,Hvap,350.0,1075.958668,CoolProp,True,1075.936,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,375.0,1017.289176,CoolProp,True,,,EOS-AUTH
+MeOH,Hvap,400.0,944.536841,CoolProp,True,944.57,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,425.0,852.564524,CoolProp,True,,,EOS-AUTH
+MeOH,Hvap,450.0,739.149763,CoolProp,True,739.19,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Hvap,475.0,610.468798,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,200.0,0.006096,CoolProp,True,0.006096,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,250.0,0.810301,CoolProp,True,0.8103,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,275.0,4.554517,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,286.74,9.142703,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,290.08,11.021044,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,290.55,11.310339,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,293.42,13.222744,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,293.89,13.561008,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,296.76,15.79223,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,297.23,16.186064,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,298.0,16.849472,CoolProp,True,18.682,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,300.0,18.682399,CoolProp,True,18.682,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,300.1,18.778352,CoolProp,True,18.682,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,303.44,22.234623,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,306.3,25.611895,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,306.77,26.206667,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,309.64,30.099605,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,310.11,30.781704,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,312.98,35.238037,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,315.84,40.210729,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,316.32,41.100808,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,318.7,45.763983,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,319.18,46.756578,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,321.56,51.950516,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,322.04,53.054791,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,324.43,58.851617,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,324.9,60.051972,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,325.0,60.310001,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,327.29,66.478677,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,327.77,67.836513,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,330.15,74.917224,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,330.63,76.417645,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,333.02,84.26765,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,333.49,85.887917,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,339.69,109.81146,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,340.17,111.873732,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,346.85,144.074851,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,350.0,161.721724,CoolProp,True,161.72,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,353.05,180.468958,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,353.53,183.575789,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,359.26,224.181692,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,365.46,276.113885,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,371.18,332.344275,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,375.0,374.825384,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,376.91,397.656939,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,382.16,466.260685,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,387.4,543.942641,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,387.88,551.548627,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,392.65,631.876185,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,400.0,773.741878,CoolProp,True,773.74,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,402.67,831.155006,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,410.0,1006.383312,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,412.21,1064.59854,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,420.8,1316.738266,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,425.0,1456.085294,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,429.39,1613.921135,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,429.87,1631.96464,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,433.21,1761.959306,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,437.5,1940.71515,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,441.32,2111.566,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,445.13,2293.436416,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,448.95,2487.760635,CoolProp,True,2543.3,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,450.0,2543.337785,CoolProp,True,2543.3,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,Pvap,452.29,2667.8598,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,452.77,2694.542863,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,456.11,2885.904279,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,459.45,3087.428249,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,462.79,3299.409597,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,465.65,3489.470272,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,466.13,3522.156753,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,469.47,3756.011712,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,471.85,3929.648243,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,472.33,3965.390612,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,475.0,4168.752349,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,475.19,4183.522428,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,475.67,4221.016278,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,478.05,4410.803324,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,478.53,4449.879254,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,480.92,4648.592748,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,481.39,4688.504808,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,483.78,4895.899385,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,484.26,4938.473345,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,486.64,5154.339866,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,487.12,5198.864729,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,489.03,5379.428835,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,489.5,5424.702335,CoolProp,True,,,EOS-AUTH
+MeOH,Pvap,500.0,6525.019683,CoolProp,True,6525.0,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,200.0,31.717075,CoolProp,True,31.717,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,250.0,26.346538,CoolProp,True,26.347,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,298.0,22.160323,CoolProp,True,21.993,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,298.15,22.147772,CoolProp,True,21.993,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,300.0,21.993042,CoolProp,True,21.993,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,350.0,17.726957,CoolProp,True,17.727,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,400.0,12.927872,CoolProp,True,12.928,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,450.0,7.315488,CoolProp,True,7.3155,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,gamma,475.0,4.257308,CoolProp,True,,,EOS-AUTH
+MeOH,gamma,500.0,1.246568,CoolProp,True,1.2466,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,200.0,880.281625,CoolProp,True,880.28,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,250.0,831.518732,CoolProp,True,831.52,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,275.0,807.910829,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,280.0,803.228046,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,281.1,802.198696,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,289.86,794.005428,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,290.96,792.976405,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,293.15,790.927046,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,298.0,786.383475,CoolProp,True,784.51,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,298.15,786.242804,CoolProp,True,784.51,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,299.73,784.760406,CoolProp,True,784.51,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,300.0,784.506955,CoolProp,True,784.51,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,300.82,783.736968,CoolProp,True,784.51,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,301.92,782.703437,CoolProp,True,784.51,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,309.59,775.472186,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,310.68,774.440291,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,311.78,773.397665,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,320.55,765.03175,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,321.64,763.984336,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,325.0,760.743236,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,329.32,756.54599,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,330.41,755.481129,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,340.27,745.725871,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,341.37,744.622422,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,350.0,735.84306,CoolProp,True,735.84,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,350.14,735.698719,CoolProp,True,735.84,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,351.23,734.572687,CoolProp,True,735.84,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,360.0,725.358651,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,361.1,724.182223,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,369.86,714.62902,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,370.96,713.404717,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,375.0,708.857036,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,379.73,703.424662,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,380.82,702.155373,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,390.68,690.350223,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,400.0,678.593492,CoolProp,True,678.59,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,400.55,677.879508,CoolProp,True,678.59,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,401.64,676.457467,CoolProp,True,678.59,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,410.41,664.654374,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,411.51,663.125691,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,420.27,650.525155,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,421.37,648.885804,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,425.0,643.378124,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,430.14,635.306579,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,431.23,633.551241,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,440.0,618.815484,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,441.1,616.884507,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,449.86,600.757267,CoolProp,True,600.49,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,450.0,600.487881,CoolProp,True,600.49,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,450.96,598.630027,CoolProp,True,600.49,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_l,459.73,580.722754,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,460.82,578.367489,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,461.92,575.958443,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,469.59,558.160432,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,470.68,555.471837,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,475.0,544.354176,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,480.55,528.784213,CoolProp,True,,,EOS-AUTH
+MeOH,rho_l,500.0,451.534872,CoolProp,True,451.53,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,200.0,0.000118,CoolProp,True,0.000118,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,250.0,0.012577,CoolProp,True,0.012577,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,275.0,0.064742,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,298.0,0.223318,CoolProp,True,0.24623,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,300.0,0.246229,CoolProp,True,0.24623,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,325.0,0.746289,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,350.0,1.905289,CoolProp,True,1.9053,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,370.96,3.77934,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,375.0,4.275708,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,380.82,5.085792,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,390.68,6.752581,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,391.78,6.964329,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,400.0,8.734337,CoolProp,True,8.7343,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,400.55,8.865445,CoolProp,True,8.7343,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,401.64,9.130315,CoolProp,True,8.7343,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,410.41,11.524566,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,411.51,11.860665,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,420.27,14.863918,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,421.37,15.285516,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,425.0,16.754442,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,430.14,19.053252,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,431.23,19.57603,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,432.33,20.116742,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,440.0,24.276909,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,441.1,24.932655,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,449.86,30.729433,CoolProp,True,30.831,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,450.0,30.830696,CoolProp,True,30.831,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,450.96,31.532645,CoolProp,True,30.831,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_v,452.05,32.345805,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,459.73,38.584112,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,460.82,39.546044,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,461.92,40.537654,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,469.59,48.115184,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,470.68,49.303059,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,471.78,50.535927,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,475.0,54.370943,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,480.55,62.042715,CoolProp,True,,,EOS-AUTH
+MeOH,rho_v,500.0,109.882844,CoolProp,True,109.88,montana_reference_values.csv (esolvs.py),EOS-AUTH
+DEC,Tc,,576.33,CoolProp/thermo Tc,True,576.0,montana_reference_values.csv (esolvs.py),"SECONDARY (chain leads to a data compilation, not a primary measurement)"
+DEC,rho_c,,328.141944,CoolProp/thermo rho_c,True,341.42,montana_reference_values.csv (esolvs.py),"SECONDARY (chain leads to a data compilation, not a primary measurement)"
+DMF,Tc,,649.6,CoolProp/thermo Tc,True,649.6,montana_reference_values.csv (esolvs.py),"UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+DMF,rho_c,,278.983893,CoolProp/thermo rho_c,True,279.204,montana_reference_values.csv (esolvs.py),"UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+DMSO,Tc,,707.0,CoolProp/thermo Tc,True,718.0,montana_reference_values.csv (esolvs.py),PRIMARY
+DMSO,rho_c,,366.823662,CoolProp/thermo rho_c,True,366.0,montana_reference_values.csv (esolvs.py),PRIMARY (estimated/extrapolated value)
+EG,Tc,,719.0,CoolProp/thermo Tc,True,719.6,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_c,,364.958899,CoolProp/thermo rho_c,True,391.9405,montana_reference_values.csv (esolvs.py),CORRELATION
+MeOH,Tc,,513.38,CoolProp Tc,True,512.5,montana_reference_values.csv (esolvs.py),EOS-AUTH
+MeOH,rho_c,,281.493187,CoolProp rho_c,True,273.846,montana_reference_values.csv (esolvs.py),PRIMARY

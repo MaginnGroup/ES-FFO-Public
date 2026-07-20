@@ -1,0 +1,30 @@
+paper_tag,molecule,property,temperature,temp_unit,exp_value,value_unit,exp_source_citation,table_or_page,notes
+gsv,methanol,Hvap,298,K,37.43,kJ/mol,"Riddick, Bunger, Sakano, Organic Solvents (Wiley, 1986) [ref 74]",Table VIII p10,Delta h_u-l 298K experimental; Table VI also lists 37.43 with ref 74; Table VIII footnote no polarization/scaling correction applied
+gsv,methanol,Hvap(melting/fusion),,,3.215,kJ/mol,"R. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 30 in Table III]; Table VIII cites within same row",Table III p7,Delta h_l-s (solid-liquid transition enthalpy) exp; Table III cites ref 30; not vaporization
+gsv,methanol,Tc,,,512.6,K,"R. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 73]",Table V p8,critical temperature exp; superscript 73
+gsv,methanol,pc,,,81,bar,"R. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 73]",Table V p8,critical pressure exp; superscript 73
+gsv,methanol,rho_c,,,0.272,g/cm^3,"Riddick, Bunger, Sakano, Organic Solvents (Wiley, 1986) [ref 74]",Table V p8,critical density exp 0.272 with superscript 74; alternate value 0.269 ref 73
+gsv,methanol,rho_c,,,0.269,g/cm^3,"R. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 73]",Table V p8,alternate critical density exp 0.269 with superscript 73; text p7 notes 0.269 (ref73) and 0.272(2) (ref74)
+gsv,methanol,gamma,298,K,22.51,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 78]",Table VIII p10,surface tension exp; Table VI lists 22.51 with ref 78 (units mJ/m^2 = mN/m)
+gsv,methanol,rho_l,298,K,0.786,g/cm^3,"C. A. Cerdeirina et al., Phys. Chem. Chem. Phys. 3, 5230 (2001) [ref 23]",Table VIII p10,liquid density 298K 1bar exp; Table VI lists 0.786 with ref 23
+gsv,methanol,rho_l,250,K,0.832,g/cm^3,not explicitly cited in Table VIII (EOS isobar exp row),Table VIII p10,exp density 250K 1bar; no per-value citation given in Table VIII
+gsv,methanol,rho_l,200,K,0.88,g/cm^3,not explicitly cited in Table VIII (EOS isobar exp row),Table VIII p10,exp density 200K 1bar; no per-value citation
+gsv,methanol,rho_l,298,K,0.826,g/cm^3,not explicitly cited in Table VIII (EOS high pressure exp row),Table VIII p10,exp density 298K 5000 bars
+gsv,methanol,rho_l,298,K,0.897,g/cm^3,not explicitly cited in Table VIII (EOS high pressure exp row),Table VIII p10,exp density 298K 20000 bars
+gsv,methanol,Pvap,350,K,1.613,bar,not explicitly cited in Table VIII (vapour pressure exp row),Table VIII p10,exp vapour pressure p_v 350K
+gsv,methanol,Pvap,450,K,25.55,bar,not explicitly cited in Table VIII (vapour pressure exp row),Table VIII p10,exp vapour pressure p_v 450K
+gsv,methanol,Tm,,,175.6,K,"Riddick, Bunger, Sakano, Organic Solvents (Wiley, 1986) [ref 74]",Table III p7,melting temperature exp; Table III superscript 74; Table VIII lists 175.6
+meoh4p,methanol,rho_l,298.15,K,786,kg/m^3,"I. Cibulka, Fluid Phase Equilib. 89, 1 (1993) [ref 55]",Table 3 p2530,exp liquid density; Table 3 footnote value 786 with ref 55
+meoh4p,methanol,Hvap,298.15,K,37.43,kJ/mol,"Riddick, Bunger, Sakano, Organic Solvents (Wiley, 1986) [ref 58]",Table 3 p2530,exp Delta H_v-l; Table 3 value 37.43 with ref 58; text p2531 states experimental 37.43 kJ/mol
+meoh4p,methanol,gamma,298.15,K,22.51,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Table 3 p2530,exp surface tension; Table 3 value 22.51 with ref 59
+meoh4p,methanol,Tc,,,512.6,K,"R. D. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 61]",Table 4 p2531,exp critical temperature; superscript 61
+meoh4p,methanol,pc,,,81,bar,"R. D. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 61]",Table 4 p2531,exp critical pressure; superscript 61
+meoh4p,methanol,rho_c,,,272,kg/m^3,"R. D. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 61]",Table 4 p2531,exp critical density; Table 4 lists 272/269 with superscript 61; text p2531 states 0.272/0.269 g/cm^3
+meoh4p,methanol,rho_c,,,269,kg/m^3,"R. D. Goodwin, J. Phys. Chem. Ref. Data 16, 799 (1987) [ref 61]",Table 4 p2531,alternate exp critical density 269 kg/m^3; text p2531 states 0.272/0.269 g/cm^3
+meoh4p,methanol,gamma,20,degC,22.95,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 59
+meoh4p,methanol,gamma,25,degC,22.51,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 60
+meoh4p,methanol,gamma,30,degC,22.01,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 61
+meoh4p,methanol,gamma,35,degC,21.52,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 62
+meoh4p,methanol,gamma,40,degC,21.13,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 63
+meoh4p,methanol,gamma,45,degC,20.61,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 64
+meoh4p,methanol,gamma,50,degC,20.21,mN/m,"G. Vazquez, E. Alvarez, J. M. Navaza, J. Chem. Eng. Data 40, 611 (1995) [ref 59]",Figure 4 p2531,exp surface tension; Table 3 value 22.51 with ref 65

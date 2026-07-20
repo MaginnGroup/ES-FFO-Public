@@ -1,0 +1,21 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+gm,DEC,OPLSAA-LPG,dielectric_constant,298.15,K,1.38,dimensionless,FALSE,Table 1 p4744,rel error (51.4)% in parenthesis; DEC results at 313.15 K per table footnote
+gm,DEC,CHARMM-Gui,dielectric_constant,298.15,K,17.72,dimensionless,FALSE,Table 1 p4744,rel error (523.9)% in parenthesis
+gm,DEC,GROMOS,dielectric_constant,298.15,K,1.64,dimensionless,FALSE,Table 1 p4744,rel error (42.3)% in parenthesis; value in blue (closest to exp) per footnote
+gm,DEC,OPLSAA-LPG,surface_tension,298.15,K,33.86,mN/m,FALSE,Table 1 p4744,rel error (30.6)% in parenthesis; value in blue (closest to exp)
+gm,DEC,CHARMM-Gui,surface_tension,298.15,K,36.75,mN/m,FALSE,Table 1 p4744,rel error (41.8)% in parenthesis
+gm,DEC,GROMOS,surface_tension,298.15,K,48.84,mN/m,FALSE,Table 1 p4744,rel error (88.4)% in parenthesis
+gm,DEC,OPLSAA-LPG,liquid_density,298.15,K,998.3,kg/m^3,FALSE,Table 1 p4744,rel error (3.0)% in parenthesis
+gm,DEC,CHARMM-Gui,liquid_density,298.15,K,987.99,kg/m^3,FALSE,Table 1 p4744,rel error (2.0)% in parenthesis; value in blue (closest to exp)
+gm,DEC,GROMOS,liquid_density,298.15,K,1097.3,kg/m^3,FALSE,Table 1 p4744,rel error (13.2)% in parenthesis
+gm,DEC,OPLSAA-LPG,heat_of_vaporization,298.15,K,55.88,kJ/mol,FALSE,Table 1 p4744,rel error (28.2)% in parenthesis; value in blue (closest to exp)
+gm,DEC,CHARMM-Gui,heat_of_vaporization,298.15,K,61.14,kJ/mol,FALSE,Table 1 p4744,rel error (40.2)% in parenthesis
+gm,DEC,GROMOS,heat_of_vaporization,298.15,K,63.32,kJ/mol,FALSE,Table 1 p4744,rel error (45.3)% in parenthesis
+gm,DEC,OPLSAA-LPG,shear_viscosity,298.15,K,2.917,mPa*s,FALSE,Table 1 p4744,rel error (289.5)% in parenthesis
+gm,DEC,CHARMM-Gui,shear_viscosity,298.15,K,1.797,mPa*s,FALSE,Table 1 p4744,rel error (17.2)% in parenthesis; value in blue (closest to exp)
+gm,DEC,GROMOS,shear_viscosity,298.15,K,11.7,mPa*s,FALSE,Table 1 p4744,rel error (40.9)% in parenthesis
+gm,DEC,New parameters (this work; OPLSAA-LPG functional form),dielectric_constant,298.15,K,2.81,dimensionless,FALSE,Table 4 p4746,rel error (1.1)% in parenthesis; DEC results at 313.15 K per table footnote
+gm,DEC,New parameters (this work; OPLSAA-LPG functional form),surface_tension,298.15,K,26.1,mN/m,FALSE,Table 4 p4746,rel error (0.7)% in parenthesis
+gm,DEC,New parameters (this work; OPLSAA-LPG functional form),liquid_density,298.15,K,969.85,kg/m^3,FALSE,Table 4 p4746,rel error (0.1)% in parenthesis
+gm,DEC,New parameters (this work; OPLSAA-LPG functional form),heat_of_vaporization,298.15,K,46.78,kJ/mol,FALSE,Table 4 p4746,rel error (7.3)% in parenthesis
+gm,DEC,New parameters (this work; OPLSAA-LPG functional form),shear_viscosity,298.15,K,0.597,mPa*s,FALSE,Table 4 p4746,rel error (20.3)% in parenthesis

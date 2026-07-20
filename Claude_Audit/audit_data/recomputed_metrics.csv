@@ -1,0 +1,423 @@
+ff,molecule,property,ruler,metric_type,value,n_points,T_range,hvap_method,caveat_flag
+caleman:GAFF,DEC,rho_l,R1,MAPD,4.956183,1,298.1-298.1,,
+caleman:GAFF,DEC,rho_l,R2,MAPD,5.345166,1,298.1-298.1,,
+caleman:GAFF,DEC,gamma,R1,MAPD,13.047326,1,298.1-298.1,,
+caleman:GAFF,DEC,gamma,R2,MAPD,12.654321,1,298.1-298.1,,
+caleman:GAFF,DEC,Hvap,R1,MAPD,38.362249,1,298.1-298.1,direct,
+caleman:GAFF,DEC,Hvap,R2,MAPD,47.907543,1,298.1-298.1,direct,
+caleman:GAFF,DMF,rho_l,R1,MAPD,4.197333,1,298.1-298.1,,
+caleman:GAFF,DMF,rho_l,R2,MAPD,4.335842,1,298.1-298.1,,
+caleman:GAFF,DMF,gamma,R1,MAPD,0.665143,1,298.1-298.1,,
+caleman:GAFF,DMF,gamma,R2,MAPD,1.007275,1,298.1-298.1,,
+caleman:GAFF,DMF,Hvap,R1,MAPD,12.119384,1,298.1-298.1,direct,
+caleman:GAFF,DMF,Hvap,R2,MAPD,10.510826,1,298.1-298.1,direct,
+caleman:GAFF,DMSO,rho_l,R1,MAPD,3.641676,1,298.1-298.1,,
+caleman:GAFF,DMSO,rho_l,R2,MAPD,3.686804,1,298.1-298.1,,
+caleman:GAFF,DMSO,gamma,R1,MAPD,3.142894,1,298.1-298.1,,
+caleman:GAFF,DMSO,gamma,R2,MAPD,3.075489,1,298.1-298.1,,
+caleman:GAFF,DMSO,Hvap,R1,MAPD,7.527139,1,298.1-298.1,direct,
+caleman:GAFF,DMSO,Hvap,R2,MAPD,8.716203,1,298.1-298.1,direct,
+caleman:GAFF,Gly,rho_l,R1,MAPD,3.768089,2,293.1-320.0,,
+caleman:GAFF,Gly,rho_l,R2,MAPD,3.785176,2,293.1-320.0,,
+caleman:GAFF,Gly,gamma,R1,MAPD,12.922888,2,293.1-298.1,,
+caleman:GAFF,Gly,gamma,R2,MAPD,7.473417,2,293.1-298.1,,
+caleman:GAFF,Gly,Hvap,R1,MAPD,16.534768,1,293.1-293.1,direct,
+caleman:GAFF,Gly,Hvap,R2,MAPD,10.409046,1,293.1-293.1,direct,
+caleman:GAFF,MeOH,rho_l,R1,MAPD,2.747206,2,293.1-298.1,,
+caleman:GAFF,MeOH,rho_l,R2,MAPD,2.65405,2,293.1-298.1,,
+caleman:GAFF,MeOH,gamma,R1,MAPD,6.988387,1,298.1-298.1,,
+caleman:GAFF,MeOH,gamma,R2,MAPD,6.660625,1,298.1-298.1,,
+caleman:GAFF,MeOH,Hvap,R1,MAPD,5.838182,2,293.1-298.1,direct,
+caleman:GAFF,MeOH,Hvap,R2,MAPD,5.534844,2,293.1-298.1,direct,
+caleman:OPLS/AA,DEC,rho_l,R1,MAPD,2.663576,1,298.1-298.1,,
+caleman:OPLS/AA,DEC,rho_l,R2,MAPD,3.044062,1,298.1-298.1,,
+caleman:OPLS/AA,DEC,gamma,R1,MAPD,3.212906,1,298.1-298.1,,
+caleman:OPLS/AA,DEC,gamma,R2,MAPD,3.549383,1,298.1-298.1,,
+caleman:OPLS/AA,DEC,Hvap,R1,MAPD,19.857806,1,298.1-298.1,direct,
+caleman:OPLS/AA,DEC,Hvap,R2,MAPD,28.126521,1,298.1-298.1,direct,
+caleman:OPLS/AA,DMF,rho_l,R1,MAPD,2.366612,1,298.1-298.1,,
+caleman:OPLS/AA,DMF,rho_l,R2,MAPD,2.236828,1,298.1-298.1,,
+caleman:OPLS/AA,DMF,gamma,R1,MAPD,12.161994,1,298.1-298.1,,
+caleman:OPLS/AA,DMF,gamma,R2,MAPD,11.863458,1,298.1-298.1,,
+caleman:OPLS/AA,DMF,Hvap,R1,MAPD,1.722252,1,298.1-298.1,direct,
+caleman:OPLS/AA,DMF,Hvap,R2,MAPD,3.132226,1,298.1-298.1,direct,
+caleman:OPLS/AA,DMSO,rho_l,R1,MAPD,0.458174,1,298.1-298.1,,
+caleman:OPLS/AA,DMSO,rho_l,R2,MAPD,0.501916,1,298.1-298.1,,
+caleman:OPLS/AA,DMSO,gamma,R1,MAPD,1.280258,1,298.1-298.1,,
+caleman:OPLS/AA,DMSO,gamma,R2,MAPD,1.211556,1,298.1-298.1,,
+caleman:OPLS/AA,DMSO,Hvap,R1,MAPD,4.011469,1,298.1-298.1,direct,
+caleman:OPLS/AA,DMSO,Hvap,R2,MAPD,5.161656,1,298.1-298.1,direct,
+caleman:OPLS/AA,Gly,rho_l,R1,MAPD,0.532883,2,293.1-320.0,,
+caleman:OPLS/AA,Gly,rho_l,R2,MAPD,0.516558,2,293.1-320.0,,
+caleman:OPLS/AA,Gly,gamma,R1,MAPD,10.870479,2,293.1-298.1,,
+caleman:OPLS/AA,Gly,gamma,R2,MAPD,18.047465,2,293.1-298.1,,
+caleman:OPLS/AA,Gly,Hvap,R1,MAPD,11.667453,1,293.1-293.1,direct,
+caleman:OPLS/AA,Gly,Hvap,R2,MAPD,5.797583,1,293.1-293.1,direct,
+caleman:OPLS/AA,MeOH,rho_l,R1,MAPD,1.107947,2,293.1-298.1,,
+caleman:OPLS/AA,MeOH,rho_l,R2,MAPD,1.197592,2,293.1-298.1,,
+caleman:OPLS/AA,MeOH,gamma,R1,MAPD,9.24595,1,298.1-298.1,,
+caleman:OPLS/AA,MeOH,gamma,R2,MAPD,8.926144,1,298.1-298.1,,
+caleman:OPLS/AA,MeOH,Hvap,R1,MAPD,2.425765,2,293.1-298.1,direct,
+caleman:OPLS/AA,MeOH,Hvap,R2,MAPD,2.706232,2,293.1-298.1,direct,
+chen:TraPPE-UA,MeOH,rho_l,R1,MAPD,1.843298,6,275.0-475.0,,
+chen:TraPPE-UA,MeOH,rho_l,R2,MAPD,0.319945,1,275.0-475.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+chen:TraPPE-UA,MeOH,rho_v,R1,MAE,10.012264,6,275.0-475.0,,
+chen:TraPPE-UA,MeOH,rho_v,R2,MAE,0.01623,1,275.0-475.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+chen:TraPPE-UA,MeOH,Pvap,R1,MAE,156.122443,6,275.0-475.0,,
+chen:TraPPE-UA,MeOH,Pvap,R2,MAE,1.682,1,275.0-475.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+chen:TraPPE-UA,MeOH,Hvap,R1,MAPD,9.942239,6,275.0-475.0,direct,
+chen:TraPPE-UA,MeOH,Hvap,R2,MAPD,5.716487,1,275.0-475.0,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+chen:TraPPE-UA,MeOH,Tc,R1,MAPD,2.216682,1,single-value,,
+chen:TraPPE-UA,MeOH,Tc,R2,MAPD,2.14425,1,single-value,,
+chen:TraPPE-UA,MeOH,rho_c,R1,MAPD,1.24579,1,single-value,,
+chen:TraPPE-UA,MeOH,rho_c,R2,MAPD,4.779412,1,single-value,,
+gm:CHARMM-Gui,DEC,rho_l,R1,MAPD,1.572788,1,298.1-298.1,,
+gm:CHARMM-Gui,DEC,rho_l,R2,MAPD,1.952387,1,298.1-298.1,,
+gm:CHARMM-Gui,DEC,gamma,R1,MAPD,42.277029,1,298.1-298.1,,
+gm:CHARMM-Gui,DEC,gamma,R2,MAPD,41.782407,1,298.1-298.1,,
+gm:CHARMM-Gui,DEC,Hvap,R1,MAPD,39.158873,1,298.1-298.1,direct,
+gm:CHARMM-Gui,DEC,Hvap,R2,MAPD,40.229358,1,298.1-298.1,direct,
+gm:GROMOS,DEC,rho_l,R1,MAPD,12.810677,1,298.1-298.1,,
+gm:GROMOS,DEC,rho_l,R2,MAPD,13.232274,1,298.1-298.1,,
+gm:GROMOS,DEC,gamma,R1,MAPD,89.083267,1,298.1-298.1,,
+gm:GROMOS,DEC,gamma,R2,MAPD,88.425926,1,298.1-298.1,,
+gm:GROMOS,DEC,Hvap,R1,MAPD,44.120704,1,298.1-298.1,direct,
+gm:GROMOS,DEC,Hvap,R2,MAPD,45.229358,1,298.1-298.1,direct,
+gm:New parameters (this work; OPLSAA-LPG functional form),DEC,rho_l,R1,MAPD,0.29214,1,298.1-298.1,,
+gm:New parameters (this work; OPLSAA-LPG functional form),DEC,rho_l,R2,MAPD,0.08049,1,298.1-298.1,,
+gm:New parameters (this work; OPLSAA-LPG functional form),DEC,gamma,R1,MAPD,1.045726,1,298.1-298.1,,
+gm:New parameters (this work; OPLSAA-LPG functional form),DEC,gamma,R2,MAPD,0.694444,1,298.1-298.1,,
+gm:New parameters (this work; OPLSAA-LPG functional form),DEC,Hvap,R1,MAPD,6.474519,1,298.1-298.1,direct,
+gm:New parameters (this work; OPLSAA-LPG functional form),DEC,Hvap,R2,MAPD,7.293578,1,298.1-298.1,direct,
+gm:OPLSAA-LPG,DEC,rho_l,R1,MAPD,2.632733,1,298.1-298.1,,
+gm:OPLSAA-LPG,DEC,rho_l,R2,MAPD,3.016294,1,298.1-298.1,,
+gm:OPLSAA-LPG,DEC,gamma,R1,MAPD,31.088441,1,298.1-298.1,,
+gm:OPLSAA-LPG,DEC,gamma,R2,MAPD,30.632716,1,298.1-298.1,,
+gm:OPLSAA-LPG,DEC,Hvap,R1,MAPD,27.186749,1,298.1-298.1,direct,
+gm:OPLSAA-LPG,DEC,Hvap,R2,MAPD,28.165138,1,298.1-298.1,direct,
+gsv:H1,MeOH,rho_l,R1,MAPD,9.984689,23,200.0-451.0,,
+gsv:H1,MeOH,rho_l,R2,MAPD,8.92438,9,200.0-451.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:H1,MeOH,rho_v,R1,MAE,11.07245,9,371.0-449.9,,
+gsv:H1,MeOH,rho_v,R2,MAE,14.69735,2,371.0-449.9,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:H1,MeOH,Pvap,R1,MAE,302.963723,45,286.7-472.3,,
+gsv:H1,MeOH,Pvap,R2,MAE,514.735172,4,286.7-472.3,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:H1,MeOH,gamma,R1,MAPD,9.297351,1,298.0-298.0,,
+gsv:H1,MeOH,gamma,R2,MAPD,10.706353,1,298.0-298.0,,
+gsv:H1,MeOH,Hvap,R1,MAPD,56.884998,3,290.1-469.5,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:H1,MeOH,Hvap,R2,MAPD,50.25305,4,290.1-469.5,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:H1,MeOH,Tc,R1,MAPD,7.125326,1,single-value,,
+gsv:H1,MeOH,Tc,R2,MAPD,6.984003,1,single-value,,
+gsv:H1,MeOH,rho_c,R1,MAPD,20.069113,1,single-value,,
+gsv:H1,MeOH,rho_c,R2,MAPD,16.356877,1,single-value,,
+gsv:L1,MeOH,rho_l,R1,MAPD,1.618009,25,200.0-469.6,,
+gsv:L1,MeOH,rho_l,R2,MAPD,2.678086,9,200.0-469.6,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:L1,MeOH,rho_v,R1,MAE,3.214464,9,390.7-469.6,,
+gsv:L1,MeOH,rho_v,R2,MAE,3.60665,2,390.7-469.6,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:L1,MeOH,Pvap,R1,MAE,488.129387,43,286.7-489.0,,
+gsv:L1,MeOH,Pvap,R2,MAE,25.055451,3,286.7-489.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:L1,MeOH,gamma,R1,MAPD,9.204184,1,298.0-298.0,,
+gsv:L1,MeOH,gamma,R2,MAPD,7.507774,1,298.0-298.0,,
+gsv:L1,MeOH,Hvap,R1,MAPD,49.739553,3,290.6-486.6,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:L1,MeOH,Hvap,R2,MAPD,44.41529,4,290.6-486.6,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:L1,MeOH,Tc,R1,MAPD,1.632319,1,single-value,,
+gsv:L1,MeOH,Tc,R2,MAPD,1.482638,1,single-value,,
+gsv:L1,MeOH,rho_c,R1,MAPD,4.438185,1,single-value,,
+gsv:L1,MeOH,rho_c,R2,MAPD,0.0,1,single-value,,
+gsv:L2,MeOH,rho_l,R1,MAPD,0.933651,24,200.0-470.7,,
+gsv:L2,MeOH,rho_l,R2,MAPD,2.273056,8,200.0-470.7,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:L2,MeOH,rho_v,R1,MAE,1.073158,9,390.7-471.8,,
+gsv:L2,MeOH,rho_v,R2,MAE,1.6057,1,390.7-471.8,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:L2,MeOH,Pvap,R1,MAE,477.728846,45,286.7-489.5,,
+gsv:L2,MeOH,Pvap,R2,MAE,18.113398,4,286.7-489.5,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:L2,MeOH,gamma,R1,MAPD,21.388122,1,298.0-298.0,,
+gsv:L2,MeOH,gamma,R2,MAPD,19.502443,1,298.0-298.0,,
+gsv:L2,MeOH,Hvap,R1,MAPD,59.523588,3,290.6-486.6,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:L2,MeOH,Hvap,R2,MAPD,49.961024,4,290.6-486.6,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:L2,MeOH,Tc,R1,MAPD,0.580467,1,single-value,,
+gsv:L2,MeOH,Tc,R2,MAPD,0.429185,1,single-value,,
+gsv:L2,MeOH,rho_c,R1,MAPD,3.017191,1,single-value,,
+gsv:L2,MeOH,rho_c,R2,MAPD,1.486989,1,single-value,,
+gsv:OPLS,MeOH,rho_l,R1,MAPD,4.847563,24,200.0-460.8,,
+gsv:OPLS,MeOH,rho_l,R2,MAPD,4.704867,9,200.0-460.8,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:OPLS,MeOH,rho_v,R1,MAE,9.746596,8,391.8-460.8,,
+gsv:OPLS,MeOH,rho_v,R2,MAE,9.52735,2,391.8-460.8,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:OPLS,MeOH,Pvap,R1,MAE,322.356145,45,286.7-489.5,,
+gsv:OPLS,MeOH,Pvap,R2,MAE,261.172713,3,286.7-489.5,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:OPLS,MeOH,gamma,R1,MAPD,2.43533,1,298.0-298.0,,
+gsv:OPLS,MeOH,gamma,R2,MAPD,0.844069,1,298.0-298.0,,
+gsv:OPLS,MeOH,Hvap,R1,MAPD,52.767127,3,290.1-487.1,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:OPLS,MeOH,Hvap,R2,MAPD,46.640752,4,290.1-487.1,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:OPLS,MeOH,Tc,R1,MAPD,4.554131,1,single-value,,
+gsv:OPLS,MeOH,Tc,R2,MAPD,4.408896,1,single-value,,
+gsv:OPLS,MeOH,rho_c,R1,MAPD,5.859178,1,single-value,,
+gsv:OPLS,MeOH,rho_c,R2,MAPD,1.486989,1,single-value,,
+gsv:OPLS/2016,MeOH,rho_l,R1,MAPD,1.16248,26,200.0-480.5,,
+gsv:OPLS/2016,MeOH,rho_l,R2,MAPD,2.256618,9,200.0-480.5,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:OPLS/2016,MeOH,rho_v,R1,MAE,5.16916,10,390.7-480.5,,
+gsv:OPLS/2016,MeOH,rho_v,R2,MAE,4.14835,2,390.7-480.5,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:OPLS/2016,MeOH,Pvap,R1,MAE,681.999914,45,286.7-489.5,,
+gsv:OPLS/2016,MeOH,Pvap,R2,MAE,315.480106,4,286.7-489.5,,R2 = generic manuscript reference (no paper-specific value at this T)
+gsv:OPLS/2016,MeOH,gamma,R1,MAPD,11.460469,1,298.0-298.0,,
+gsv:OPLS/2016,MeOH,gamma,R2,MAPD,9.729009,1,298.0-298.0,,
+gsv:OPLS/2016,MeOH,Hvap,R1,MAPD,49.703955,3,290.6-486.6,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:OPLS/2016,MeOH,Hvap,R2,MAPD,44.387849,4,290.6-486.6,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+gsv:OPLS/2016,MeOH,Tc,R1,MAPD,1.581674,1,single-value,,
+gsv:OPLS/2016,MeOH,Tc,R2,MAPD,1.736247,1,single-value,,
+gsv:OPLS/2016,MeOH,rho_c,R1,MAPD,3.372439,1,single-value,,
+gsv:OPLS/2016,MeOH,rho_c,R2,MAPD,1.115242,1,single-value,,
+huang:Gubskaya and Kusalik (ref 15),EG,rho_l,R1,MAPD,2.319468,1,298.0-298.0,,
+huang:Gubskaya and Kusalik (ref 15),EG,rho_l,R2,MAPD,2.347943,1,298.0-298.0,,
+huang:Gubskaya and Kusalik (ref 15),EG,Hvap,R1,MAPD,9.243597,1,298.0-298.0,direct,
+huang:Gubskaya and Kusalik (ref 15),EG,Hvap,R2,MAPD,8.571429,1,298.0-298.0,direct,
+huang:OPLS-AA (Jorgensen),EG,rho_l,R1,MAPD,5.568403,1,298.0-298.0,,
+huang:OPLS-AA (Jorgensen),EG,rho_l,R2,MAPD,5.59593,1,298.0-298.0,,
+huang:OPLS-AA (Jorgensen),EG,Hvap,R1,MAPD,10.426303,1,298.0-298.0,direct,
+huang:OPLS-AA (Jorgensen),EG,Hvap,R2,MAPD,10.977444,1,298.0-298.0,direct,
+huang:Szefczyk and Cordeiro (ref 19),EG,rho_l,R1,MAPD,0.113039,1,298.0-298.0,,
+huang:Szefczyk and Cordeiro (ref 19),EG,rho_l,R2,MAPD,0.083855,1,298.0-298.0,,
+huang:Szefczyk and Cordeiro (ref 19),EG,Hvap,R1,MAPD,14.388032,1,298.0-298.0,direct,
+huang:Szefczyk and Cordeiro (ref 19),EG,Hvap,R2,MAPD,13.68421,1,298.0-298.0,direct,
+huang:modified OPLS-AA (Kony et al ref 17),EG,rho_l,R1,MAPD,3.672725,1,298.0-298.0,,
+huang:modified OPLS-AA (Kony et al ref 17),EG,rho_l,R2,MAPD,3.700805,1,298.0-298.0,,
+huang:modified OPLS-AA (Kony et al ref 17),EG,Hvap,R1,MAPD,2.70965,1,298.0-298.0,direct,
+huang:modified OPLS-AA (Kony et al ref 17),EG,Hvap,R2,MAPD,3.308271,1,298.0-298.0,direct,
+huang:present model (Huang/Vrabec 2012),EG,rho_l,R1,MAPD,2.348964,10,298.0-700.0,,R1 near-critical/unreliable point included
+huang:present model (Huang/Vrabec 2012),EG,rho_l,R2,MAPD,1.047956,7,298.0-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+huang:present model (Huang/Vrabec 2012),EG,rho_v,R1,MAE,5.193114,9,325.0-700.0,,R1 near-critical/unreliable point included
+huang:present model (Huang/Vrabec 2012),EG,rho_v,R2,MAE,6.19985,6,325.0-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+huang:present model (Huang/Vrabec 2012),EG,Pvap,R1,MAE,209.027071,9,325.0-700.0,,R1 near-critical/unreliable point included
+huang:present model (Huang/Vrabec 2012),EG,Pvap,R2,MAE,313.455667,6,325.0-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+huang:present model (Huang/Vrabec 2012),EG,Hvap,R1,MAPD,7.227026,10,298.0-700.0,direct,R1 near-critical/unreliable point included
+huang:present model (Huang/Vrabec 2012),EG,Hvap,R2,MAPD,5.621656,7,298.0-700.0,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+huang:present model (Huang/Vrabec 2012),EG,Tc,R1,MAPD,0.417246,1,single-value,,
+huang:present model (Huang/Vrabec 2012),EG,Tc,R2,MAPD,0.277778,1,single-value,,
+huang:present model (Huang/Vrabec 2012),EG,rho_c,R1,MAPD,0.343628,1,single-value,,reference provenance: CORRELATION
+huang:present model (Huang/Vrabec 2012),EG,rho_c,R2,MAPD,0.337838,1,single-value,,reference provenance: CORRELATION
+jahn:BC-FF,Gly,rho_l,R1,MAPD,4.143012,8,300.0-459.7,,
+jahn:BC-FF,Gly,rho_l,R2,MAPD,4.361194,2,300.0-459.7,,
+jahn:OPLS1-FF,Gly,rho_l,R1,MAPD,1.960857,7,319.9-459.7,,
+jahn:OPLS1-FF,Gly,rho_l,R2,MAPD,2.219023,2,319.9-459.7,,
+jahn:OPLS2-FF,Gly,rho_l,R1,MAPD,1.230223,7,319.9-459.7,,
+jahn:OPLS2-FF,Gly,rho_l,R2,MAPD,1.334375,2,319.9-459.7,,
+jahn:OPLS3-FF,Gly,rho_l,R1,MAPD,3.366478,8,300.0-459.2,,
+jahn:OPLS3-FF,Gly,rho_l,R2,MAPD,3.556723,2,300.0-459.2,,
+jahn:R-FF,Gly,rho_l,R1,MAPD,8.105972,8,299.5-459.7,,
+jahn:R-FF,Gly,rho_l,R2,MAPD,7.806647,2,299.5-459.7,,
+jorg:OPLS (OPLS-UA),MeOH,rho_l,R1,MAPD,3.464935,1,298.1-298.1,,
+jorg:OPLS (OPLS-UA),MeOH,rho_l,R2,MAPD,3.508772,1,298.1-298.1,,
+jorg:OPLS (OPLS-UA),MeOH,Hvap,R1,MAPD,1.095552,1,298.1-298.1,direct,
+jorg:OPLS (OPLS-UA),MeOH,Hvap,R2,MAPD,1.230425,1,298.1-298.1,direct,
+meoh4p:MD1,MeOH,rho_l,R1,MAPD,2.763408,6,250.0-500.0,,
+meoh4p:MD1,MeOH,rho_l,R2,MAPD,2.544266,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD1,MeOH,rho_v,R1,MAE,19.837453,6,250.0-500.0,,
+meoh4p:MD1,MeOH,rho_v,R2,MAE,17.634821,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD1,MeOH,Pvap,R1,MAE,1308.935245,6,250.0-500.0,,
+meoh4p:MD1,MeOH,Pvap,R2,MAE,1102.58646,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD1,MeOH,gamma,R1,MAPD,62.746547,6,250.0-500.0,,
+meoh4p:MD1,MeOH,gamma,R2,MAPD,61.328377,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD1,MeOH,Hvap,R1,MAPD,44.775908,5,298.0-475.0,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+meoh4p:MD1,MeOH,Hvap,R2,MAPD,29.297052,4,298.0-475.0,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+meoh4p:MD1,MeOH,Tc,R1,MAPD,3.82173,1,single-value,,
+meoh4p:MD1,MeOH,Tc,R2,MAPD,3.979711,1,single-value,,
+meoh4p:MD1,MeOH,rho_c,R1,MAPD,10.832655,1,single-value,,
+meoh4p:MD1,MeOH,rho_c,R2,MAPD,6.69145,1,single-value,,
+meoh4p:MD2,MeOH,rho_l,R1,MAPD,3.63284,6,250.0-500.0,,
+meoh4p:MD2,MeOH,rho_l,R2,MAPD,3.309603,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD2,MeOH,rho_v,R1,MAE,21.100786,6,250.0-500.0,,
+meoh4p:MD2,MeOH,rho_v,R2,MAE,18.870821,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD2,MeOH,Pvap,R1,MAE,1426.301911,6,250.0-500.0,,
+meoh4p:MD2,MeOH,Pvap,R2,MAE,1197.32646,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD2,MeOH,gamma,R1,MAPD,52.354371,6,250.0-500.0,,
+meoh4p:MD2,MeOH,gamma,R2,MAPD,51.689237,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MD2,MeOH,Hvap,R1,MAPD,46.48736,5,298.0-475.0,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+meoh4p:MD2,MeOH,Hvap,R2,MAPD,28.058173,4,298.0-475.0,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+meoh4p:MD2,MeOH,Tc,R1,MAPD,2.352643,1,single-value,,
+meoh4p:MD2,MeOH,Tc,R2,MAPD,2.508389,1,single-value,,
+meoh4p:MD2,MeOH,rho_c,R1,MAPD,10.477407,1,single-value,,
+meoh4p:MD2,MeOH,rho_c,R2,MAPD,6.319703,1,single-value,,
+meoh4p:MeOH-4P,MeOH,rho_l,R1,MAPD,1.192087,6,250.0-500.0,,
+meoh4p:MeOH-4P,MeOH,rho_l,R2,MAPD,0.962695,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MeOH-4P,MeOH,rho_v,R1,MAE,18.507452,6,250.0-500.0,,
+meoh4p:MeOH-4P,MeOH,rho_v,R2,MAE,16.594821,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MeOH-4P,MeOH,Pvap,R1,MAE,1212.201911,6,250.0-500.0,,
+meoh4p:MeOH-4P,MeOH,Pvap,R2,MAE,1024.90646,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MeOH-4P,MeOH,gamma,R1,MAPD,48.563565,6,250.0-500.0,,
+meoh4p:MeOH-4P,MeOH,gamma,R2,MAPD,46.94408,5,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:MeOH-4P,MeOH,Hvap,R1,MAPD,43.376019,5,298.0-475.0,CC+direct,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+meoh4p:MeOH-4P,MeOH,Hvap,R2,MAPD,27.848158,4,298.0-475.0,CC+direct,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+meoh4p:MeOH-4P,MeOH,Tc,R1,MAPD,1.659589,1,single-value,,
+meoh4p:MeOH-4P,MeOH,Tc,R2,MAPD,1.81428,1,single-value,,
+meoh4p:MeOH-4P,MeOH,rho_c,R1,MAPD,9.411662,1,single-value,,
+meoh4p:MeOH-4P,MeOH,rho_c,R2,MAPD,5.204461,1,single-value,,
+meoh4p:OPLS-UA,MeOH,rho_l,R1,MAPD,3.083374,1,298.1-298.1,,
+meoh4p:OPLS-UA,MeOH,rho_l,R2,MAPD,3.053435,1,298.1-298.1,,
+meoh4p:OPLS-UA,MeOH,gamma,R1,MAPD,40.175068,6,250.0-500.0,,
+meoh4p:OPLS-UA,MeOH,gamma,R2,MAPD,39.63313,6,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:OPLS-UA,MeOH,Hvap,R1,MAPD,6.794478,1,298.1-298.1,direct,
+meoh4p:OPLS-UA,MeOH,Hvap,R2,MAPD,6.732567,1,298.1-298.1,direct,
+meoh4p:OPLS-UA,MeOH,Tc,R1,MAPD,4.554131,1,single-value,,
+meoh4p:OPLS-UA,MeOH,Tc,R2,MAPD,4.408896,1,single-value,,
+meoh4p:OPLS-UA,MeOH,rho_c,R1,MAPD,5.859178,1,single-value,,
+meoh4p:OPLS-UA,MeOH,rho_c,R2,MAPD,1.486989,1,single-value,,
+meoh4p:OPLS/2016,MeOH,rho_l,R1,MAPD,0.158069,1,298.1-298.1,,
+meoh4p:OPLS/2016,MeOH,rho_l,R2,MAPD,0.127226,1,298.1-298.1,,
+meoh4p:OPLS/2016,MeOH,gamma,R1,MAPD,77.480536,6,250.0-500.0,,
+meoh4p:OPLS/2016,MeOH,gamma,R2,MAPD,76.890306,6,250.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+meoh4p:OPLS/2016,MeOH,Hvap,R1,MAPD,0.254006,1,298.1-298.1,direct,
+meoh4p:OPLS/2016,MeOH,Hvap,R2,MAPD,0.320598,1,298.1-298.1,direct,
+meoh4p:OPLS/2016,MeOH,Tc,R1,MAPD,1.581674,1,single-value,,
+meoh4p:OPLS/2016,MeOH,Tc,R2,MAPD,1.736247,1,single-value,,
+meoh4p:OPLS/2016,MeOH,rho_c,R1,MAPD,3.372439,1,single-value,,
+meoh4p:OPLS/2016,MeOH,rho_c,R2,MAPD,1.115242,1,single-value,,
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,DMSO,rho_l,R1,MAPD,2.771504,4,298.0-373.0,,
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,DMSO,rho_l,R2,MAPD,1.853298,2,298.0-373.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,DMSO,rho_v,R1,MAE,0.044892,4,298.0-373.0,,
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,DMSO,rho_v,R2,MAE,0.011801,1,298.0-373.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,DMSO,gamma,R1,MAPD,28.709368,4,298.0-373.0,,
+senapati:P2 (Luzar-Chandler) + Benjamin flexible intramolecular,DMSO,gamma,R2,MAPD,23.563339,2,298.0-373.0,,
+stubbs:TraPPE-UA,EG,rho_l,R1,MAPD,4.639905,5,450.0-650.0,,R1 near-critical/unreliable point included
+stubbs:TraPPE-UA,EG,rho_l,R2,MAPD,4.501151,5,450.0-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+stubbs:TraPPE-UA,EG,rho_v,R1,MAE,4.484442,5,450.0-650.0,,R1 near-critical/unreliable point included
+stubbs:TraPPE-UA,EG,rho_v,R2,MAE,1.338606,5,450.0-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+stubbs:TraPPE-UA,EG,Pvap,R1,MAE,71.741093,5,450.0-650.0,,R1 near-critical/unreliable point included
+stubbs:TraPPE-UA,EG,Pvap,R2,MAE,71.7412,5,450.0-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+stubbs:TraPPE-UA,EG,Hvap,R1,MAPD,8.245431,3,500.0-600.0,CC,"some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+stubbs:TraPPE-UA,EG,Hvap,R2,MAPD,8.243012,3,500.0-600.0,CC,"R2 = generic manuscript reference (no paper-specific value at this T); some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated"
+stubbs:TraPPE-UA,EG,Tc,R1,MAPD,0.139082,1,single-value,,
+stubbs:TraPPE-UA,EG,Tc,R2,MAPD,0.277778,1,single-value,,
+stubbs:TraPPE-UA,EG,rho_c,R1,MAPD,6.838825,1,single-value,,reference provenance: CORRELATION
+stubbs:TraPPE-UA,EG,rho_c,R2,MAPD,13.252139,1,single-value,,R2 = generic manuscript reference (no paper-specific value); reference provenance: CORRELATION
+student:Base,DEC,rho_l,R1,MAPD,1.217296,5,273.2-353.2,,
+student:Base,DEC,rho_l,R2,MAPD,0.666068,5,273.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DEC,rho_v,R1,MAE,0.192476,1,353.2-353.2,,
+student:Base,DEC,rho_v,R2,MAE,0.857039,1,353.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DEC,Pvap,R1,MAE,4.3047,1,353.2-353.2,,
+student:Base,DEC,Pvap,R2,MAE,2.939586,1,353.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DEC,gamma,R1,MAPD,2.498738,5,273.2-353.2,,
+student:Base,DEC,gamma,R2,MAPD,2.990227,5,273.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMF,rho_l,R1,MAPD,0.084078,5,308.1-328.1,,
+student:Base,DMF,rho_l,R2,MAPD,0.647185,5,308.1-328.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMF,gamma,R1,MAPD,1.381644,5,308.1-328.1,,
+student:Base,DMF,gamma,R2,MAPD,1.82993,5,308.1-328.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,rho_l,R1,MAPD,0.664407,5,313.1-333.1,,
+student:Base,DMSO,rho_l,R2,MAPD,0.529226,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,rho_v,R1,MAE,0.01265,5,313.1-333.1,,
+student:Base,DMSO,rho_v,R2,MAE,0.012515,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,Pvap,R1,MAE,0.436256,5,313.1-333.1,,
+student:Base,DMSO,Pvap,R2,MAE,0.43,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,gamma,R1,MAPD,1.085213,5,313.1-333.1,,
+student:Base,DMSO,gamma,R2,MAPD,1.153694,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,Hvap,R1,MAPD,17.991381,2,318.0-328.1,direct,
+student:Base,DMSO,Hvap,R2,MAPD,17.865509,2,318.0-328.1,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,Tc,R1,MAPD,11.330595,1,single-value,,
+student:Base,DMSO,Tc,R2,MAPD,12.68904,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:Base,DMSO,rho_c,R1,MAPD,1.224168,1,single-value,,
+student:Base,DMSO,rho_c,R2,MAPD,1.001878,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:Base,EG,rho_l,R1,MAPD,4.4909,11,378.1-700.0,,R1 near-critical/unreliable point included
+student:Base,EG,rho_l,R2,MAPD,2.802141,11,378.1-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,EG,rho_v,R1,MAE,7.495548,10,378.1-650.0,,R1 near-critical/unreliable point included
+student:Base,EG,rho_v,R2,MAE,5.804323,10,378.1-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,EG,Pvap,R1,MAE,165.524838,10,378.1-650.0,,R1 near-critical/unreliable point included
+student:Base,EG,Pvap,R2,MAE,165.523644,10,378.1-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,EG,gamma,R1,MAPD,19.21357,11,378.1-700.0,,R1 near-critical/unreliable point included
+student:Base,EG,gamma,R2,MAPD,19.213373,11,378.1-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,EG,Hvap,R1,MAPD,14.512016,10,378.1-650.0,direct,R1 near-critical/unreliable point included
+student:Base,EG,Hvap,R2,MAPD,14.51274,10,378.1-650.0,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,EG,Tc,R1,MAPD,1.387705,1,single-value,,
+student:Base,EG,Tc,R2,MAPD,1.469928,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:Base,EG,rho_c,R1,MAPD,1.545762,1,single-value,,reference provenance: CORRELATION
+student:Base,EG,rho_c,R2,MAPD,8.323456,1,single-value,,R2 = generic manuscript reference (no paper-specific value); reference provenance: CORRELATION
+student:Base,Gly,rho_l,R1,MAPD,0.314465,5,293.1-333.1,,
+student:Base,Gly,rho_l,R2,MAPD,0.34918,5,293.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,Gly,gamma,R1,MAPD,2.817912,5,293.1-333.1,,
+student:Base,Gly,gamma,R2,MAPD,1.678462,5,293.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,MeOH,rho_l,R1,MAPD,5.297475,7,200.0-500.0,,
+student:Base,MeOH,rho_l,R2,MAPD,5.297699,7,200.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,MeOH,rho_v,R1,MAE,2.639976,6,200.0-450.0,,
+student:Base,MeOH,rho_v,R2,MAE,2.640023,6,200.0-450.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,MeOH,Pvap,R1,MAE,301.41592,6,200.0-450.0,,
+student:Base,MeOH,Pvap,R2,MAE,301.408955,6,200.0-450.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,MeOH,gamma,R1,MAPD,31.868086,7,200.0-500.0,,
+student:Base,MeOH,gamma,R2,MAPD,31.867417,7,200.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,MeOH,Hvap,R1,MAPD,13.981304,6,200.0-450.0,direct,
+student:Base,MeOH,Hvap,R2,MAPD,13.982365,6,200.0-450.0,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,MeOH,Tc,R1,MAPD,9.111027,1,single-value,,
+student:Base,MeOH,Tc,R2,MAPD,9.298378,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:Base,MeOH,rho_c,R1,MAPD,3.18783,1,single-value,,
+student:Base,MeOH,rho_c,R2,MAPD,0.484337,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:GP-Optimized,DEC,rho_l,R1,MAPD,0.801235,5,273.2-353.2,,
+student:GP-Optimized,DEC,rho_l,R2,MAPD,0.273694,5,273.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DEC,rho_v,R1,MAE,0.152754,2,333.2-353.2,,
+student:GP-Optimized,DEC,rho_v,R2,MAE,0.611771,2,333.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DEC,Pvap,R1,MAE,3.507452,2,333.2-353.2,,
+student:GP-Optimized,DEC,Pvap,R2,MAE,3.129472,2,333.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DEC,gamma,R1,MAPD,3.430219,5,273.2-353.2,,
+student:GP-Optimized,DEC,gamma,R2,MAPD,2.585989,5,273.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DEC,Tc,R1,MAPD,2.247991,1,single-value,,"reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
+student:GP-Optimized,DEC,Tc,R2,MAPD,2.191987,1,single-value,,"R2 = generic manuscript reference (no paper-specific value); reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
+student:GP-Optimized,DEC,rho_c,R1,MAPD,2.497853,1,single-value,,"reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
+student:GP-Optimized,DEC,rho_c,R2,MAPD,6.289778,1,single-value,,"R2 = generic manuscript reference (no paper-specific value); reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
+student:GP-Optimized,DMF,rho_l,R1,MAPD,0.6659,5,308.1-328.1,,
+student:GP-Optimized,DMF,rho_l,R2,MAPD,0.06068,5,308.1-328.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMF,gamma,R1,MAPD,4.144547,5,308.1-328.1,,
+student:GP-Optimized,DMF,gamma,R2,MAPD,3.625021,5,308.1-328.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,rho_l,R1,MAPD,0.122854,5,313.1-333.1,,
+student:GP-Optimized,DMSO,rho_l,R2,MAPD,0.090156,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,rho_v,R1,MAE,0.037127,5,313.1-333.1,,
+student:GP-Optimized,DMSO,rho_v,R2,MAE,0.036992,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,Pvap,R1,MAE,1.280949,5,313.1-333.1,,
+student:GP-Optimized,DMSO,Pvap,R2,MAE,1.274693,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,gamma,R1,MAPD,1.587788,5,313.1-333.1,,
+student:GP-Optimized,DMSO,gamma,R2,MAPD,1.461923,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,Hvap,R1,MAPD,14.694494,2,318.0-328.1,direct,
+student:GP-Optimized,DMSO,Hvap,R2,MAPD,14.544474,2,318.0-328.1,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,Tc,R1,MAPD,12.257185,1,single-value,,
+student:GP-Optimized,DMSO,Tc,R2,MAPD,13.601435,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:GP-Optimized,DMSO,rho_c,R1,MAPD,0.54901,1,single-value,,
+student:GP-Optimized,DMSO,rho_c,R2,MAPD,0.325201,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:GP-Optimized,EG,rho_l,R1,MAPD,2.954828,11,378.1-700.0,,R1 near-critical/unreliable point included
+student:GP-Optimized,EG,rho_l,R2,MAPD,1.436554,11,378.1-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,EG,rho_v,R1,MAE,3.761452,10,378.1-650.0,,R1 near-critical/unreliable point included
+student:GP-Optimized,EG,rho_v,R2,MAE,2.070227,10,378.1-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,EG,Pvap,R1,MAE,32.573864,10,378.1-650.0,,R1 near-critical/unreliable point included
+student:GP-Optimized,EG,Pvap,R2,MAE,32.573715,10,378.1-650.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,EG,gamma,R1,MAPD,17.127572,11,378.1-700.0,,R1 near-critical/unreliable point included
+student:GP-Optimized,EG,gamma,R2,MAPD,17.127573,11,378.1-700.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,EG,Hvap,R1,MAPD,11.316823,10,378.1-650.0,direct,R1 near-critical/unreliable point included
+student:GP-Optimized,EG,Hvap,R2,MAPD,11.317634,10,378.1-650.0,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,EG,Tc,R1,MAPD,1.370846,1,single-value,,
+student:GP-Optimized,EG,Tc,R2,MAPD,1.286323,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:GP-Optimized,EG,rho_c,R1,MAPD,2.416113,1,single-value,,reference provenance: CORRELATION
+student:GP-Optimized,EG,rho_c,R2,MAPD,9.133892,1,single-value,,R2 = generic manuscript reference (no paper-specific value); reference provenance: CORRELATION
+student:GP-Optimized,Gly,rho_l,R1,MAPD,0.317139,5,293.1-333.1,,
+student:GP-Optimized,Gly,rho_l,R2,MAPD,0.318305,5,293.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,Gly,gamma,R1,MAPD,3.789907,5,293.1-333.1,,
+student:GP-Optimized,Gly,gamma,R2,MAPD,2.240735,5,293.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,MeOH,rho_l,R1,MAPD,3.861231,7,200.0-500.0,,
+student:GP-Optimized,MeOH,rho_l,R2,MAPD,3.861444,7,200.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,MeOH,rho_v,R1,MAE,1.009249,6,200.0-450.0,,
+student:GP-Optimized,MeOH,rho_v,R2,MAE,1.009296,6,200.0-450.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,MeOH,Pvap,R1,MAE,119.247614,6,200.0-450.0,,
+student:GP-Optimized,MeOH,Pvap,R2,MAE,119.240649,6,200.0-450.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,MeOH,gamma,R1,MAPD,22.010559,7,200.0-500.0,,
+student:GP-Optimized,MeOH,gamma,R2,MAPD,22.009428,7,200.0-500.0,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,MeOH,Hvap,R1,MAPD,8.372844,6,200.0-450.0,direct,
+student:GP-Optimized,MeOH,Hvap,R2,MAPD,8.372067,6,200.0-450.0,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,MeOH,Tc,R1,MAPD,7.389331,1,single-value,,
+student:GP-Optimized,MeOH,Tc,R2,MAPD,7.573726,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+student:GP-Optimized,MeOH,rho_c,R1,MAPD,2.248849,1,single-value,,
+student:GP-Optimized,MeOH,rho_c,R2,MAPD,0.480866,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,R1,MAPD,2.385807,20,293.4-584.5,,R1 near-critical/unreliable point included
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_l,R2,MAPD,1.556933,5,293.4-584.5,,R2 = generic manuscript reference (no paper-specific value at this T)
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_v,R1,MAE,2.399993,11,413.0-584.5,,R1 near-critical/unreliable point included
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,R1,MAE,254.564751,23,277.8-598.8,,R1 near-critical/unreliable point included
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Pvap,R2,MAE,0.406018,3,277.8-598.8,,R2 = generic manuscript reference (no paper-specific value at this T)
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Tc,R1,MAPD,0.112996,1,single-value,,"reference provenance: UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,Tc,R2,MAPD,0.112996,1,single-value,,"R2 = generic manuscript reference (no paper-specific value); reference provenance: UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_c,R1,MAPD,0.020111,1,single-value,,"reference provenance: UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMF,rho_c,R2,MAPD,0.058738,1,single-value,,"R2 = generic manuscript reference (no paper-specific value); reference provenance: UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,R1,MAPD,4.31253,22,291.0-526.6,,
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_l,R2,MAPD,4.759108,4,291.0-526.6,,R2 = generic manuscript reference (no paper-specific value at this T)
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,rho_v,R1,MAE,1.5531,2,514.2-527.6,,R1 near-critical/unreliable point included
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,R1,MAE,5.177299,15,354.6-526.3,,
+vahid:Vahid&Maginn GEMC-NVT/MC (this work's own FF),DMSO,Pvap,R2,MAE,2.241797,4,354.6-526.3,,

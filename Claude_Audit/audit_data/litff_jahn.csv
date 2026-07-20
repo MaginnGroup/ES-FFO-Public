@@ -1,0 +1,6 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+jahn,glycerol,R-FF,rho_l,,K,,g/cm^3,True,Fig2a p11286,"Liquid density rho(T) plotted only in Figure 2a for T=300-460 K; no per-temperature values tabulated. Text p11286 gives qualitative statement only: R-FF underestimates density, e.g. at T=400 K R-FF density is ~0.11 g/cm3 smaller than experiment (deviation ~9%), no explicit simulated number printed."
+jahn,glycerol,BC-FF,rho_l,,K,,g/cm^3,True,Fig2a p11286,"Liquid density rho(T) plotted only in Figure 2a; no tabulated values. Text: BC-FF density close to experiment, deviation dp<0.05 g/cm3 (<4.5%)."
+jahn,glycerol,OPLS1-FF,rho_l,,K,,g/cm^3,True,Fig2a p11286,"Liquid density rho(T) plotted only in Figure 2a; no tabulated values. Text: OPLS1-FF close to experiment, deviations <=4.5%."
+jahn,glycerol,OPLS2-FF,rho_l,,K,,g/cm^3,True,Fig2a p11286,"Liquid density rho(T) plotted only in Figure 2a; no tabulated values. Text (abstract): for FF ii deviations in density more pronounced <=9%; note abstract groups OPLS2 differently - see notes. Density from figure only."
+jahn,glycerol,OPLS3-FF,rho_l,,K,,g/cm^3,True,Fig2a p11286,"Liquid density rho(T) plotted only in Figure 2a; no tabulated values."

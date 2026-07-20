@@ -1,0 +1,29 @@
+paper_tag,molecule,ff_model,property,temperature,temp_unit,value,value_unit,is_figure_only,table_or_page,notes
+chen,methanol,TraPPE-UA,Pvap,275,K,0.0038,MPa,False,Table 2 p3097,subscript 2 = stat uncertainty last digit
+chen,methanol,TraPPE-UA,rho_v,275,K,0.000054,g/mL,False,Table 2 p3097,printed as 0.000 054 subscript 3
+chen,methanol,TraPPE-UA,rho_l,275,K,0.807,g/mL,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,Hvap,275,K,41.0,kJ/mol,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,Pvap,300,K,0.017,MPa,False,Table 2 p3097,subscript 1
+chen,methanol,TraPPE-UA,rho_v,300,K,0.00023,g/mL,False,Table 2 p3097,printed as 0.000 23 subscript 1
+chen,methanol,TraPPE-UA,rho_l,300,K,0.782,g/mL,False,Table 2 p3097,subscript 1
+chen,methanol,TraPPE-UA,Hvap,300,K,39.5,kJ/mol,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,Pvap,325,K,0.052,MPa,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,rho_v,325,K,0.00065,g/mL,False,Table 2 p3097,printed as 0.000 65 subscript 3
+chen,methanol,TraPPE-UA,rho_l,325,K,0.753,g/mL,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,Hvap,325,K,37.5,kJ/mol,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,Pvap,375,K,0.354,MPa,False,Table 2 p3097,subscript 7
+chen,methanol,TraPPE-UA,rho_v,375,K,0.0042,g/mL,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,rho_l,375,K,0.692,g/mL,False,Table 2 p3097,subscript 2
+chen,methanol,TraPPE-UA,Hvap,375,K,32.8,kJ/mol,False,Table 2 p3097,subscript 4
+chen,methanol,TraPPE-UA,Pvap,425,K,1.57,MPa,False,Table 2 p3097,subscript 5
+chen,methanol,TraPPE-UA,rho_v,425,K,0.021,g/mL,False,Table 2 p3097,subscript 1
+chen,methanol,TraPPE-UA,rho_l,425,K,0.628,g/mL,False,Table 2 p3097,subscript 3
+chen,methanol,TraPPE-UA,Hvap,425,K,25.2,kJ/mol,False,Table 2 p3097,subscript 7
+chen,methanol,TraPPE-UA,Pvap,475,K,4.96,MPa,False,Table 2 p3097,subscript 4
+chen,methanol,TraPPE-UA,rho_v,475,K,0.110,g/mL,False,Table 2 p3097,subscript 5
+chen,methanol,TraPPE-UA,rho_l,475,K,0.518,g/mL,False,Table 2 p3097,subscript 8
+chen,methanol,TraPPE-UA,Hvap,475,K,12.7,kJ/mol,False,Table 2 p3097,subscript 5
+chen,methanol,TraPPE-UA,Tc,,,502,K,False,Table 3 p3098,subscript 2; estimated from scaling-law fit
+chen,methanol,TraPPE-UA,rho_c,,,0.285,g/mL,False,Table 3 p3098,subscript 4; estimated from law of rectilinear diameters
+jorg,methanol,OPLS (OPLS-UA),Hvap,25,degC,9.05,kcal/mol,False,Table V p1279,+/- 0.02; calcd via dHvap=dEvap+RT-(H0-H); simulation at 25 C 1 atm NPT
+jorg,methanol,OPLS (OPLS-UA),rho_l,25,degC,0.759,g/cm3,False,Table VI p1279,+/- 0.003; liquid density at 25 C 1 atm

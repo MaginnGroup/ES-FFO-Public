@@ -1,0 +1,81 @@
+molecule,property,series,n_points,frac_within_1pct,frac_within_5pct,max_dev_pct,mean_dev_pct,circular_vs_R1
+MeOH,rho_l,caleman paper's cited exp,2,1.0,1.0,0.12,0.09,N
+MeOH,rho_l,jorg paper's cited exp,1,1.0,1.0,0.05,0.05,N
+MeOH,rho_l,gsv paper's cited exp,3,1.0,1.0,0.06,0.05,N
+MeOH,rho_l,meoh4p paper's cited exp,1,1.0,1.0,0.03,0.03,N
+MeOH,rho_l,esolvs.py (manuscript reference),7,1.0,1.0,0.0,0.0,Y
+MeOH,rho_l,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+MeOH,rho_v,esolvs.py (manuscript reference),7,1.0,1.0,0.0,0.0,Y
+MeOH,rho_v,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+MeOH,Pvap,gsv paper's cited exp,2,1.0,1.0,0.46,0.36,N
+MeOH,Pvap,esolvs.py (manuscript reference),7,1.0,1.0,0.0,0.0,Y
+MeOH,Pvap,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+MeOH,Hvap,caleman paper's cited exp,2,1.0,1.0,0.64,0.35,N
+MeOH,Hvap,jorg paper's cited exp,1,1.0,1.0,0.13,0.13,N
+MeOH,Hvap,gsv paper's cited exp,1,1.0,1.0,0.09,0.09,N
+MeOH,Hvap,meoh4p paper's cited exp,1,1.0,1.0,0.07,0.07,N
+MeOH,Hvap,esolvs.py (manuscript reference),7,1.0,1.0,0.26,0.04,Y
+MeOH,Hvap,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+MeOH,gamma,caleman paper's cited exp,1,1.0,1.0,0.35,0.35,N
+MeOH,gamma,gsv paper's cited exp,1,0.0,1.0,1.58,1.58,N
+MeOH,gamma,meoh4p paper's cited exp,8,0.375,1.0,1.7,1.23,N
+MeOH,gamma,esolvs.py (manuscript reference),7,1.0,1.0,0.0,0.0,Y
+MeOH,gamma,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+EG,rho_l,"exp: Tawfik, W",13,1.0,1.0,0.12,0.05,N
+EG,rho_l,huang paper's cited exp,1,1.0,1.0,0.03,0.03,N
+EG,rho_l,esolvs.py (manuscript reference),11,0.909,0.909,19.79,1.87,Y
+EG,rho_l,Montana's raw REFPROP output,6,0.833,0.833,19.79,3.43,Y
+EG,rho_v,esolvs.py (manuscript reference),11,0.545,0.636,72.59,11.19,Y
+EG,rho_v,Montana's raw REFPROP output,6,0.167,0.333,72.59,20.41,Y
+EG,Pvap,esolvs.py (manuscript reference),11,1.0,1.0,0.0,0.0,Y
+EG,Pvap,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+EG,Hvap,huang paper's cited exp,1,1.0,1.0,0.62,0.62,N
+EG,Hvap,esolvs.py (manuscript reference),11,1.0,1.0,0.0,0.0,Y
+EG,Hvap,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+EG,gamma,esolvs.py (manuscript reference),11,1.0,1.0,0.0,0.0,Y
+EG,gamma,Montana's raw REFPROP output,6,1.0,1.0,0.0,0.0,Y
+Gly,rho_l,esolvs.py (manuscript reference),5,1.0,1.0,0.08,0.06,N
+Gly,rho_v,esolvs.py (manuscript reference),5,0.0,1.0,4.41,2.93,N
+Gly,Pvap,esolvs.py (manuscript reference),5,0.0,1.0,4.32,2.86,N
+Gly,Hvap,esolvs.py (manuscript reference),1,0.0,0.0,5.95,5.95,N
+Gly,gamma,jahn paper's cited exp,1,0.0,1.0,3.3,3.3,N
+Gly,gamma,esolvs.py (manuscript reference),5,0.0,0.6,5.99,4.2,N
+DMF,rho_l,caleman paper's cited exp,1,1.0,1.0,0.13,0.13,N
+DMF,rho_l,vahid paper's cited exp,3,1.0,1.0,0.05,0.05,N
+DMF,rho_l,esolvs.py (manuscript reference),5,1.0,1.0,0.67,0.65,N
+DMF,rho_v,esolvs.py (manuscript reference),5,0.2,0.4,9.89,6.35,N
+DMF,Pvap,esolvs.py (manuscript reference),5,0.2,0.4,9.67,6.21,N
+DMF,Hvap,"exp: Ruzicka, K",20,0.35,1.0,1.65,1.11,N
+DMF,Hvap,caleman paper's cited exp,1,0.0,1.0,1.46,1.46,N
+DMF,Hvap,esolvs.py (manuscript reference),1,1.0,1.0,0.01,0.01,N
+DMF,gamma,caleman paper's cited exp,1,1.0,1.0,0.34,0.34,N
+DMF,gamma,esolvs.py (manuscript reference),5,1.0,1.0,0.91,0.5,N
+DMSO,rho_l,"exp: Campbell, A",11,1.0,1.0,0.88,0.2,N
+DMSO,rho_l,"exp: Pruett, D",5,1.0,1.0,0.1,0.09,N
+DMSO,rho_l,caleman paper's cited exp,1,1.0,1.0,0.04,0.04,N
+DMSO,rho_l,senapati paper's cited exp,1,1.0,1.0,0.33,0.33,N
+DMSO,rho_l,luzar paper's cited exp,3,1.0,1.0,0.1,0.09,N
+DMSO,rho_l,vahid paper's cited exp,21,1.0,1.0,0.88,0.15,N
+DMSO,rho_l,esolvs.py (manuscript reference),5,1.0,1.0,0.15,0.14,N
+DMSO,rho_v,esolvs.py (manuscript reference),5,0.6,1.0,1.34,0.97,N
+DMSO,Pvap,"exp: Jakli, G",5,0.2,1.0,1.7,1.33,N
+DMSO,Pvap,"exp: Nishimura, M",26,0.0,0.5,12.19,5.31,N
+DMSO,Pvap,esolvs.py (manuscript reference),5,0.2,1.0,1.7,1.33,N
+DMSO,Hvap,caleman paper's cited exp,1,0.0,1.0,1.09,1.09,N
+DMSO,Hvap,esolvs.py (manuscript reference),5,0.2,1.0,3.31,1.57,N
+DMSO,gamma,"exp: Lawrence Clever, H",12,1.0,1.0,0.27,0.12,N
+DMSO,gamma,caleman paper's cited exp,1,1.0,1.0,0.07,0.07,N
+DMSO,gamma,senapati paper's cited exp,2,1.0,1.0,0.14,0.1,N
+DMSO,gamma,esolvs.py (manuscript reference),5,1.0,1.0,0.2,0.12,N
+DEC,rho_l,"exp: Rodriguez, A",1,1.0,1.0,0.37,0.37,N
+DEC,rho_l,caleman paper's cited exp,1,1.0,1.0,0.37,0.37,N
+DEC,rho_l,gm paper's cited exp,1,1.0,1.0,0.37,0.37,N
+DEC,rho_l,esolvs.py (manuscript reference),5,0.8,1.0,1.16,0.65,N
+DEC,rho_v,esolvs.py (manuscript reference),5,0.0,0.0,142.34,68.74,N
+DEC,Pvap,esolvs.py (manuscript reference),5,0.2,0.4,7.34,4.93,N
+DEC,Hvap,caleman paper's cited exp,1,0.0,0.0,6.45,6.45,N
+DEC,Hvap,gm paper's cited exp,1,1.0,1.0,0.76,0.76,N
+DEC,Hvap,esolvs.py (manuscript reference),8,0.625,1.0,1.4,0.88,N
+DEC,gamma,caleman paper's cited exp,1,1.0,1.0,0.35,0.35,N
+DEC,gamma,gm paper's cited exp,1,1.0,1.0,0.35,0.35,N
+DEC,gamma,esolvs.py (manuscript reference),5,0.0,1.0,2.36,1.88,N

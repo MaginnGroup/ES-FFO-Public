@@ -1,0 +1,5 @@
+paper_tag,molecule,property,temperature,temp_unit,exp_value,value_unit,exp_source_citation,table_or_page,notes
+chen,methanol,Tc,,,513,K,ref 60: Smith B.D.; Srivastava R. Thermodynamic Data for Pure Compounds Part B Halogenated Hydrocarbons and Alcohols; Elsevier: Amsterdam 1986,Table 3 p3098,experimental critical temperature
+chen,methanol,rho_c,,,0.272,g/mL,ref 60: Smith B.D.; Srivastava R. Thermodynamic Data for Pure Compounds Part B Halogenated Hydrocarbons and Alcohols; Elsevier: Amsterdam 1986,Table 3 p3098,experimental critical density
+jorg,methanol,Hvap,25,degC,8.94,kcal/mol,ref 38: Wilhoit R.C.; Zwolinski B.J. J. Phys. Chem. Ref. Data Suppl. 1973 2,Table V p1279,experimental heat of vaporization
+jorg,methanol,rho_l,25,degC,0.7866,g/cm3,ref 38: Wilhoit R.C.; Zwolinski B.J. J. Phys. Chem. Ref. Data Suppl. 1973 2,Table VI p1279,experimental liquid density; V exptl = 67.20 Angstrom^3
