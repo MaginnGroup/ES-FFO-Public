@@ -28,7 +28,7 @@ ES-FFO/ is the top level directory. It contains: <br />
 10. create_analysis_figs.ipynb is a jupyter notebook for creating the final analysis figures including all figures from running the scripts in 11-17. <br />
 11. make_corr_figs_all_molec.py is a python script for creating correlation figures for all molecules. Figure 12, Figure 14, and SI Figure S12 in the main text. <br />
 12. make_corr_figs_one_molec.py is a python script for creating correlation figures for individual molecules. SI Figures S1-S6 and SI Figures S13-S24 in the main text. <br />
-13. make_GP_vs_sim_and_sens.py is a python script for creating figures comparing GP and actual predictions and generating the results for individual molecule sensitivity analyses. Figure 9, SI Figure S11, and SI Tables S2-S13 in the main text. <br />
+13. make_GP_vs_sim_and_sens.py is a python script for creating figures comparing GP and actual predictions and generating the results for individual molecule sensitivity analyses. Figure 9, SI Figure S11, and SI Tables S4-S15 in the main text. <br />
 14. make_ift_val_figs.py is a python script for creating visualizations of the interfactial tension boxes for all ST simulations. <br />
 15. make_param_comp_figs.py is a python script for creating parameter comparison figures. Figures 10-11 and SI Figures S7-S10 in the main text. <br />
 16. make_pareto_comp_figs.py is a python script for visualizing differences between pareto-optimal LJ parameter sets in ST (and LD) iterations. Figure 13 in the main text. <br />
@@ -349,6 +349,16 @@ Note: Step 2 operation IFT runs multiple operations in series. Alternatively, th
      qsub -N makeIFTValfigs submit_job make_ift_val_figs.py
      qsub -N makeParamComp submit_job make_param_comp_figs.py
      qsub -N makeParetoComp submit_job make_pareto_comp_figs.py
+
+     cd Claude_Audit/scripts
+     python extract_student_ff_values.py
+     python recompute_student_metrics.py
+     python plot_baseline_vs_experiment.py
+     python generate_provenance_table.py
+     python build_master_ff_predictions.py
+     python build_reference_values_all.py
+     python recompute_metrics_all.py
+     python generate_tables.py
    ``` 
 Note: The second set of jobs create final figures for the SI and main text. Alternatively, these can be created by running the jupyter notebook `create_analysis_figs.ipynb`.
 
