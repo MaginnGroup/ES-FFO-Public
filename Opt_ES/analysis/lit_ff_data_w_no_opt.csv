@@ -469,11 +469,11 @@ Gly,400.0,1144.63,,,,,,,,,,OK,Jahn et al.,OPLS3-FF,Jahn
 Gly,419.89796,1126.06,,,,,,,,,,OK,Jahn et al.,OPLS3-FF,Jahn
 Gly,439.79592,1108.47,,,,,,,,,,OK,Jahn et al.,OPLS3-FF,Jahn
 Gly,459.18367,1091.86,,,,,,,,,,OK,Jahn et al.,OPLS3-FF,Jahn
-Gly,293.15,1310.2,,,1081.550657,,,,,,,OK,Caleman et al.,GAFF,Caleman
-Gly,298.15,,,,,74.9,,,,,,OK,Caleman et al.,GAFF,Caleman
+Gly,293.15,1310.2,,,1081.550657,74.9,,,,,,OK,Caleman et al.,GAFF,Caleman
+Gly,298.15,,,,,70.5,,,,,,OK,Caleman et al.,GAFF,Caleman
 Gly,320.0,1289.5,,,,,,,,,,OK,Caleman et al.,GAFF,Caleman
-Gly,293.15,1259.7,,,1036.377457,,,,,,,OK,Caleman et al.,OPLS/AA,Caleman
-Gly,298.15,,,,,63.1,,,,,,OK,Caleman et al.,OPLS/AA,Caleman
+Gly,293.15,1259.7,,,1036.377457,63.1,,,,,,OK,Caleman et al.,OPLS/AA,Caleman
+Gly,298.15,,,,,51.8,,,,,,OK,Caleman et al.,OPLS/AA,Caleman
 Gly,320.0,1232.3,,,,,,,,,,OK,Caleman et al.,OPLS/AA,Caleman
 DMF,298.15,984.2,,,719.2502394,36.1,,,,,,OK,Caleman et al.,GAFF,Caleman
 DMF,298.15,922.2,,,630.4556027,31.5,,,,,,OK,Caleman et al.,OPLS/AA,Caleman
