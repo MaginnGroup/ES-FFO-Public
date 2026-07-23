@@ -54,6 +54,7 @@ PROP_MAP = {
     "vap_density": ("rho_v", "kg/m3"),
     "Pvap": ("Pvap", "bar"),
     "surf_tens": ("gamma", "mN/m"),
+    "Hvap": ("Hvap", "kJ/kg")
 }
 HVAP_UNIT = "kJ/kg"
 CRIT_UNITS = {"Tc": "K", "rho_c": "kg/m3"}
@@ -92,11 +93,15 @@ def extract_ms_data_rows(mol, ff_label, ff_dir):
                 sim_std = sim_vals.std() if n_sim_valid > 1 else 0.0
                 note = f"mean of {n_sim_valid}/{n_restart} restarts (std={sim_std:.4g})"
             expt_val = expt_vals.iloc[0] if len(expt_vals) else float("nan")
+            if repo_prop == "Hvap":
+                Hvap_method = "direct"
+            else:
+                Hvap_method = "na"
             rows.append({
                 "molecule": mol, "ff": ff_label, "property": prop,
                 "temperature_K": T, "sim_value": sim_mean, "sim_unit": unit,
                 "expt_reference_value": expt_val, "expt_unit": unit,
-                "hvap_method": "na", "source_file": rel(path), "notes": note,
+                "hvap_method": Hvap_method, "source_file": rel(path), "notes": note,
             })
 
     # critical points: single value per ff/molecule (should be constant across all rows)
@@ -209,6 +214,16 @@ def main():
             hvap_rows = extract_hvap_estimates_rows(mol, ff_label, ff_dir)
             all_value_rows.extend(ms_rows)
             all_value_rows.extend(hvap_rows)
+
+            # Remove duplicates based on molecule, ff, prop, and temp
+            unique_rows = {}
+            for row in all_value_rows:
+                key = (row["molecule"], row["ff"], row["property"], row["temperature_K"])   # everything except the last 3 columns
+                if key not in unique_rows:
+                    unique_rows[key] = row
+
+            all_value_rows = list(unique_rows.values())
+            
 
             # errors: prefer comp_err_data.csv (consolidated, ref_name-labeled)
             ref_name = ref_name_map[ff_label]

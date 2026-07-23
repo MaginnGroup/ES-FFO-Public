@@ -68,6 +68,7 @@ def parse_float(v):
 
 # ---- load master predictions, grouped by (ff, molecule) ----
 preds = defaultdict(lambda: defaultdict(list))  # (ff,mol) -> prop -> [(T, value)]
+preds_no_cc = defaultdict(lambda: defaultdict(list))  # (ff,mol) -> prop -> [(T, value)]
 preds_crit = defaultdict(dict)  # (ff,mol) -> prop -> value  (Tc, rho_c)
 ff_paper_tag = {}
 with open(f"{AD}/master_ff_predictions.csv") as f:
@@ -83,6 +84,8 @@ with open(f"{AD}/master_ff_predictions.csv") as f:
         else:
             T = float(r["temperature_K"])
             preds[key][prop].append((T, v))
+            if "Hvap_estimates.csv" not in r["source"]:
+                preds_no_cc[key][prop].append((T, v))
 
 # ---- load R1/R2 generic reference ----
 ref = {}  # (mol,prop,T) -> dict
@@ -193,29 +196,34 @@ def cc_estimate(pvap_series, T_target, mw, verbose=False):
     if P_hi <= 0 or P_lo <= 0:
         return None
     H_molar = -math.log(P_hi / P_lo) * R_KJ_PER_MOL_K / (1 / T_hi - 1 / T_lo)  # kJ/mol
-    # if verbose:
-    #     print(T_target, T_lo, T_hi, P_lo, P_hi, mw)
-    #     print(f"H={H_molar / mw * 1000.0:.3f} kJ/kg")
+    if verbose:
+        print(T_target, T_lo, T_hi, P_lo, P_hi, mw)
+        print(f"H={H_molar / mw * 1000.0:.3f} kJ/kg")
     return H_molar / mw * 1000.0  # kJ/kg
 
 
-def build_hvap_series(key, mol, verbose=False):
+def build_hvap_series(key, mol, pred_vals, verbose=False):
     """Unified Hvap policy: direct where available, else CC from this FF's OWN Pvap curve."""
-    direct = dict(preds[key].get("Hvap", []))
-    # if verbose:
-    #     print(f"  {key}: direct Hvap at {len(direct)} T points")
-    #     #Print T points where direct Hvap is available.
-    #     for T in sorted(direct.keys()):
-    #         print(f"    direct Hvap at {T:.2f}K: {direct[T]:.3f} kJ/kg")
-    pvap = preds[key].get("Pvap", [])
+    direct = dict(pred_vals[key].get("Hvap", []))
+    if verbose:
+        print(f"  {key}: direct Hvap at {len(direct)} T points")
+        #Print T points where direct Hvap is available.
+        for T in sorted(direct.keys()):
+            print(f"    direct Hvap at {T:.2f}K: {direct[T]:.3f} kJ/kg")
+    pvap = pred_vals[key].get("Pvap", [])
     mw = MOL_WT.get(mol)
     out = []  # (T, value, method)
-    all_T = sorted(set([t for t, _ in preds[key].get("Hvap", [])] + [t for t, _ in pvap]))
+    all_T = sorted(set([t for t, _ in pred_vals[key].get("Hvap", [])] + [t for t, _ in pvap]))
+    if verbose:
+        print(all_T)
     for T in all_T:
         if T in direct:
             out.append((T, direct[T], "direct"))
         elif len(pvap) >= 2 and mw:
-            est = cc_estimate(pvap, T, mw)
+            if verbose:
+                est = cc_estimate(pvap, T, mw, verbose=True)
+            else:
+                est = cc_estimate(pvap, T, mw)
             if est is not None:
                 out.append((T, est, "CC"))
     return out
@@ -290,15 +298,18 @@ for key in sorted(preds.keys() | preds_crit.keys()):
             })
 
     # ---- Hvap (unified policy) ----
-    # if paper_tag == "meoh4p" and ff == "meoh4p:MD2" and mol == "MeOH":
-    #     verbose = True
-    # else:
-    #     verbose = False
-    hvap_series = build_hvap_series(key, mol)
+    hvap_series = build_hvap_series(key, mol, preds)
+    hvap_series_no_cc = build_hvap_series(key, mol, preds_no_cc)
+
     if hvap_series:
         for ruler in ("R1", "R2"):
+            if ruler == "R1" and (set(hvap_series_no_cc) != set(hvap_series)):
+                print(key)
+                series_use = hvap_series_no_cc
+            else:
+                series_use = hvap_series
             pairs, methods, caveats = [], set(), set()
-            for T, sim_v, method in hvap_series:
+            for T, sim_v, method in series_use:
                 if ruler == "R1":
                     rk = ref.get((mol, "Hvap", round(T, 2)))
                     if rk is None or rk["R1_value"] == "":
@@ -327,7 +338,7 @@ for key in sorted(preds.keys() | preds_crit.keys()):
             val, n = calc_mapd(pairs)
             if val is None:
                 continue
-            Ts = [t for t, _, _ in hvap_series]
+            Ts = [t for t, _, _ in series_use]
             method_str = "+".join(sorted(methods))
             if "CC" in methods:
                 caveats.add("some/all points are Clausius-Clapeyron estimates from this FF's own Pvap curve, not directly simulated")

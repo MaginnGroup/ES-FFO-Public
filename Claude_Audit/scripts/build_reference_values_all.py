@@ -156,7 +156,7 @@ rows_out = []
 for (mol, prop, T) in sorted(needed):
     r1v, r1src, r1rel = r1_value_and_reliability(mol, prop, T)
     r2key = (mol, prop, T)
-    # try exact T match first, else nearest within 2K (esolvs grids are usually exact matches)
+    # try exact T match first, else nearest within 2K (0.01K) (esolvs grids are usually exact matches)
     r2v, r2unit = r2_generic.get(r2key, (None, None))
     if r2v is None:
         candidates = [(k, v) for k, v in r2_generic.items() if k[0] == mol and k[1] == prop and k[2] is not None]

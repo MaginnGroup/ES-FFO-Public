@@ -1,5 +1,7 @@
 molecule,property,temperature_K,R1_value,R1_source,R1_reliable,R2_value,R2_source,provenance_flag
 DEC,Hvap,298.15,371.924106,thermo,True,375.48,montana_reference_values.csv (esolvs.py),PRIMARY
+DEC,Hvap,333.18,349.393908,thermo,True,,,PRIMARY
+DEC,Hvap,353.19,336.806638,thermo,True,,,PRIMARY
 DEC,Pvap,333.18,8.781458,thermo,True,9.4256,montana_reference_values.csv (esolvs.py),CORRELATION
 DEC,Pvap,353.19,20.596986,thermo,True,21.9621,montana_reference_values.csv (esolvs.py),CORRELATION
 DEC,gamma,273.18,28.687807,thermo,True,29.2,montana_reference_values.csv (esolvs.py),PRIMARY
@@ -84,8 +86,13 @@ DMF,rho_v,550.72,19.990451,thermo,False,,,EOS-AUTH
 DMF,rho_v,568.04,24.887214,thermo,False,,,EOS-AUTH
 DMF,rho_v,584.54,30.254968,thermo,False,,,EOS-AUTH
 DMSO,Hvap,298.15,684.434557,thermo,True,,,EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,313.15,674.600877,thermo,True,,,EOS-AUTH (judgment call -- see note)
 DMSO,Hvap,318.0,671.376524,thermo,True,666.837,montana_reference_values.csv (esolvs.py),EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,318.15,671.276443,thermo,True,666.837,montana_reference_values.csv (esolvs.py),EOS-AUTH (judgment call -- see note)
 DMSO,Hvap,320.0,670.040339,thermo,True,661.718,montana_reference_values.csv (esolvs.py),EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,323.15,667.927988,thermo,True,,,EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,328.15,664.555037,thermo,True,,,EOS-AUTH (judgment call -- see note)
+DMSO,Hvap,333.15,661.157103,thermo,True,,,EOS-AUTH (judgment call -- see note)
 DMSO,Pvap,313.15,0.21824,thermo,True,0.220055,montana_reference_values.csv (esolvs.py),CORRELATION
 DMSO,Pvap,318.15,0.29771,thermo,True,0.301115,montana_reference_values.csv (esolvs.py),CORRELATION
 DMSO,Pvap,323.15,0.401808,thermo,True,0.407377,montana_reference_values.csv (esolvs.py),CORRELATION

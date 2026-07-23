@@ -295,6 +295,7 @@ student:Base,DEC,Pvap,R1,MAE,4.3047,1,353.2-353.2,,
 student:Base,DEC,Pvap,R2,MAE,2.939586,1,353.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
 student:Base,DEC,gamma,R1,MAPD,2.498738,5,273.2-353.2,,
 student:Base,DEC,gamma,R2,MAPD,2.990227,5,273.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DEC,Hvap,R1,MAPD,4.201271,1,353.2-353.2,direct,
 student:Base,DMF,rho_l,R1,MAPD,0.084078,5,308.1-328.1,,
 student:Base,DMF,rho_l,R2,MAPD,0.647185,5,308.1-328.1,,R2 = generic manuscript reference (no paper-specific value at this T)
 student:Base,DMF,gamma,R1,MAPD,1.381644,5,308.1-328.1,,
@@ -307,8 +308,8 @@ student:Base,DMSO,Pvap,R1,MAE,0.436256,5,313.1-333.1,,
 student:Base,DMSO,Pvap,R2,MAE,0.43,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
 student:Base,DMSO,gamma,R1,MAPD,1.085213,5,313.1-333.1,,
 student:Base,DMSO,gamma,R2,MAPD,1.153694,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
-student:Base,DMSO,Hvap,R1,MAPD,17.991381,2,318.0-328.1,direct,
-student:Base,DMSO,Hvap,R2,MAPD,17.865509,2,318.0-328.1,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:Base,DMSO,Hvap,R1,MAPD,4.274339,5,313.1-333.1,direct,
+student:Base,DMSO,Hvap,R2,MAPD,13.051951,3,313.1-333.1,direct,R2 = generic manuscript reference (no paper-specific value at this T)
 student:Base,DMSO,Tc,R1,MAPD,11.330595,1,single-value,,
 student:Base,DMSO,Tc,R2,MAPD,12.68904,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
 student:Base,DMSO,rho_c,R1,MAPD,1.224168,1,single-value,,
@@ -353,6 +354,7 @@ student:GP-Optimized,DEC,Pvap,R1,MAE,3.507452,2,333.2-353.2,,
 student:GP-Optimized,DEC,Pvap,R2,MAE,3.129472,2,333.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
 student:GP-Optimized,DEC,gamma,R1,MAPD,3.430219,5,273.2-353.2,,
 student:GP-Optimized,DEC,gamma,R2,MAPD,2.585989,5,273.2-353.2,,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DEC,Hvap,R1,MAPD,0.722489,2,333.2-353.2,direct,
 student:GP-Optimized,DEC,Tc,R1,MAPD,2.247991,1,single-value,,"reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
 student:GP-Optimized,DEC,Tc,R2,MAPD,2.191987,1,single-value,,"R2 = generic manuscript reference (no paper-specific value); reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
 student:GP-Optimized,DEC,rho_c,R1,MAPD,2.497853,1,single-value,,"reference provenance: SECONDARY (chain leads to a data compilation, not a primary measurement)"
@@ -369,8 +371,8 @@ student:GP-Optimized,DMSO,Pvap,R1,MAE,1.280949,5,313.1-333.1,,
 student:GP-Optimized,DMSO,Pvap,R2,MAE,1.274693,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
 student:GP-Optimized,DMSO,gamma,R1,MAPD,1.587788,5,313.1-333.1,,
 student:GP-Optimized,DMSO,gamma,R2,MAPD,1.461923,5,313.1-333.1,,R2 = generic manuscript reference (no paper-specific value at this T)
-student:GP-Optimized,DMSO,Hvap,R1,MAPD,14.694494,2,318.0-328.1,direct,
-student:GP-Optimized,DMSO,Hvap,R2,MAPD,14.544474,2,318.0-328.1,direct,R2 = generic manuscript reference (no paper-specific value at this T)
+student:GP-Optimized,DMSO,Hvap,R1,MAPD,9.475814,5,313.1-333.1,direct,
+student:GP-Optimized,DMSO,Hvap,R2,MAPD,12.640831,3,313.1-333.1,direct,R2 = generic manuscript reference (no paper-specific value at this T)
 student:GP-Optimized,DMSO,Tc,R1,MAPD,12.257185,1,single-value,,
 student:GP-Optimized,DMSO,Tc,R2,MAPD,13.601435,1,single-value,,R2 = generic manuscript reference (no paper-specific value)
 student:GP-Optimized,DMSO,rho_c,R1,MAPD,0.54901,1,single-value,,

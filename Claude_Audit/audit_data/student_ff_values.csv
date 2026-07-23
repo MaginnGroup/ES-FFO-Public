@@ -27,15 +27,15 @@ MeOH,GP-Optimized,gamma,350.0,18.978266666666666,mN/m,17.727,mN/m,na,Opt_ES/anal
 MeOH,GP-Optimized,gamma,400.0,13.762916666666667,mN/m,12.928,mN/m,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.3567)
 MeOH,GP-Optimized,gamma,450.0,8.936116666666669,mN/m,7.3155,mN/m,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.6698)
 MeOH,GP-Optimized,gamma,500.0,2.4067375,mN/m,1.2466,mN/m,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 2/3 restarts (std=0.3125)
+MeOH,GP-Optimized,Hvap,200.0,1457.7892862393826,kJ/kg,1289.99,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=5.283)
+MeOH,GP-Optimized,Hvap,250.0,1396.6339658435174,kJ/kg,1234.79,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=6.083)
+MeOH,GP-Optimized,Hvap,300.0,1299.7248257225722,kJ/kg,1166.17,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=17.22)
+MeOH,GP-Optimized,Hvap,350.0,1155.6484961764609,kJ/kg,1075.936,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=35.93)
+MeOH,GP-Optimized,Hvap,400.0,962.6667851226749,kJ/kg,944.57,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=28.93)
+MeOH,GP-Optimized,Hvap,450.0,763.883575610905,kJ/kg,739.19,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=10.47)
+MeOH,GP-Optimized,Hvap,500.0,nan,kJ/kg,391.06,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=500.0
 MeOH,GP-Optimized,Tc,,551.3153478276897,K,512.5,K,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 MeOH,GP-Optimized,rho_c,,275.16283100876024,kg/m3,273.846,kg/m3,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
-MeOH,GP-Optimized,Hvap,200.0,1457.7892862393826,kJ/kg,1289.99,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,GP-Optimized,Hvap,250.0,1396.633965843518,kJ/kg,1234.79,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,GP-Optimized,Hvap,300.0,1299.7248257225722,kJ/kg,1166.17,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,GP-Optimized,Hvap,350.0,1155.6484961764609,kJ/kg,1075.936,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,GP-Optimized,Hvap,400.0,962.6667851226748,kJ/kg,944.57,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,GP-Optimized,Hvap,450.0,763.883575610905,kJ/kg,739.19,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,GP-Optimized,Hvap,500.0,nan,kJ/kg,391.06,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
 MeOH,Base,rho_l,200.0,892.5240031754225,kg/m3,880.28,kg/m3,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.1228)
 MeOH,Base,rho_l,250.0,840.277237965491,kg/m3,831.52,kg/m3,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.1946)
 MeOH,Base,rho_l,300.0,791.1537197864994,kg/m3,784.51,kg/m3,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.2715)
@@ -64,15 +64,15 @@ MeOH,Base,gamma,350.0,16.6418,mN/m,17.727,mN/m,na,Opt_ES/analysis/at_00/MeOH/Exp
 MeOH,Base,gamma,400.0,12.49805,mN/m,12.928,mN/m,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.8308)
 MeOH,Base,gamma,450.0,8.0542,mN/m,7.3155,mN/m,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.328)
 MeOH,Base,gamma,500.0,3.599721666666667,mN/m,1.2466,mN/m,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.4733)
+MeOH,Base,Hvap,200.0,1571.6495323074053,kJ/kg,1289.99,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=2.141)
+MeOH,Base,Hvap,250.0,1529.5673579596505,kJ/kg,1234.79,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=2.653)
+MeOH,Base,Hvap,300.0,1401.9735644330358,kJ/kg,1166.17,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=45.37)
+MeOH,Base,Hvap,350.0,1169.8704948543918,kJ/kg,1075.936,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=147.1)
+MeOH,Base,Hvap,400.0,1007.9401258387161,kJ/kg,944.57,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=28.59)
+MeOH,Base,Hvap,450.0,720.5065240513949,kJ/kg,739.19,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=24.01)
+MeOH,Base,Hvap,500.0,nan,kJ/kg,391.06,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=500.0
 MeOH,Base,Tc,,560.1541880677166,K,512.5,K,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 MeOH,Base,rho_c,,272.51966283869,kg/m3,273.846,kg/m3,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
-MeOH,Base,Hvap,200.0,1571.6495323074053,kJ/kg,1289.99,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,Base,Hvap,250.0,1529.5673579596505,kJ/kg,1234.79,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,Base,Hvap,300.0,1401.9735644330358,kJ/kg,1166.17,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,Base,Hvap,350.0,1169.8704948543918,kJ/kg,1075.936,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,Base,Hvap,400.0,1007.940125838716,kJ/kg,944.57,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,Base,Hvap,450.0,720.5065240513949,kJ/kg,739.19,kJ/kg,direct,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-MeOH,Base,Hvap,500.0,nan,kJ/kg,391.06,kJ/kg,na,Opt_ES/analysis/at_00/MeOH/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
 EG,GP-Optimized,rho_l,378.15,1066.4945993282374,kg/m3,1051.7,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.04198)
 EG,GP-Optimized,rho_l,383.15,1061.6333520953597,kg/m3,1047.9,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.05069)
 EG,GP-Optimized,rho_l,393.15,1052.001388084089,kg/m3,1040.2,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.03896)
@@ -117,19 +117,19 @@ EG,GP-Optimized,gamma,550.0,21.490133333333333,mN/m,23.738,mN/m,na,Opt_ES/analys
 EG,GP-Optimized,gamma,600.0,14.602466666666666,mN/m,18.076,mN/m,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.5947)
 EG,GP-Optimized,gamma,650.0,8.025683333333335,mN/m,11.837,mN/m,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.196)
 EG,GP-Optimized,gamma,700.0,1.9916549999999997,mN/m,4.3463,mN/m,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.4617)
+EG,GP-Optimized,Hvap,378.15,913.1948919667306,kJ/kg,977.45,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.9059)
+EG,GP-Optimized,Hvap,383.15,905.7209627825865,kJ/kg,972.15,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.416)
+EG,GP-Optimized,Hvap,393.15,893.2499876989663,kJ/kg,961.57,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.513)
+EG,GP-Optimized,Hvap,403.15,879.4800348004463,kJ/kg,951.01,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.647)
+EG,GP-Optimized,Hvap,413.15,868.4867269465617,kJ/kg,940.46,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.9382)
+EG,GP-Optimized,Hvap,450.0,820.9104414371383,kJ/kg,901.26,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.364)
+EG,GP-Optimized,Hvap,500.0,751.1263183784341,kJ/kg,845.255,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.6333)
+EG,GP-Optimized,Hvap,550.0,669.435611668293,kJ/kg,781.37,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.641)
+EG,GP-Optimized,Hvap,600.0,571.6399464376016,kJ/kg,701.38,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.535)
+EG,GP-Optimized,Hvap,650.0,443.676841131964,kJ/kg,588.55,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=2.571)
+EG,GP-Optimized,Hvap,700.0,nan,kJ/kg,376.95,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=700.0
 EG,GP-Optimized,Tc,,728.8563817527511,K,719.6,K,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 EG,GP-Optimized,rho_c,,356.14107793952286,kg/m3,391.9405,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
-EG,GP-Optimized,Hvap,378.15,913.1948919667306,kJ/kg,977.45,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,383.15,905.7209627825864,kJ/kg,972.15,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,393.15,893.2499876989663,kJ/kg,961.57,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,403.15,879.4800348004463,kJ/kg,951.01,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,413.15,868.4867269465617,kJ/kg,940.46,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,450.0,820.9104414371383,kJ/kg,901.26,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,500.0,751.1263183784341,kJ/kg,845.255,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,550.0,669.435611668293,kJ/kg,781.37,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,600.0,571.6399464376016,kJ/kg,701.38,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,650.0,443.676841131964,kJ/kg,588.55,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,GP-Optimized,Hvap,700.0,nan,kJ/kg,376.95,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
 EG,Base,rho_l,378.15,1060.159209493286,kg/m3,1051.7,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.2296)
 EG,Base,rho_l,383.15,1055.02067743866,kg/m3,1047.9,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.1891)
 EG,Base,rho_l,393.15,1044.9989092253725,kg/m3,1040.2,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.07893)
@@ -174,19 +174,19 @@ EG,Base,gamma,550.0,19.262783333333335,mN/m,23.738,mN/m,na,Opt_ES/analysis/at_00
 EG,Base,gamma,600.0,12.559283333333333,mN/m,18.076,mN/m,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.7453)
 EG,Base,gamma,650.0,5.806916666666667,mN/m,11.837,mN/m,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.435)
 EG,Base,gamma,700.0,0.4399303333333333,mN/m,4.3463,mN/m,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.6668)
+EG,Base,Hvap,378.15,901.440271195705,kJ/kg,977.45,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.3945)
+EG,Base,Hvap,383.15,894.8543687306101,kJ/kg,972.15,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.203)
+EG,Base,Hvap,393.15,882.8854456926418,kJ/kg,961.57,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.961)
+EG,Base,Hvap,403.15,867.119063573467,kJ/kg,951.01,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.138)
+EG,Base,Hvap,413.15,856.4080294014169,kJ/kg,940.46,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.7068)
+EG,Base,Hvap,450.0,805.3314337324797,kJ/kg,901.26,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.444)
+EG,Base,Hvap,500.0,728.9547805282408,kJ/kg,845.255,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.8984)
+EG,Base,Hvap,550.0,641.2102446186553,kJ/kg,781.37,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.4911)
+EG,Base,Hvap,600.0,529.6568118366132,kJ/kg,701.38,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.963)
+EG,Base,Hvap,650.0,372.9391139956852,kJ/kg,588.55,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=9.166)
+EG,Base,Hvap,700.0,nan,kJ/kg,376.95,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=700.0
 EG,Base,Tc,,709.0223976457555,K,719.6,K,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 EG,Base,rho_c,,359.3175038294981,kg/m3,391.9405,kg/m3,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
-EG,Base,Hvap,378.15,901.440271195705,kJ/kg,977.45,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,383.15,894.8543687306101,kJ/kg,972.15,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,393.15,882.8854456926418,kJ/kg,961.57,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,403.15,867.119063573467,kJ/kg,951.01,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,413.15,856.4080294014169,kJ/kg,940.46,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,450.0,805.3314337324797,kJ/kg,901.26,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,500.0,728.9547805282408,kJ/kg,845.255,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,550.0,641.2102446186553,kJ/kg,781.37,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,600.0,529.6568118366132,kJ/kg,701.38,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,650.0,372.9391139956852,kJ/kg,588.55,kJ/kg,direct,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,"H_method(repo)=direct; expt T coincided with a simulated T, direct MD sim_Hvap used"
-EG,Base,Hvap,700.0,nan,kJ/kg,376.95,kJ/kg,na,Opt_ES/analysis/at_00/EG/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
 Gly,GP-Optimized,rho_l,293.15,1268.9995215130095,kg/m3,1261.1,kg/m3,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.2774)
 Gly,GP-Optimized,rho_l,303.15,1259.9736336585158,kg/m3,1255.6,kg/m3,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.376)
 Gly,GP-Optimized,rho_l,313.15,1249.9818976706194,kg/m3,1249.5,kg/m3,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.1809)
@@ -207,6 +207,11 @@ Gly,GP-Optimized,gamma,303.15,62.782333333333334,mN/m,62.4,mN/m,na,Opt_ES/analys
 Gly,GP-Optimized,gamma,313.15,62.802,mN/m,62.0,mN/m,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.85)
 Gly,GP-Optimized,gamma,323.15,60.597,mN/m,61.1,mN/m,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.3887)
 Gly,GP-Optimized,gamma,333.15,59.28916666666667,mN/m,60.5,mN/m,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.31)
+Gly,GP-Optimized,Hvap,293.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=293.15
+Gly,GP-Optimized,Hvap,303.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=303.15
+Gly,GP-Optimized,Hvap,313.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=313.15
+Gly,GP-Optimized,Hvap,323.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=323.15
+Gly,GP-Optimized,Hvap,333.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=333.15
 Gly,GP-Optimized,Tc,,nan,K,850.0,K,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 Gly,GP-Optimized,rho_c,,nan,kg/m3,366.90764940239046,kg/m3,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 Gly,GP-Optimized,Hvap,298.15,nan,kJ/kg,982.734,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -230,6 +235,11 @@ Gly,Base,gamma,303.15,62.89966666666667,mN/m,62.4,mN/m,na,Opt_ES/analysis/at_00/
 Gly,Base,gamma,313.15,61.69583333333335,mN/m,62.0,mN/m,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.442)
 Gly,Base,gamma,323.15,59.97833333333333,mN/m,61.1,mN/m,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.329)
 Gly,Base,gamma,333.15,59.11166666666667,mN/m,60.5,mN/m,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.1753)
+Gly,Base,Hvap,293.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=293.15
+Gly,Base,Hvap,303.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=303.15
+Gly,Base,Hvap,313.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=313.15
+Gly,Base,Hvap,323.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=323.15
+Gly,Base,Hvap,333.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=333.15
 Gly,Base,Tc,,nan,K,850.0,K,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 Gly,Base,rho_c,,nan,kg/m3,366.90764940239046,kg/m3,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 Gly,Base,Hvap,298.15,nan,kJ/kg,982.734,kJ/kg,na,Opt_ES/analysis/at_00/Gly/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -253,6 +263,11 @@ DMF,GP-Optimized,gamma,313.15,34.808683333333335,mN/m,33.917,mN/m,na,Opt_ES/anal
 DMF,GP-Optimized,gamma,318.15,35.44231666666667,mN/m,33.309,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.6796)
 DMF,GP-Optimized,gamma,323.15,33.27978333333334,mN/m,32.701,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.3143)
 DMF,GP-Optimized,gamma,328.15,33.49973333333333,mN/m,32.094,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.3769)
+DMF,GP-Optimized,Hvap,308.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=308.15
+DMF,GP-Optimized,Hvap,313.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=313.15
+DMF,GP-Optimized,Hvap,318.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=318.15
+DMF,GP-Optimized,Hvap,323.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=323.15
+DMF,GP-Optimized,Hvap,328.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=328.15
 DMF,GP-Optimized,Tc,,nan,K,649.6,K,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMF,GP-Optimized,rho_c,,nan,kg/m3,279.204,kg/m3,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMF,GP-Optimized,Hvap,298.15,nan,kJ/kg,641.538,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -276,6 +291,11 @@ DMF,Base,gamma,313.15,33.5409,mN/m,33.917,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpV
 DMF,Base,gamma,318.15,33.176449999999996,mN/m,33.309,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.8808)
 DMF,Base,gamma,323.15,31.472583333333336,mN/m,32.701,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.2082)
 DMF,Base,gamma,328.15,31.255683333333334,mN/m,32.094,mN/m,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.335)
+DMF,Base,Hvap,308.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=308.15
+DMF,Base,Hvap,313.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=313.15
+DMF,Base,Hvap,318.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=318.15
+DMF,Base,Hvap,323.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=323.15
+DMF,Base,Hvap,328.15,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=328.15
 DMF,Base,Tc,,nan,K,649.6,K,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMF,Base,rho_c,,nan,kg/m3,279.204,kg/m3,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMF,Base,Hvap,298.15,nan,kJ/kg,641.538,kJ/kg,na,Opt_ES/analysis/at_00/DMF/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -299,6 +319,11 @@ DMSO,GP-Optimized,gamma,318.15,41.23641666666667,mN/m,40.6275,mN/m,na,Opt_ES/ana
 DMSO,GP-Optimized,gamma,323.15,40.27588333333333,mN/m,40.055,mN/m,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.6792)
 DMSO,GP-Optimized,gamma,328.15,40.24821666666667,mN/m,39.4825,mN/m,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.2648)
 DMSO,GP-Optimized,gamma,333.15,39.504250000000006,mN/m,38.91,mN/m,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.3883)
+DMSO,GP-Optimized,Hvap,313.15,614.1975552530429,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.7045)
+DMSO,GP-Optimized,Hvap,318.15,607.9316565032141,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 2/3 restarts (std=0.613)
+DMSO,GP-Optimized,Hvap,323.15,604.5243000586997,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.3322)
+DMSO,GP-Optimized,Hvap,328.15,599.9853741631188,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=1.102)
+DMSO,GP-Optimized,Hvap,333.15,596.4969439222652,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.7664)
 DMSO,GP-Optimized,Tc,,620.3416988303535,K,718,K,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMSO,GP-Optimized,rho_c,,364.8097644398224,kg/m3,366,kg/m3,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMSO,GP-Optimized,Hvap,308,nan,kJ/kg,669.397,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -326,6 +351,11 @@ DMSO,Base,gamma,318.15,40.668866666666666,mN/m,40.6275,mN/m,na,Opt_ES/analysis/a
 DMSO,Base,gamma,323.15,39.39175,mN/m,40.055,mN/m,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.2012)
 DMSO,Base,gamma,328.15,39.076166666666666,mN/m,39.4825,mN/m,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.6423)
 DMSO,Base,gamma,333.15,38.74308333333334,mN/m,38.91,mN/m,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.4232)
+DMSO,Base,Hvap,313.15,649.6201993274775,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.729)
+DMSO,Base,Hvap,318.15,643.9989276414138,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.5229)
+DMSO,Base,Hvap,323.15,638.2487118270407,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.09353)
+DMSO,Base,Hvap,328.15,634.1144239294758,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.3278)
+DMSO,Base,Hvap,333.15,630.8691662560718,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.5616)
 DMSO,Base,Tc,,626.8926906308961,K,718,K,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMSO,Base,rho_c,,362.3331247631592,kg/m3,366,kg/m3,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DMSO,Base,Hvap,308,nan,kJ/kg,669.397,kJ/kg,na,Opt_ES/analysis/at_00/DMSO/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -353,6 +383,11 @@ DEC,GP-Optimized,gamma,293.16,27.8927,mN/m,26.8,mN/m,na,Opt_ES/analysis/at_00/DE
 DEC,GP-Optimized,gamma,313.19,24.7858,mN/m,24.5,mN/m,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.4413)
 DEC,GP-Optimized,gamma,333.18,22.323850000000004,mN/m,22.4,mN/m,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.691)
 DEC,GP-Optimized,gamma,353.19,19.392983333333333,mN/m,20.2,mN/m,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.7152)
+DEC,GP-Optimized,Hvap,273.18,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=273.18
+DEC,GP-Optimized,Hvap,293.16,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=293.16
+DEC,GP-Optimized,Hvap,313.19,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=313.19
+DEC,GP-Optimized,Hvap,333.18,353.0737089082006,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 3/3 restarts (std=0.6044)
+DEC,GP-Optimized,Hvap,353.19,338.126188615047,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,mean of 2/3 restarts (std=1.557)
 DEC,GP-Optimized,Tc,,563.3741557019463,K,576,K,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DEC,GP-Optimized,rho_c,,319.9454400571521,kg/m3,341.42,kg/m3,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DEC,GP-Optimized,Hvap,273.1,nan,kJ/kg,389.66,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
@@ -383,6 +418,11 @@ DEC,Base,gamma,293.16,26.930650000000004,mN/m,26.8,mN/m,na,Opt_ES/analysis/at_00
 DEC,Base,gamma,313.19,23.641566666666666,mN/m,24.5,mN/m,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.049)
 DEC,Base,gamma,333.18,21.879500000000004,mN/m,22.4,mN/m,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=1.479)
 DEC,Base,gamma,353.19,18.813583333333334,mN/m,20.2,mN/m,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 3/3 restarts (std=0.8619)
+DEC,Base,Hvap,273.18,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=273.18
+DEC,Base,Hvap,293.16,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=293.16
+DEC,Base,Hvap,313.19,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=313.19
+DEC,Base,Hvap,333.18,nan,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,all 3 restarts NaN for sim_Hvap at T=333.18
+DEC,Base,Hvap,353.19,350.95679717821895,kJ/kg,nan,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,mean of 2/3 restarts (std=2.108)
 DEC,Base,Tc,,nan,K,576,K,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DEC,Base,rho_c,,nan,kg/m3,341.42,kg/m3,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/ms_data.csv,single fitted critical-point value (constant across all restarts/temperatures)
 DEC,Base,Hvap,273.1,nan,kJ/kg,389.66,kJ/kg,na,Opt_ES/analysis/at_00/DEC/ExpVal/opt_res/ms_val_no_opt/Hvap_estimates.csv,H_method(repo)=skipped; no simulated Pvap data close enough to interpolate -- sim_value is NaN
