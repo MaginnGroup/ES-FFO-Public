@@ -470,13 +470,13 @@ MeOH,rho_v,471.78,50.535927,CoolProp,True,,,EOS-AUTH
 MeOH,rho_v,475.0,54.370943,CoolProp,True,,,EOS-AUTH
 MeOH,rho_v,480.55,62.042715,CoolProp,True,,,EOS-AUTH
 MeOH,rho_v,500.0,109.882844,CoolProp,True,109.88,montana_reference_values.csv (esolvs.py),EOS-AUTH
-DEC,Tc,,576.33,CoolProp/thermo Tc,True,576.0,montana_reference_values.csv (esolvs.py),"SECONDARY (chain leads to a data compilation, not a primary measurement)"
-DEC,rho_c,,328.141944,CoolProp/thermo rho_c,True,341.42,montana_reference_values.csv (esolvs.py),"SECONDARY (chain leads to a data compilation, not a primary measurement)"
-DMF,Tc,,649.6,CoolProp/thermo Tc,True,649.6,montana_reference_values.csv (esolvs.py),"UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
-DMF,rho_c,,278.983893,CoolProp/thermo rho_c,True,279.204,montana_reference_values.csv (esolvs.py),"UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
-DMSO,Tc,,707.0,CoolProp/thermo Tc,True,718.0,montana_reference_values.csv (esolvs.py),PRIMARY
-DMSO,rho_c,,366.823662,CoolProp/thermo rho_c,True,366.0,montana_reference_values.csv (esolvs.py),PRIMARY (estimated/extrapolated value)
-EG,Tc,,719.0,CoolProp/thermo Tc,True,719.6,montana_reference_values.csv (esolvs.py),EOS-AUTH
-EG,rho_c,,364.958899,CoolProp/thermo rho_c,True,391.9405,montana_reference_values.csv (esolvs.py),CORRELATION
+DEC,Tc,,576.33,thermo Tc,True,576.0,montana_reference_values.csv (esolvs.py),"SECONDARY (chain leads to a data compilation, not a primary measurement)"
+DEC,rho_c,,328.141944,thermo rho_c,True,341.42,montana_reference_values.csv (esolvs.py),"SECONDARY (chain leads to a data compilation, not a primary measurement)"
+DMF,Tc,,649.6,thermo Tc,True,649.6,montana_reference_values.csv (esolvs.py),"UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+DMF,rho_c,,278.983893,thermo rho_c,True,279.204,montana_reference_values.csv (esolvs.py),"UNVERIFIED (cited Part I not in hand; delivered scan is Part II, lacks DMF)"
+DMSO,Tc,,707.0,thermo Tc,True,718.0,montana_reference_values.csv (esolvs.py),PRIMARY
+DMSO,rho_c,,366.823662,thermo rho_c,True,366.0,montana_reference_values.csv (esolvs.py),PRIMARY (estimated/extrapolated value)
+EG,Tc,,719.0,thermo Tc,True,719.6,montana_reference_values.csv (esolvs.py),EOS-AUTH
+EG,rho_c,,364.958899,thermo rho_c,True,391.9405,montana_reference_values.csv (esolvs.py),CORRELATION
 MeOH,Tc,,513.38,CoolProp Tc,True,512.5,montana_reference_values.csv (esolvs.py),EOS-AUTH
 MeOH,rho_c,,281.493187,CoolProp rho_c,True,273.846,montana_reference_values.csv (esolvs.py),PRIMARY

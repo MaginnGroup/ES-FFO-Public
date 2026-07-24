@@ -109,9 +109,9 @@ def r1_critical(mol, prop):
     try:
         c = Chemical(CAS[mol])
         if prop == "Tc":
-            return c.Tc, ("CoolProp/thermo Tc" if mol != "MeOH" else "CoolProp Tc")
+            return c.Tc, ("thermo Tc" if mol != "MeOH" else "CoolProp Tc")
         if prop == "rho_c":
-            return c.rhoc, ("CoolProp/thermo rho_c" if mol != "MeOH" else "CoolProp rho_c")
+            return c.rhoc, ("thermo rho_c" if mol != "MeOH" else "CoolProp rho_c")
     except Exception:
         return None, None
     return None, None

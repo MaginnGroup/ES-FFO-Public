@@ -99,6 +99,18 @@ def r1_value(mol, prop, T):
         return None
     return None
 
+def r1_critical(mol, prop):
+    """Tc/rho_c from thermo/CoolProp for reference (informational; the manuscript's own
+    critical-point provenance per molecule is documented in provenance_map.csv)."""
+    try:
+        c = Chemical(CAS[mol])
+        if prop == "Tc":
+            return c.Tc, ("thermo Tc" if mol != "MeOH" else "CoolProp Tc")
+        if prop == "rho_c":
+            return c.rhoc, ("thermo rho_c" if mol != "MeOH" else "CoolProp rho_c")
+    except Exception:
+        return None, None
+    return None, None
 
 def parse_float(v):
     if v in (None, ""):
@@ -420,6 +432,13 @@ for mol in MOLECULES:
             baseline_label_used.add(lbl2)
     if RHOC[mol]:
         ax.plot(RHOC[mol], TC[mol], "*", color="red", markersize=16, label="(Tc, rho_c) [esolvs.py]", zorder=5)
+
+    Tc_R1 = r1_critical(mol, "Tc")
+    rho_c_R1 = r1_critical(mol, "rho_c")
+
+    if (Tc_R1 and rho_c_R1):
+        ax.plot(rho_c_R1[0], Tc_R1[0], "-", marker = "_", color="black",lw=3, zorder = 7)
+
     idx = 0
     for series, marker, primary in all_series:
         for prop_key in ("rho_l", "rho_v"):
