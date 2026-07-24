@@ -402,7 +402,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                "TraPPE-UA": ('purple', 'd', 1, False),
                "TraPPE-UA": ('purple', 'd', 1, False),
                "Huang et al.": ('gray', 's', 1, False),
-               "OPLS2-FF": ('gray', 's', 1, False),
+               "OPLS2": ('gray', 's', 1, False),
                "GAFF": ('deeppink', 's', 1, False),
                "OPLS/AA": ('blue', 'h', 1, False),
             #    "Caleman et al. (CGenFF)": ('deeppink', '1', 1, False),
@@ -456,6 +456,10 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
+
+        #Filter out point with reliability "UNRELIABLE"
+        if "reliability" in df_ff.columns:
+            df_ff = df_ff[df_ff['reliability'] != 'UNRELIABLE']
 
         #continue if df_ff is not in key_map and df_label is not in key_map
         if df_label not in key_map.keys():
@@ -543,6 +547,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
             max_temp = 330
             min_temp = 298.15
         elif molec == "DMSO":
+            min_temp = 290
             max_temp = 380
         elif molec == "Gly":
             max_temp = 400
@@ -552,13 +557,13 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         if prop_name == "liq_density":
             ax2.set_ylim(bottom=880)
         if prop_name == "vap_density":
-            ax2.set_ylim(top = 3)
+            ax2.set_ylim(bottom = 0, top = 0.3)
 
     if molec == "DMSO":
         if prop_name == "liq_density":
             ax2.set_ylim(bottom=900)
         if prop_name == "vap_density":
-            ax2.set_ylim(top = 3)
+            ax2.set_ylim(bottom = 0, top = 0.6)
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=22, pad=10)
     ax2.tick_params("both", which="major", length=8)
@@ -624,7 +629,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                "TraPPE-UA": ('purple', 'd', 1),
                "TraPPE-UA": ('purple', 'd', 1),
                "Huang et al.": ('gray', 's', 1),
-               "OPLS2-FF": ('gray', 's', 1),
+               "OPLS2": ('gray', 's', 1),
                "GAFF": ('deeppink', 's', 1),
                "OPLS/AA": ('blue', 'h', 1),
             #    "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
@@ -689,6 +694,11 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
             has_vap = True
             has_liq = True
             label_prop = df_label
+
+            #Filter out point with reliability "UNRELIABLE"
+            if "reliability" in df_ff.columns:
+                df_ff = df_ff[df_ff['reliability'] != 'UNRELIABLE']
+
             # grouped = df_ff.groupby(["temperature", "atom_type"])[all_props]
             #Check that there are data points for liquid density for all df
             if df_ff["sim_liq_density"].isnull().all():
@@ -872,7 +882,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                "TraPPE-UA": ('purple', 'd', 1),
                "TraPPE-UA": ('purple', 'd', 1),
                "Huang et al.": ('gray', 's', 1),
-               "OPLS2-FF": ('gray', 's', 1),
+               "OPLS2": ('gray', 's', 1),
                "GAFF": ('deeppink', 's', 1),
                "OPLS/AA": ('blue', 'h', 1),
             #    "Caleman et al. (CGenFF)": ('deeppink', '1', 1),
@@ -936,6 +946,10 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     for i in range(len(df_ff_list)):
         df_label = df_labels[i]
         df_ff = df_ff_list[i]
+
+        #Filter out point with reliability "UNRELIABLE"
+        if "reliability" in df_ff.columns:
+            df_ff = df_ff[df_ff['reliability'] != 'UNRELIABLE']
 
         if df_ff is not None:
         # if df_ff is not None and "Vahid" not in df_label:
