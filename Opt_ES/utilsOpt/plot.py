@@ -12,9 +12,85 @@ from matplotlib.ticker import LogLocator, MultipleLocator, AutoMinorLocator, Max
 from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, variances_scaled_to_real
 from fffit.fffit.plot import plot_model_performance, plot_model_vs_test, plot_slices_temperature, plot_slices_params, plot_model_vs_exp, plot_obj_contour
 from utils.molec_class_files import esolvs
+from thermo import Chemical
+from CoolProp.CoolProp import PropsSI
 
 mol_names = ["EG" , "Gly", "ACN", "MeOH", "DMSO", "THF", "DCM", "DEC", "DMF"]
+CAS = {"MeOH": "67-56-1", "EG": "107-21-1", "Gly": "56-81-5", "DMF": "68-12-2",
+       "DMSO": "67-68-5", "DEC": "105-58-8"}
 molec_dict = esolvs.make_dict(mol_names)
+
+def split_reliable(mol, molec_data, prop, Ts, vals):
+    """Split into (reliable_T, reliable_v), (unreliable_T, unreliable_v) for solid/dashed plotting."""
+    rel_T, rel_v, unrel_T, unrel_v = [], [], [], []
+    for T, v in zip(Ts, vals):
+        if v is None or (isinstance(v, float) and math.isnan(v)):
+            continue
+        if thermo_reliable(prop, T, mol, molec_data):
+            rel_T.append(T); rel_v.append(v)
+        else:
+            unrel_T.append(T); unrel_v.append(v)
+    return (rel_T, rel_v), (unrel_T, unrel_v)
+
+def r1_critical(mol, prop):
+    """Tc/rho_c from thermo/CoolProp for reference (informational; the manuscript's own
+    critical-point provenance per molecule is documented in provenance_map.csv)."""
+    try:
+        c = Chemical(CAS[mol])
+        if prop == "Tc":
+            return c.Tc, ("thermo Tc" if mol != "MeOH" else "CoolProp Tc")
+        if prop == "rho_c":
+            return c.rhoc, ("thermo rho_c" if mol != "MeOH" else "CoolProp rho_c")
+    except Exception:
+        return None, None
+    return None, None
+
+def thermo_reliable(prop, T, mol, molec_data):
+    if mol == "MeOH":
+        return True  # R1 baseline calls CoolProp directly for MeOH -- validated full range
+    # NOTE: EG's R1 baseline still calls the `thermo` package directly (there is no pure-EG
+    # CoolProp EOS). refprop_output_verification.md validated esolvs.py's OWN transcribed
+    # REFPROP values for EG at 450-700K -- it did NOT show that live thermo.Chemical() calls
+    # are accurate there. In fact thermo.rhol(EG) demonstrably clips at ~751 kg/m3 for T>=650K
+    # (verified while building this plot: thermo gives rhol=750.81 at both 650K and 700K,
+    # whereas the true/REFPROP value at 700K is 602.22) -- so EG gets the SAME near-Tc
+    # thermo-proxy caveat as the other four molecules, not a blanket pass.
+    tratio = T / molec_data.expt_Tc
+    if prop == "vap_density":
+        return tratio <= 0.68
+    if prop == "liq_density":
+        return tratio <= 0.85
+    return tratio <= 0.90
+
+def r1_value(mol, prop, T):
+    """R1 baseline: CoolProp for MeOH, thermo DIPPR correlation otherwise."""
+    try:
+        if mol == "MeOH":
+            f = "Methanol"
+            if prop == "liq_density":
+                return PropsSI("D", "T", T, "Q", 0, f)
+            if prop == "vap_density":
+                return PropsSI("D", "T", T, "Q", 1, f)
+            if prop == "Pvap":
+                return PropsSI("P", "T", T, "Q", 0, f) / 1000.0
+            if prop == "Hvap":
+                return (PropsSI("H", "T", T, "Q", 1, f) - PropsSI("H", "T", T, "Q", 0, f)) / 1000.0
+            if prop == "surf_tens":
+                return PropsSI("I", "T", T, "Q", 0, f) * 1000.0
+        c = Chemical(CAS[mol], T=float(T))
+        if prop == "liq_density":
+            return c.rhol
+        if prop == "vap_density":
+            return Chemical(CAS[mol], T=float(T), P=c.Psat).rhog if c.Psat else None
+        if prop == "Pvap":
+            return c.Psat / 1000.0 if c.Psat else None
+        if prop == "Hvap":
+            return c.Hvap / 1000.0 if c.Hvap else None
+        if prop == "surf_tens":
+            return c.sigma * 1000.0 if c.sigma else None
+    except Exception:
+        return None
+    return None
 
 #Deprecated
 # def prepare_df_vle(df_csv, molec_dict, csv_name = None, drop_one = False):
@@ -235,6 +311,9 @@ molec_dict = esolvs.make_dict(mol_names)
 #         curr_max = max_new_val
 #     return curr_min, curr_max
 
+def dense_grid(T_min, T_max, step=3.0):
+    n = max(2, int((T_max - T_min) / step))
+    return np.linspace(T_min, T_max, n)
 
 def get_min_max(curr_min, curr_max, new_vals, std_dev=None):
     """
@@ -318,7 +397,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     df_ff_list = list(df_ffs)
 
     key_map = {"MeOH-4P": ('gray', 's', 1, False),
-               "OPLS (Gonzalez-Salgado & Vega)": ('tab:orange', '>', 1, False),
+               "OPLS-UA": ('tab:orange', '>', 1, False),
                "OPLS/2016": ('tab:green', 'p', 1, False),
                "TraPPE-UA": ('purple', 'd', 1, False),
                "TraPPE-UA": ('purple', 'd', 1, False),
@@ -414,7 +493,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
                 elif df_label == "Base":
                     df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
 
-                if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)") and prop_name != "surf_tens":
+                if df_label in ("OPLS/2016", "OPLS-UA") and prop_name != "surf_tens":
                     means = means[::5]
                     stds = stds[::5]
 
@@ -428,11 +507,17 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     #     vals = np.array(list(prop_data.values()))
     #     mask = keys < 430
     #     ax2.scatter(keys[mask], vals[mask],
-    #     color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = len(df_ff_list)+1)
+    #     color="black",marker="*",linewidths=2,s=100,label="RD2", zorder = 0)
     # else:
-    ax2.scatter(prop_data.keys(), prop_data.values(),
-        color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = len(df_ff_list)+1)
+    
 
+    T_grid = dense_grid(min_temp, max_temp, step=3.0)
+    gamma_grid = [r1_value(molec, prop_name, T) for T in T_grid]
+    (rt, rv), (ut, uv) = split_reliable(molec, mol_data, prop_name, T_grid, gamma_grid)
+    if rt:
+        ax2.plot(rt, rv, "-", color="black",lw=1.5,label="RD1", zorder = 0)
+    if ut:
+        ax2.plot(ut, uv, "--", color="black",lw=1.5, zorder = 0)
     #Set Axes
     #Use a log10 scale for diff_coeff
     if prop_name == "diff_coeff":
@@ -445,6 +530,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         #Set 5 ticks on y axis
         ax2.yaxis.set_major_locator(MaxNLocator(nbins=6))
 
+    ax2.scatter(prop_data.keys(), prop_data.values(),
+        color="black",marker="*",linewidths=2,s=100,label="RD2", zorder = 0)
     
     # print(f"Final min/max for {prop_name} for {molec}: {min_st}/{max_st}, {min_temp}/{max_temp}")
     ax2.xaxis.set_major_locator(MaxNLocator(nbins=6))
@@ -494,7 +581,8 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
 
     #Get legends and handles
     handles, labels = ax2.get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=2, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    ncol = 3 if len(labels) > 5 else 2
+    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=ncol, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     # ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     if prop_name == "diff_coeff":
         #Put text in lower right
@@ -531,7 +619,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     key_map = {"MeOH-4P": ('gray', 's', 1),
-               "OPLS (Gonzalez-Salgado & Vega)": ('tab:orange', '>', 1),
+               "OPLS-UA": ('tab:orange', '>', 1),
                "OPLS/2016": ('tab:green', 'p', 1),
                "TraPPE-UA": ('purple', 'd', 1),
                "TraPPE-UA": ('purple', 'd', 1),
@@ -639,7 +727,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                 elif label_prop == "Base":
                     label_prop = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
 
-                if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)"):
+                if df_label in ("OPLS/2016", "OPLS-UA"):
                         means = means[::5]
                         stds = stds[::5]
 
@@ -653,6 +741,7 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                     df_label = "GP-Opt"
                 elif df_label == "Base":
                     df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
+
                 if "sim_rhoc_unc" not in means.columns or "sim_Tc_unc" not in means.columns:
                     std_rhoc = stds["sim_rhoc"].values
                     std_Tc = stds["sim_Tc"].values
@@ -670,15 +759,33 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
                     pass
 
     #Plot experimental data
+    T_grid = dense_grid(min_temp, max_temp, step=3.0)
+    
+    rho_l_grid = [r1_value(molec, "liq_density", T) for T in T_grid]
+    rho_v_grid = [r1_value(molec, "vap_density", T) for T in T_grid]
+    for label_suffix, vals in [("liquid branch", rho_l_grid), ("vapor branch", rho_v_grid)]:
+        prop_key = "liq_density" if "liquid" in label_suffix else "vap_density"
+        (rt, rv), (ut, uv) = split_reliable(molec, mol_data, prop_key, T_grid, vals)
+        if rt:
+            ax2.plot(rv, rt, "-", color="black",lw=1.5,label="RD1", zorder = 0)
+        if ut:
+            ax2.plot(uv, ut, "--", color="black",lw=1.5, zorder = 0)
+
+    Tc_R1 = r1_critical(molec, "Tc")
+    rho_c_R1 = r1_critical(molec, "rho_c")
+
+    if (Tc_R1 and rho_c_R1) and (liq_data_present and vap_data_present) and molec!="DMSO":
+        ax2.plot(rho_c_R1[0], Tc_R1[0], "-", marker = "_", color="black", lw=3, zorder = 1)
+
     if liq_data_present or (not liq_data_present and not vap_data_present):
         ax2.scatter(mol_data.expt_liq_density.values(),mol_data.expt_liq_density.keys(),
-            color="black",marker="x",linewidths=2,s=100,label="Experiment", zorder = 7)
+            color="black",marker="*",linewidths=2,s=100,label="RD2", zorder = 0)
     if vap_data_present or (not liq_data_present and not vap_data_present):
         ax2.scatter(mol_data.expt_vap_density.values(),mol_data.expt_vap_density.keys(),
-            color="black",marker="x",linewidths=2,s=100, zorder = 7)
+            color="black",marker="*",linewidths=2,s=100, zorder = 0)
     if liq_data_present and vap_data_present and molec != "DMSO":
-        ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="x", linewidths=2, 
-                    s=100, zorder = len(df_ff_list)+1)
+        ax2.scatter(mol_data.expt_rhoc, mol_data.expt_Tc, color="black", marker="*", linewidths=2, 
+                    s=100, zorder = 0)
 
     #Set Axes
     # ax2.set_xlim(min_rho*0.95,max_rho*1.05)
@@ -719,10 +826,14 @@ def plot_vle_envelopes(molec_dict, df_ff_dict, save_name = None):
     for h, l in zip(handles, labels):
         if l not in unique:
             unique[l] = h
+    ncol = 3 if len(unique) > 5 else 2
 
-    ax2.text(0.65,  0.82, molec, fontsize=30, transform=ax2.transAxes)
+    if molec == "EG":
+        ax2.text(0.70,  0.82, molec, fontsize=30, transform=ax2.transAxes)
+    else:
+        ax2.text(0.65,  0.82, molec, fontsize=30, transform=ax2.transAxes)
     fig.subplots_adjust(bottom=0.2, top=0.75, left=0.15, right=0.95, wspace=0.55)
-    fig.legend(unique.values(), unique.keys(), loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=2, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
+    fig.legend(unique.values(), unique.keys(), loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=ncol, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
 
 
     return fig
@@ -756,7 +867,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     df_ff_list = list(df_ffs)
 
     key_map = {"MeOH-4P": ('gray', 's', 1),
-               "OPLS (Gonzalez-Salgado & Vega)": ('tab:orange', '>', 1),
+               "OPLS-UA": ('tab:orange', '>', 1),
                "OPLS/2016": ('tab:green', 'p', 1),
                "TraPPE-UA": ('purple', 'd', 1),
                "TraPPE-UA": ('purple', 'd', 1),
@@ -893,7 +1004,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                     elif df_label == "Base":
                         df_label = "Base" #"Lowest " + r"$\gamma$" + " MAPD FF"
 
-                    if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)"):
+                    if df_label in ("OPLS/2016", "OPLS-UA"):
                         temps_finite = temps_finite[::6]
                         log_Pvap_finite = log_Pvap_finite[::6]
                         std_log_pvap = std_log_pvap[::6]
@@ -913,7 +1024,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                 temps_finite = means["temperature"].values[finite_indices]
                 min_hvap, max_hvap = get_min_max(min_hvap, max_hvap, Hvap_finite, std_hvap)
 
-                if df_label in ("OPLS/2016", "OPLS (Gonzalez-Salgado & Vega)"):
+                if df_label in ("OPLS/2016", "OPLS-UA"):
                         temps_finite = temps_finite[::5]
                         Hvap_finite = Hvap_finite[::5]
                         std_hvap = std_hvap[::5]
@@ -922,14 +1033,31 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
                             color=df_color, markersize=10, linestyle='None', marker = df_marker, alpha=0.5, 
                             zorder = df_z_order,label = df_label)
 
-        
+
+    T_grid = dense_grid(min_temp, max_temp, step=3.0)
+
     #Plot experimental pvap (kPa)
+    pvap_grid = [r1_value(molec, "Pvap", T) for T in T_grid]
+    (rt, rv), (ut, uv) = split_reliable(molec, mol_data, "Pvap", T_grid, pvap_grid)
+    if rt:
+        axs[0].plot([1000.0 / t for t in rt], [math.log(v) for v in rv], "-", color="black",lw=1.5,label="RD1", zorder = 0)
+    if ut:
+        axs[0].plot([1000.0 / t for t in ut], [math.log(v) for v in uv], "--", color="black",lw=1.5, zorder = 0)
+
     axs[0].scatter(1000/np.array(list(mol_data.expt_Pvap.keys())),
-                    np.log(np.array(list(mol_data.expt_Pvap.values()))*100),
-        color="black",marker="x",label="Experiment",s=100,zorder = len(df_ff_list)+1)
+                np.log(np.array(list(mol_data.expt_Pvap.values()))*100),
+    color="black",marker="*",label="RD2",s=100,zorder = 0)
+            
     #Plot experimental Hvap
+    hvap_grid = [r1_value(molec, "Hvap", T) for T in T_grid]
+    (rt, rv), (ut, uv) = split_reliable(molec, mol_data, "Hvap", T_grid, hvap_grid)
+    if rt:
+        axs[1].plot(rt, rv, "-", color="black",lw=1.5,label="RD1", zorder = 0)
+    if ut:
+        axs[1].plot(ut, uv, "--", color="black",lw=1.5, zorder = 0)
+
     axs[1].scatter(mol_data.expt_Hvap.keys(),mol_data.expt_Hvap.values(),
-        color="black",marker="x",label="Experiment",s=100, zorder = len(df_ff_list)+1)
+        color="black",marker="*",label="RD2",s=100, zorder = 0)
 
     #Set axes details
     # axs[0].set_xlim((1/max_temp)*0.95,(1/min_temp)*1.05)
@@ -970,6 +1098,7 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     if molec not in ["R14", "R50", "R170", "R116"]:
         #Substitute mole string R w/ HFC
         molec = molec.replace("R","HFC")
+        
     axs[0].text(0.08, 0.15, molec, fontsize=30, transform=axs[0].transAxes)
 
     for axis in ['top','bottom','left','right']:
@@ -990,8 +1119,8 @@ def plot_pvap_hvap(molec_dict, df_ff_dict, save_name = None):
     for h, l in zip(handles, labels):
         if l not in unique:
             unique[l] = h
-
-    fig.legend(unique.values(), unique.keys(), loc="lower center", bbox_to_anchor=(0.5, 0.88), ncol=2, fontsize=20, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
+    ncol = 3 if len(unique) > 5 else 2
+    fig.legend(unique.values(), unique.keys(), loc="lower center", bbox_to_anchor=(0.5, 0.88), ncol=ncol, fontsize=20, handletextpad=0.1, markerscale=0.8, edgecolor="dimgrey")
 
     fig.subplots_adjust(bottom=0.15, top=0.85, left=0.15, right=0.85, wspace=0.55, hspace=0.5)
 
