@@ -547,8 +547,12 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
             max_temp = 330
             min_temp = 298.15
         elif molec == "DMSO":
-            min_temp = 290
-            max_temp = 380
+            if "liq" in prop_name or "surf_tens" in prop_name:
+                min_temp = 290
+                max_temp = 375
+            if "vap" in prop_name:
+                min_temp = 310
+                max_temp = 330
         elif molec == "Gly":
             max_temp = 400
     ax2.set_xlim(min_temp*0.95, max_temp*1.05)
@@ -563,7 +567,7 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
         if prop_name == "liq_density":
             ax2.set_ylim(bottom=900)
         if prop_name == "vap_density":
-            ax2.set_ylim(bottom = 0, top = 0.6)
+            ax2.set_ylim(bottom = 0, top = 0.095)
     
     ax2.tick_params("both", direction="in", which="both", length=4, labelsize=22, pad=10)
     ax2.tick_params("both", which="major", length=8)
@@ -589,7 +593,9 @@ def plot_misc_prop(molec_dict, df_ff_dict, prop_name):
     ncol = 3 if len(labels) > 5 else 2
     fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.78), ncol=ncol, fontsize=20, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
     # ax2.legend(loc="lower left", bbox_to_anchor=(-0.16, 1.03), ncol=2, fontsize=22, handletextpad=0.1, markerscale=0.9, edgecolor="dimgrey")
-    if prop_name == "diff_coeff":
+    if molec == "DMSO" and prop_name == "vap_density":
+        ax2.text(0.15,  0.82, molec, fontsize=30, transform=ax2.transAxes)
+    elif prop_name == "diff_coeff":
         #Put text in lower right
         ax2.text(0.60,  0.15, molec, fontsize=30, transform=ax2.transAxes)
     else:
