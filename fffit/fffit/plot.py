@@ -382,7 +382,7 @@ def plot_model_vs_exp(
                     alpha=0.25,
                 )
 
-    ax.set_title("GP Model vs. Exp Data for " + label)
+    ax.set_title("GP Model vs. Exp Data for " + label, fontsize=20)
     
     if isinstance(other_data, dict):
         extra_markers = ['^','D','p','P','*']
@@ -402,10 +402,11 @@ def plot_model_vs_exp(
         
     exp_temp = np.array(list(exp_data.keys()))
     exp_property = np.array(list(exp_data.values()))
-    ax.plot(exp_temp, exp_property, "s", color="black", label="Exp",zorder=2)
+    ax.plot(exp_temp, exp_property, "s", color="black", label="RD2",zorder=2)
     
-    ax.set_xlabel("Temperature")
-    ax.set_ylabel(property_name)
+    ax.set_xlabel(r'$T/K$', fontsize = 32)
+    ax.set_ylabel(property_name, fontsize = 32)
+    ax.tick_params(axis='both', which='major', labelsize=18)
     # print(property_name)
     handles, labels = ax.get_legend_handles_labels()
     #Move "Exp" to the end of the legend
@@ -414,7 +415,7 @@ def plot_model_vs_exp(
         handles.append(handles.pop(exp_index))
         labels.append(labels.pop(exp_index))
     ncol = len(labels) if len(labels) < 4 else np.ceil(len(labels)/2)
-    ax.legend(handles, labels,loc='lower center',bbox_to_anchor=(0.5, 1.05),ncol=ncol, frameon=True)
+    ax.legend(handles, labels,loc='lower center',bbox_to_anchor=(0.5, 1.05),ncol=ncol, frameon=True, fontsize = 20)
     # if "Liquid Density" in property_name or "Enthalpy" in property_name or "Surface Tension" in property_name:
     #     plt.legend(loc="lower left")
     # else:

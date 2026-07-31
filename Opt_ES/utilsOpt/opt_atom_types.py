@@ -467,23 +467,23 @@ class Problem_Setup:
         if "vap_density" in prop_key:
             exp_data = molec_object.expt_vap_density
             property_bounds = molec_object.vap_density_bounds
-            property_name = "Vapor Density [kg/m^3]"
+            property_name = r'$\rho_v/$kg$\,$m$^{-3}$' #"Vapor Density [kg/m^3]"
         elif "liq_density" in prop_key:
             exp_data = molec_object.expt_liq_density
             property_bounds = molec_object.liq_density_bounds
-            property_name = "Liquid Density [kg/m^3]"
+            property_name = r'$\rho_l/$kg$\,$m$^{-3}$' #"Liquid Density [kg/m^3]"
         elif "Pvap" in prop_key:
             exp_data = molec_object.expt_Pvap
             property_bounds = molec_object.Pvap_bounds
-            property_name = "Vapor Pressure [bar]"
+            property_name = r'$P_{vap}/$bar' #"Vapor Pressure [bar]"
         elif "Hvap" in prop_key:
             exp_data = molec_object.expt_Hvap
             property_bounds = molec_object.Hvap_bounds
-            property_name = "Enthalpy of Vaporization [kJ/kg]"
+            property_name = r'$\Delta H_{vap}/$kJ$\,$kg$^{-1}$'#"Enthalpy of Vaporization [kJ/kg]"
         elif "surf_tens" in prop_key:
             exp_data = molec_object.expt_surf_tens
             property_bounds = molec_object.surf_tens_bounds
-            property_name = "Surface Tension [mN/m]"
+            property_name = r'$\gamma/$mN$\,$m$^{-1}$' #"Surface Tension [mN/m]""
         else:
             raise (
                 ValueError,

@@ -50,6 +50,9 @@ for statepoint_value, group in grouped_jobs:
             else:
                 unsorted_df = pd.concat([unsorted_df, df_best_run], ignore_index=True)
 
+    if "/scratch365" in save_path:
+        save_path = save_path.replace("/scratch365/mcarlozo", "/groups/ed/group_members/Montana_Carlozo") 
+
     if unsorted_df is not None:
         # Sort the data by the minimum objective value
         all_df = unsorted_df.sort_values(by="Min Obj Cum.", ascending=True).reset_index(
