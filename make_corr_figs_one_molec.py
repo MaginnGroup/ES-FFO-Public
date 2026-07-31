@@ -485,39 +485,39 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
     if mode == "ld":
         for i in range(len(df_analyze)):
             ax1.plot(df_analyze["sigma_sum"].iloc[i], df_analyze["mpd_liq_density"].iloc[i], 'o', label="Liquid Density")
-        ax1.set_xlabel(r"$\Sigma \sigma$/A", fontsize=16)
-        ax1.set_ylabel(r"MPD $\rho_l$/%", fontsize=16)
-        ax1.tick_params(axis='both', which='major', labelsize=14)
+        ax1.set_xlabel(r"$\Sigma \sigma$/A", fontsize=32)
+        ax1.set_ylabel(r"MPD $\rho_l$/%", fontsize=32)
+        ax1.tick_params(axis='both', which='major', labelsize=18)
         ax1.set_xlim(x_min_sig, x_max_sig)
 
         for i in range(len(df_analyze)):
             ax2.plot(df_analyze["epsilon_sum"].iloc[i], df_analyze["mpd_liq_density"].iloc[i], 'o', label="Liquid Density")
-        ax2.set_xlabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=16)
-        ax2.set_ylabel(r"MPD $\rho_l$/%", fontsize=16)
-        ax2.tick_params(axis='both', which='major', labelsize=14)
+        ax2.set_xlabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=32)
+        ax2.set_ylabel(r"MPD $\rho_l$/%", fontsize=32)
+        ax2.tick_params(axis='both', which='major', labelsize=18)
         ax2.set_xlim(x_min_eps, x_max_eps)
 
     if mode == "vle":
         for i in range(len(df_analyze)):
             ax2.plot(df_analyze["epsilon_sum"].iloc[i], df_analyze["mpd_surf_tens"].iloc[i], 'o', label="Surface Tension")
-        ax2.set_xlabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=16)
-        ax2.set_ylabel(r"MPD $\gamma$/%", fontsize=16)
-        ax2.tick_params(axis='both', which='major', labelsize=14)
+        ax2.set_xlabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=32)
+        ax2.set_ylabel(r"MPD $\gamma$/%", fontsize=32)
+        ax2.tick_params(axis='both', which='major', labelsize=18)
         ax2.set_xlim(x_min_eps, x_max_eps)
         for i in range(len(df_analyze)):
             ax1.plot(df_analyze["sigma_sum"].iloc[i], df_analyze["mpd_surf_tens"].iloc[i], 'o', label="Surface Tension")
-        ax1.set_xlabel(r"$\Sigma \sigma$/A", fontsize=16)
-        ax1.set_ylabel(r"MPD $\gamma$/%", fontsize=16)
-        ax1.tick_params(axis='both', which='major', labelsize=14)
+        ax1.set_xlabel(r"$\Sigma \sigma$/A", fontsize=32)
+        ax1.set_ylabel(r"MPD $\gamma$/%", fontsize=32)
+        ax1.tick_params(axis='both', which='major', labelsize=18)
         ax1.set_xlim(x_min_sig, x_max_sig)
 
 
     for i in range(len(df_analyze)):
         ax3.plot(df_analyze["sigma_sum"].iloc[i], df_analyze["epsilon_sum"].iloc[i], 'o', label="Liquid Density")
-    ax3.set_xlabel(r"$\Sigma \sigma$/A", fontsize=16)
-    ax3.set_ylabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=16)
+    ax3.set_xlabel(r"$\Sigma \sigma$/A", fontsize=32)
+    ax3.set_ylabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=32)
     ax3.set_ylim(x_min_eps, x_max_eps)
-    ax3.tick_params(axis='both', which='major', labelsize=14)
+    ax3.tick_params(axis='both', which='major', labelsize=18)
     ax3.set_xlim(x_min_sig, x_max_sig)
     fig2.tight_layout()
 
@@ -532,7 +532,8 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
 
     import seaborn as sns
     import matplotlib.pyplot as plt
-    size = 48/(len(corr_matrix))
+    # size = 48/(len(corr_matrix))
+    size = 20
     fig4 = plt.figure(figsize=(8,8))
     rename_map = {}
     for i, col in enumerate(corr_matrix.columns):
@@ -591,6 +592,7 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
     corr_mat_df = lhs_param_df
     corr_matrix2 = corr_mat_df.corr(method=meth)  # or "spearman"
     fig5 = plt.figure(figsize=(8,8))
+    # size = 20
     size = np.maximum(10,48/(len(corr_matrix2)))
 
     for i, col in enumerate(corr_matrix2.columns):
@@ -619,12 +621,12 @@ def plot_corr_matrix_one_molec(df_analyze, data_class, x_min_sig, x_max_sig, x_m
     fig3, ax3 = plt.subplots(1, 1, figsize=(5,5))
     ax3.plot(df_analyze["sigma_sum"], df_analyze["epsilon_sum"], 'o', label="Successful Points", alpha = 0.5)
     ax3.plot(failure_points["sigma_sum"], failure_points["epsilon_sum"], 'o', label="Failed Points", alpha = 0.5)
-    ax3.set_xlabel(r"$\Sigma \sigma$/A", fontsize=16)
-    ax3.set_ylabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=16)
+    ax3.set_xlabel(r"$\Sigma \sigma$/A", fontsize=32)
+    ax3.set_ylabel(r"$\Sigma \frac{\epsilon}{k_B}$/K", fontsize=32)
     ax3.set_ylim(x_min_eps, x_max_eps)
-    ax3.tick_params(axis='both', which='major', labelsize=14)
+    ax3.tick_params(axis='both', which='major', labelsize=18)
     ax3.set_xlim(x_min_sig, x_max_sig)
-    fig3.legend(loc = 'upper center', fontsize=16, ncol=2, bbox_to_anchor=(0.5, 1.15)  )
+    fig3.legend(loc = 'upper center', fontsize=20, ncol=2, bbox_to_anchor=(0.5, 1.15)  )
     fig3.tight_layout()
     if mode == "ld":
         return fig2, fig3, fig4, fig5
