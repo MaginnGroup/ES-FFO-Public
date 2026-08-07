@@ -18,6 +18,7 @@ from fffit.fffit.utils import values_real_to_scaled, values_scaled_to_real, valu
 from fffit.fffit.plot import plot_model_vs_exp
 from utils.molec_class_files import esolvs
 from Opt_ES.utilsOpt import opt_atom_types
+from make_svd_sensitivity import run_sensitivity_analysis
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -59,106 +60,20 @@ def sp_within_bounds(analyzer):
 from Build_GPs.utils.models import get_exp_data, loo_model_perform
 
 ###Create Estimability Analysis Tables
-mol_names = ["DEC", "DMF", "DMSO", "EG", "Gly", "MeOH"] 
+# The SVD sensitivity analysis lives in make_svd_sensitivity.py so that it can be
+# reproduced on its own, without the simulation-workflow dependencies used below.
+# Running it here regenerates the singular values, right singular vectors, the full
+# decomposition, and the q_j rankings for every molecule and both temperature modes.
+mol_names = ["DEC", "DMF", "DMSO", "EG", "Gly", "MeOH"]
 molec_dict = esolvs.make_dict(mol_names)
 
-os.chdir("/groups/ed/group_members/Montana_Carlozo/ES-FFO/Opt_ES")
-#For each of the 6 solvents
-data_dict = []
-max_mapd = 0
-mode = "wo_temp" #w_temp or wo_temp
-for mol_name in mol_names:
-    at_num = 0 
-    setup = opt_atom_types.Problem_Setup([mol_name], at_num, "ExpVal")
-    # Set parameter set of interest (in this case get the best parameter set)
-    x_label = "best_set"
-    all_molec_dir = setup.use_dir_name
-    GPs = setup.all_gp_dict[mol_name]
-    ranks = {}
-    q_vals = {}
-    for prop_name in ["liq_density", "surf_tens"]:
-        GP_model = GPs[f"sim_{prop_name}"]
-        mol_data = molec_dict[mol_name]
-        exp_data, property_bounds, property_name = get_exp_data(mol_data, prop_name)
+run_sensitivity_analysis(mol_names=mol_names)
 
-        #Get parameter sets and property values for best parameter set
-        if prop_name == "liq_density":
-            ms_data = pd.read_csv(f"../Build_GPs/analysis/{mol_name}/ld_iters/all_results.csv")
-        else:            
-            ms_data = pd.read_csv(f"../Build_GPs/analysis/{mol_name}/vle_iters/all_results.csv")
-
-        param_bounds, param_names = setup.get_param_bnds_names()
-        first_param_name = param_names[0]
-        last_param_name = param_names[-1]
-
-        real_best_set = ms_data.loc[:, first_param_name:last_param_name]
-        real_temp = ms_data.loc[:, "temperature"]
-        real_prop = ms_data.loc[:, f"{prop_name}"]
-        X_test = np.hstack((real_best_set, real_temp.values.reshape(-1,1)))
-        
-        #Calculate the Sensitivity Matrix
-        X_test_tf = tf.Variable(X_test, dtype=tf.float64)
-
-        with tf.GradientTape() as tape:
-            tape.watch(X_test_tf)
-            x_data = X_test_tf
-            mean, _ = GP_model.predict_f(x_data)
-            
-        
-        sensitivity_matrix = tape.gradient(mean, X_test_tf)
-        gp_input_names = param_names + ["temperature"]
-
-        #Remove last column of sensitivity matrix if we don't want to include temperature
-        if mode == "wo_temp":
-            sensitivity_matrix = sensitivity_matrix[:, :-1]
-            names_to_use = param_names
-        else:
-            names_to_use = gp_input_names
-
-        #SVD of sensitivity matrix to get singular values and right basis vectors
-        S, U, Vt = tf.linalg.svd(sensitivity_matrix)
-        sing_vals = S.numpy()
-        right_vecs = Vt.numpy().T  # Transpose to get eigenvectors as columns
-        q = sing_vals@abs(right_vecs)
-
-        #Reorder input names based on the magntude of the sensitivity (q)
-        sorted_indices = np.argsort(q)[::-1]
-        #sorted values of q
-        sorted_q = q[sorted_indices]
-
-        
-        param_ranks = [names_to_use[i] for i in sorted_indices]
-        ranks[prop_name] = param_ranks
-        q_vals[prop_name] = sorted_q
-
-        #Save singular values, and right singular vectors as csvs to dir
-        if prop_name == "liq_density":
-            dir = f"../Build_GPs/analysis/{mol_name}/ld_iters/sens_approx"
-        else:
-            dir = f"../Build_GPs/analysis/{mol_name}/vle_iters/sens_approx"
-        if mode == "wo_temp":
-            name_dir = "_wo_temp"
-        else:            
-            name_dir = ""
-        sens_dir_name = "sens_approx" + name_dir
-        os.makedirs(os.path.join(dir, sens_dir_name), exist_ok=True) 
-        sens_dir = os.path.join(dir, sens_dir_name)
-        singval_df = pd.DataFrame(sing_vals, columns=["sing_value"])
-        singval_df.to_csv(os.path.join(sens_dir, f"sing_val_{prop_name}.csv"), index=False)
-        rightvec_df = pd.DataFrame(right_vecs, columns=[f"{gp_input_names[i]}" for i in range(right_vecs.shape[1])])
-        rightvec_df.to_csv(os.path.join(sens_dir, f"basis_vec_{prop_name}.csv"), index=False)
-        rank_df = pd.DataFrame({"param_rank": param_ranks,"sensitivity_score": sorted_q})        
-        rank_df.to_csv(os.path.join(sens_dir, f"param_rank_{prop_name}.csv"), index=False)
-        # print(np.linalg.norm(right_vecs, axis=0))
-
-    #Create a table which shows the parameter ranks for each property and save to csv
-    dir = f"../Build_GPs/analysis/{mol_name}/"
-    rank_table = pd.DataFrame({"Rank": list(range(1, len(param_ranks) + 1)), 
-                               r"\rho_l - LD Data": ranks["liq_density"],
-                               "q_j (rho_l)": q_vals["liq_density"],
-                                r"\gamma - ST Data": ranks["surf_tens"],
-                                "q_j (gamma)": q_vals["surf_tens"]})
-    rank_table.to_csv(os.path.join(dir, f"param_rank_table{name_dir}.csv"), index=False)
+# Work from the repo's Opt_ES directory, resolved relative to this script, rather than a
+# hard-coded cluster path. The code below reads "../Build_GPs/..." and resolves GP pickles
+# relative to this working directory.
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(os.path.join(_script_dir, "Opt_ES"))
 
 
 ###Compare GP Prediction Accuracy to MAPD of final FF model
