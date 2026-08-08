@@ -248,6 +248,12 @@ Note: Step 2 operation IFT runs multiple operations in series. Alternatively, th
      qsub -N postVLE submit_job post_vle.py
    ```  
 
+> **Note — regenerating the surface-tension GPs will not reproduce the archived DMF model.**
+> Five of the six archived surface-tension GPs use a masked linear mean function, but DMF's
+> uses a plain linear mean function; the current code masks all six. The archived DMF model
+> is the one behind the published results. See the "Mean functions, and a known exception for
+> DMF" section of [SENSITIVITY_ANALYSIS.md](SENSITIVITY_ANALYSIS.md) for details.
+
 ### Distinct Atom Type Optimization
 To run generalized FF calibration, follow the following steps:
 1. Initialize Signac workflow

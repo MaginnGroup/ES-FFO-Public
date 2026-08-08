@@ -92,3 +92,47 @@ The most recent iteration is used for each property: liquid density from
 matching the selection in `Opt_ES/utilsOpt/opt_atom_types.get_gp_data_from_pkl`.
 The script prints the exact model file used for each molecule and property when
 it runs.
+
+### Mean functions, and a known exception for DMF
+
+The liquid-density GPs use a plain `gpflow` `Linear` mean function. Five of the
+six surface-tension GPs — MeOH, EG, Gly, DMSO and DEC — instead use
+`MaskedLinear` (built as the `'Custom'` mean function in
+`Build_GPs/utils/models.py`), which masks the sigma inputs so the linear mean
+acts only on the epsilon parameters and temperature.
+
+**The archived DMF surface-tension GP uses a plain `Linear` mean function, not
+`MaskedLinear`.** It is the one exception among the six, and it is the model
+behind the published DMF surface-tension results.
+
+This is deliberate, not a stale artifact. In the development history, the commit
+that introduced the masked mean function updated the models for the other five
+molecules and explicitly left DMF's alone; its message reads *"Updated GP models
+of all molecules except DMF to exlude linear dependence of sigma in the mean
+functions"* (private-history commit `de6a765`, 2025-12-17; the supporting code
+change is `a2aeecb`, the same day). DMF's surface-tension pickle dates from the
+previous day's model update and was not rewritten by that commit. **No reason for
+the exception is recorded anywhere in the history, and none should be inferred.**
+
+**Re-running the pipeline as committed will not reproduce the archived DMF
+model.** `Build_GPs/utils/models.py` computes an Eötvös scale for every molecule
+in the `vle_iters` branch, and sets `mean_function='Custom'` whenever that scale
+is not `None`, so current code masks DMF along with the other five. Anyone
+regenerating the surface-tension GPs should expect a `MaskedLinear` DMF model
+that differs from the archived one. The archived models are used as-is by the
+analysis scripts here; nothing is retrained.
+
+Two clarifications, because "DMF is different" invites broader inferences than
+the evidence supports:
+
+- **Only the mean function differs.** Eötvös noise scaling was applied to all six
+  surface-tension GPs, DMF included: the archived white-kernel variance matches
+  the Eötvös scaled variance to seven digits for DMF (0.1620487) and for DMSO
+  (0.0863983, checked as a control). DMF's likelihood and noise settings are the
+  same as the other five.
+- **Accuracy does not motivate changing it.** Retraining DMF's surface-tension GP
+  with the mask and the same Eötvös noise gives a slightly *worse* test-set fit
+  (2.347% MAPD, 0.9947 mN/m RMSE) than the archived model (2.194%, 0.9223). The
+  difference is small enough to sit within restart-to-restart variation, so this
+  is a reason not to bother changing the archived model rather than evidence
+  about why the exception was made.
