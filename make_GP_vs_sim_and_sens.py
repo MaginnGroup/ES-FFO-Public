@@ -143,14 +143,14 @@ for i, property_name in enumerate(data_df["Property Name"].unique()):
         axes[i].set_ylim(0, max_mapd*1.05)
         # axes[i].set_xlabel(f"GP-Predicted MAPD", fontsize = 18)
     else:
-        axes[i].legend(loc="upper center", fontsize = 18, ncol=2)
+        axes[i].legend(loc="lower right", fontsize = 18, ncol=2)
     axes[i].tick_params("y", direction="inout", which="both", length=7)
     axes[i].tick_params("y", which="major", length=14)
     axes[i].tick_params("x", pad=15)
     #Increase font size of ticks    
     axes[i].tick_params(axis='both', which='major', labelsize=14)
 fig.supylabel('FF simulation vs. experiment, MAPD/%', fontsize=18)
-fig.supxlabel('GP prediction vs FF simulation, MAPD/%', fontsize=18)
+fig.supxlabel('GP prediction vs. FF simulation, MAPD/%', fontsize=18)
 
 plt.tight_layout()
 

@@ -38,7 +38,7 @@ DATA_DIR = os.path.join(REPO_ROOT, "Opt_ES", "analysis", "AT-0", "ms_val_opt")
 CSV_PATH = os.path.join(DATA_DIR, "MAPD_comp_bestFF.csv")
 PNG_PATH = os.path.join(DATA_DIR, "MAPD_comp_bestFF.png")
 
-X_LABEL = "GP prediction vs FF simulation, MAPD/%"
+X_LABEL = "GP prediction vs. FF simulation, MAPD/%"
 Y_LABEL = "FF simulation vs. experiment, MAPD/%"
 
 
@@ -69,7 +69,7 @@ def main():
         if i == 1:
             axes[i].set_ylim(0, max_mapd * 1.05)
         else:
-            axes[i].legend(loc="upper center", fontsize=18, ncol=2)
+            axes[i].legend(loc="lower right", fontsize=18, ncol=2)
         axes[i].tick_params("y", direction="inout", which="both", length=7)
         axes[i].tick_params("y", which="major", length=14)
         axes[i].tick_params("x", pad=15)
