@@ -137,7 +137,6 @@ for i, property_name in enumerate(data_df["Property Name"].unique()):
         axes[i].scatter(prop_data["GP_MAPD"].iloc[j], prop_data["FF_MAPD"].iloc[j], 
                         label=prop_data["Molecule"].iloc[j], 
                         color=colors[j % len(colors)], marker=label_type, s=150, alpha = 0.5)
-    axes[i].plot(prop_data["GP_MAPD"], prop_data["GP_MAPD"], color="black", label = "Parity Line")
     # axes[i].set_ylabel("GP-Opt Simulated MAPD", fontsize = 18)
     axes[i].set_title(f"{property_name.split('/')[0]} MAPD Comparison", fontsize = 24)
     if i == 1:
@@ -150,8 +149,8 @@ for i, property_name in enumerate(data_df["Property Name"].unique()):
     axes[i].tick_params("x", pad=15)
     #Increase font size of ticks    
     axes[i].tick_params(axis='both', which='major', labelsize=14)
-fig.supylabel('Actual FF MAPD/%', fontsize=18)
-fig.supxlabel('GP-Predicted FF MAPD/%', fontsize=18)
+fig.supylabel('FF simulation vs. experiment, MAPD/%', fontsize=18)
+fig.supxlabel('GP vs. FF simulation, MAPD/%', fontsize=18)
 
 plt.tight_layout()
 
