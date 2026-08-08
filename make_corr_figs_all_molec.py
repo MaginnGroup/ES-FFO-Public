@@ -85,7 +85,7 @@ def set_ticks_for_axis(ax, param_bounds, nticks):
 
 def calc_param_sums(df_analyze, data_class, mol_names, mode3 = "scl"):
     NM_TO_ANGSTROM = 10
-    K_B = 0.008314 # J/MOL K
+    K_B = 0.0083144598 # kJ/(mol*K)
     KJMOL_TO_K = 1.0 / K_B
 
     param_names = list(data_class.param_names)
@@ -182,7 +182,7 @@ def weighted_min_max(param_bounds_slice, param_names_slice, param_counts):
 
 def get_corr_all_molecs(mol_names, mode, mode2 = "all", mode3 ="scl", err_met = "mpd", threshold=10):
     NM_TO_ANGSTROM = 10
-    K_B = 0.008314 # J/MOL K
+    K_B = 0.0083144598 # kJ/(mol*K)
     KJMOL_TO_K = 1.0 / K_B
     import matplotlib.pyplot as plt 
 
