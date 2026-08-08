@@ -38,7 +38,7 @@ DATA_DIR = os.path.join(REPO_ROOT, "Opt_ES", "analysis", "AT-0", "ms_val_opt")
 CSV_PATH = os.path.join(DATA_DIR, "MAPD_comp_bestFF.csv")
 PNG_PATH = os.path.join(DATA_DIR, "MAPD_comp_bestFF.png")
 
-X_LABEL = "GP vs. FF simulation, MAPD/%"
+X_LABEL = "GP prediction vs FF simulation, MAPD/%"
 Y_LABEL = "FF simulation vs. experiment, MAPD/%"
 
 
