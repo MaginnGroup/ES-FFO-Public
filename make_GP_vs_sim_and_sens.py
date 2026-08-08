@@ -143,7 +143,7 @@ for i, property_name in enumerate(data_df["Property Name"].unique()):
         axes[i].set_ylim(0, max_mapd*1.05)
         # axes[i].set_xlabel(f"GP-Predicted MAPD", fontsize = 18)
     else:
-        axes[i].legend(loc="upper center", fontsize = 18)
+        axes[i].legend(loc="upper center", fontsize = 18, ncol=2)
     axes[i].tick_params("y", direction="inout", which="both", length=7)
     axes[i].tick_params("y", which="major", length=14)
     axes[i].tick_params("x", pad=15)
