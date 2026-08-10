@@ -16,6 +16,7 @@ analysis_old*
 *Build_GPs/analysis/MeOH/ld_iters/old/*
 *Build_GPs/analysis/Gly/vle_iters/iter-1/close_st_data_gps/*
 *bndl_out*
+scripts/replot_mapd_comparison.py
 
 
 #Specific PDF Files
