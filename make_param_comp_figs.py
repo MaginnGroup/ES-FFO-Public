@@ -60,7 +60,7 @@ for str in molec_names:
     matplotlib.rc("font", serif="Arial")
 
     NM_TO_ANGSTROM = 10
-    K_B = 0.008314 # J/MOL K
+    K_B = 0.0083144598 # kJ/(mol*K)
     KJMOL_TO_K = 1.0 / K_B
 
     # ID the top ten by lowest average MAPE
