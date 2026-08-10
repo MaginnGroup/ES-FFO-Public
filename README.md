@@ -13,7 +13,7 @@ Carlozo, M. N., Dowling, A. W., \& Maginn, E. J.. Transferable Force Fields for 
    
 ## Available Data
 
-### Repository Organization (UPDATE NUMBERS)
+### Repository Organization
 The repository is organized as follows: <br />
 ES-FFO/ is the top level directory. It contains: <br />
 1. .gitignore prevents large files from the signac workflow and plots from being tracked by git and prevents  tracking of other unimportant files. <br />
