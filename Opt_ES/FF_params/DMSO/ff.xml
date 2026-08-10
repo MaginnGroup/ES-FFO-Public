@@ -1,0 +1,29 @@
+<ForceField>
+ <AtomTypes>
+   <Type name="S1" class="s4" element="S" mass="32.06" def="[S;X3]" desc="S with three connected atoms"/>
+   <Type name="O1" class="o" element="O" mass="16.0" def="[O;X1]" desc="Oxygen with one connected atom"/>
+   <Type name="C1" class="c3" element="C" mass="12.01" def="[C;X4]" desc="Sp3 C"/>
+   <Type name="H1" class="h1" element="H" mass="1.008" def="H[C;X4]([N,O,F,Cl,Br,I,S])" desc="H bonded to aliphatic carbon with 1 d. group"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="o" class2="s4" length="0.1497" k="375471.133"/>
+  <Bond class1="c3" class2="s4" length="0.1807" k="195644.283"/>
+  <Bond class1="c3" class2="h1" length="0.1093" k="281080.370"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="h1" class2="c3" class3="s4" angle="1.896" k="454.219"/>
+  <Angle class1="c3" class2="s4" class3="o" angle="1.854" k="343.587"/>
+  <Angle class1="c3" class2="s4" class3="c3" angle="1.690" k="325.012"/>
+  <Angle class1="h1" class2="c3" class3="h1" angle="1.912" k="327.856"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+  <Proper class1="h1" class2="c3" class3="s4" class4="c3" periodicity1="3" phase1="0.0" k1="0.837"/>
+  <Proper class1="h1" class2="c3" class3="s4" class4="o" periodicity1="3" phase1="0.0" k1="0.837"/>
+ </PeriodicTorsionForce>
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
+  <Atom type="S1" charge="0.357892" sigma="0.440882" epsilon="0.970885"/>
+  <Atom type="O1" charge="-0.485458" sigma="0.320107" epsilon="0.813941"/>
+  <Atom type="C1" charge="-0.492849" sigma="0.222472" epsilon="0.595916"/>
+  <Atom type="H1" charge="0.185544" sigma="0.219614" epsilon="0.081473"/>
+ </NonbondedForce>
+</ForceField>

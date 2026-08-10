@@ -1,0 +1,174 @@
+!*******************************************************************************
+!Molecular connectivity file
+!*******************************************************************************
+!species1.mcf - created by mBuild
+
+!Atom Format
+!index type element mass charge vdw_type parameters
+!vdw_type="LJ", parms=epsilon sigma
+!vdw_type="Mie", parms=epsilon sigma repulsion_exponent dispersion_exponent
+
+# Atom_Info
+18
+1    C1_s1    C    12.011    -0.45330200    LJ    69.29648    3.33283
+2    C2_s1    C    12.011    0.49617900    LJ    23.16710    3.96203
+3    O1_s1    O    15.999    -0.54136300    LJ    45.53054    3.60129
+4    C3_s1    C    12.011    1.05558500    LJ    63.22237    2.44351
+5    O2_s1    O    15.999    -0.65019300    LJ    129.95837    2.60269
+6    O1_s1    O    15.999    -0.54136300    LJ    45.53054    3.60129
+7    C2_s1    C    12.011    0.49617900    LJ    23.16710    3.96203
+8    C1_s1    C    12.011    -0.45330200    LJ    69.29648    3.33283
+9    H1_s1    H    1.008    0.11964200    LJ    7.59207    2.39690
+10    H1_s1    H    1.008    0.11964200    LJ    7.59207    2.39690
+11    H1_s1    H    1.008    0.11964200    LJ    7.59207    2.39690
+12    H2_s1    H    1.008    -0.03156800    LJ    2.06640    2.39679
+13    H2_s1    H    1.008    -0.03156800    LJ    2.06640    2.39679
+14    H2_s1    H    1.008    -0.03156800    LJ    2.06640    2.39679
+15    H2_s1    H    1.008    -0.03156800    LJ    2.06640    2.39679
+16    H1_s1    H    1.008    0.11964200    LJ    7.59207    2.39690
+17    H1_s1    H    1.008    0.11964200    LJ    7.59207    2.39690
+18    H1_s1    H    1.008    0.11964200    LJ    7.59207    2.39690
+
+!Bond Format
+!index i j type parameters
+!type="fixed", parms=bondLength
+
+# Bond_Info
+17
+1     1     2     fixed     1.535
+2     1     9     fixed     1.092
+3     1     10    fixed     1.092
+4     1     11    fixed     1.092
+5     2     3     fixed     1.439
+6     2     12    fixed     1.093
+7     2     13    fixed     1.093
+8     3     4     fixed     1.343
+9     4     5     fixed     1.214
+10    4     6     fixed     1.343
+11    6     7     fixed     1.439
+12    7     8     fixed     1.535
+13    7     14    fixed     1.093
+14    7     15    fixed     1.093
+15    8     16    fixed     1.092
+16    8     17    fixed     1.092
+17    8     18    fixed     1.092
+
+!Angle Format
+!index i j k type parameters
+!type="fixed", parms=equilibrium_angle
+!type="harmonic", parms=force_constant equilibrium_angle
+
+# Angle_Info
+29
+1     1     2     3     harmonic   34108.0    108.40
+2     1     2     12    harmonic   23329.0    110.07
+3     1     2     13    harmonic   23329.0    110.07
+4     2     1     9     harmonic   23334.0    110.07
+5     2     1     10    harmonic   23334.0    110.07
+6     2     1     11    harmonic   23334.0    110.07
+7     2     3     4     harmonic   32020.0    115.16
+8     3     2     12    harmonic   25584.0    108.80
+9     3     2     13    harmonic   25584.0    108.80
+10    3     4     5     harmonic   38209.0    123.36
+11    3     4     6     harmonic   38471.0    111.38
+12    4     6     7     harmonic   32020.0    115.16
+13    5     4     6     harmonic   38209.0    123.36
+14    6     7     8     harmonic   34108.0    108.40
+15    6     7     14    harmonic   25584.0    108.80
+16    6     7     15    harmonic   25584.0    108.80
+17    7     8     16    harmonic   23334.0    110.07
+18    7     8     17    harmonic   23334.0    110.07
+19    7     8     18    harmonic   23334.0    110.07
+20    8     7     14    harmonic   23329.0    110.07
+21    8     7     15    harmonic   23329.0    110.07
+22    9     1     10    harmonic   19842.0    108.35
+23    9     1     11    harmonic   19842.0    108.35
+24    10    1     11    harmonic   19842.0    108.35
+25    12    2     13    harmonic   19716.0    109.55
+26    14    7     15    harmonic   19716.0    109.55
+27    16    8     17    harmonic   19842.0    108.35
+28    16    8     18    harmonic   19842.0    108.35
+29    17    8     18    harmonic   19842.0    108.35
+
+!Dihedral Format
+!index i j k l type parameters
+!type="none"
+!type="CHARMM", parms=a0 a1 delta
+!type="OPLS", parms=c0 c1 c2 c3
+!type="harmonic", parms=force_constant equilibrium_dihedral
+
+# Dihedral_Info
+32
+1     1     2     3     4     CHARMM     1.602    3.000    0.000
+2     1     2     3     4     CHARMM     3.347    1.000  177.617
+3     2     3     4     5     CHARMM    11.297    2.000  177.617
+4     2     3     4     5     CHARMM     5.858    1.000  177.617
+5     2     3     4     6     CHARMM    11.297    2.000  177.617
+6     3     2     1     9     CHARMM     1.046    1.000    0.000
+7     3     2     1     10    CHARMM     1.046    1.000    0.000
+8     3     2     1     11    CHARMM     1.046    1.000    0.000
+9     3     4     6     7     CHARMM    11.297    2.000  177.617
+10    4     3     2     12    CHARMM     1.602    3.000    0.000
+11    4     3     2     13    CHARMM     1.602    3.000    0.000
+12    4     6     7     8     CHARMM     1.602    3.000    0.000
+13    4     6     7     8     CHARMM     3.347    1.000  177.617
+14    4     6     7     14    CHARMM     1.602    3.000    0.000
+15    4     6     7     15    CHARMM     1.602    3.000    0.000
+16    5     4     6     7     CHARMM    11.297    2.000  177.617
+17    5     4     6     7     CHARMM     5.858    1.000  177.617
+18    6     7     8     16    CHARMM     1.046    1.000    0.000
+19    6     7     8     17    CHARMM     1.046    1.000    0.000
+20    6     7     8     18    CHARMM     1.046    1.000    0.000
+21    9     1     2     12    CHARMM     0.653    3.000    0.000
+22    9     1     2     13    CHARMM     0.653    3.000    0.000
+23    10    1     2     12    CHARMM     0.653    3.000    0.000
+24    10    1     2     13    CHARMM     0.653    3.000    0.000
+25    11    1     2     12    CHARMM     0.653    3.000    0.000
+26    11    1     2     13    CHARMM     0.653    3.000    0.000
+27    14    7     8     16    CHARMM     0.653    3.000    0.000
+28    14    7     8     17    CHARMM     0.653    3.000    0.000
+29    14    7     8     18    CHARMM     0.653    3.000    0.000
+30    15    7     8     16    CHARMM     0.653    3.000    0.000
+31    15    7     8     17    CHARMM     0.653    3.000    0.000
+32    15    7     8     18    CHARMM     0.653    3.000    0.000
+
+!Improper Format
+!index i j k l type parameters
+!type="harmonic", parms=force_constant equilibrium_improper
+
+# Improper_Info
+0
+
+!Fragment Format
+!index number_of_atoms_in_fragment branch_point other_atoms
+
+# Fragment_Info
+7
+1    5    1    2    9    10    11
+2    5    2    1    3    12    13
+3    3    3    2    4
+4    4    4    3    5    6
+5    3    6    4    7
+6    5    7    6    8    14    15
+7    5    8    7    16    17    18
+
+
+# Fragment_Connectivity
+6
+1    1    2
+2    2    3
+3    3    4
+4    4    5
+5    5    6
+6    6    7
+
+!Intra Scaling
+!vdw_scaling    1-2 1-3 1-4 1-N
+!charge_scaling 1-2 1-3 1-4 1-N
+
+# Intra_Scaling
+0. 0. 0.5000 1.
+0. 0. 0.8333 1.
+
+
+END

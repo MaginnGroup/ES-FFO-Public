@@ -73,17 +73,19 @@ This directory contains all data related to running the optimization workflow of
 5. ift_val_opt/: The signac project directory for running the interfacial tension validation for GP-optimized FF including project.py, templates/, and workspace/
 6. ift_val_no_opt/: The signac project directory for running the interfacial tension validation for the Base FF including project.py, templates/, and workspace/
 7. opt_at_params_new/: The signac project directory for running the optimization of FF parameters with updated GP models including project.py, templates/, and workspace/
-8. compress_gemc.py: A script to compress the gemc validation data
-9. compress_ift.py: A script to compress the interfacial tension validation data
-10. get_CPU_hrs.py: A script to calculate the total CPU hours used by the optimization and validation workflows
-11. get_GPU_hrs.py: A script to calculate the total GPU hours used by the optimization and validation workflows
-12. init_gemc_val.py: A script to initialize the gemc validation workflow
-13. init_ift_val.py: A script to initialize the interfacial tension validation workflow
-14. init_opt_at.py: A script to initialize the optimization workflow
-15. post_analysis_opt.py: A script to analyze the results of the optimization workflow
-16. post_analysis_val.py: A script to analyze the results of the validation workflows. Generates Figures 3-8 of the main text
-17. get_RD2_data.py: A script to extract select RD2 property data for each molecule for the Base and GP-optimized FFs. Generates data for Table 5 in the main text.
-18. all_properties.csv: A csv file containing select RD2 property data for each molecule for the Base and GP-optimized FFs. Table 5 in the main text.
+8. FF_params/: The directory for compiling FF parameters for each molecule for the Base and GP-optimized FFs including ff.xml, species1.mcf, species1.pdb, and species1.top files for each molecule
+9. compress_gemc.py: A script to compress the gemc validation data
+10. compress_ift.py: A script to compress the interfacial tension validation data
+11. get_CPU_hrs.py: A script to calculate the total CPU hours used by the optimization and validation workflows
+12. get_GPU_hrs.py: A script to calculate the total GPU hours used by the optimization and validation workflows
+13. init_gemc_val.py: A script to initialize the gemc validation workflow
+14. init_ift_val.py: A script to initialize the interfacial tension validation workflow
+15. init_opt_at.py: A script to initialize the optimization workflow
+16. post_analysis_opt.py: A script to analyze the results of the optimization workflow
+17. post_analysis_val.py: A script to analyze the results of the validation workflows. Generates Figures 3-8 of the main text
+18. get_RD2_data.py: A script to extract select RD2 property data for each molecule for the Base and GP-optimized FFs. Generates data for Table 5 in the main text.
+19. all_properties.csv: A csv file containing select RD2 property data for each molecule for the Base and GP-optimized FFs. Table 5 in the main text.
+20. compile_ff_params: Python file to compile FF parameters for each molecule for the Base and GP-optimized FFs.
 
 #### Opt_ES/analysis/
 This directory contains data from analyzing the results of the optimization workflow for each molecule "mol".:
